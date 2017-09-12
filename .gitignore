@@ -1,1 +1,5 @@
 JHotDraw/target/
+
+JHotDraw/\.idea/
+
+*.iml
