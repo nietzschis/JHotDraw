@@ -17,11 +17,11 @@
         Versions are based on IDE releases, e.g.: RELEASE691
         To create your own repository, use: nbm:populate-repository
         -->
-<repository>
-    <id>git-corfixen</id>
-    <name>corfixen's Git based repo</name>
-    <url>https://github.com/sweat-tek/SB5-MAI-Maven/raw/repository/</url>
-</repository>
+        <repository>
+            <id>git-corfixen</id>
+            <name>corfixen's Git based repo</name>
+            <url>https://github.com/sweat-tek/SB5-MAI-Maven/raw/repository/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -29,5 +29,10 @@
             <artifactId>featuretracer</artifactId>
             <version>1.0</version>
         </dependency>
-    </dependencies>
-</project>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.6</version>
+        </dependency>
+    </dependencies>   
+ </project>
