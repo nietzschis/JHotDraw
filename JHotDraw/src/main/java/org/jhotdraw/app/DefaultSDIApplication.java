@@ -5,17 +5,15 @@
  * and all its contributors.
  * All rights reserved.
  *
- * The copyright of this software is owned by the authors and  
- * contributors of the JHotDraw project ("the copyright holders").  
- * You may not use, copy or modify this software, except in  
- * accordance with the license agreement you entered into with  
- * the copyright holders. For details see accompanying license terms. 
+ * The copyright of this software is owned by the authors and
+ * contributors of the JHotDraw project ("the copyright holders").
+ * You may not use, copy or modify this software, except in
+ * accordance with the license agreement you entered into with
+ * the copyright holders. For details see accompanying license terms.
  */
 package org.jhotdraw.app;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import org.jhotdraw.util.*;
-import org.jhotdraw.util.prefs.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -24,6 +22,8 @@ import java.util.*;
 import java.util.prefs.*;
 import javax.swing.*;
 import org.jhotdraw.app.action.*;
+import org.jhotdraw.util.*;
+import org.jhotdraw.util.prefs.*;
 
 /**
  * A DefaultSDIApplication can handle the life cycle of a single document window
@@ -34,12 +34,13 @@ import org.jhotdraw.app.action.*;
  * quits the application.
  *
  * @author Werner Randelshofer
- * @version 1.5.1 2008-07-13 Don't add the view menu to the menu bar if it is empty. 
- * <br>1.5 2007-12-25 Added method updateViewTitle. Replaced 
- * currentProject by activeProject in super class. 
+ * @version 1.5.1 2008-07-13 Don't add the view menu to the menu bar if it is
+ * empty.
+ * <br>1.5 2007-12-25 Added method updateViewTitle. Replaced currentProject by
+ * activeProject in super class.
  * <br>1.4 2007-01-11 Removed method addStandardActionsTo.
- * <br>1.3 2006-05-03 Show asterisk in window title, when view has
- * unsaved changes.
+ * <br>1.3 2006-05-03 Show asterisk in window title, when view has unsaved
+ * changes.
  * <br>1.2.1 2006-02-28 Stop application when last view is closed.
  * <br>1.2 2006-02-06 Support for multiple open id added.
  * <br>1.1 2006-02-06 Revised.
@@ -49,7 +50,9 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     private Preferences prefs;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     @FeatureEntryPoint(JHotDrawFeatures.APPLICATION_STARTUP)
     public DefaultSDIApplication() {
     }
@@ -135,7 +138,7 @@ public class DefaultSDIApplication extends AbstractApplication {
         p.putAction(LoadAction.ID, m.getAction(LoadAction.ID));
     }
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public void show(final View p) {
         if (!p.isShowing()) {
             p.setShowing(true);
@@ -157,10 +160,10 @@ public class DefaultSDIApplication extends AbstractApplication {
                 moved = false;
                 for (Iterator i = views().iterator(); i.hasNext();) {
                     View aView = (View) i.next();
-                    if (aView != p &&
-                            SwingUtilities.getWindowAncestor(aView.getComponent()) != null &&
-                            SwingUtilities.getWindowAncestor(aView.getComponent()).
-                            getLocation().equals(loc)) {
+                    if (aView != p
+                            && SwingUtilities.getWindowAncestor(aView.getComponent()) != null
+                            && SwingUtilities.getWindowAncestor(aView.getComponent()).
+                                    getLocation().equals(loc)) {
                         loc.x += 22;
                         loc.y += 22;
                         moved = true;
@@ -175,7 +178,7 @@ public class DefaultSDIApplication extends AbstractApplication {
                 public void windowClosing(final WindowEvent evt) {
                     getModel().getAction(CloseAction.ID).actionPerformed(
                             new ActionEvent(f, ActionEvent.ACTION_PERFORMED,
-                            "windowClosing"));
+                                    "windowClosing"));
                 }
 
                 @Override
@@ -195,9 +198,9 @@ public class DefaultSDIApplication extends AbstractApplication {
 
                 public void propertyChange(PropertyChangeEvent evt) {
                     String name = evt.getPropertyName();
-                    if (name.equals(View.HAS_UNSAVED_CHANGES_PROPERTY) ||
-                            name.equals(View.FILE_PROPERTY) ||
-                            name.equals(View.MULTIPLE_OPEN_ID_PROPERTY)) {
+                    if (name.equals(View.HAS_UNSAVED_CHANGES_PROPERTY)
+                            || name.equals(View.FILE_PROPERTY)
+                            || name.equals(View.MULTIPLE_OPEN_ID_PROPERTY)) {
                         updateViewTitle(p, f);
                     }
                 }
@@ -209,8 +212,8 @@ public class DefaultSDIApplication extends AbstractApplication {
     }
 
     /**
-     * Returns the view component. Eventually wraps it into
-     * another component in order to provide additional functionality.
+     * Returns the view component. Eventually wraps it into another component in
+     * order to provide additional functionality.
      */
     protected Component wrapViewComponent(View p) {
         JComponent c = p.getComponent();
@@ -251,8 +254,8 @@ public class DefaultSDIApplication extends AbstractApplication {
     }
 
     /**
-     * The view menu bar is displayed for a view.
-     * The default implementation returns a new screen menu bar.
+     * The view menu bar is displayed for a view. The default implementation
+     * returns a new screen menu bar.
      */
     protected JMenuBar createMenuBar(final View p, java.util.List<Action> toolBarActions) {
         JMenuBar mb = new JMenuBar();
@@ -348,7 +351,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     /**
      * Updates the title of a view and displays it in the given frame.
-     * 
+     *
      * @param p The view.
      * @param f The frame.
      */
@@ -369,7 +372,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     /**
      * Updates the "file &gt; open recent" menu item.
-     * 
+     *
      * @param openRecentMenu
      */
     protected void updateOpenRecentMenu(JMenu openRecentMenu) {
@@ -398,7 +401,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     /**
      * Creates the view menu.
-     * 
+     *
      * @param p The View
      * @param viewActions Actions for the view menu
      * @return A JMenu or null, if no view actions are provided
