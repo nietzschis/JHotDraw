@@ -351,18 +351,18 @@ public class SVGView extends AbstractView implements ExportableView {
 
     @FeatureEntryPoint(JHotDrawFeatures.EXPORT)
     public void export(File f, javax.swing.filechooser.FileFilter filter, Component accessory) throws IOException {
-        // If selected format was compressed PNG, compress an image with a web service tinypng.
-        if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
-            // Cal the method for tinypng api.
-        }
-        
         OutputFormat format = fileFilterOutputFormatMap.get(filter);
 
         if (!f.getName().endsWith("." + format.getFileExtension())) {
             f = new File(f.getPath() + "." + format.getFileExtension());
         }
-
+        
         format.write(f, svgPanel.getDrawing());
+        
+        // If selected format was "compressed PNG", compress an image with a web service tinypng.
+        if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
+            TinyPngCompressAction.compressImage(f);
+        }
 
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());
