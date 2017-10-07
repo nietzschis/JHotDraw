@@ -64,6 +64,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      */
     private BufferedImage bufferedImage;
     
+    private boolean edgeDetectorApplied; 
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
@@ -73,11 +74,13 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     /** Creates a new instance. */
     public SVGImageFigure() {
         this(0, 0, 0, 0);
+        edgeDetectorApplied = false;
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.IMAGE_TOOL)
     public SVGImageFigure(double x, double y, double width, double height) {
         rectangle = new Rectangle2D.Double(x, y, width, height);
+        edgeDetectorApplied = false;
         SVGAttributeKeys.setDefaults(this);
     }
 
@@ -348,6 +351,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     public void setOriginalBufferedImage(BufferedImage oimage) {
         willChange();
         this.originalBufferedImage = oimage;
+        this.edgeDetectorApplied = true;
         changed();
     }
 
@@ -358,6 +362,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     public void setBufferedImage(BufferedImage image) {
         willChange();
         this.imageData = null;
+        this.originalBufferedImage = null;
+        this.edgeDetectorApplied = false;
         this.bufferedImage = image;
         changed();
     }
@@ -382,29 +388,19 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         return bufferedImage;
     }
     
-    
-    /**
-     * Gets the original buffered image. If necessary, this method creates the buffered
-     * image from the image data.
-     */
-    public BufferedImage getOriginalBufferedImage() {
-        if (bufferedImage != null) {
-            //System.out.println("recreateing bufferedImage");
-            try {
-                bufferedImage = ImageIO.read(new ByteArrayInputStream(imageData));
-            } catch (Throwable e) {
-                e.printStackTrace();
-                // If we can't create a buffered image from the image data,
-                // there is no use to keep the image data and try again, so
-                // we drop the image data.
-                imageData = null;
-            }
-        }
-        return bufferedImage;
+    public boolean getEdgeDetectorApplied() {
+        return this.edgeDetectorApplied;
+    }
+    public void setEdgeDetectorApplied(boolean applied) {
+        this.edgeDetectorApplied = applied;
     }
     
-    
-    
+    /**
+     * Gets the original buffered image.
+     */
+    public BufferedImage getOriginalBufferedImage() {
+        return this.originalBufferedImage;
+    }
 
     /**
      * Gets the image data. If necessary, this method creates the image

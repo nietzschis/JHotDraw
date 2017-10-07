@@ -2,6 +2,8 @@ package org.jhotdraw.draw.action;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.*;
 import javax.swing.undo.*;
 import org.jhotdraw.app.JHotDrawFeatures;
@@ -27,10 +29,9 @@ public class EdgeDetectionAction extends AbstractSelectedAction {
     @FeatureEntryPoint(JHotDrawFeatures.IMAGE_TOOL)
     public void actionPerformed(java.awt.event.ActionEvent e) {
         final DrawingView view = getView();
-        final LinkedList<Figure> figures = new LinkedList<Figure>(view.getSelectedFigures());
+        Collection figures = new LinkedList<Figure>(view.getSelectedFigures());
 
         edgeDetection(view, figures);
-        // TODO: You can not undo changes when edge detection is applied.
         fireUndoableEditHappened(new AbstractUndoableEdit() {
             @Override
             public String getPresentationName() {
@@ -40,44 +41,74 @@ public class EdgeDetectionAction extends AbstractSelectedAction {
             @Override
             public void redo() throws CannotRedoException {
                 super.redo();
-                SendToBackAction.sendToBack(view, figures);
+                edgeDetection(view, figures);
             }
 
             @Override
             public void undo() throws CannotUndoException {
                 super.undo();
-                BringToFrontAction.bringToFront(view, figures);
+                // Remove all "edge detected images" and show the originals.
+                Iterator i = figures.iterator();
+                Drawing drawing = view.getDrawing();
+
+                List<Figure> figuresToAdd = new ArrayList<Figure>();
+                while (i.hasNext()) {
+                    SVGImageFigure figure = (SVGImageFigure) i.next();
+                    if (figure.getEdgeDetectorApplied()) {
+                        SVGImageFigure normalImage = new SVGImageFigure(figure.getStartPoint().x, figure.getStartPoint().y, figure.getWidth(), figure.getHeight());
+                        normalImage.setBufferedImage(figure.getOriginalBufferedImage());
+
+                        drawing.remove(figure);
+                        drawing.add(normalImage);
+
+                        //figures.remove(figure);
+                        //figures.add(normalImage);
+                        i.remove();
+                        figuresToAdd.add(normalImage);
+                    }
+                }
+                for (Figure f : figuresToAdd) {
+                    figures.add(f);
+                }
             }
         }
         );
     }
 
     public static void edgeDetection(DrawingView view, Collection figures) {
-        //create the detector and adjust its parameters as desired
-//        CannyEdgeDetector detector = new CannyEdgeDetector();
-//        detector.setLowThreshold(0.5f);
-//        detector.setHighThreshold(1f);
         EdgeDetector edgeDetector = new EdgeDetector();
-        
+
+        List<Figure> figuresToAdd = new ArrayList<Figure>();
         Iterator i = figures.iterator();
         Drawing drawing = view.getDrawing();
         while (i.hasNext()) {
             SVGImageFigure figure = (SVGImageFigure) i.next();
             BufferedImage bi = figure.getBufferedImage();
 
-            bi.getGraphics().drawImage(bi, 0, 0, null);
-            BufferedImage edges = edgeDetector.detect(bi);
-           
-            //apply edge detector to an image
-//            detector.setSourceImage(bi);
-//            detector.process();
-//            BufferedImage edges = detector.getEdgesImage();
+            BufferedImage edges = deepCopy(bi);
+            edgeDetector.detect(edges);
 
             SVGImageFigure edgeImage = new SVGImageFigure(figure.getStartPoint().x, figure.getStartPoint().y, figure.getWidth(), figure.getHeight());
             edgeImage.setBufferedImage(edges);
+            edgeImage.setOriginalBufferedImage(bi);
 
-            drawing.basicRemove(figure);
+            drawing.remove(figure);
             drawing.add(edgeImage);
+
+            //figures.remove(figure);
+            //figures.add(edgeImage);
+            i.remove();
+            figuresToAdd.add(edgeImage);
         }
+        for (Figure f : figuresToAdd) {
+            figures.add(f);
+        }
+    }
+
+    public static BufferedImage deepCopy(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 }

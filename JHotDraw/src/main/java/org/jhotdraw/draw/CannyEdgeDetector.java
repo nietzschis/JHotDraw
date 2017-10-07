@@ -1,4 +1,4 @@
-package org.jhotdraw.draw.action;
+package org.jhotdraw.draw;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
