@@ -17,7 +17,6 @@ public class EdgeDetector {
         //2x2 matrix, with those two float arrays.
         Kernel MatrixA = new Kernel(3, 3, x1);
         Kernel MatrixB = new Kernel(3, 3, y1);
-        // Convolving the matrices. I hate math.
         ConvolveOp convolve1 = new ConvolveOp(MatrixA);
         ConvolveOp convolve2 = new ConvolveOp(MatrixB);
 
@@ -37,13 +36,13 @@ public class EdgeDetector {
         return img;
     }
 
-    //formula for making things work.
+    //formula for making things work
     private double G(int x, int y) {
-        //the minimum value has to be 0, and the maximum must be 16777215 (hexidecimal of black is 000000 and white is ffffff. I just used the calculator to find it out)
+        //The minimum value has to be 0, and the maximum must be 16777215 (hexidecimal of black is 000000 and white is ffffff.
         int derp = this.Gx.getRGB(x, y);
         int herp = this.Gy.getRGB(x, y);
 
-        //maximum possible for result: 23726565.  Minimum == 0.
+        //Maximum possible for result: 23726565.  Minimum == 0.
         double result = Math.sqrt(Math.pow(derp, 2.0) + Math.pow(herp, 2.0));
         return result;
     }
