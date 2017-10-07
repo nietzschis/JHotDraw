@@ -63,6 +63,12 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private BufferedImage bufferedImage;
+    
+    /**
+     * The original buffered image. This can be null, if we haven't yet applied
+     * the edge detector to an image.
+     */
+    private BufferedImage originalBufferedImage;
 
     /** Creates a new instance. */
     public SVGImageFigure() {
@@ -338,6 +344,12 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
+    
+    public void setOriginalBufferedImage(BufferedImage oimage) {
+        willChange();
+        this.originalBufferedImage = oimage;
+        changed();
+    }
 
     /**
      * Sets the buffered image.
@@ -369,6 +381,30 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         }
         return bufferedImage;
     }
+    
+    
+    /**
+     * Gets the original buffered image. If necessary, this method creates the buffered
+     * image from the image data.
+     */
+    public BufferedImage getOriginalBufferedImage() {
+        if (bufferedImage != null) {
+            //System.out.println("recreateing bufferedImage");
+            try {
+                bufferedImage = ImageIO.read(new ByteArrayInputStream(imageData));
+            } catch (Throwable e) {
+                e.printStackTrace();
+                // If we can't create a buffered image from the image data,
+                // there is no use to keep the image data and try again, so
+                // we drop the image data.
+                imageData = null;
+            }
+        }
+        return bufferedImage;
+    }
+    
+    
+    
 
     /**
      * Gets the image data. If necessary, this method creates the image

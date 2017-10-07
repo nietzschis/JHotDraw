@@ -14,7 +14,8 @@ public class TinyPngCompressAction {
             // Use the Tinify API client.
             Tinify.setKey("nNBJKdX3DsD-XO181v1ws1dOptFy2cZ3");
             Source source = Tinify.fromFile(f.getPath());
-            source.toFile(f.getPath() + "compressed.png");
+            String fileName = f.getPath().substring(0, f.getPath().lastIndexOf('.') - 1);
+            source.toFile(fileName + "_compressed.png");
             int compressionsThisMonth = Tinify.compressionCount();
             System.out.println("Compressions this month: " + compressionsThisMonth);
         } catch (AccountException e) {
