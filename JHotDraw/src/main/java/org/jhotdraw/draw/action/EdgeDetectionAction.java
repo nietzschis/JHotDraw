@@ -58,8 +58,13 @@ public class EdgeDetectionAction extends AbstractSelectedAction {
                         SVGImageFigure normalImage = new SVGImageFigure(figure.getStartPoint().x, figure.getStartPoint().y, figure.getWidth(), figure.getHeight());
                         normalImage.setBufferedImage(figure.getOriginalBufferedImage());
 
-                        drawing.remove(figure);
-                        drawing.add(normalImage);
+                        try {
+                            drawing.remove(figure);
+                            drawing.add(normalImage);
+                        } catch (Exception ex) {
+                            // This can not happen when testing.
+                            System.out.println("Can not add/remove the image to/from the drawing.");
+                        }
 
                         //figures.remove(figure);
                         //figures.add(normalImage);
@@ -92,8 +97,13 @@ public class EdgeDetectionAction extends AbstractSelectedAction {
             edgeImage.setBufferedImage(edges);
             edgeImage.setOriginalBufferedImage(bi);
 
-            drawing.remove(figure);
-            drawing.add(edgeImage);
+            try {
+                drawing.remove(figure);
+                drawing.add(edgeImage);
+            } catch (Exception ex) {
+                // This can not happen when testing.
+                System.out.println("Can not add/remove the image to/from the drawing.");
+            }
 
             //figures.remove(figure);
             //figures.add(edgeImage);
@@ -110,5 +120,20 @@ public class EdgeDetectionAction extends AbstractSelectedAction {
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = bi.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public static boolean bufferedImagesEqual(BufferedImage img1, BufferedImage img2) {
+        if (img1.getWidth() == img2.getWidth() && img1.getHeight() == img2.getHeight()) {
+            for (int x = 0; x < img1.getWidth(); x++) {
+                for (int y = 0; y < img1.getHeight(); y++) {
+                    if (img1.getRGB(x, y) != img2.getRGB(x, y)) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }
