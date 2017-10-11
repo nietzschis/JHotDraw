@@ -5,11 +5,17 @@ package org.jhotdraw.draw.action;
  * @author Matic-ProBook
  */
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.EdgeDetector;
@@ -21,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class EdgeDetectionTest {
-    
+
     @Test
     public void edgeDetectionTest() {
         String fileName = "D:\\tree.jpg";
@@ -36,7 +42,7 @@ public class EdgeDetectionTest {
         }
         figures.add(f);
         BufferedImage imgCopy = deepCopy(img);
-        
+
         EdgeDetector edgeDetector = new EdgeDetector();
         edgeDetector.detect(imgCopy);
 
