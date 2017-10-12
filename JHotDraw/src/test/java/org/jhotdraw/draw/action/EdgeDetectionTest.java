@@ -47,7 +47,9 @@ public class EdgeDetectionTest {
     
     public static BufferedImage loadTestImage() {
         //String fileName = "D:\\tree.png";
+        /* //String fileName = System.getProperty("user.dir") + "\\src\\test\\java\\org\\jhotdraw\\draw\\action\\tree.png"; */
         String fileName = "/tree.png";
+        
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(fileName));
