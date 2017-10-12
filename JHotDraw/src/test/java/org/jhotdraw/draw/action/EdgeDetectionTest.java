@@ -5,17 +5,11 @@ package org.jhotdraw.draw.action;
  * @author Matic-ProBook
  */
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.EdgeDetector;
@@ -30,16 +24,11 @@ public class EdgeDetectionTest {
 
     @Test
     public void edgeDetectionTest() {
-        String fileName = "D:\\tree.jpg";
+        BufferedImage img = loadTestImage();
+        
         Collection figures = new LinkedList<Figure>();
         SVGImageFigure f = new SVGImageFigure();
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File(fileName));
-            f.setBufferedImage(img);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        f.setBufferedImage(img);
         figures.add(f);
         BufferedImage imgCopy = deepCopy(img);
 
@@ -54,5 +43,17 @@ public class EdgeDetectionTest {
             BufferedImage edgesDetected = tempFigure.getBufferedImage();
             assertTrue(bufferedImagesEqual(edgesDetected, imgCopy));
         }
+    }
+    
+    public static BufferedImage loadTestImage() {
+        //String fileName = "D:\\tree.png";
+        String fileName = "/tree.png";
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
     }
 }

@@ -9,15 +9,16 @@ import java.io.File;
  */
 public class TinyPngCompressAction {
     
-    public static void compressImage(File f) {
+    public static boolean compressImage(File f) {
         try {
             // Use the Tinify API client.
             Tinify.setKey("nNBJKdX3DsD-XO181v1ws1dOptFy2cZ3");
             Source source = Tinify.fromFile(f.getPath());
-            String fileName = f.getPath().substring(0, f.getPath().lastIndexOf('.') - 1);
+            String fileName = f.getPath().substring(0, f.getPath().lastIndexOf('.'));
             source.toFile(fileName + "_compressed.png");
             int compressionsThisMonth = Tinify.compressionCount();
             System.out.println("Compressions this month: " + compressionsThisMonth);
+            return true;
         } catch (AccountException e) {
             System.out.println("Verify your API key and account limit. The error message is: " + e.getMessage());
         } catch (ClientException e) {
@@ -29,5 +30,6 @@ public class TinyPngCompressAction {
         } catch (java.lang.Exception e) {
             System.out.println("Something else went wrong, unrelated to the Tinify API. The error message is: " + e.getMessage());
         }
+        return false;
     }
 }
