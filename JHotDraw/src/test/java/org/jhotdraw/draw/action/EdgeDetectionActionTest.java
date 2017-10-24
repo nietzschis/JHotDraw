@@ -1,12 +1,10 @@
 package org.jhotdraw.draw.action;
 
-/**
- *
- * @author Matic-ProBook
- */
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,16 +12,62 @@ import javax.imageio.ImageIO;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.EdgeDetector;
 import org.jhotdraw.draw.Figure;
-import static org.jhotdraw.draw.action.EdgeDetectionAction.deepCopy;
 import static org.jhotdraw.draw.action.EdgeDetectionAction.bufferedImagesEqual;
+import static org.jhotdraw.draw.action.EdgeDetectionAction.deepCopy;
 import org.jhotdraw.samples.svg.figures.SVGImageFigure;
-import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class EdgeDetectionTest {
+/**
+ *
+ * @author Matic-ProBook
+ */
+public class EdgeDetectionActionTest {
+    
+    public EdgeDetectionActionTest() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of actionPerformed method, of class EdgeDetectionAction.
+     */
+    /*
+    @Test
+    public void testActionPerformed() {
+        System.out.println("actionPerformed");
+        
+        ActionEvent e = null;
+        EdgeDetectionAction instance = null;
+        instance.actionPerformed(e);
+        
+        instance.fireUndoableEditHappened(null);
+        
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    */
 
     @Test
-    public void edgeDetectionTest() {
+    public void testEdgeDetection() {
         BufferedImage img = loadTestImage();
         
         Collection figures = new LinkedList<Figure>();
@@ -45,11 +89,9 @@ public class EdgeDetectionTest {
         }
     }
     
-    public static BufferedImage loadTestImage() {
-        //String fileName = "D:\\tree.png";
-        /* //String fileName = System.getProperty("user.dir") + "\\src\\test\\java\\org\\jhotdraw\\draw\\action\\tree.png"; */
-        String fileName = "/tree.png";
-        
+    public BufferedImage loadTestImage() {
+        URL url = getClass().getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");
+        String fileName = url.getPath();
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File(fileName));
