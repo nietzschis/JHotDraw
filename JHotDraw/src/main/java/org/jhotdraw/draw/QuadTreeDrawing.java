@@ -48,6 +48,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
         return children.indexOf(figure);
     }
 
+    @FeatureEntryPoint(JHotDrawFeatures.ADD_FIGURE)
     @Override
     @FeatureEntryPoint(JHotDrawFeatures.BASIC_ADD)
     public void basicAdd(int index, Figure figure) {
