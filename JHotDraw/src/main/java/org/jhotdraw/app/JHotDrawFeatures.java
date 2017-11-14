@@ -35,4 +35,5 @@ public class JHotDrawFeatures {
     public static final String LINK_PALETTE = "link palette";
     public static final String VIEW_PALETTE = "view palette";
     public static final String ALIGN_PALETTE = "align palette";
+    public static final String BASIC_ADD = "basic add";
 }

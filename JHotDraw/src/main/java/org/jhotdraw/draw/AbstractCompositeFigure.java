@@ -119,6 +119,7 @@ public abstract class AbstractCompositeFigure
     }
 
     public boolean add(Figure figure) {
+        System.out.println("Abstract Add");
         add(getChildCount(), figure);
         return true;
     }
@@ -523,6 +524,7 @@ public abstract class AbstractCompositeFigure
     }
 
     public void basicAdd(int index, Figure figure) {
+        System.out.println("Basic add Composite");
         children.add(index, figure);
         figure.addFigureListener(eventHandler);
     }

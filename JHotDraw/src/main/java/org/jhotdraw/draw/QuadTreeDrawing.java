@@ -49,7 +49,9 @@ public class QuadTreeDrawing extends AbstractDrawing {
     }
 
     @Override
+    @FeatureEntryPoint(JHotDrawFeatures.BASIC_ADD)
     public void basicAdd(int index, Figure figure) {
+        System.out.println("Basic Add QuadTree");
         super.basicAdd(index, figure);
         quadTree.add(figure, figure.getDrawingArea());
         needsSorting = true;
