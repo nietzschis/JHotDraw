@@ -107,6 +107,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<JMenu>();
         mb.add(createEditMenu(a, pr));
+        mb.add(createCollaborationMenu());
         mb.add(createViewMenu(a, pr));
         return mb;
     }
@@ -128,6 +129,17 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         m.add(getAction(ViewSourceAction.ID));
 
         return m;
+    }
+    
+    protected JMenu createCollaborationMenu() {
+        JMenu menu = new JMenu();
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        
+        appLabels.configureMenu(menu, "collaboration");
+        
+        //TODO: ændre action
+        menu.add(getAction(CollaborationConnectAction.ID));
+        return menu;
     }
 
     @Override

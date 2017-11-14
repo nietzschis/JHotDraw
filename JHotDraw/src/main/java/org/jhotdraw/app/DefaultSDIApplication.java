@@ -131,6 +131,9 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(DeleteAction.ID, new DeleteAction());
         m.putAction(DuplicateAction.ID, new DuplicateAction());
         m.putAction(SelectAllAction.ID, new SelectAllAction());
+        
+        //TODO: Put menu action here
+        m.putAction(CollaborationConnectAction.ID, new CollaborationConnectAction(this));
     }
 
     protected void initViewActions(View p) {
