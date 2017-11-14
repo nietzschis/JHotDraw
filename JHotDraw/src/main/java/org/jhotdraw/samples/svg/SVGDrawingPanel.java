@@ -27,6 +27,7 @@ import org.jhotdraw.gui.ToolBarLayout;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.plaf.palette.PaletteLookAndFeel;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.samples.svg.gui.MinimapToolBar;
 
 /**
  * JSVGDrawingAppletPanel.
@@ -73,6 +74,8 @@ public class SVGDrawingPanel extends JPanel {
         }
 
         initComponents();
+        minimapToolBar = new MinimapToolBar();
+        toolsPane.add(minimapToolBar);
         toolsPane.setLayout(new ToolBarLayout());
         toolsPane.setBackground(new Color(0xf0f0f0));
         toolsPane.setOpaque(true);
@@ -275,4 +278,5 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.draw.DefaultDrawingView view;
     private org.jhotdraw.samples.svg.gui.ViewToolBar viewToolBar;
     // End of variables declaration//GEN-END:variables
+    private MinimapToolBar minimapToolBar;
 }
