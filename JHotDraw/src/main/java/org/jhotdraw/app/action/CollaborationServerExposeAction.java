@@ -42,6 +42,14 @@ public class CollaborationServerExposeAction extends AbstractApplicationAction {
         return "192.168.101.202";
     }
     
+    private PropertyChangeListener createApplicationListener() {
+        return (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName() == "closeServer") {
+                setEnabled(true);
+            }
+        };
+    }
+    
     @Override
     protected void installApplicationListeners(Application app) {
         super.installApplicationListeners(app);
@@ -51,19 +59,6 @@ public class CollaborationServerExposeAction extends AbstractApplicationAction {
         app.addPropertyChangeListener(applicationListener);
     }
     
-    private PropertyChangeListener createApplicationListener() {
-        return new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == "closeServer") { // Strings get interned
-                    setEnabled(true);
-                }
-            }
-        };
-    }
-    
-    /**
-     * Installs listeners on the application object.
-     */
     @Override
     protected void uninstallApplicationListeners(Application app) {
         super.uninstallApplicationListeners(app);
