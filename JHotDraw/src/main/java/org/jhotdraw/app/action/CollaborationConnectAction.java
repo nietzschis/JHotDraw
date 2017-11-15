@@ -8,8 +8,11 @@ package org.jhotdraw.app.action;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.collaboration.CollaborationConnection;
 import org.jhotdraw.draw.Drawing;
@@ -33,6 +36,7 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
+        app.addPropertyChangeListener(createApplicationListener());
     }
 
     @Override
@@ -63,7 +67,16 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
     private void connectToServer(String IP) {
         Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
         CollaborationConnection.getInstance().setDrawing(drawing);
-        
+        app.firePropertyEvent("connect", null, null);
+        setEnabled(false);
+    }
+    
+    private PropertyChangeListener createApplicationListener() { 
+        return (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName() == "disconnect") {
+                setEnabled(true);
+            } 
+        }; 
     }
 
 }

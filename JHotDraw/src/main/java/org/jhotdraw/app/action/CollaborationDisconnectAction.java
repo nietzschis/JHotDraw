@@ -6,6 +6,8 @@
 package org.jhotdraw.app.action;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jhotdraw.app.Application;
@@ -24,6 +26,8 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
+        setEnabled(false);
+        app.addPropertyChangeListener(createApplicationListener());
     }
 
     @Override
@@ -31,6 +35,11 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
         app = getApplication();
     }
     
-    
-
+    private PropertyChangeListener createApplicationListener() { 
+        return (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName() == "connect") {
+                setEnabled(true);
+            } 
+        }; 
+    }
 }
