@@ -5,10 +5,18 @@
  */
 package org.jhotdraw.app.action;
 
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jhotdraw.app.Application;
+import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.draw.Drawing;
+import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.DrawingView;
+import org.jhotdraw.samples.svg.SVGApplicationModel;
+import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -19,6 +27,7 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
 
     public final static String ID = "collaboration.connect";
     private Application app;
+    private DrawingEditor editor;
 
     public CollaborationConnectAction(Application app) {
         super(app);
@@ -44,10 +53,17 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
     private void verifyIP(String IP) {
         if(IP.length() >= 7) {
             // TODO: Implement Server connection
-            JOptionPane.showMessageDialog(app.getComponent(), "Connected to server!");
+            connectToServer(IP);
+            JOptionPane.showMessageDialog(app.getComponent(), "Connected to server! ");
         } else {
             showInputDialog("Wrong IP, try again:");
         }
+    }
+    
+    private void connectToServer(String IP) {
+        Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
+        CollaborationConnection.getInstance().setDrawing(drawing);
+        
     }
 
 }
