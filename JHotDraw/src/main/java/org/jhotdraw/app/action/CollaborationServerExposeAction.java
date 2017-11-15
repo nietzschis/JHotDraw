@@ -9,7 +9,7 @@ import org.jhotdraw.app.*;
 
 /**
  *
- * @author Niels Heltner
+ * @author Niels
  */
 public class CollaborationServerExposeAction extends AbstractApplicationAction {
 
