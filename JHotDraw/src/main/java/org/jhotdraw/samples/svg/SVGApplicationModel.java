@@ -107,8 +107,25 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<JMenu>();
         mb.add(createEditMenu(a, pr));
+        mb.add(createCollaborationMenu());
         mb.add(createViewMenu(a, pr));
         return mb;
+    }
+    
+    protected JMenu createCollaborationMenu() {
+        JMenu m = new JMenu();
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        
+        appLabels.configureMenu(m, "collaboration"); // til selve "Collaboration" i menubaren
+        
+        m.add(getAction(CollaborationServerExposeAction.ID));
+        
+        m.add(getAction(CollaborationServerCloseAction.ID));
+        
+        //JMenuItem mi = m.add(getAction(CollaborationServerCloseAction.ID));
+        //mi.setEnabled(false);
+
+        return m;
     }
 
     protected JMenu createViewMenu(Application a, View p) {
