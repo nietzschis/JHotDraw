@@ -75,6 +75,8 @@ public class SVGDrawingPanel extends JPanel {
 
         initComponents();
         minimapToolBar = new MinimapToolBar();
+        minimapToolBar.setDrawingView(view);
+        
         toolsPane.add(minimapToolBar);
         toolsPane.setLayout(new ToolBarLayout());
         toolsPane.setBackground(new Color(0xf0f0f0));
@@ -183,6 +185,7 @@ public class SVGDrawingPanel extends JPanel {
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
         editor.setActiveView(temp);
+        minimapToolBar.setEditor(editor);
     }
 
     /** This method is called from within the constructor to
