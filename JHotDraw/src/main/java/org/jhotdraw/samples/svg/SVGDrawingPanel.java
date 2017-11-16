@@ -75,9 +75,8 @@ public class SVGDrawingPanel extends JPanel {
 
         initComponents();
         minimapToolBar = new MinimapToolBar();
-        minimapToolBar.setDrawingView(view);
-        
         toolsPane.add(minimapToolBar);
+        
         toolsPane.setLayout(new ToolBarLayout());
         toolsPane.setBackground(new Color(0xf0f0f0));
         toolsPane.setOpaque(true);
