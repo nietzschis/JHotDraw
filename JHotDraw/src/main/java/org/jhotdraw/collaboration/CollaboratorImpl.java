@@ -11,6 +11,7 @@ public class CollaboratorImpl extends UnicastRemoteObject implements Collaborato
     @Override
     public void notifyCollaborator() throws RemoteException {
         // TODO: Skal pulle fra server
+        CollaborationConnection.getInstance().getFiguresFromServer();
     }
     
 }
