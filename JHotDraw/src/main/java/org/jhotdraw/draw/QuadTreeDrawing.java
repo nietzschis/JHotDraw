@@ -21,6 +21,7 @@ import java.awt.geom.*;
 import org.jhotdraw.util.*;
 import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.collaboration.CollaborationConnection;
 import org.jhotdraw.geom.Geom;
 
 /**
@@ -52,18 +53,20 @@ public class QuadTreeDrawing extends AbstractDrawing {
     //@FeatureEntryPoint(JHotDrawFeatures.ADD_FIGURE)
     @Override
     public void basicAdd(int index, Figure figure) {
-        System.out.println("Basic Add QuadTree");
         super.basicAdd(index, figure);
         quadTree.add(figure, figure.getDrawingArea());
         needsSorting = true;
     }
-
+    
     @Override
     public Figure basicRemoveChild(int index) {
         Figure figure = getChild(index);
         quadTree.remove(figure);
         needsSorting = true;
         super.basicRemoveChild(index);
+        
+        // Notify collaborator
+        CollaborationConnection.getInstance().notifyUpdate("remove");
         return figure;
     }
 

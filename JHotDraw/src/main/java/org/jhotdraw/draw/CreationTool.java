@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
+import org.jhotdraw.collaboration.CollaborationConnection;
 import org.jhotdraw.util.*;
 
 /**
@@ -253,6 +254,9 @@ public class CreationTool extends AbstractTool {
                 });
                 creationFinished(createdFigure);
                 createdFigure = null;
+                // TODO: Her bliver ikke SVG figurer tegnet
+                CollaborationConnection.getInstance().notifyUpdate("create");
+                System.out.println("Creation Tool finished");
             }
         } else {
             if (isToolDoneAfterCreation()) {
