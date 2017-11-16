@@ -1,5 +1,7 @@
 package org.jhotdraw.collaboration;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,8 @@ public class CollaborationConnection {
     
     public void sendFiguresToServer() {
         /*try {
-            collaborationProxy.sendFigures(figureList);
+            list = drawing.getChildren();
+            collaborationProxy.sendFigures(list);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }*/
@@ -70,10 +73,19 @@ public class CollaborationConnection {
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }*/
-        drawing.removeAllChildren();
+        List<Figure> serverList = null;
+        for (Figure workingFigure : drawing.getChildren()) {
+            for(Figure serverFigure : serverList) {
+                if( serverFigure.equals(workingFigure)) {
+                    
+                }
+            }
+        }
+        
+        /*drawing.removeAllChildren();
         drawing.addAll(list);
         System.out.println("Get List lenght " + list.size());
-        System.out.println("List recieved");
+        System.out.println("List recieved");*/
     }
     
     private void addCollaborator() {
