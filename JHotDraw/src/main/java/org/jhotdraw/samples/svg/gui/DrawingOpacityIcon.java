@@ -137,7 +137,7 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
     private void handleFillShape(DrawingOpacityIcon doi, Color fillColor, Double opacity, Graphics2D g, int x, int y) {
         if (opacity != null) {
             if (fillColor == null) {
-                fillColor = Color.BLUE;
+                fillColor = Color.BLACK;
             }
             g.setColor(new Color((((int) (opacity * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
             g.translate(x, y);
@@ -149,7 +149,7 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
     private void handleStrokeShape(DrawingOpacityIcon doi, Color strokeColor, Double opacity, Graphics2D g, int x, int y) {
         if (opacity != null) {
             if (strokeColor == null) {
-                strokeColor = Color.BLUE;
+                strokeColor = Color.BLACK;
             }
             g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
             g.translate(x, y);
@@ -161,7 +161,6 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
     @Override
     public void paintIcon(java.awt.Component c, java.awt.Graphics gr, int x, int y) {
         Graphics2D g = (Graphics2D) gr;
-        super.paintIcon(c, g, x, y);
         Double opacity = 0d;
         Color fillColor = null;
         Color strokeColor = null;
