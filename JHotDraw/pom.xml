@@ -34,5 +34,10 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.xbib</groupId>
+            <artifactId>jsr-305</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>   
  </project>
