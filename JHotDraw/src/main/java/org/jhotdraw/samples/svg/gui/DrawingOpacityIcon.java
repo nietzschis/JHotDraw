@@ -123,12 +123,6 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
 
     @Override
     public void paintIcon(java.awt.Component c, java.awt.Graphics gr, int x, int y) {
-        Graphics2D g = (Graphics2D) gr;
-        Double opacity = 0d;
-        Color fillColor = null;
-        Color strokeColor = null;
-        
-        new IconPainter(this, c, g, x, y, opacity, fillColor, strokeColor).process();
-
+        new IconPainter(this, c, (Graphics2D) gr, x, y).process();
     }
 }

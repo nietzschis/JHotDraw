@@ -7,7 +7,6 @@ package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import org.jhotdraw.draw.DrawingView;
 
@@ -26,15 +25,15 @@ public class IconPainter {
     private Color strokeColor;
     private Double opacity;
 
-    public IconPainter(DrawingOpacityIcon doi, Component c, Graphics gr, int x, int y, Double opacity, Color fillColor, Color strokeColor) {
+    public IconPainter(DrawingOpacityIcon doi, Component c, Graphics2D gr, int x, int y) {
         this.doi = doi;
         this.c = c;
-        this.gr = (Graphics2D) gr;
+        this.gr = gr;
         this.x = x;
         this.y = y;
-        this.fillColor = fillColor;
-        this.strokeColor = strokeColor;
-        this.opacity = opacity;
+        this.fillColor = null;
+        this.strokeColor = null;
+        this.opacity = 0d;
     }
 
     private void viewDrawer() {
