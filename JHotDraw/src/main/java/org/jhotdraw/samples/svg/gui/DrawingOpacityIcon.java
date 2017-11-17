@@ -101,23 +101,23 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
         return strokeShape;
     }
 
-    private boolean editorNotNull() {
+    public boolean editorNotNull() {
         return this.editor != null;
     }
 
-    private boolean fillColorKeyNotNull() {
+    public boolean fillColorKeyNotNull() {
         return this.fillColorKey != null;
     }
 
-    private boolean fillShapeNotNull() {
+    public boolean fillShapeNotNull() {
         return this.fillShape != null;
     }
 
-    private boolean strokeColorKeyNotNull() {
+    public boolean strokeColorKeyNotNull() {
         return this.strokeColorKey != null;
     }
 
-    private boolean strokeShapeNotNull() {
+    public boolean strokeShapeNotNull() {
         return this.strokeShape != null;
     }
 
@@ -164,14 +164,8 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
         Double opacity = 0d;
         Color fillColor = null;
         Color strokeColor = null;
-        if (editorNotNull()) {
-            viewDrawer(this, opacity, fillColor, strokeColor);
-        }
-        if (fillColorKeyNotNull() && fillShapeNotNull()) {
-            handleFillShape(this, fillColor, opacity, g, x, y);
-        }
-        if (strokeColorKeyNotNull() && strokeShapeNotNull()) {
-            handleStrokeShape(this, strokeColor, opacity, g, x, y);
-        }
+        
+        new IconPainter(this, c, g, x, y, opacity, fillColor, strokeColor).process();
+
     }
 }
