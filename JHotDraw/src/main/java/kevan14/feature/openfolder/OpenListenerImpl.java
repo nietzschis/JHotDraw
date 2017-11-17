@@ -35,6 +35,13 @@ public class OpenListenerImpl implements OpenListener{
         }
         
     }
+    
+    /*
+    method added to use test. This allows for DI and easier testing.
+    */
+    public OpenListenerImpl(Strategy strategy) {
+        this.strategy = strategy;
+    }
 
     @Override
     public void openBrowser(File file) {
