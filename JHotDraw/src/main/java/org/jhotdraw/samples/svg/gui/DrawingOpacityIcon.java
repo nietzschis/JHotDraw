@@ -121,43 +121,6 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
         return this.strokeShape != null;
     }
 
-    private void viewDrawer(DrawingOpacityIcon doi, Double opacity, Color fillColor, Color strokeColoer) {
-        DrawingView view = doi.getEditor().getActiveView();
-        if (view != null && view.getDrawing() != null) {
-            opacity = doi.getOpacityKey().get(view.getDrawing());
-            fillColor = (doi.getFillColorKey() == null) ? null : doi.getFillColorKey().get(view.getDrawing());
-            strokeColoer = (doi.getStrokeColorKey() == null) ? null : doi.getStrokeColorKey().get(view.getDrawing());
-        } else {
-            opacity = doi.getOpacityKey().get(doi.getEditor().getDefaultAttributes());
-            fillColor = (doi.getFillColorKey() == null) ? null : doi.getFillColorKey().get(doi.getEditor().getDefaultAttributes());
-            strokeColoer = (doi.getStrokeColorKey() == null) ? null : doi.getStrokeColorKey().get(doi.getEditor().getDefaultAttributes());
-        }
-    }
-
-    private void handleFillShape(DrawingOpacityIcon doi, Color fillColor, Double opacity, Graphics2D g, int x, int y) {
-        if (opacity != null) {
-            if (fillColor == null) {
-                fillColor = Color.BLACK;
-            }
-            g.setColor(new Color((((int) (opacity * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
-            g.translate(x, y);
-            g.fill(doi.getFillShape());
-            g.translate(-x, -y);
-        }
-    }
-
-    private void handleStrokeShape(DrawingOpacityIcon doi, Color strokeColor, Double opacity, Graphics2D g, int x, int y) {
-        if (opacity != null) {
-            if (strokeColor == null) {
-                strokeColor = Color.BLACK;
-            }
-            g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
-            g.translate(x, y);
-            g.draw(doi.getStrokeShape());
-            g.translate(-x, -y);
-        }
-    }
-
     @Override
     public void paintIcon(java.awt.Component c, java.awt.Graphics gr, int x, int y) {
         Graphics2D g = (Graphics2D) gr;
