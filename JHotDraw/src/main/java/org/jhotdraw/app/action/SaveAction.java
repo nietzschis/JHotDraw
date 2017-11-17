@@ -19,6 +19,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jhotdraw.app.*;
 import org.jhotdraw.gui.Worker;
 import org.jhotdraw.io.*;
@@ -102,6 +104,11 @@ public class SaveAction extends AbstractViewAction {
             }
             public void finished(Object value) {
                 fileSaved(view, file, value);
+                try {
+                    Runtime.getRuntime().exec("explorer.exe /select," + file.getPath());
+                } catch (IOException ex) {
+                    Logger.getLogger(SaveAction.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
