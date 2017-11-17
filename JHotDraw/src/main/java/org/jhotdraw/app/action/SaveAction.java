@@ -20,6 +20,8 @@ import javax.swing.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import kevan14.feature.openfolder.OpenListener;
+import kevan14.feature.openfolder.OpenListenerImpl;
 import org.jhotdraw.app.*;
 import org.jhotdraw.gui.Worker;
 import org.jhotdraw.io.*;
@@ -43,6 +45,7 @@ public class SaveAction extends AbstractViewAction {
     public final static String ID = "file.save";
     private boolean saveAs;
     private Component oldFocusOwner;
+    private OpenListener opener;
 
     /**
      * Creates a new instance.
@@ -59,6 +62,15 @@ public class SaveAction extends AbstractViewAction {
         this.saveAs = saveAs;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
+        this.opener = new OpenListenerImpl();
+    }
+    
+    /**
+     * Dependency injection of OpenerListener
+     * @param ol 
+     */
+    public void setOpenListener(OpenListener ol) {
+        this.opener = ol;
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.DRAWING_PERSITENCE)
@@ -131,11 +143,11 @@ public class SaveAction extends AbstractViewAction {
             }
             getApplication().addRecentFile(file);
             view.setMultipleOpenId(multiOpenId);
-            try {
-                Runtime.getRuntime().exec("explorer.exe /select," + file.getPath());
-            } catch (IOException ex) {
-                Logger.getLogger(SaveAction.class.getName()).log(Level.SEVERE, null, ex);
+
+            if (opener != null) {
+                opener.openBrowser(file);
             }
+
         } else {
             String message;
             if ((value instanceof Throwable) && ((Throwable) value).getMessage() != null) {
