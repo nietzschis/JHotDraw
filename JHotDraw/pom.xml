@@ -39,5 +39,10 @@
             <artifactId>jsr-305</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>be.cyberelf.nanoxml</groupId>
+            <artifactId>nanoxml</artifactId>
+            <version>2.2.3</version>
+        </dependency>
     </dependencies>   
  </project>
