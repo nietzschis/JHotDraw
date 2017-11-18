@@ -12,6 +12,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.jhotdraw.draw.CompositeFigureEvent;
+import org.jhotdraw.draw.CompositeFigureListener;
+import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import static org.jhotdraw.draw.DrawingEditor.ACTIVE_VIEW_PROPERTY;
 import org.jhotdraw.draw.DrawingView;
@@ -26,32 +29,30 @@ import org.jhotdraw.util.ResourceBundleUtil;
 public class MinimapToolBar extends AbstractToolBar {
     
     DrawingView drawingView;
-    //MinimapFigureListener figureListener = new MinimapFigureListener();
-    //DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    FigureChangeListener figureListener;
+    MinimapView minimapView;
+    DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
     
     /** Creates new instance. */
     public MinimapToolBar() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
-        
+        this.figureListener = new FigureChangeListener();
+        minimapView = new MinimapView(this);
+        minimapView.setPreferredSize(new Dimension(80,80));
         //getEditor().getActiveView()
     }
     
     @Override
     public void setEditor(DrawingEditor drawingEditor){
-        //getEditor().removePropertyChangeListener(editorListener);
+        if(getEditor() != null){
+            getEditor().removePropertyChangeListener(editorListener);
+        }
         super.setEditor(drawingEditor);
-        
-        //drawingEditor.getActiveView().getDrawing();
-        //System.out.println(drawingEditor.getActiveView());
-        //drawingEditor.addPropertyChangeListener(editorListener);
-        
-        /*drawingEditor.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println(evt);
-            }
-        });*/
+        if(drawingEditor != null){
+            setDrawing(drawingEditor.getActiveView().getDrawing());
+            drawingEditor.addPropertyChangeListener(editorListener);
+        }
     } 
     
     @Override
@@ -60,17 +61,12 @@ public class MinimapToolBar extends AbstractToolBar {
     }
     
     @Override
-    protected JComponent createDisclosedComponent(int state) {
-        JPanel p = null;
-        
+    protected JComponent createDisclosedComponent(int state) {        
         if(state == 1){
-            p = new MinimapView();
-            
-            p.setPreferredSize(new Dimension(80,80));
-            //p.invalidate();
+            return minimapView;
         }
         
-        return p;
+        return null;
     }
     
     @Override
@@ -78,11 +74,13 @@ public class MinimapToolBar extends AbstractToolBar {
         return 1;
     }
     
-    /*private class MinimapFigureListener implements FigureListener{
+    private class FigureChangeListener implements FigureListener, CompositeFigureListener{
 
         @Override
         public void areaInvalidated(FigureEvent e) {
-            System.out.println(e);
+            //System.out.println(e);
+            minimapView.invalidate();
+            //minimapView.repaint();
         }
 
         @Override
@@ -114,10 +112,20 @@ public class MinimapToolBar extends AbstractToolBar {
         public void figureRequestRemove(FigureEvent e) {
             System.out.println("figureRequestRemove");
         }
+
+        @Override
+        public void figureAdded(CompositeFigureEvent e) {
+            System.out.println("comp figureAdded");
+        }
+
+        @Override
+        public void figureRemoved(CompositeFigureEvent e) {
+            System.out.println("comp figureRemoved");
+        }
         
     }
 
-    private static class DrawingEditorChangeListener implements PropertyChangeListener {
+    private class DrawingEditorChangeListener implements PropertyChangeListener {
 
         public DrawingEditorChangeListener() {
         }
@@ -125,8 +133,24 @@ public class MinimapToolBar extends AbstractToolBar {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if(evt.getPropertyName().equals(ACTIVE_VIEW_PROPERTY)){
-                
+                setDrawing((Drawing) evt.getNewValue());
             }
         }
-    }*/
+    }
+    
+    private Drawing activeDrawing;
+    private void setDrawing(Drawing d){
+        if (activeDrawing != null){
+            activeDrawing.removeFigureListener(figureListener);
+            activeDrawing.removeCompositeFigureListener(figureListener);
+        }
+        activeDrawing = d;
+        
+        if (activeDrawing != null){
+            activeDrawing.addFigureListener(figureListener);
+            activeDrawing.addCompositeFigureListener(figureListener);
+        }
+        
+        minimapView.invalidate();
+    }
 }
