@@ -116,6 +116,8 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(ClearAction.ID, new ClearAction(this));
         m.putAction(NewAction.ID, new NewAction(this));
         appLabels.configureAction(m.getAction(NewAction.ID), "window.new");
+        m.putAction(DuplicateCanvas.ID, new DuplicateCanvas(this));
+        appLabels.configureAction(m.getAction(DuplicateCanvas.ID), "window.duplicate");
         m.putAction(LoadAction.ID, new LoadAction(this));
         m.putAction(ClearRecentFilesAction.ID, new ClearRecentFilesAction(this));
         m.putAction(SaveAction.ID, new SaveAction(this));
@@ -308,6 +310,7 @@ public class DefaultSDIApplication extends AbstractApplication {
         labels.configureMenu(m, "file");
         m.add(model.getAction(ClearAction.ID));
         m.add(model.getAction(NewAction.ID));
+        m.add(model.getAction(DuplicateCanvas.ID));
         m.add(model.getAction(LoadAction.ID));
         if (model.getAction(LoadDirectoryAction.ID) != null) {
             m.add(model.getAction(LoadDirectoryAction.ID));
