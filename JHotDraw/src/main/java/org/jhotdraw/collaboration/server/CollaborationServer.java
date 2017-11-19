@@ -64,7 +64,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     }
 
     @Override
-    public void startServer() {
+    public void startServer() { // TODO throws Exception, håndter dem inde i Action-klassen, ved at opdatere GUI med fejlmeddelserne
         try {
             LocateRegistry.getRegistry(
                     CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) getInstance());
@@ -81,9 +81,9 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
             LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
             System.out.println("Server stopped.");
         }
-        catch (RemoteException | NotBoundException ex) {
-            ex.printStackTrace();
-        }        
+        catch (RemoteException | NotBoundException e) {
+            System.err.println("Server shutdown failed: " + e);
+        }
     }
 
 }

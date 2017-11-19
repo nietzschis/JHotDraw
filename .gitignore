@@ -1,3 +1,5 @@
 JHotDraw/target/
 /JHotDraw/nbactions.xml
 JHotDraw/FeatureTraces/
+.idea/
+*.iml

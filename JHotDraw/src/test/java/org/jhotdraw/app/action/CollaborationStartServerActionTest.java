@@ -3,23 +3,25 @@ package org.jhotdraw.app.action;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import static org.junit.Assert.assertFalse;
-import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  *
  * @author Niels
  */
-public class CollaborationServerCloseActionTest1 {
-    
+public class CollaborationStartServerActionTest {
+
     @Test
     public void testChangeListener() {
         Application app = new DefaultSDIApplication();
-        AbstractApplicationAction closeServerAction = new CollaborationStopServerAction(app);
-        
-        assertFalse(closeServerAction.isEnabled());
+        AbstractApplicationAction startServerAction = new CollaborationStartServerAction(app);
+
+        assertTrue(startServerAction.isEnabled());
         app.startServer();
-        assertTrue(closeServerAction.isEnabled());
+        assertFalse(startServerAction.isEnabled());
+        app.stopServer();
+        assertTrue(startServerAction.isEnabled());
     }
-    
+
 }

@@ -33,7 +33,6 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
                 "\n\nAre you sure?",
                 "Collaboration", JOptionPane.YES_NO_OPTION);
         if(answer == JOptionPane.YES_OPTION) {
-            setEnabled(false);
             app.stopServer();
         }
     }
@@ -42,6 +41,9 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
         return (PropertyChangeEvent evt) -> {
             if (evt.getPropertyName() == "startServer") {
                 setEnabled(true);
+            }
+            if (evt.getPropertyName() == "stopServer") {
+                setEnabled(false);
             }
         };
     }
