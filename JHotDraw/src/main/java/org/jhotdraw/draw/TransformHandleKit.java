@@ -212,6 +212,7 @@ public class TransformHandleKit {
         }
 
         protected void transform(Point2D.Double anchor, Point2D.Double lead) {
+            //System.out.println("transform test");
             Figure f = getOwner();
             f.willChange();
             Rectangle2D.Double oldBounds = getTransformedBounds();

@@ -1,6 +1,9 @@
 package org.jhotdraw.collaboration.client;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +35,16 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public boolean connectToServer(String IP) {
         // TOOD: Opret forbindelse
-
-        //this.addCollaborator();
+        /*Registry registry;
+        try {
+            registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
+            collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
+            addCollaborator();
+            return true;
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+            return false;
+        }*/
 
         return true;
     }
@@ -56,12 +67,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     private void sendFiguresToServer() {
-        /*try {
-            list = drawing.getChildren();
-            collaborationProxy.sendFigures(list);
-        } catch (RemoteException ex) {
-            ex.printStackTrace();
-        }*/
         list = cloneList();
         System.out.println("List saved");
         System.out.println("Set List lenght " + list.size());
