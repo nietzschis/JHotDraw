@@ -31,7 +31,7 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         app = getApplication();
-        CollaborationConnection.getInstance().getFiguresFromServer();
+        //CollaborationConnection.getInstance().getFiguresFromServer();
         app.firePropertyEvent("disconnect", null, null);
     }
     

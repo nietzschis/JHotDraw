@@ -41,6 +41,7 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         app = getApplication();
+        
         showInputDialog("Type the IP of the server:");
     }
 
@@ -58,7 +59,7 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
                             "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."+
                             "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."+
                             "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
-        if(IP.matches(IPRegExpr)); 
+        if(IP.matches(IPRegExpr));
         if (IP.length() >= 7) {
             // TODO: Implement Server connection
             connectToServer(IP);
@@ -70,6 +71,7 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
 
     private void connectToServer(String IP) {
         if (CollaborationConnection.getInstance().connectToServer(IP)) {
+            
             Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
             CollaborationConnection.getInstance().setDrawing(drawing);
             app.firePropertyEvent("connect", null, null);
