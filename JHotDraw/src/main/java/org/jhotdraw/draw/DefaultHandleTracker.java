@@ -196,7 +196,7 @@ public class DefaultHandleTracker extends AbstractTool implements HandleTracker 
         fireToolDone();
         
         // Change figure
-        CollaborationConnection.getInstance().notifyUpdate("update");
+        CollaborationConnection.getInstance().notifyUpdate("update bounds");
     }
 
     protected void clearHoverHandles() {

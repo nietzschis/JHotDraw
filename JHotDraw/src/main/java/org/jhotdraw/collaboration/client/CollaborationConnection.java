@@ -1,12 +1,9 @@
 package org.jhotdraw.collaboration.client;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
@@ -58,7 +55,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         }
     }
 
-    public void sendFiguresToServer() {
+    private void sendFiguresToServer() {
         /*try {
             list = drawing.getChildren();
             collaborationProxy.sendFigures(list);
@@ -118,7 +115,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         }
     }
 
-    public void removeCollaborator() {
+    private void removeCollaborator() {
         try {
             collaborationProxy.removeCollaborator(this);
         } catch (RemoteException ex) {

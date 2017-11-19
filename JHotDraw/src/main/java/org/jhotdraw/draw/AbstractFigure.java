@@ -231,7 +231,6 @@ public abstract class AbstractFigure
      * notification on this event type.
      */
     protected void fireFigureChanged(Rectangle2D.Double changedArea) {
-        System.out.println("figure changed");
         if (listenerList.getListenerCount() > 0) {
             FigureEvent event = null;
             // Notify all listeners that have registered interest for

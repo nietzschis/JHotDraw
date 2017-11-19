@@ -203,7 +203,7 @@ public class DefaultDragTracker extends AbstractTool implements DragTracker {
         }
         fireToolDone();
         // Drag a figure
-        CollaborationConnection.getInstance().notifyUpdate("update");
+        CollaborationConnection.getInstance().notifyUpdate("update position");
     }
 
     public void setDraggedFigure(Figure f) {
