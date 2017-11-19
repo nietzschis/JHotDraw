@@ -222,6 +222,22 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     public void configure(String[] args) {
     }
+    
+    public void exposeServer() {
+        //@SuppressWarnings("unchecked")
+        //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
+        //recentFiles.clear();
+        //prefs.putInt("recentFileCount", recentFiles.size());
+        firePropertyChange("exposeServer", null, null);
+    }
+    
+    public void closeServer() {
+        //@SuppressWarnings("unchecked")
+        //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
+        //recentFiles.clear();
+        //prefs.putInt("recentFileCount", recentFiles.size());
+        firePropertyChange("closeServer", null, null);
+    }
 
     public java.util.List<File> recentFiles() {
         return Collections.unmodifiableList(recentFiles);

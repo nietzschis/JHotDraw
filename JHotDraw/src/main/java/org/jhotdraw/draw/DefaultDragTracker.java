@@ -17,7 +17,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
-import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 
 /**
  * <code>DefaultDragTracker</code> implements interactions with the content area of a

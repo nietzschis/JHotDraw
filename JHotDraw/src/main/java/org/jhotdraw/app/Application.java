@@ -219,6 +219,10 @@ public interface Application {
      */
     public void clearRecentFiles();
     
+    public void exposeServer();
+    
+    public void closeServer();
+    
     /**
      * Adds a palette window to the application.
      */

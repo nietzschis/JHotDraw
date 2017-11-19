@@ -17,7 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.*;
-import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 
 /**
  * DefaultHandleTracker implements interactions with the handles of a Figure.

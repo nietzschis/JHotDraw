@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**

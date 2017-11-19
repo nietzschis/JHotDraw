@@ -19,7 +19,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
-import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 
 /**
