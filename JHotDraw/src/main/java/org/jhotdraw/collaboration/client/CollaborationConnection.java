@@ -7,6 +7,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
@@ -35,7 +36,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public boolean connectToServer(String IP) {
         // TOOD: Opret forbindelse
-        /*Registry registry;
+        Registry registry;
         try {
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
             collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
@@ -44,9 +45,9 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
             return false;
-        }*/
+        }
 
-        return true;
+        //return true;
     }
 
     public void disconnectFromServer() {
@@ -104,10 +105,11 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     drawing.add(serverFigure);
                 }
 
-                // A figure exists on client but not on server
-                if (!serverList.contains(workingFigure)) {
-                    drawing.remove(workingFigure);
-                }
+            }
+
+            // A figure exists on client but not on server
+            if (!serverList.contains(workingFigure)) {
+                drawing.remove(workingFigure);
             }
         }
     }

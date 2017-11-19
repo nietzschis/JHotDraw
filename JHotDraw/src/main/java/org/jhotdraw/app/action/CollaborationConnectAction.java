@@ -5,27 +5,16 @@
  */
 package org.jhotdraw.app.action;
 
-import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.draw.Drawing;
-import org.jhotdraw.draw.DrawingEditor;
-import org.jhotdraw.draw.DrawingView;
-import org.jhotdraw.samples.svg.SVGApplicationModel;
 import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.util.ResourceBundleUtil;
 
-/**
- *
- * @author niclasmolby
- */
 public class CollaborationConnectAction extends AbstractApplicationAction {
 
     public final static String ID = "collaboration.connect";
