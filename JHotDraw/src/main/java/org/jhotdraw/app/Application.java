@@ -19,6 +19,8 @@ import java.beans.*;
 import java.util.*;
 import javax.swing.*;
 import java.io.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 /**
  * An Application handles the lifecycle of {@link View}s and provides windows
  * to present them on screen. Depending on the document interface style 
@@ -219,9 +221,9 @@ public interface Application {
      */
     public void clearRecentFiles();
     
-    public void startServer();
+    public void startServer() throws RemoteException, AlreadyBoundException;
     
-    public void stopServer();
+    public void stopServer() throws RemoteException;
     
     /**
      * Adds a palette window to the application.

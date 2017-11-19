@@ -1,10 +1,12 @@
 package org.jhotdraw.collaboration.server;
 
 import java.rmi.AlreadyBoundException;
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,14 +25,9 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     private Set<IRemoteObserver> collaborators;
     private static IServer instance;
 
-    public static IServer getInstance() {
+    public static IServer getInstance() throws RemoteException {
         if (instance == null) {
-            try {
-                instance = new CollaborationServer();
-            }
-            catch (RemoteException e) {
-                System.err.println("Unable to start client: " + e);
-            }
+            instance = new CollaborationServer();
         }
         return instance;
     }
@@ -38,7 +35,6 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     private CollaborationServer() throws RemoteException {
         super();
         collaborators = new LinkedHashSet<>();
-        LocateRegistry.createRegistry(CollaborationConfig.PORT);
     }
 
     @Override
@@ -64,14 +60,21 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     }
 
     @Override
-    public void startServer() { // TODO throws Exception, håndter dem inde i Action-klassen, ved at opdatere GUI med fejlmeddelserne
+    public void startServer() throws RemoteException, AlreadyBoundException {
         try {
+            LocateRegistry.getRegistry(CollaborationConfig.PORT).lookup(CollaborationConfig.NAME);
+            System.err.println("Server not started.");
+            throw new ExportException("Port " + CollaborationConfig.PORT + " already in use");
+        }
+        catch (NotBoundException e) {
             LocateRegistry.getRegistry(
                     CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) getInstance());
             System.out.println("Server started.");
         }
-        catch (RemoteException | AlreadyBoundException e) {
-            System.err.println("Server launch failed: " + e);
+        catch (ConnectException e) {
+            LocateRegistry.createRegistry(
+                    CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) getInstance());
+            System.out.println("Server started.");
         }
     }
 

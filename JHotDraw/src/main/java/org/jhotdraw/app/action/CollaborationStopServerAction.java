@@ -4,6 +4,9 @@ import org.jhotdraw.util.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 
@@ -33,7 +36,12 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
                 "\n\nAre you sure?",
                 "Collaboration", JOptionPane.YES_NO_OPTION);
         if(answer == JOptionPane.YES_OPTION) {
-            app.stopServer();
+            try {
+                app.stopServer();
+            }
+            catch (RemoteException ex) {
+                System.out.println(ex);
+            }
         }
     }
     

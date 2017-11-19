@@ -12,8 +12,12 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
 
@@ -41,10 +45,18 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
     public void actionPerformed(ActionEvent evt) {
         single.execute(() -> {
             if (shouldStartServer()) {
-                startServer();
-                String ip = getPublicIp();
-                if (shouldCopyIpToClipboard(ip)) {
-                    copyIpToClipboard(ip);
+                try {
+                    app.startServer();
+                    String ip = getPublicIp();
+                    if (shouldCopyIpToClipboard(ip)) {
+                        copyIpToClipboard(ip);
+                    }
+                }
+                catch (RemoteException | AlreadyBoundException e) {
+                    JOptionPane.showMessageDialog(app.getComponent(),
+                            "Error starting server."
+                            + "\n\n" + e,
+                            "Collaboration error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -70,10 +82,6 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
     }
 
-    private void startServer() {
-        app.startServer();
-    }
-
     private String getPublicIp() {
         String ip = "";
         try (BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -81,7 +89,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             ip = in.readLine();
         }
         catch (IOException e) {
-            System.err.println("Unable to get public ip: " + e);
+            ip = "[unable to get IP]";
         }
         return ip;
     }
