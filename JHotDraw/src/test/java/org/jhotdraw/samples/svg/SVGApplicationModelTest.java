@@ -23,7 +23,6 @@ public class SVGApplicationModelTest {
         model = new SVGApplicationModel();
         appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         menus = model.createMenus(null, null);
-        
     }
     
     @Test

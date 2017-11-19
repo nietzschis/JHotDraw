@@ -81,9 +81,9 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
             LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
             System.out.println("Server stopped.");
         }
-        catch (RemoteException | NotBoundException ex) {
-            ex.printStackTrace();
-        }        
+        catch (RemoteException | NotBoundException e) {
+            System.err.println("Server shutdown failed: " + e);
+        }
     }
 
 }

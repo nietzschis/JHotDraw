@@ -71,7 +71,6 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
     }
 
     private void startServer() {
-        setEnabled(false);
         app.startServer();
     }
 
@@ -82,7 +81,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             ip = in.readLine();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Unable to get public ip: " + e);
         }
         return ip;
     }
@@ -93,7 +92,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             ip = InetAddress.getLocalHost().getHostAddress();
         }
         catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.err.println("Unable to get private ip: " + e);
         }
         return ip;
     }
@@ -102,6 +101,9 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
         return (PropertyChangeEvent evt) -> {
             if (evt.getPropertyName() == "stopServer") {
                 setEnabled(true);
+            }
+            if (evt.getPropertyName() == "startServer") {
+                setEnabled(false);
             }
         };
     }

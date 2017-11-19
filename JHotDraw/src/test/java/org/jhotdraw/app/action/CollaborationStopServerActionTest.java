@@ -11,15 +11,17 @@ import static org.junit.Assert.assertTrue;
  * @author Niels
  */
 public class CollaborationStopServerActionTest {
-    
+
     @Test
     public void testChangeListener() {
         Application app = new DefaultSDIApplication();
-        AbstractApplicationAction closeServerAction = new CollaborationStopServerAction(app);
-        
-        assertFalse(closeServerAction.isEnabled());
+        AbstractApplicationAction stopServerAction = new CollaborationStopServerAction(app);
+
+        assertFalse(stopServerAction.isEnabled());
         app.startServer();
-        assertTrue(closeServerAction.isEnabled());
+        assertTrue(stopServerAction.isEnabled());
+        app.stopServer();
+        assertFalse(stopServerAction.isEnabled());
     }
-    
+
 }
