@@ -60,6 +60,7 @@ public class ApplyAttributesAction extends AbstractSelectedAction {
 
     @SuppressWarnings("unchecked")
     public void applyAttributes() {
+        System.out.println("Change attribute");
         DrawingEditor editor = getEditor();
 
         CompositeEdit edit = new CompositeEdit(labels.getString("edit.applyAttrbutes.text"));

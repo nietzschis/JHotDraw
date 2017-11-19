@@ -100,14 +100,14 @@ public class CollaborationConnection {
                 
                 // A figure exists on the client
                 if( serverFigure.equals(workingFigure)) {
-                    Rectangle2D.Double serverBounds = serverFigure.getBounds();
+                    /*Rectangle2D.Double serverBounds = serverFigure.getBounds();
                     Rectangle2D.Double clientBounds = workingFigure.getBounds();
                     if( serverBounds.x != clientBounds.x || serverBounds.y != clientBounds.y || 
-                        serverBounds.height != clientBounds.height || serverBounds.width != clientBounds.width) {
+                        serverBounds.height != clientBounds.height || serverBounds.width != clientBounds.width) {*/
                         
                         drawing.remove(workingFigure);
                         drawing.add(serverFigure);
-                    }
+                    //}
                 }
                 
                 // A figure from the server does not exist in the client
