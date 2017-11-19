@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
-import org.jhotdraw.collaboration.common.observer.IRemoteObservable;
-import org.jhotdraw.collaboration.common.observer.IRemoteObserver;
+import org.jhotdraw.collaboration.common.IRemoteObservable;
+import org.jhotdraw.collaboration.common.IRemoteObserver;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
     // TOOD: Opret forbindelse

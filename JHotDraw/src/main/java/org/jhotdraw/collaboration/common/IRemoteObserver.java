@@ -1,4 +1,4 @@
-package org.jhotdraw.collaboration.common.observer;
+package org.jhotdraw.collaboration.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
