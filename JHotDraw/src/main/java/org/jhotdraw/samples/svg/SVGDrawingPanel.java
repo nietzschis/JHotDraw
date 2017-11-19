@@ -83,7 +83,7 @@ public class SVGDrawingPanel extends JPanel {
         setEditor(new DefaultDrawingEditor());
         editor.setHandleAttribute(HandleAttributeKeys.HANDLE_SIZE, new Integer(7));
 
-        DefaultDrawing drawing = new DefaultDrawing();
+        Drawing drawing = new QuadTreeDrawing();
         view.setDrawing(drawing);
         drawing.addUndoableEditListener(undoManager);
 
