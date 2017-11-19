@@ -1,21 +1,21 @@
-package org.jhotdraw.collaboration;
+package org.jhotdraw.collaboration.client;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
+import org.jhotdraw.collaboration.common.observer.IRemoteObservable;
+import org.jhotdraw.collaboration.common.observer.IRemoteObserver;
 
-public class CollaborationConnection {
+public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
     // TOOD: Opret forbindelse
     private static CollaborationConnection singleton;
     private Drawing drawing;
-    private Collaboration collaborationProxy;
-    private Collaborator collaborator;
+    private IRemoteObservable collaborationProxy;
     
     private CollaborationConnection() {
-        collaborator = new CollaboratorImpl();
     }
     
     public static CollaborationConnection getInstance() {
@@ -42,17 +42,17 @@ public class CollaborationConnection {
         }
     }
     
-    public void getFiguresFromServer() {
+    /*public void getFiguresFromServer() {
         try {
             drawing.addAll(collaborationProxy.getFigures());
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
     
     private void addCollaborator() {
         try {
-            collaborationProxy.addCollaborator(collaborator);
+            collaborationProxy.addCollaborator(this);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
@@ -60,9 +60,14 @@ public class CollaborationConnection {
     
     public void removeCollaborator() {
         try {
-            collaborationProxy.removeCollaborator(collaborator);
+            collaborationProxy.removeCollaborator(this);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(List<Figure> figures) {
+        drawing.addAll(figures);
     }
 }

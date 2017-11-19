@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.collaboration.CollaborationConnection;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
