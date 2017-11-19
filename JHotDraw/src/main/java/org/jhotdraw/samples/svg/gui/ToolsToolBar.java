@@ -193,6 +193,8 @@ public class ToolsToolBar extends AbstractToolBar {
     protected String getID() {
         return "tools";
     }
+    
+    @Override
     protected int getDefaultDisclosureState() {
         return 1;
     }

@@ -107,6 +107,7 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                 panels[i] = new ProxyPanel();
             }
         }
+        
         return panels[state];
     }
 
@@ -117,7 +118,7 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
     protected int getDefaultDisclosureState() {
         return 0;
     }
-
+    
     private class ProxyPanel extends JPanel {
 
         private Runnable runner;
@@ -130,6 +131,7 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
             setLayout(new FlowLayout(FlowLayout.LEFT, 1, 1));
         }
 
+       
         @Override
         @FeatureEntryPoint(JHotDrawFeatures.TOOL_PALETTE)
         public void paint(Graphics g) {
@@ -141,6 +143,10 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                     public void run() {
                         try {
                         // long start = System.currentTimeMillis();
+                        
+                        // Print dem der bliver kaldt paint på.
+                        System.out.println(panels[state].getParent().getClass());
+                        
                         panels[state] = createDisclosedComponent(state);
                         } catch (Throwable t) {
                             t.printStackTrace();
