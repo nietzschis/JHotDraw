@@ -251,6 +251,11 @@ public class DefaultDrawingView
     public Drawing getDrawing() {
         return drawing;
     }
+    
+    public boolean  hasDrawing()
+    {
+        return drawing != null;
+    }
 
     @Override
     public String getToolTipText(MouseEvent evt) {

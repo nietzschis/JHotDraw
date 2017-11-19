@@ -83,10 +83,6 @@ public class SVGDrawingPanel extends JPanel {
         setEditor(new DefaultDrawingEditor());
         editor.setHandleAttribute(HandleAttributeKeys.HANDLE_SIZE, new Integer(7));
 
-        Drawing drawing = new QuadTreeDrawing();
-        view.setDrawing(drawing);
-        drawing.addUndoableEditListener(undoManager);
-
         /* FIXME - Implement the code for handling constraints!
         toggleGridAction = actionToolBar.getToggleGridAction();
         if (prefs != null && prefs.getBoolean("gridVisible", false)) {
@@ -140,8 +136,14 @@ public class SVGDrawingPanel extends JPanel {
 
     @FeatureEntryPoint(JHotDrawFeatures.TABS)
     public void setDrawing(Drawing d) {
-        undoManager.discardAllEdits();
-        view.getDrawing().removeUndoableEditListener(undoManager);
+        
+        //View does not have a Drawing on the first set call 
+        if(view.hasDrawing())
+        {
+            undoManager.discardAllEdits();
+            view.getDrawing().removeUndoableEditListener(undoManager);
+        }
+        
         view.setDrawing(d);
         d.addUndoableEditListener(undoManager);
     }
