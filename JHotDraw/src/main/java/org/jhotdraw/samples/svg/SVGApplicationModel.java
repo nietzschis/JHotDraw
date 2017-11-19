@@ -144,14 +144,8 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         //TODO: ændre action
         menu.add(getAction(CollaborationConnectAction.ID));
         menu.addSeparator();
-        
-        // TODO: Disconnect
-        JMenuItem menuItem = new JMenuItem();
-        // TODO: Skal lige finde ud af, hvordan den skal gøres aktiv, når en forbindelse er oprettet
-        //menuItem.add(menu.add(getAction(CollaborationDisconnectAction.ID)));
-        appLabels.configureMenu(menuItem, CollaborationDisconnectAction.ID);
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
+        menu.add(getAction(CollaborationDisconnectAction.ID));
+
         return menu;
     }
 

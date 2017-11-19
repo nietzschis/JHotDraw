@@ -243,4 +243,6 @@ public interface Application {
      * Removes a (non-palette) window from the application.
      */
     public void removeWindow(Window window);
+    
+    public void firePropertyEvent(String eventName, Object oldValue, Object newValue);
 }

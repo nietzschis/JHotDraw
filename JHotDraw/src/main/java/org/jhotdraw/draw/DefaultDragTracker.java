@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 
 /**
  * <code>DefaultDragTracker</code> implements interactions with the content area of a
@@ -201,6 +202,8 @@ public class DefaultDragTracker extends AbstractTool implements DragTracker {
             }
         }
         fireToolDone();
+        // Drag a figure
+        CollaborationConnection.getInstance().notifyUpdate("update");
     }
 
     public void setDraggedFigure(Figure f) {

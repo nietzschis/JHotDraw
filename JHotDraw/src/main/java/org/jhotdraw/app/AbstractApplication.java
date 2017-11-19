@@ -53,7 +53,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     public void init() {
         prefs = Preferences.userNodeForPackage((getModel() == null) ? getClass() : getModel().getClass());
-
+       
         int count = prefs.getInt("recentFileCount", 0);
         for (int i = 0; i < count; i++) {
             String path = prefs.get("recentFile." + i, null);
@@ -287,5 +287,9 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     }
 
     public void addWindow(Window window, View p) {
+    }
+    
+    public void firePropertyEvent(String eventName, Object oldValue, Object newValue) {
+        firePropertyChange(eventName, oldValue, newValue);
     }
 }
