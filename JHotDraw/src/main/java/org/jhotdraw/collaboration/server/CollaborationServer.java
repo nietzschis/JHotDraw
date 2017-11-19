@@ -64,7 +64,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     }
 
     @Override
-    public void startServer() {
+    public void startServer() { // TODO throws Exception, håndter dem inde i Action-klassen, ved at opdatere GUI med fejlmeddelserne
         try {
             LocateRegistry.getRegistry(
                     CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) getInstance());
