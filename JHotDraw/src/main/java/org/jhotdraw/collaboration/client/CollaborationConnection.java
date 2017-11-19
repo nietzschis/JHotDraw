@@ -96,8 +96,14 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
                 // A figure exists on the client
                 if (serverFigure.equals(workingFigure)) {
-                    drawing.remove(workingFigure);
-                    drawing.add(serverFigure);
+                    if (workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
+                        System.out.println("No difference");
+                    }
+                    else {
+                        System.out.println("Some difference");
+                        drawing.remove(workingFigure);
+                        drawing.add(serverFigure);
+                    }
                 }
 
                 // A figure from the server does not exist in the client
