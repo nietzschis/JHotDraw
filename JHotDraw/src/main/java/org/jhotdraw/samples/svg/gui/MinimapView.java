@@ -6,7 +6,6 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -18,16 +17,21 @@ import static org.jhotdraw.draw.AttributeKeys.CANVAS_HEIGHT;
 import static org.jhotdraw.draw.AttributeKeys.CANVAS_WIDTH;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
-import org.jhotdraw.geom.Geom;
 
 /**
  *
  * @author Jakob Andersen
+ * 
+ * A view to draw a {@link Drawing} onto the minimap.
  */
 public class MinimapView extends JPanel{
     
     AbstractToolBar toolBar;
 
+    /**
+     * Creates a new view to draw a {@link Drawing} onto the minimap.
+     * @param toolBar The {@link AbstractToolBar} used to disply the drawing. A reference to {@link Drawing} is obatained througt the toolbar.
+     */
     public MinimapView(AbstractToolBar toolBar) {
         assert toolBar != null;
         this.toolBar = toolBar;
@@ -46,8 +50,7 @@ public class MinimapView extends JPanel{
             size = getSmallestSize();
         }
         
-        System.out.println(size);
-        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available, paint the minimap white and return
+        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or it doesn't have a size, paint the minimap white and return.
             g.setColor(Color.white);
             g.fillRect(0, 0, getPreferredSize().width, getPreferredSize().height);
             
@@ -56,9 +59,7 @@ public class MinimapView extends JPanel{
         }
         
         // background
-        //Rectangle2D.Double fitted = fitLargeInSmall(size, new Rectangle2D.Double(0,0,getPreferredSize().width, getPreferredSize().height));
         double scale = getDownScale(size, new Rectangle2D.Double(0,0,getPreferredSize().width, getPreferredSize().height));
-        System.out.println("scale:" + scale);
         g.setColor(getBackgroundColor());
         g.fillRect(0, 0, (int) (size.width*scale), (int) (size.height*scale));
         
@@ -70,6 +71,10 @@ public class MinimapView extends JPanel{
         g.dispose();
     }
     
+    /**
+     * Get the current {@link Drawing} to display on the minimap.
+     * @return The {@link Drawing}, or null if not available.
+     */
     private Drawing getDrawing(){
         if(toolBar.getEditor() != null && toolBar.getEditor().getActiveView() != null){
             return toolBar.getEditor().getActiveView().getDrawing();
@@ -78,6 +83,10 @@ public class MinimapView extends JPanel{
         return null;
     }
     
+    /**
+     * Get the background color of the current {@link Drawing}.
+     * @return The background color.
+     */
     private Color getBackgroundColor(){
         Color canvasColor = CANVAS_FILL_COLOR.get(getDrawing());
         if (canvasColor != null) {
@@ -87,14 +96,26 @@ public class MinimapView extends JPanel{
         return canvasColor;
     }
     
+    /**
+     * 
+     * @return The width of {@link Drawing}.
+     */
     private Double getCanvasWidth(){
         return CANVAS_WIDTH.get(getDrawing());
     }
     
+    /**
+     * 
+     * @return The height of {@link Drawing}.
+     */
     private Double getCanvasHeight(){
         return CANVAS_HEIGHT.get(getDrawing());
     }
     
+    /**
+     * If the canvas does not have a fixed size, this function is used to calculate the size and position of smallest rectange able to contain all figures on the {@link Drawing}.
+     * @return The rectangle that can fit no more than all figures.
+     */
     private Rectangle2D.Double getSmallestSize(){
         
         if (getDrawing() != null && getDrawing().getChildren().isEmpty()){
@@ -139,6 +160,12 @@ public class MinimapView extends JPanel{
         return smallestContainer;
     }
     
+    /**
+     * Calcualtes a factor, this can be multiplied onto elements of the {@link Drawing}, to get the size fitting the minimap.
+     * @param large The size of the canvas.
+     * @param small The size of the minimap.
+     * @return A factor.
+     */
     private double getDownScale(Rectangle2D.Double large, Rectangle2D.Double small){
         if(large.width/small.width > large.height/small.height){ // decide what side is largerst
             return small.width/large.width;
@@ -146,12 +173,4 @@ public class MinimapView extends JPanel{
             return small.height/large.height;
         }
     }
-    
-    /*private Rectangle2D.Double fitLargeInSmall(Rectangle2D.Double large, Rectangle2D.Double small){
-        if(large.width/small.width > large.height/small.height){ // decide what side is largerst
-            return new Rectangle2D.Double(0, 0, small.width, small.width*(large.height/large.width));
-        }else{
-            return new Rectangle2D.Double(0, 0, small.height*(large.width/large.height), small.height);
-        }
-    }*/
 }

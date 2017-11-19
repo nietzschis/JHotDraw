@@ -5,33 +5,28 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import org.jhotdraw.draw.CompositeFigureEvent;
 import org.jhotdraw.draw.CompositeFigureListener;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import static org.jhotdraw.draw.DrawingEditor.ACTIVE_VIEW_PROPERTY;
-import org.jhotdraw.draw.DrawingView;
 import org.jhotdraw.draw.FigureEvent;
 import org.jhotdraw.draw.FigureListener;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
- *
- * @author Jakob Andersen
+ * A toolbar to display a minimap on the panel.
  */
 public class MinimapToolBar extends AbstractToolBar {
     
-    DrawingView drawingView;
-    FigureChangeListener figureListener;
-    MinimapView minimapView;
-    DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    private final FigureChangeListener figureListener;
+    private final MinimapView minimapView;
+    private final DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    private Drawing activeDrawing;
     
     /** Creates new instance. */
     public MinimapToolBar() {
@@ -138,7 +133,10 @@ public class MinimapToolBar extends AbstractToolBar {
         }
     }
     
-    private Drawing activeDrawing;
+    /**
+     * Sets the drawing that should be shown on the minimap.
+     * @param d 
+     */
     private void setDrawing(Drawing d){
         if (activeDrawing != null){
             activeDrawing.removeFigureListener(figureListener);
