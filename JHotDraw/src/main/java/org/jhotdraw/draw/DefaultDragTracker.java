@@ -171,7 +171,7 @@ public class DefaultDragTracker extends AbstractTool implements DragTracker {
             int y = evt.getY();
             updateCursor(editor.findView((Container) evt.getSource()), new Point(x, y));
             Point2D.Double newPoint = view.viewToDrawing(new Point(x, y));
-
+            
             Collection<Figure> draggedFigures = new LinkedList<Figure>(view.getSelectedFigures());
             Figure dropTarget = getDrawing().findFigureExcept(newPoint, draggedFigures);
             if (dropTarget != null) {
@@ -202,8 +202,11 @@ public class DefaultDragTracker extends AbstractTool implements DragTracker {
             }
         }
         fireToolDone();
-        // Drag a figure
-        CollaborationConnection.getInstance().notifyUpdate("update position");
+        
+        // Call update of figure, if moved
+        if( (anchorOrigin.x - previousOrigin.x) != 0 || (anchorOrigin.y - previousOrigin.y) != 0) {
+            CollaborationConnection.getInstance().notifyUpdate("update position");
+        }
     }
 
     public void setDraggedFigure(Figure f) {

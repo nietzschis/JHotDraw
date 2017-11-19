@@ -33,7 +33,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     public boolean connectToServer(String IP) {
         // TOOD: Opret forbindelse
 
-        this.addCollaborator();
+        //this.addCollaborator();
 
         return true;
     }
@@ -50,7 +50,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public void notifyUpdate(String source) {
         if (drawing != null) {
-            System.out.println("Collaboration Notified");
+            System.out.println("Collaboration Notified, action: " + source);
             //collaborationProxy.notifyAllCollaborators(drawing.getChildren());
         }
     }
