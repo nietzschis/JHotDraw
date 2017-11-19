@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import org.jhotdraw.draw.CompositeFigureEvent;
 import org.jhotdraw.draw.CompositeFigureListener;
 import org.jhotdraw.draw.Drawing;
@@ -26,16 +28,27 @@ public class MinimapToolBar extends AbstractToolBar {
     private final FigureChangeListener figureListener;
     private final MinimapView minimapView;
     private final DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    private final UndoableEditListener undoableEditListener = new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+            minimapView.repaint();
+        }
+    };
     private Drawing activeDrawing;
+    private Dimension size = new Dimension();
     
-    /** Creates new instance. */
-    public MinimapToolBar() {
+    public MinimapToolBar(int width, int height) {
+        size.setSize(width, height);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
         this.figureListener = new FigureChangeListener();
         minimapView = new MinimapView(this);
-        minimapView.setPreferredSize(new Dimension(80,80));
-        //getEditor().getActiveView()
+        minimapView.setPreferredSize(size);
+    }
+    
+    /** Creates new instance. */
+    public MinimapToolBar() {
+        this(80,80);
     }
     
     @Override
@@ -73,9 +86,7 @@ public class MinimapToolBar extends AbstractToolBar {
 
         @Override
         public void areaInvalidated(FigureEvent e) {
-            //System.out.println(e);
-            minimapView.invalidate();
-            //minimapView.repaint();
+            minimapView.repaint();
         }
 
         @Override
@@ -128,8 +139,9 @@ public class MinimapToolBar extends AbstractToolBar {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if(evt.getPropertyName().equals(ACTIVE_VIEW_PROPERTY)){
-                setDrawing((Drawing) evt.getNewValue());
+                setDrawing((Drawing) evt.getNewValue()); // update whenever the active drawing changes.
             }
+            minimapView.repaint();
         }
     }
     
@@ -141,12 +153,14 @@ public class MinimapToolBar extends AbstractToolBar {
         if (activeDrawing != null){
             activeDrawing.removeFigureListener(figureListener);
             activeDrawing.removeCompositeFigureListener(figureListener);
+            activeDrawing.removeUndoableEditListener(undoableEditListener);
         }
         activeDrawing = d;
         
         if (activeDrawing != null){
             activeDrawing.addFigureListener(figureListener);
             activeDrawing.addCompositeFigureListener(figureListener);
+            activeDrawing.addUndoableEditListener(undoableEditListener);
         }
         
         minimapView.invalidate();
