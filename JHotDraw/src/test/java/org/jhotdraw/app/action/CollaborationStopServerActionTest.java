@@ -2,6 +2,7 @@ package org.jhotdraw.app.action;
 
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -9,15 +10,16 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Niels
  */
-public class CollaborationServerExposeActionTest {
+public class CollaborationStopServerActionTest {
     
     @Test
     public void testChangeListener() {
         Application app = new DefaultSDIApplication();
-        AbstractApplicationAction exposeServerAction = new CollaborationStartServerAction(app);
+        AbstractApplicationAction closeServerAction = new CollaborationStopServerAction(app);
         
-        app.stopServer();
-        assertTrue(exposeServerAction.isEnabled());
+        assertFalse(closeServerAction.isEnabled());
+        app.startServer();
+        assertTrue(closeServerAction.isEnabled());
     }
     
 }
