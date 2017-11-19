@@ -15,10 +15,10 @@ public class CollaborationServerCloseActionTest1 {
     @Test
     public void testChangeListener() {
         Application app = new DefaultSDIApplication();
-        AbstractApplicationAction closeServerAction = new CollaborationServerCloseAction(app);
+        AbstractApplicationAction closeServerAction = new CollaborationStopServerAction(app);
         
         assertFalse(closeServerAction.isEnabled());
-        app.exposeServer();
+        app.startServer();
         assertTrue(closeServerAction.isEnabled());
     }
     

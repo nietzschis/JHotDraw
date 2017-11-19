@@ -11,13 +11,13 @@ import org.jhotdraw.app.*;
  *
  * @author Niels
  */
-public class CollaborationServerCloseAction extends AbstractApplicationAction {
+public class CollaborationStopServerAction extends AbstractApplicationAction {
 
-    public final static String ID = "collaboration.close";
+    public final static String ID = "collaboration.stop";
     
     private PropertyChangeListener applicationListener;
     
-    public CollaborationServerCloseAction(Application app) {
+    public CollaborationStopServerAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
@@ -28,20 +28,20 @@ public class CollaborationServerCloseAction extends AbstractApplicationAction {
     public void actionPerformed(ActionEvent evt) {
         Application app = getApplication();
         int answer = JOptionPane.showConfirmDialog(app.getComponent(),
-                "If you close yourself down as a server, people currently" + 
+                "If you stop being a server, people currently" + 
                 "\nconnected to you will get disconnected." + 
                 "\n\nAre you sure?",
                 "Collaboration", JOptionPane.YES_NO_OPTION);
         if(answer == JOptionPane.YES_OPTION) {
             System.out.println("Pressed yes");
             setEnabled(false);
-            app.closeServer();
+            app.stopServer();
         }
     }
     
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
-            if (evt.getPropertyName() == "exposeServer") {
+            if (evt.getPropertyName() == "startServer") {
                 setEnabled(true);
             }
         };

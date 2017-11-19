@@ -8,6 +8,6 @@ public interface IServer {
     
     void startServer();
     
-    void closeServer();
+    void stopServer();
     
 }

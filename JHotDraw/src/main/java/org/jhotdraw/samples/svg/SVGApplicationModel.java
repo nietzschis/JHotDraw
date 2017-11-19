@@ -137,9 +137,9 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         
         appLabels.configureMenu(menu, "collaboration");
         
-        menu.add(getAction(CollaborationServerExposeAction.ID));
+        menu.add(getAction(CollaborationStartServerAction.ID));
         
-        menu.add(getAction(CollaborationServerCloseAction.ID));
+        menu.add(getAction(CollaborationStopServerAction.ID));
         
         //TODO: ændre action
         menu.add(getAction(CollaborationConnectAction.ID));

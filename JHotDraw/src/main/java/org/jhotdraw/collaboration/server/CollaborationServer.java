@@ -77,7 +77,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     }
     
     @Override
-    public void closeServer() {
+    public void stopServer() {
         try {
             UnicastRemoteObject.unexportObject((Remote) getInstance(), false);
             System.out.println("Server stopped.");
