@@ -14,9 +14,9 @@ public class CollaborationServerExposeActionTest {
     @Test
     public void testChangeListener() {
         Application app = new DefaultSDIApplication();
-        AbstractApplicationAction exposeServerAction = new CollaborationServerExposeAction(app);
+        AbstractApplicationAction exposeServerAction = new CollaborationStartServerAction(app);
         
-        app.closeServer();
+        app.stopServer();
         assertTrue(exposeServerAction.isEnabled());
     }
     
