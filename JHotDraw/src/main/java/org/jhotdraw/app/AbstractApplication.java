@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.prefs.*;
 import javax.swing.*;
 import java.io.*;
+import org.jhotdraw.collaboration.server.CollaborationServer;
 
 /**
  * AbstractApplication.
@@ -228,6 +229,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
         //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
         //recentFiles.clear();
         //prefs.putInt("recentFileCount", recentFiles.size());
+        CollaborationServer.getInstance().startServer();
         firePropertyChange("exposeServer", null, null);
     }
     
@@ -236,6 +238,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
         //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
         //recentFiles.clear();
         //prefs.putInt("recentFileCount", recentFiles.size());
+        CollaborationServer.getInstance().closeServer();
         firePropertyChange("closeServer", null, null);
     }
 
