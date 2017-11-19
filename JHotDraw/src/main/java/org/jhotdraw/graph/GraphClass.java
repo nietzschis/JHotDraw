@@ -34,12 +34,12 @@ public class GraphClass extends BezierFigure {
         this.setClosed(false);
     }
      
-    public BezierPath generatePath() {
+    public BezierPath generatePath(Graph graph) {
         double x = graphStartPos.getX();
         double y = graphStartPos.getY();
-        GraphMath graph = GraphMath.getInstance();
+        GraphMath graphCalc = GraphMath.getInstance();
         for (double i = 0+x; i < 300+x; i =i+5) {
-            double yPoint = graph.calcYCoordinate(i-x, new QuadraticGraph(0.05, 0,0), y);
+            double yPoint = graphCalc.calcYCoordinate(i-x, graph, y);
             System.out.println("y: " + yPoint + " height: " + graphHeight);
             if(yPoint < 0) {
                 return path;
@@ -61,7 +61,7 @@ public class GraphClass extends BezierFigure {
         //graphLength = lead.getX() - anchor.getX();
         //graphHeight = lead.getY() - anchor.getY();
         graphStartPos = anchor;
-        path.addAll(generatePath());
+        path.addAll(generatePath(new QuadraticGraph(0.05, 0,0)));
         invalidate();
     }   
     
