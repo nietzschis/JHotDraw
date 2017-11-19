@@ -1,7 +1,7 @@
 package org.jhotdraw.collaboration.server;
 
 import java.rmi.AlreadyBoundException;
-import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -9,8 +9,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.draw.Figure;
@@ -21,12 +19,12 @@ import org.jhotdraw.collaboration.common.CollaborationConfig;
  * @author Niels
  */
 public class CollaborationServer extends UnicastRemoteObject implements IRemoteObservable, IServer {
-    
+
     private Set<IRemoteObserver> collaborators;
     private static IServer instance;
-    
+
     public static IServer getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             try {
                 instance = new CollaborationServer();
             }
@@ -36,10 +34,11 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
         }
         return instance;
     }
-    
+
     private CollaborationServer() throws RemoteException {
         super();
         collaborators = new LinkedHashSet<>();
+        LocateRegistry.createRegistry(CollaborationConfig.PORT);
     }
 
     @Override
@@ -58,16 +57,16 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
             try {
                 collaborator.update(figures);
             }
-            catch(RemoteException e) {
+            catch (RemoteException e) {
                 System.err.println("Exception while updating client " + collaborator + ": " + e);
             }
         });
     }
-    
+
     @Override
     public void startServer() {
         try {
-            LocateRegistry.createRegistry(
+            LocateRegistry.getRegistry(
                     CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) getInstance());
             System.out.println("Server started.");
         }
@@ -75,16 +74,16 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
             System.err.println("Server launch failed: " + e);
         }
     }
-    
+
     @Override
     public void stopServer() {
         try {
-            UnicastRemoteObject.unexportObject((Remote) getInstance(), false);
+            LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
             System.out.println("Server stopped.");
         }
-        catch (NoSuchObjectException e) {
-            System.err.println("Tried to unexport an unexported object: " + e);
-        }
+        catch (RemoteException | NotBoundException ex) {
+            ex.printStackTrace();
+        }        
     }
-    
+
 }
