@@ -33,7 +33,6 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
                 "\n\nAre you sure?",
                 "Collaboration", JOptionPane.YES_NO_OPTION);
         if(answer == JOptionPane.YES_OPTION) {
-            System.out.println("Pressed yes");
             setEnabled(false);
             app.stopServer();
         }
