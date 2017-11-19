@@ -4,8 +4,12 @@ import org.jhotdraw.util.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.collaboration.server.RemoteObservable;
 
 /**
  *
@@ -35,6 +39,12 @@ public class CollaborationServerExposeAction extends AbstractApplicationAction {
             System.out.println("Pressed yes");
             setEnabled(false);
             app.exposeServer();
+            try {
+                new RemoteObservable();
+            }
+            catch (RemoteException ex) {
+                Logger.getLogger(CollaborationServerExposeAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
