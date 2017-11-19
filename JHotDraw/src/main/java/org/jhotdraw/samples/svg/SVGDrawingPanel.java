@@ -138,6 +138,7 @@ public class SVGDrawingPanel extends JPanel {
         });
     }
 
+    @FeatureEntryPoint(JHotDrawFeatures.TABS)
     public void setDrawing(Drawing d) {
         undoManager.discardAllEdits();
         view.getDrawing().removeUndoableEditListener(undoManager);

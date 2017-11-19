@@ -18,6 +18,7 @@ public class JHotDrawFeatures {
     public static final String GROUPING = "grouping";
     public static final String PATH_EDITING = "path editing";
     public static final String CANVAS = "canvas";
+    public static final String TABS = "tabs";
     public static final String TOOL_PALETTE = "tool palette";
     public static final String SELECTION_TOOL = "selection tool";
     public static final String LINE_TOOL = "line tool";
