@@ -134,6 +134,11 @@ public class DefaultSDIApplication extends AbstractApplication {
         
         m.putAction(CollaborationServerExposeAction.ID, new CollaborationServerExposeAction(this));
         m.putAction(CollaborationServerCloseAction.ID, new CollaborationServerCloseAction(this));
+        
+        //TODO: Put menu action here
+        m.putAction(CollaborationConnectAction.ID, new CollaborationConnectAction(this));
+        m.putAction(CollaborationDisconnectAction.ID, new CollaborationDisconnectAction(this));
+        
     }
 
     protected void initViewActions(View p) {

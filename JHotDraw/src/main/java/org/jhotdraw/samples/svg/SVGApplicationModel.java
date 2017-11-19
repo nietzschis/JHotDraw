@@ -111,22 +111,6 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         mb.add(createViewMenu(a, pr));
         return mb;
     }
-    
-    protected JMenu createCollaborationMenu() {
-        JMenu m = new JMenu();
-        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
-        appLabels.configureMenu(m, "collaboration"); // til selve "Collaboration" i menubaren
-        
-        m.add(getAction(CollaborationServerExposeAction.ID));
-        
-        m.add(getAction(CollaborationServerCloseAction.ID));
-        
-        //JMenuItem mi = m.add(getAction(CollaborationServerCloseAction.ID));
-        //mi.setEnabled(false);
-
-        return m;
-    }
 
     protected JMenu createViewMenu(Application a, View p) {
         JMenu m, m2;
@@ -145,6 +129,30 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         m.add(getAction(ViewSourceAction.ID));
 
         return m;
+    }
+    
+    protected JMenu createCollaborationMenu() {
+        JMenu menu = new JMenu();
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        
+        appLabels.configureMenu(menu, "collaboration");
+        
+        menu.add(getAction(CollaborationServerExposeAction.ID));
+        
+        menu.add(getAction(CollaborationServerCloseAction.ID));
+        
+        //TODO: ændre action
+        menu.add(getAction(CollaborationConnectAction.ID));
+        menu.addSeparator();
+        
+        // TODO: Disconnect
+        JMenuItem menuItem = new JMenuItem();
+        // TODO: Skal lige finde ud af, hvordan den skal gøres aktiv, når en forbindelse er oprettet
+        //menuItem.add(menu.add(getAction(CollaborationDisconnectAction.ID)));
+        appLabels.configureMenu(menuItem, CollaborationDisconnectAction.ID);
+        menuItem.setEnabled(false);
+        menu.add(menuItem);
+        return menu;
     }
 
     @Override
