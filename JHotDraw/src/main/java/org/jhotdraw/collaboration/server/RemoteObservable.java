@@ -1,6 +1,5 @@
 package org.jhotdraw.collaboration.server;
 
-import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -8,8 +7,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.draw.Figure;
@@ -45,7 +42,7 @@ public class RemoteObservable extends UnicastRemoteObject implements IRemoteObse
                 collaborator.update(figures);
             }
             catch(RemoteException e) {
-                System.out.println("Exception while updating client " + collaborator + ": " + e);
+                System.err.println("Exception while updating client " + collaborator + ": " + e);
             }
         });
     }
@@ -55,11 +52,8 @@ public class RemoteObservable extends UnicastRemoteObject implements IRemoteObse
             LocateRegistry.createRegistry(
                     CollaborationConfig.PORT).bind(CollaborationConfig.NAME, new RemoteObservable());
         }
-        catch (RemoteException ex) {
-            Logger.getLogger(RemoteObservable.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (AlreadyBoundException ex) {
-            Logger.getLogger(RemoteObservable.class.getName()).log(Level.SEVERE, null, ex);
+        catch (RemoteException | AlreadyBoundException e) {
+            System.err.println("Server launch failed: " + e);
         }
     }
     
