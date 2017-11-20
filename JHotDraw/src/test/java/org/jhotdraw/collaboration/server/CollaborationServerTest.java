@@ -7,16 +7,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ExportException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
-import org.jhotdraw.collaboration.common.IRemoteObservable;
-import org.jhotdraw.collaboration.common.IRemoteObserver;
-import org.jhotdraw.draw.Figure;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,11 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.mockito.ArgumentCaptor;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  *
