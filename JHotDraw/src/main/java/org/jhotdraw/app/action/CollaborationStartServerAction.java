@@ -110,11 +110,13 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             if (evt.getPropertyName() == "stopServer") {
                 setEnabled(true);
             }
+            if (evt.getPropertyName() == "startServer") {
+                setEnabled(false);
+            }
             
             if (evt.getPropertyName() == "connect") {
                 setEnabled(false);
             }
-            
             if (evt.getPropertyName() == "disconnect") {
                 setEnabled(true);
             }
