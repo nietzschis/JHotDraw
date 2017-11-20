@@ -141,9 +141,11 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         
         menu.add(getAction(CollaborationStopServerAction.ID));
         
+        menu.addSeparator();
+        
         //TODO: ændre action
         menu.add(getAction(CollaborationConnectAction.ID));
-        menu.addSeparator();
+        
         menu.add(getAction(CollaborationDisconnectAction.ID));
 
         return menu;

@@ -1,12 +1,13 @@
 package org.jhotdraw.collaboration.client;
 
-import java.rmi.Remote;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
@@ -35,10 +36,18 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public boolean connectToServer(String IP) {
         // TOOD: Opret forbindelse
+        Registry registry;
+        try {
+            registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
+            collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
+            addCollaborator();
+            return true;
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+            return false;
+        }
 
-        this.addCollaborator();
-
-        return true;
+        //return true;
     }
 
     public void disconnectFromServer() {
@@ -53,18 +62,12 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public void notifyUpdate(String source) {
         if (drawing != null) {
-            System.out.println("Collaboration Notified");
+            System.out.println("Collaboration Notified, action: " + source);
             //collaborationProxy.notifyAllCollaborators(drawing.getChildren());
         }
     }
 
-    public void sendFiguresToServer() {
-        /*try {
-            list = drawing.getChildren();
-            collaborationProxy.sendFigures(list);
-        } catch (RemoteException ex) {
-            ex.printStackTrace();
-        }*/
+    private void sendFiguresToServer() {
         list = cloneList();
         System.out.println("List saved");
         System.out.println("Set List lenght " + list.size());
@@ -93,8 +96,14 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
                 // A figure exists on the client
                 if (serverFigure.equals(workingFigure)) {
-                    drawing.remove(workingFigure);
-                    drawing.add(serverFigure);
+                    if (workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
+                        System.out.println("No difference");
+                    }
+                    else {
+                        System.out.println("Some difference");
+                        drawing.remove(workingFigure);
+                        drawing.add(serverFigure);
+                    }
                 }
 
                 // A figure from the server does not exist in the client
@@ -102,10 +111,11 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     drawing.add(serverFigure);
                 }
 
-                // A figure exists on client but not on server
-                if (!serverList.contains(workingFigure)) {
-                    drawing.remove(workingFigure);
-                }
+            }
+
+            // A figure exists on client but not on server
+            if (!serverList.contains(workingFigure)) {
+                drawing.remove(workingFigure);
             }
         }
     }
@@ -118,7 +128,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         }
     }
 
-    public void removeCollaborator() {
+    private void removeCollaborator() {
         try {
             collaborationProxy.removeCollaborator(this);
         } catch (RemoteException ex) {

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -26,6 +25,7 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
         app.addPropertyChangeListener(createApplicationListener());
+        setEnabled(false);
     }
 
     @Override
@@ -33,6 +33,7 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
         app = getApplication();
         //CollaborationConnection.getInstance().getFiguresFromServer();
         app.firePropertyEvent("disconnect", null, null);
+        setEnabled(false);
     }
     
     private PropertyChangeListener createApplicationListener() { 
