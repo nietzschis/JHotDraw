@@ -23,7 +23,7 @@ import org.jhotdraw.collaboration.common.CollaborationConfig;
  */
 public class CollaborationServer extends UnicastRemoteObject implements IRemoteObservable, IServer {
 
-    private Set<IRemoteObserver> collaborators;
+    private final Set<IRemoteObserver> collaborators;
     private static IServer instance;
 
     public static IServer getInstance() throws RemoteException {
