@@ -1,6 +1,7 @@
 package org.jhotdraw.app.action;
 
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
@@ -15,7 +16,7 @@ import org.junit.Test;
 public class CollaborationStartServerActionTest {
 
     @Test
-    public void testChangeListener() throws RemoteException, AlreadyBoundException {
+    public void testChangeListener() throws RemoteException, AlreadyBoundException, NotBoundException {
         Application app = new DefaultSDIApplication();
         AbstractApplicationAction startServerAction = new CollaborationStartServerAction(app);
 
