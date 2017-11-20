@@ -11,6 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.draw.Figure;
@@ -35,6 +36,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     private CollaborationServer() throws RemoteException {
         super();
         collaborators = new LinkedHashSet<>();
+        addCollaborator(CollaborationConnection.getInstance());
     }
 
     @Override
