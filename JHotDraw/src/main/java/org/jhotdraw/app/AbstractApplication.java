@@ -25,6 +25,8 @@ import java.io.*;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
+import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.server.CollaborationServer;
 
 /**
@@ -233,6 +235,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
         //recentFiles.clear();
         //prefs.putInt("recentFileCount", recentFiles.size());
         CollaborationServer.getInstance().startServer();
+        ((IRemoteObservable) CollaborationServer.getInstance()).addCollaborator(CollaborationConnection.getInstance());
         firePropertyChange("startServer", null, null);
     }
     

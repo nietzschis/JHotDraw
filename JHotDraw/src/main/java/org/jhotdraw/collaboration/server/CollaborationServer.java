@@ -34,7 +34,6 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     private CollaborationServer() throws RemoteException {
         super();
         collaborators = new LinkedHashSet<>();
-        addCollaborator(CollaborationConnection.getInstance());
     }
 
     @Override
@@ -84,6 +83,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     @Override
     public void stopServer() throws RemoteException, NotBoundException {
         LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
+        collaborators.clear();
         System.out.println("Server stopped.");
     }
 
