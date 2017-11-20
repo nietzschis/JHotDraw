@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
 
@@ -43,38 +44,57 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        single.execute(() -> {
-            if (shouldStartServer()) {
+        if (shouldStartServer()) {
+            JDialog startingServerDialog = createMessage("Starting server...", JOptionPane.PLAIN_MESSAGE, false);
+            single.execute(() -> {
                 try {
                     app.startServer();
                     String ip = getPublicIp();
+                    startingServerDialog.dispose();
                     if (shouldCopyIpToClipboard(ip)) {
                         copyIpToClipboard(ip);
                     }
                 }
                 catch (RemoteException | AlreadyBoundException e) {
-                    JOptionPane.showMessageDialog(app.getComponent(),
-                            "Error starting server."
-                            + "\n\n" + e,
-                            "Collaboration error", JOptionPane.ERROR_MESSAGE);
+                    startingServerDialog.dispose();
+                    createMessage("Error starting server."
+                            + "\n\n" + e, JOptionPane.ERROR_MESSAGE, true, "     OK     ");
                 }
-            }
-        });
+            });
+            startingServerDialog.setVisible(true);
+        }
     }
 
     private boolean shouldStartServer() {
-        return JOptionPane.showConfirmDialog(app.getComponent(),
-                "Are you sure want to start being a server, "
-                + "\nallowing other people to connect to you?",
-                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        return showYesNoDialog("Are you sure want to start being a server, "
+                + "\nallowing other people to connect to you?") == JOptionPane.YES_OPTION;
     }
 
     private boolean shouldCopyIpToClipboard(String ip) {
-        return JOptionPane.showConfirmDialog(app.getComponent(),
-                "Server started."
+        return showYesNoDialog("Server started."
                 + "\n\nYour IP is " + ip
-                + "\nDo you want to copy it to your clipboard?",
-                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                + "\nDo you want to copy it to your clipboard?") == JOptionPane.YES_OPTION;
+    }
+
+    private int showYesNoDialog(String text) {
+        return JOptionPane.showConfirmDialog(app.getComponent(),
+                text,
+                "Collaboration", JOptionPane.YES_NO_OPTION);
+    }
+
+    private JDialog createMessage(String text, int messageType, boolean show, String... options) {
+        JOptionPane jop = new JOptionPane();
+        jop.setMessage(text);
+        jop.setMessageType(messageType);
+        jop.setOptions(options);
+        JDialog dialog = jop.createDialog(app.getComponent(), "Collaboration");
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setVisible(show);
+        return dialog;
+
+        /*JOptionPane.showOptionDialog(app.getComponent(), text, "Collaboration",
+                JOptionPane.DEFAULT_OPTION, messageType,
+                null, options, null);*/
     }
 
     private void copyIpToClipboard(String ip) {
@@ -113,7 +133,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             if (evt.getPropertyName() == "startServer") {
                 setEnabled(false);
             }
-            
+
             if (evt.getPropertyName() == "connect") {
                 setEnabled(false);
             }
