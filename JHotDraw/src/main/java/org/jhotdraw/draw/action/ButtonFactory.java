@@ -314,7 +314,13 @@ public class ButtonFactory {
             Tool tool, String labelKey,
             ResourceBundleUtil labels) {
 
-        ButtonGroup group = (ButtonGroup) tb.getClientProperty("toolButtonGroup");
+        ButtonGroup group;
+        if (tb.getClientProperty("toolButtonGroup") instanceof ButtonGroup) {
+            group = (ButtonGroup) tb.getClientProperty("toolButtonGroup");
+        } else {
+            group = new ButtonGroup();
+            tb.putClientProperty("toolButtonGroup", group);
+        }
         ToolListener toolHandler = (ToolListener) tb.getClientProperty("toolHandler");
 
         JToggleButton t = new JToggleButton();

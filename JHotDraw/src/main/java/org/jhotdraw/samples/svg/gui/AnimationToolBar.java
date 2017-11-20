@@ -15,7 +15,6 @@ package org.jhotdraw.samples.svg.gui;
 
 import javax.swing.border.*;
 import org.jhotdraw.gui.plaf.palette.*;
-import org.jhotdraw.samples.svg.*;
 import org.jhotdraw.util.*;
 import java.awt.*;
 import java.util.*;
@@ -25,7 +24,6 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
  * DrawToolsPane.
@@ -41,7 +39,7 @@ public class AnimationToolBar extends AbstractToolBar {
      */
     public AnimationToolBar() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-        setName(labels.getString("tools.toolbar"));
+        setName(labels.getString("tools.animationToolbar"));
     }
 
     @Override
@@ -59,6 +57,41 @@ public class AnimationToolBar extends AbstractToolBar {
                 GridBagLayout layout = new GridBagLayout();
                 p.setLayout(layout);
                 GridBagConstraints gbc;
+                AbstractButton btn;
+                AnimationTool animationTool;
+                
+                
+                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(1), "addFrame", labels);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                p.add(btn, gbc);
+                
+                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "removeFrame", labels);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                gbc.insets = new Insets(5, 0, 0, 0);
+                p.add(btn, gbc);
+                
+                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "play", labels);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                gbc = new GridBagConstraints();
+                gbc.gridx = 1;
+                gbc.gridy = 0;
+                gbc.insets = new Insets(0, 5, 0, 0);
+                p.add(btn, gbc);
+                
+                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "pause", labels);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                gbc = new GridBagConstraints();
+                gbc.gridx = 1;
+                gbc.gridy = 1;
+                gbc.insets = new Insets(5, 5, 0, 0);
+                p.add(btn, gbc);
             }
             break;
         }
