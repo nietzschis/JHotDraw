@@ -37,16 +37,20 @@ public class GraphClass extends BezierFigure {
     public BezierPath generatePath(Graph graph) {
         double x = graphStartPos.getX();
         double y = graphStartPos.getY();
-        GraphMath graphCalc = GraphMath.getInstance();
-        for (double i = 0+x; i < 300+x; i =i+5) {
-            double yPoint = graphCalc.calcYCoordinate(i-x, graph, y);
-            System.out.println("y: " + yPoint + " height: " + graphHeight);
-            if(yPoint < 0) {
-                return path;
-            }
-            System.out.println("Y:" + yPoint + " and x: " + i);
-            path.addPoint(i, yPoint);
-        }    
+        path.clear();
+//        GraphMath graphCalc = GraphMath.getInstance();
+//        for (double i = 0+x; i < 300+x; i =i+5) {
+//            double yPoint = graphCalc.calcYCoordinate(i-x, graph, y);
+//            System.out.println("y: " + yPoint + " height: " + graphHeight);
+//            if(yPoint < 0) {
+//                return path;
+//            }
+//            System.out.println("Y:" + yPoint + " and x: " + i);
+//            path.addPoint(i, yPoint);
+//        }
+        path.addPoint(50, 50);
+        path.addPoint(55, 75);
+        path.addPoint(60, 100);
         
         return path;
     }
@@ -73,6 +77,22 @@ public class GraphClass extends BezierFigure {
     @Override
     protected void drawStroke(Graphics2D g) {
         super.drawStroke(g);
+//        BezierPath.Node oldNode = null;
+//        BezierPath.Node newNode = null;
+//        
+//        for (BezierPath.Node node : path) {
+//            BezierPath linePath = new BezierPath();
+//            newNode = node;
+//            if (oldNode != null) {
+//                linePath.add(oldNode);
+//                linePath.add(newNode);
+//                g.draw(linePath);
+//                oldNode = newNode;
+//                newNode = null;
+//            }
+//        }
+        
+        
 //        double grow = AttributeKeys.getPerpendicularDrawGrowth(this);
 //        if (grow == 0d) {
 //                g.draw(path);
@@ -100,25 +120,25 @@ public class GraphClass extends BezierFigure {
         return bounds;
     }
 
-//    @Override
-//    public boolean contains(Point2D.Double p) {
-//        
-//    }
+    @Override
+    public boolean contains(Point2D.Double p) {
+        return super.contains(p);
+    }
 
-//    @Override
-//    public Object getTransformRestoreData() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public void restoreTransformTo(Object restoreData) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public void transform(AffineTransform tx) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }    
+    @Override
+    public Object getTransformRestoreData() {
+        return super.getAttributesRestoreData();
+    }
+
+    @Override
+    public void restoreTransformTo(Object restoreData) {
+        super.restoreTransformTo(restoreData);
+    }
+
+    @Override
+    public void transform(AffineTransform tx) {
+        super.transform(tx);
+    }    
 
    
 }
