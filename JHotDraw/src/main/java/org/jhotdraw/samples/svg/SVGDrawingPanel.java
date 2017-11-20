@@ -179,7 +179,7 @@ public class SVGDrawingPanel extends JPanel {
         editor.setActiveView(view);
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
-        recordingToolbar.setEditor(editor);
+        recordingToolBar1.setEditor(editor);
         editor.setActiveView(temp);
     }
 
@@ -209,7 +209,7 @@ public class SVGDrawingPanel extends JPanel {
         linkToolBar = new org.jhotdraw.samples.svg.gui.LinkToolBar();
         canvasToolBar = new org.jhotdraw.samples.svg.gui.CanvasToolBar();
         viewToolBar = new org.jhotdraw.samples.svg.gui.ViewToolBar();
-        recordingToolbar = new org.jhotdraw.samples.svg.gui.RecordingToolbar();
+        recordingToolBar1 = new org.jhotdraw.samples.svg.gui.RecordingToolBar();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
@@ -244,9 +244,8 @@ public class SVGDrawingPanel extends JPanel {
         toolsPane.add(canvasToolBar);
         toolsPane.add(viewToolBar);
 
-        recordingToolbar.setMinimumSize(new java.awt.Dimension(18, 14));
-        recordingToolbar.setPreferredSize(new java.awt.Dimension(18, 14));
-        toolsPane.add(recordingToolbar);
+        recordingToolBar1.setRollover(true);
+        toolsPane.add(recordingToolBar1);
 
         toolsScrollPane.setViewportView(toolsPane);
 
@@ -272,7 +271,7 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.samples.svg.gui.FillToolBar fillToolBar;
     private org.jhotdraw.samples.svg.gui.FontToolBar fontToolBar;
     private org.jhotdraw.samples.svg.gui.LinkToolBar linkToolBar;
-    private org.jhotdraw.samples.svg.gui.RecordingToolbar recordingToolbar;
+    private org.jhotdraw.samples.svg.gui.RecordingToolBar recordingToolBar1;
     private javax.swing.JScrollPane scrollPane;
     private org.jhotdraw.samples.svg.gui.StrokeToolBar strokeToolBar;
     private javax.swing.ButtonGroup toolButtonGroup;

@@ -120,14 +120,9 @@
                 </Component>
                 <Component class="org.jhotdraw.samples.svg.gui.ViewToolBar" name="viewToolBar">
                 </Component>
-                <Container class="org.jhotdraw.samples.svg.gui.RecordingToolbar" name="recordingToolbar">
+                <Container class="org.jhotdraw.samples.svg.gui.RecordingToolBar" name="recordingToolBar1">
                   <Properties>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[18, 14]"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[18, 14]"/>
-                    </Property>
+                    <Property name="rollover" type="boolean" value="true"/>
                   </Properties>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
