@@ -67,7 +67,7 @@ public class StrokeToolBar extends AbstractToolBar {
     @FeatureEntryPoint(JHotDrawFeatures.STROKE_PALETTE)
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
-
+        int i =0;
         switch (state) {
             case 1:
                 {
