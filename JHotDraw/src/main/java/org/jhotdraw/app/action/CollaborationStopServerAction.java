@@ -4,9 +4,8 @@ import org.jhotdraw.util.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 
@@ -17,11 +16,13 @@ import org.jhotdraw.app.*;
 public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     public final static String ID = "collaboration.stop";
-    
+
     private PropertyChangeListener applicationListener;
-    
+    private Application app;
+
     public CollaborationStopServerAction(Application app) {
         super(app);
+        this.app = app;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
         setEnabled(false);
@@ -29,22 +30,27 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        Application app = getApplication();
-        int answer = JOptionPane.showConfirmDialog(app.getComponent(),
-                "If you stop being a server, people currently" + 
-                "\nconnected to you will get disconnected." + 
-                "\n\nAre you sure?",
-                "Collaboration", JOptionPane.YES_NO_OPTION);
-        if(answer == JOptionPane.YES_OPTION) {
+        if (shouldStopServer()) {
             try {
                 app.stopServer();
             }
-            catch (RemoteException ex) {
-                System.out.println(ex);
+            catch (RemoteException | NotBoundException e) {
+                JOptionPane.showMessageDialog(app.getComponent(),
+                        "Error shutting down server."
+                        + "\n\n" + e,
+                        "Collaboration error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-    
+
+    private boolean shouldStopServer() {
+        return JOptionPane.showConfirmDialog(app.getComponent(),
+                "If you stop being a server, people currently"
+                + "\nconnected to you will get disconnected."
+                + "\n\nAre you sure?",
+                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
+
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
             if (evt.getPropertyName() == "startServer") {
@@ -55,7 +61,7 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
             }
         };
     }
-    
+
     @Override
     protected void installApplicationListeners(Application app) {
         super.installApplicationListeners(app);
@@ -64,7 +70,7 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
         }
         app.addPropertyChangeListener(applicationListener);
     }
-    
+
     @Override
     protected void uninstallApplicationListeners(Application app) {
         super.uninstallApplicationListeners(app);

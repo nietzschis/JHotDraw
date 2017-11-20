@@ -23,6 +23,7 @@ import java.util.prefs.*;
 import javax.swing.*;
 import java.io.*;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.jhotdraw.collaboration.server.CollaborationServer;
 
@@ -235,7 +236,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
         firePropertyChange("startServer", null, null);
     }
     
-    public void stopServer() throws RemoteException {
+    public void stopServer() throws RemoteException, NotBoundException {
         //@SuppressWarnings("unchecked")
         //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
         //recentFiles.clear();

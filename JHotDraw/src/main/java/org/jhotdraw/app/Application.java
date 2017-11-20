@@ -20,6 +20,7 @@ import java.util.*;
 import javax.swing.*;
 import java.io.*;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 /**
  * An Application handles the lifecycle of {@link View}s and provides windows
@@ -223,7 +224,7 @@ public interface Application {
     
     public void startServer() throws RemoteException, AlreadyBoundException;
     
-    public void stopServer() throws RemoteException;
+    public void stopServer() throws RemoteException, NotBoundException;
     
     /**
      * Adds a palette window to the application.

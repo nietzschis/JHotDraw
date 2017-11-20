@@ -12,10 +12,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
-import org.jhotdraw.collaboration.common.IRemoteObservable;
-import org.jhotdraw.collaboration.common.IRemoteObserver;
+import org.jhotdraw.collaboration.common.*;
 import org.jhotdraw.draw.Figure;
-import org.jhotdraw.collaboration.common.CollaborationConfig;
 
 /**
  *
@@ -81,14 +79,9 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     }
 
     @Override
-    public void stopServer() {
-        try {
-            LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
-            System.out.println("Server stopped.");
-        }
-        catch (RemoteException | NotBoundException e) {
-            System.err.println("Server shutdown failed: " + e);
-        }
+    public void stopServer() throws RemoteException, NotBoundException {
+        LocateRegistry.getRegistry(CollaborationConfig.PORT).unbind(CollaborationConfig.NAME);
+        System.out.println("Server stopped.");
     }
 
 }
