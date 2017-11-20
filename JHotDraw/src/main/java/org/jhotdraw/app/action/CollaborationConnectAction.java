@@ -30,25 +30,30 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         app = getApplication();
-        
+
         showInputDialog("Type the IP of the server:");
+    }
+
+    private boolean showConfirmDialog(String message) {
+        return JOptionPane.showConfirmDialog(app.getComponent(), message, "Connect to server", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     private void showInputDialog(String message) {
 
         String inputText = JOptionPane.showInputDialog(app.getComponent(), message);
         if (inputText != null) {
-            verifyIP(inputText);
-
+            if (showConfirmDialog("Are you sure? Your current work will be deleted")) {
+                verifyIP(inputText);
+            }
         }
     }
 
     private void verifyIP(String IP) {
-        String IPRegExpr = "\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."+
-                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."+
-                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."+
-                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
-        if(IP.matches(IPRegExpr));
+        String IPRegExpr = "\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
+        if (IP.matches(IPRegExpr));
         if (IP.length() >= 7) {
             // TODO: Implement Server connection
             connectToServer(IP);
@@ -60,11 +65,16 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
 
     private void connectToServer(String IP) {
         if (CollaborationConnection.getInstance().connectToServer(IP)) {
-            
+
             Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
             CollaborationConnection.getInstance().setDrawing(drawing);
             app.firePropertyEvent("connect", null, null);
             setEnabled(false);
+            
+            // Clear own canvas
+            if(drawing.getChildCount() > 0) {
+                drawing.removeAllChildren();
+            }
         }
     }
 
