@@ -1,14 +1,11 @@
 package org.jhotdraw.collaboration.server;
 
-import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ExportException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.collaboration.common.CollaborationConfig;

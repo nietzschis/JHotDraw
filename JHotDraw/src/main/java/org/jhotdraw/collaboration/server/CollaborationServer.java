@@ -40,11 +40,13 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
     @Override
     public void addCollaborator(IRemoteObserver collaborator) throws RemoteException {
         collaborators.add(collaborator);
+        System.out.println("Added new collaborator: " + collaborator);
     }
 
     @Override
     public void removeCollaborator(IRemoteObserver collaborator) throws RemoteException {
         collaborators.remove(collaborator);
+        System.out.println("Removed collaborator: " + collaborator);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class CollaborationServer extends UnicastRemoteObject implements IRemoteO
                 collaborator.update(figures);
             }
             catch (RemoteException e) {
+                collaborators.remove(collaborator);
                 System.err.println("Exception while updating client " + collaborator + ": " + e);
             }
         });
