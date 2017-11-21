@@ -129,15 +129,18 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     private void removeCollaborator() {
+        System.out.println("starting to remove as collab");
         try {
             collaborationProxy.removeCollaborator(this);
+            System.out.println("removed as collab");
         } catch (RemoteException ex) {
+            System.out.println("collab error");
             ex.printStackTrace();
         }
     }
 
     @Override
     public String getName() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Anton" + (Math.random() * 100);
     }
 }

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.jhotdraw.app.Application;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -31,7 +32,7 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         app = getApplication();
-        //CollaborationConnection.getInstance().getFiguresFromServer();
+        CollaborationConnection.getInstance().disconnectFromServer();
         app.firePropertyEvent("disconnect", null, null);
         setEnabled(false);
     }
