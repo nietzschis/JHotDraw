@@ -5,7 +5,9 @@
  */
 package org.jhotdraw.draw.action;
 
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +40,23 @@ import static org.junit.Assert.*;
  */
 public class ButtonFactoryIT {
     
+    private JToolBar toolbar;
+    private DrawingEditor editor;
+ 
+    @Before
+    public void setUp() {
+        toolbar = new JToolBar("TestingToolbar");
+        editor = new DefaultDrawingEditor();
+    }
+    
+    @After
+    public void tearDown(){
+        toolbar = null;
+        editor = null;
+    }
+    
     @Test
     public void createRectangleTool() {
-        JToolBar toolbar = new JToolBar("TestingToolbar");
-        DrawingEditor editor = new DefaultDrawingEditor();
-        
         
         AbstractButton button;
         Map<AttributeKey, Object> toolAttributes = new HashMap<>();
@@ -63,10 +77,33 @@ public class ButtonFactoryIT {
         assertEquals(1, toolbar.getComponentCount());
     }
     
+    
+    @Test
+    public void testAddSelectionToolTo() {
+        
+        AbstractButton btnToAddToToolBar = ButtonFactory.addSelectionToolTo(toolbar, editor);
+        Component[] buttonsInToolBar = toolbar.getComponents();
+    
+        assertEquals("Button is added to Toolbar", 
+                btnToAddToToolBar, buttonsInToolBar[0]);
+    }
+    
+    @Test
+    public void testAddSelectionToolHasButtonListner() {
+        
+        AbstractButton button = ButtonFactory.addSelectionToolTo(toolbar, editor);
+        ItemListener[] itemListeners = button.getItemListeners();
+        
+        assertEquals(1, itemListeners.length);
+        
+        
+        
+        assertNotNull(itemListeners[0]);
+    }
+    
+    
     @Test
     public void testUseRectangleTool() {
-        JToolBar toolbar = new JToolBar("TestingToolbar");
-        DrawingEditor editor = new DefaultDrawingEditor();
         DrawingView view = new DefaultDrawingView();
         Drawing drawing = new QuadTreeDrawing();
         
