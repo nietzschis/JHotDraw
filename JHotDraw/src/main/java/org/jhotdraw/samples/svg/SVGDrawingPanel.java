@@ -187,6 +187,8 @@ public class SVGDrawingPanel extends JPanel {
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
         editor.setActiveView(temp);
+        minimapToolBar.setEditor(editor);
+        comicsToolBar.setEditor(editor);
     }
 
     /** This method is called from within the constructor to
