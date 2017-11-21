@@ -9,6 +9,7 @@ import org.junit.rules.ErrorCollector;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static java.awt.Cursor.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
@@ -19,31 +20,26 @@ public class ResizeHandleKitTest {
     @Rule
     public ErrorCollector collector = new ErrorCollector();
 
-    enum Direction
+    enum HandleDirections
     {
-        S,
-        N,
-        E,
-        W,
-        SE,
-        SW,
-        NE,
-        NW,
-        MAX_HANDLES
+        S(S_RESIZE_CURSOR,RelativeLocator.south()),
+        N(N_RESIZE_CURSOR,RelativeLocator.north()),
+        E(E_RESIZE_CURSOR,RelativeLocator.east()),
+        W(W_RESIZE_CURSOR,RelativeLocator.west()),
+        SE(SE_RESIZE_CURSOR,RelativeLocator.southEast()),
+        SW(SW_RESIZE_CURSOR,RelativeLocator.southWest()),
+        NE(NE_RESIZE_CURSOR,RelativeLocator.northEast()),
+        NW(NW_RESIZE_CURSOR,RelativeLocator.northWest());
+
+        HandleDirections(int cursor, Locator locator)
+        {
+            this.cursor = cursor;
+            this.locator = locator;
+        }
+
+        int cursor;
+        Locator locator;
     }
-
-    final static int[] cursors =
-            {
-                    Cursor.S_RESIZE_CURSOR,
-                    Cursor.N_RESIZE_CURSOR,
-                    Cursor.E_RESIZE_CURSOR,
-                    Cursor.W_RESIZE_CURSOR,
-
-                    Cursor.SE_RESIZE_CURSOR,
-                    Cursor.SW_RESIZE_CURSOR,
-                    Cursor.NE_RESIZE_CURSOR,
-                    Cursor.NW_RESIZE_CURSOR,
-            };
 
     @Before
     public void setUp() throws Exception {
@@ -56,14 +52,37 @@ public class ResizeHandleKitTest {
     @Test
     public void cursorTest()
     {
-        for (int i = 0; i < Direction.MAX_HANDLES.ordinal(); i++)
+        for (int i = 0; i < HandleDirections.values().length; i++)
         {
+            HandleDirections dir = HandleDirections.values()[i];
             figure.setTransformable(false);
-            collector.checkThat("Cursor type doesnt max when not transformable for "+ Direction.values()[i].name(),Cursor.DEFAULT_CURSOR, equalTo(handles.get(i).getCursor().getType()));
+            collector.checkThat("Cursor type doesnt max when not transformable for "+ dir.name(),Cursor.DEFAULT_CURSOR, equalTo(handles.get(i).getCursor().getType()));
 
             figure.setTransformable(true);
-            collector.checkThat("Cursor type doesnt max when not transformable for "+ Direction.values()[i].name(),cursors[i], equalTo(handles.get(i).getCursor().getType()));
+            collector.checkThat("Cursor type doesnt max when not transformable for "+ dir.name(),dir.cursor, equalTo(handles.get(i).getCursor().getType()));
         }
+    }
+
+    @Test
+    public void locatorTest()
+    {
+        for (int i = 0; i < HandleDirections.values().length; i++)
+        {
+            HandleDirections dir = HandleDirections.values()[i];
+            collector.checkThat("Locator does not match for "+ dir.name(),dir.locator.locate(figure), equalTo(((LocatorHandle)handles.get(i)).getLocationOnDrawing()));
+        }
+    }
+
+    @Test
+    public void trackStepNormalizedTest()
+    {
+        assertEquals(true, false);
+    }
+
+    @Test
+    public void keyPressed()
+    {
+        assertEquals(true, false);
     }
 
 }
