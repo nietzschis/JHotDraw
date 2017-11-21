@@ -5,34 +5,36 @@
  */
 package org.jhotdraw.draw;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
 
 /**
  *
  * @author lasca
  */
-public class AnimationTool extends AbstractTool {
+public class AnimationTool extends AbstractAction {
     
     protected int tool;
-    private final boolean isToolDoneAfterCreation = true;
     
     public AnimationTool(int toolmode) {
         
         tool = toolmode;
     }
 
-    public boolean isIsToolDoneAfterCreation() {
-        return isToolDoneAfterCreation;
-    }
-    
     @Override
-    public void mouseClicked(MouseEvent evt) {
-        super.mouseClicked(evt);
-        fireToolDone();
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        
+    public void actionPerformed(ActionEvent e) {
+        if(tool == 1){
+            System.out.println("Du trykkede på add");
+        }
+        if(tool == 2){
+            System.out.println("Du trykkede på remove");
+        }
+        if(tool == 3){
+            System.out.println("Du trykkede på play");
+        }
+        if(tool == 4){
+            System.out.println("Du trykkede på pause");
+        }
     }
 }

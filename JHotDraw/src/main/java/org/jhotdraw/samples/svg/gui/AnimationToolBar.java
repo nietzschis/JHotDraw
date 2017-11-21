@@ -61,7 +61,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 AnimationTool animationTool;
                 
                 
-                btn = new JButton();
+                btn = new JButton(new AnimationTool(1));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "addFrame");
                 gbc = new GridBagConstraints();
@@ -70,7 +70,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(0, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton();
+                btn = new JButton(new AnimationTool(2));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "removeFrame");
                 gbc = new GridBagConstraints();
@@ -79,7 +79,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(5, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton();
+                btn = new JButton(new AnimationTool(3));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "play");
                 gbc = new GridBagConstraints();
@@ -88,7 +88,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(0, 5, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton();
+                btn = new JButton(new AnimationTool(4));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "pause");
                 gbc = new GridBagConstraints();
