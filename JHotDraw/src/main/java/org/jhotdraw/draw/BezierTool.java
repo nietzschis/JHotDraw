@@ -42,7 +42,7 @@ public class BezierTool extends AbstractTool {
      * Set this to true to turn on debugging output on System.out.
      */
     private final static boolean DEBUG = false;
-    private Boolean finishWhenMouseReleased;
+    protected Boolean finishWhenMouseReleased;
     protected Map<AttributeKey, Object> attributes;
     private boolean isToolDoneAfterCreation;
     /**
@@ -61,7 +61,7 @@ public class BezierTool extends AbstractTool {
     private String presentationName;
     private Point mouseLocation;
     /** Holds the view on which we are currently creating a figure. */
-    private DrawingView creationView;
+    protected DrawingView creationView;
 
     /** Creates a new instance. */
     public BezierTool(BezierFigure prototype) {
