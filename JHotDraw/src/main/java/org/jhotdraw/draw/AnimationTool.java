@@ -25,12 +25,14 @@ public class AnimationTool extends AbstractTool {
         return isToolDoneAfterCreation;
     }
     
+    @Override
     public void mouseClicked(MouseEvent evt) {
-        System.out.println("hej");
+        super.mouseClicked(evt);
+        fireToolDone();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.println("hej2");
+        
     }
 }

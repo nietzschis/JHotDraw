@@ -61,32 +61,36 @@ public class AnimationToolBar extends AbstractToolBar {
                 AnimationTool animationTool;
                 
                 
-                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(1), "addFrame", labels);
+                btn = new JButton();
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                labels.configureToolBarButton(btn, "addFrame");
                 gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.gridy = 0;
                 gbc.insets = new Insets(0, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "removeFrame", labels);
+                btn = new JButton();
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                labels.configureToolBarButton(btn, "removeFrame");
                 gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.gridy = 1;
                 gbc.insets = new Insets(5, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "play", labels);
+                btn = new JButton();
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                labels.configureToolBarButton(btn, "play");
                 gbc = new GridBagConstraints();
                 gbc.gridx = 1;
                 gbc.gridy = 0;
                 gbc.insets = new Insets(0, 5, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = ButtonFactory.addToolTo(this, editor, animationTool = new AnimationTool(2), "pause", labels);
+                btn = new JButton();
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                labels.configureToolBarButton(btn, "pause");
                 gbc = new GridBagConstraints();
                 gbc.gridx = 1;
                 gbc.gridy = 1;
