@@ -27,6 +27,7 @@ import org.jhotdraw.gui.ToolBarLayout;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.plaf.palette.PaletteLookAndFeel;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.samples.svg.gui.MinimapToolBar;
 import org.jhotdraw.samples.svg.gui.ComicsToolBar;
 /**
  * JSVGDrawingAppletPanel.
@@ -76,6 +77,9 @@ public class SVGDrawingPanel extends JPanel {
         
         comicsToolBar = new ComicsToolBar();
         toolsPane.add(comicsToolBar);
+        minimapToolBar = new MinimapToolBar();
+        toolsPane.add(minimapToolBar);
+        
         toolsPane.setLayout(new ToolBarLayout());
         toolsPane.setBackground(new Color(0xf0f0f0));
         toolsPane.setOpaque(true);
@@ -183,7 +187,6 @@ public class SVGDrawingPanel extends JPanel {
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
         editor.setActiveView(temp);
-        comicsToolBar.setEditor(editor);
     }
 
     /** This method is called from within the constructor to
@@ -279,5 +282,6 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.draw.DefaultDrawingView view;
     private org.jhotdraw.samples.svg.gui.ViewToolBar viewToolBar;
     // End of variables declaration//GEN-END:variables
+    private MinimapToolBar minimapToolBar;
     private ComicsToolBar comicsToolBar;
 }
