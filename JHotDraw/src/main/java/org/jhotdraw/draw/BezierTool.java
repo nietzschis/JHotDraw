@@ -286,11 +286,6 @@ public class BezierTool extends AbstractTool {
         anchor.x = evt.getX();
         anchor.y = evt.getY();
         mouseLocation = evt.getPoint();
-        
-        finishWhenMouseReleased = null;
-
-        finishCreation(createdFigure, creationView);
-        createdFigure = null;
     }
 
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
@@ -303,7 +298,7 @@ public class BezierTool extends AbstractTool {
 
     public void mouseDragged(MouseEvent evt) {
         if (finishWhenMouseReleased == null) {
-            finishWhenMouseReleased = Boolean.FALSE;
+            finishWhenMouseReleased = Boolean.TRUE;
         }
         int x = evt.getX();
         int y = evt.getY();
@@ -318,7 +313,7 @@ public class BezierTool extends AbstractTool {
                 getView() == creationView) {
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0f, new float[]{1f, 5f}, 0f));
-            //g.drawLine(anchor.x, anchor.y, mouseLocation.x, mouseLocation.y);
+            g.drawLine(anchor.x, anchor.y, mouseLocation.x, mouseLocation.y);
             if (!isWorking && createdFigure.isClosed() && createdFigure.getNodeCount() > 1) {
                 Point p = creationView.drawingToView(createdFigure.getStartPoint());
                 g.drawLine(mouseLocation.x, mouseLocation.y, p.x, p.y);
