@@ -52,8 +52,30 @@ public class SVGTriangleFigureTest {
      * a figure in a bounding box
      */
     @Test
-    public void testTriangleFigure() {
+    public void testTriangleFigure1() {
         SVGTriangleFigure instance = new SVGTriangleFigure();
+        Rectangle2D.Double expResult = 
+                new Rectangle2D.Double(
+                        instance.getX(), instance.getY(), 
+                        instance.getWidth(), instance.getHeight() );
+        Rectangle2D.Double result = instance.getBounds();
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testTriangleFigure2() {
+        SVGTriangleFigure instance = new SVGTriangleFigure(-5,-5,10,10);
+        Rectangle2D.Double expResult = 
+                new Rectangle2D.Double(
+                        instance.getX(), instance.getY(), 
+                        instance.getWidth(), instance.getHeight() );
+        Rectangle2D.Double result = instance.getBounds();
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testTriangleFigure3() {
+        SVGTriangleFigure instance = new SVGTriangleFigure(2,3,(-4),(-5));
         Rectangle2D.Double expResult = 
                 new Rectangle2D.Double(
                         instance.getX(), instance.getY(), 
