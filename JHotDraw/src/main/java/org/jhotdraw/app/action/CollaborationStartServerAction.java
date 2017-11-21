@@ -12,8 +12,11 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
 
@@ -39,39 +42,62 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        single.execute(() -> {
-            if (shouldStartServer()) {
-                startServer();
-                String ip = getPublicIp();
-                if (shouldCopyIpToClipboard(ip)) {
-                    copyIpToClipboard(ip);
+        if (shouldStartServer()) {
+            JDialog startingServerDialog = createMessage("Starting server...", JOptionPane.PLAIN_MESSAGE, false);
+            single.execute(() -> {
+                try {
+                    app.startServer();
+                    String ip = getPrivateIp();
+                    startingServerDialog.dispose();
+                    if (shouldCopyIpToClipboard(ip)) {
+                        copyIpToClipboard(ip);
+                    }
                 }
-            }
-        });
+                catch (RemoteException | AlreadyBoundException e) {
+                    startingServerDialog.dispose();
+                    createMessage("Error starting server."
+                            + "\n\n" + e, JOptionPane.ERROR_MESSAGE, true, "     OK     ");
+                }
+            });
+            startingServerDialog.setVisible(true);
+        }
     }
 
     private boolean shouldStartServer() {
-        return JOptionPane.showConfirmDialog(app.getComponent(),
-                "Are you sure want to start being a server, "
-                + "\nallowing other people to connect to you?",
-                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        return showYesNoDialog("Are you sure want to start being a server, "
+                + "\nallowing other people to connect to you?") == JOptionPane.YES_OPTION;
     }
 
     private boolean shouldCopyIpToClipboard(String ip) {
-        return JOptionPane.showConfirmDialog(app.getComponent(),
-                "Server started."
+        return showYesNoDialog("Server started."
                 + "\n\nYour IP is " + ip
-                + "\nDo you want to copy it to your clipboard?",
-                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                + "\nDo you want to copy it to your clipboard?") == JOptionPane.YES_OPTION;
+    }
+
+    private int showYesNoDialog(String text) {
+        return JOptionPane.showConfirmDialog(app.getComponent(),
+                text,
+                "Collaboration", JOptionPane.YES_NO_OPTION);
+    }
+
+    private JDialog createMessage(String text, int messageType, boolean show, String... options) {
+        JOptionPane jop = new JOptionPane();
+        jop.setMessage(text);
+        jop.setMessageType(messageType);
+        jop.setOptions(options);
+        JDialog dialog = jop.createDialog(app.getComponent(), "Collaboration");
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setVisible(show);
+        return dialog;
+
+        /*JOptionPane.showOptionDialog(app.getComponent(), text, "Collaboration",
+                JOptionPane.DEFAULT_OPTION, messageType,
+                null, options, null);*/
     }
 
     private void copyIpToClipboard(String ip) {
         StringSelection selection = new StringSelection(ip);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
-    }
-
-    private void startServer() {
-        app.startServer();
     }
 
     private String getPublicIp() {
@@ -81,7 +107,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             ip = in.readLine();
         }
         catch (IOException e) {
-            System.err.println("Unable to get public ip: " + e);
+            ip = "[unable to get IP]";
         }
         return ip;
     }
@@ -99,15 +125,17 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
-            if (evt.getPropertyName() == "stopServer") {
+            if (evt.getPropertyName().equals("stopServer")) {
                 setEnabled(true);
             }
-            
-            if (evt.getPropertyName() == "connect") {
+            if (evt.getPropertyName().equals("startServer")) {
                 setEnabled(false);
             }
-            
-            if (evt.getPropertyName() == "disconnect") {
+
+            if (evt.getPropertyName().equals("connect")) {
+                setEnabled(false);
+            }
+            if (evt.getPropertyName().equals("disconnect")) {
                 setEnabled(true);
             }
         };

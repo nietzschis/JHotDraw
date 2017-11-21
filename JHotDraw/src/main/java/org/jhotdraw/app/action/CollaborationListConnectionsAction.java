@@ -4,23 +4,25 @@ import org.jhotdraw.util.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.collaboration.server.RemoteObservable;
 
 /**
  *
  * @author Niels
  */
-public class CollaborationStopServerAction extends AbstractApplicationAction {
+public class CollaborationListConnectionsAction extends AbstractApplicationAction {
 
-    public final static String ID = "collaboration.stop";
+    public final static String ID = "collaboration.list";
 
     private PropertyChangeListener applicationListener;
     private Application app;
 
-    public CollaborationStopServerAction(Application app) {
+    public CollaborationListConnectionsAction(Application app) {
         super(app);
         this.app = app;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
@@ -30,16 +32,23 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        if (shouldStopServer()) {
+        try {
+            ((RemoteObservable) RemoteObservable.getInstance()).getCollaboratorNames().forEach(name -> System.out.println(name));
+            
+            /*if (shouldStopServer()) {
             try {
-                app.stopServer();
+            app.stopServer();
             }
             catch (RemoteException | NotBoundException e) {
-                JOptionPane.showMessageDialog(app.getComponent(),
-                        "Error shutting down server."
-                        + "\n\n" + e,
-                        "Collaboration error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(app.getComponent(),
+            "Error shutting down server."
+            + "\n\n" + e,
+            "Collaboration error", JOptionPane.ERROR_MESSAGE);
             }
+            }*/
+        }
+        catch (RemoteException ex) {
+            Logger.getLogger(CollaborationListConnectionsAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -53,10 +62,10 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
-            if (evt.getPropertyName().equals("startServer")) {
+            if (evt.getPropertyName() == "startServer") {
                 setEnabled(true);
             }
-            if (evt.getPropertyName().equals("stopServer")) {
+            if (evt.getPropertyName() == "stopServer") {
                 setEnabled(false);
             }
         };
