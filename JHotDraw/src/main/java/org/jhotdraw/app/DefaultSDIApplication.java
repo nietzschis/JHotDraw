@@ -134,6 +134,7 @@ public class DefaultSDIApplication extends AbstractApplication {
         
         m.putAction(CollaborationStartServerAction.ID, new CollaborationStartServerAction(this));
         m.putAction(CollaborationStopServerAction.ID, new CollaborationStopServerAction(this));
+        m.putAction(CollaborationListConnectionsAction.ID, new CollaborationListConnectionsAction(this));
         
         //TODO: Put menu action here
         m.putAction(CollaborationConnectAction.ID, new CollaborationConnectAction(this));

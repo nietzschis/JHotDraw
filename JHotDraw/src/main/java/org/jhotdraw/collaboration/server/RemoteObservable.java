@@ -2,9 +2,12 @@ package org.jhotdraw.collaboration.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.draw.Figure;
@@ -14,7 +17,7 @@ import org.jhotdraw.draw.Figure;
  * @author Niels
  */
 public class RemoteObservable extends UnicastRemoteObject implements IRemoteObservable {
-    
+
     private final Set<IRemoteObserver> collaborators;
     private static IRemoteObservable instance;
 
@@ -54,9 +57,24 @@ public class RemoteObservable extends UnicastRemoteObject implements IRemoteObse
             }
         });
     }
-    
+
+    public Collection<String> getCollaboratorNames() {
+        ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue();
+        collaborators.parallelStream()
+                .filter(collaborator -> collaborator != CollaborationConnection.getInstance())
+                .forEach(collaborator -> {
+                    try {
+                        queue.add(collaborator.getName());
+                    }
+                    catch (RemoteException e) {
+                        System.err.println("Exception while getting name from client " + collaborator + ": " + e);
+                    }
+                });
+        return queue;
+    }
+
     public void clearAllCollaborators() {
         collaborators.clear();
     }
-    
+
 }

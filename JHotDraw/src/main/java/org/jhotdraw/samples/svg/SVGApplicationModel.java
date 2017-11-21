@@ -144,6 +144,8 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         
         menu.add(getAction(CollaborationStopServerAction.ID));
         
+        menu.add(getAction(CollaborationListConnectionsAction.ID));
+        
         menu.addSeparator();
         
         //TODO: ændre action
