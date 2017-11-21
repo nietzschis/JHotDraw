@@ -259,29 +259,38 @@ public class ButtonFactory {
         return addSelectionToolTo(tb, editor, selectionTool);
     }
 
-    public static JToggleButton addSelectionToolTo(JToolBar tb, final DrawingEditor editor, Tool selectionTool) {
+    /**
+     * Adds a button to a toolbar and associates that button with a specific tool.
+     * 
+     * FIXME: Code smell "Long Method"
+     * @param toolbar
+     * @param editor
+     * @param selectionTool
+     * @return 
+     */
+    public static JToggleButton addSelectionToolTo(JToolBar toolbar, final DrawingEditor editor, Tool selectionTool) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
-        JToggleButton t;
+        JToggleButton button;
         Tool tool;
         HashMap<String, Object> attributes;
 
         ButtonGroup group;
-        if (tb.getClientProperty("toolButtonGroup") instanceof ButtonGroup) {
-            group = (ButtonGroup) tb.getClientProperty("toolButtonGroup");
+        if (toolbar.getClientProperty("toolButtonGroup") instanceof ButtonGroup) {
+            group = (ButtonGroup) toolbar.getClientProperty("toolButtonGroup");
         } else {
             group = new ButtonGroup();
-            tb.putClientProperty("toolButtonGroup", group);
+            toolbar.putClientProperty("toolButtonGroup", group);
         }
 
         // Selection tool
         editor.setTool(selectionTool);
-        t = new JToggleButton();
-        final JToggleButton defaultToolButton = t;
+        button = new JToggleButton();
+        final JToggleButton defaultToolButton = button;
 
         ToolListener toolHandler;
-        if (tb.getClientProperty("toolHandler") instanceof ToolListener) {
-            toolHandler = (ToolListener) tb.getClientProperty("toolHandler");
+        if (toolbar.getClientProperty("toolHandler") instanceof ToolListener) {
+            toolHandler = (ToolListener) toolbar.getClientProperty("toolHandler");
         } else {
             toolHandler = new ToolListener() {
 
@@ -295,18 +304,18 @@ public class ButtonFactory {
                 public void areaInvalidated(ToolEvent e) {
                 }
             };
-            tb.putClientProperty("toolHandler", toolHandler);
+            toolbar.putClientProperty("toolHandler", toolHandler);
         }
 
-        labels.configureToolBarButton(t, "selectionTool");
-        t.setSelected(true);
-        t.addItemListener(
+        labels.configureToolBarButton(button, "selectionTool");
+        button.setSelected(true);
+        button.addItemListener(
                 new ToolButtonListener(selectionTool, editor));
-        t.setFocusable(false);
-        group.add(t);
-        tb.add(t);
+        button.setFocusable(false);
+        group.add(button);
+        toolbar.add(button);
 
-        return t;
+        return button;
     }
 
     /**
@@ -314,32 +323,32 @@ public class ButtonFactory {
      * JToolBar.
      *
      */
-    public static JToggleButton addToolTo(JToolBar tb, DrawingEditor editor,
+    public static JToggleButton addToolTo(JToolBar toolbar, DrawingEditor editor,
             Tool tool, String labelKey,
             ResourceBundleUtil labels) {
 
         ButtonGroup group;
-        if (tb.getClientProperty("toolButtonGroup") instanceof ButtonGroup) {
-            group = (ButtonGroup) tb.getClientProperty("toolButtonGroup");
+        if (toolbar.getClientProperty("toolButtonGroup") instanceof ButtonGroup) {
+            group = (ButtonGroup) toolbar.getClientProperty("toolButtonGroup");
         } else {
             group = new ButtonGroup();
-            tb.putClientProperty("toolButtonGroup", group);
+            toolbar.putClientProperty("toolButtonGroup", group);
         }
-        ToolListener toolHandler = (ToolListener) tb.getClientProperty("toolHandler");
+        ToolListener toolHandler = (ToolListener) toolbar.getClientProperty("toolHandler");
 
-        JToggleButton t = new JToggleButton();
-        labels.configureToolBarButton(t, labelKey);
-        t.addItemListener(new ToolButtonListener(tool, editor));
-        t.setFocusable(false);
+        JToggleButton button = new JToggleButton();
+        labels.configureToolBarButton(button, labelKey);
+        button.addItemListener(new ToolButtonListener(tool, editor));
+        button.setFocusable(false);
         tool.addToolListener(toolHandler);
-        group.add(t);
-        tb.add(t);
+        group.add(button);
+        toolbar.add(button);
 
-        return t;
+        return button;
     }
 
-    public static void addZoomButtonsTo(JToolBar bar, final DrawingEditor editor) {
-        bar.add(createZoomButton(editor));
+    public static void addZoomButtonsTo(JToolBar toolbar, final DrawingEditor editor) {
+        toolbar.add(createZoomButton(editor));
     }
 
     public static AbstractButton createZoomButton(final DrawingEditor editor) {
@@ -431,34 +440,34 @@ public class ButtonFactory {
     /**
      * Creates toolbar buttons and adds them to the specified JToolBar
      */
-    public static void addAttributesButtonsTo(JToolBar bar, DrawingEditor editor) {
+    public static void addAttributesButtonsTo(JToolBar toolbar, DrawingEditor editor) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-        JButton b;
+        JButton button;
 
-        b = bar.add(new PickAttributesAction(editor));
-        b.setFocusable(false);
-        b = bar.add(new ApplyAttributesAction(editor));
-        b.setFocusable(false);
-        bar.addSeparator();
+        button = toolbar.add(new PickAttributesAction(editor));
+        button.setFocusable(false);
+        button = toolbar.add(new ApplyAttributesAction(editor));
+        button.setFocusable(false);
+        toolbar.addSeparator();
 
-        addColorButtonsTo(bar, editor);
-        bar.addSeparator();
-        addStrokeButtonsTo(bar, editor);
-        bar.addSeparator();
-        addFontButtonsTo(bar, editor);
+        addColorButtonsTo(toolbar, editor);
+        toolbar.addSeparator();
+        addStrokeButtonsTo(toolbar, editor);
+        toolbar.addSeparator();
+        addFontButtonsTo(toolbar, editor);
     }
 
-    public static void addColorButtonsTo(JToolBar bar, DrawingEditor editor) {
-        addColorButtonsTo(bar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
+    public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor) {
+        addColorButtonsTo(toolbar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
     }
 
-    public static void addColorButtonsTo(JToolBar bar, DrawingEditor editor,
+    public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor,
             java.util.List<ColorIcon> colors, int columnCount) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
-        bar.add(createEditorColorButton(editor, STROKE_COLOR, colors, columnCount, "attribute.strokeColor", labels, new HashMap<AttributeKey, Object>()));
-        bar.add(createEditorColorButton(editor, FILL_COLOR, colors, columnCount, "attribute.fillColor", labels, new HashMap<AttributeKey, Object>()));
-        bar.add(createEditorColorButton(editor, TEXT_COLOR, colors, columnCount, "attribute.textColor", labels, new HashMap<AttributeKey, Object>()));
+        toolbar.add(createEditorColorButton(editor, STROKE_COLOR, colors, columnCount, "attribute.strokeColor", labels, new HashMap<AttributeKey, Object>()));
+        toolbar.add(createEditorColorButton(editor, FILL_COLOR, colors, columnCount, "attribute.fillColor", labels, new HashMap<AttributeKey, Object>()));
+        toolbar.add(createEditorColorButton(editor, TEXT_COLOR, colors, columnCount, "attribute.textColor", labels, new HashMap<AttributeKey, Object>()));
     }
 
     /**
@@ -975,14 +984,14 @@ public class ButtonFactory {
         return popupButton;
     }
 
-    public static void addStrokeButtonsTo(JToolBar bar, DrawingEditor editor) {
-        bar.add(createStrokeDecorationButton(editor));
-        bar.add(createStrokeWidthButton(editor));
-        bar.add(createStrokeDashesButton(editor));
-        bar.add(createStrokeTypeButton(editor));
-        bar.add(createStrokePlacementButton(editor));
-        bar.add(createStrokeCapButton(editor));
-        bar.add(createStrokeJoinButton(editor));
+    public static void addStrokeButtonsTo(JToolBar toolbar, DrawingEditor editor) {
+        toolbar.add(createStrokeDecorationButton(editor));
+        toolbar.add(createStrokeWidthButton(editor));
+        toolbar.add(createStrokeDashesButton(editor));
+        toolbar.add(createStrokeTypeButton(editor));
+        toolbar.add(createStrokePlacementButton(editor));
+        toolbar.add(createStrokeCapButton(editor));
+        toolbar.add(createStrokeJoinButton(editor));
     }
 
     public static JPopupButton createStrokeWidthButton(DrawingEditor editor) {
@@ -1153,31 +1162,31 @@ public class ButtonFactory {
                 AttributeKeys.StrokeType.BASIC,
                 labels.getString("attribute.strokeType.basic"),
                 new StrokeIcon(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL))));
-        HashMap<AttributeKey, Object> attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
-        attr.put(STROKE_INNER_WIDTH_FACTOR, 2d);
+        HashMap<AttributeKey, Object> attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
+        attributes.put(STROKE_INNER_WIDTH_FACTOR, 2d);
         strokeTypePopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeType.double"),
                 new StrokeIcon(new DoubleStroke(2, 1))));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
-        attr.put(STROKE_INNER_WIDTH_FACTOR, 3d);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
+        attributes.put(STROKE_INNER_WIDTH_FACTOR, 3d);
         strokeTypePopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeType.double"),
                 new StrokeIcon(new DoubleStroke(3, 1))));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
-        attr.put(STROKE_INNER_WIDTH_FACTOR, 4d);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_TYPE, AttributeKeys.StrokeType.DOUBLE);
+        attributes.put(STROKE_INNER_WIDTH_FACTOR, 4d);
         strokeTypePopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeType.double"),
                 new StrokeIcon(new DoubleStroke(4, 1))));
 
@@ -1192,97 +1201,97 @@ public class ButtonFactory {
         labels.configureToolBarButton(strokePlacementPopupButton, "attribute.strokePlacement");
         strokePlacementPopupButton.setFocusable(false);
 
-        HashMap<AttributeKey, Object> attr;
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
+        HashMap<AttributeKey, Object> attributes;
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.center"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.inside"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.outside"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.centerFilled"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.insideFilled"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.outsideFilled"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.centerUnfilled"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.insideUnfilled"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokePlacement.outsideUnfilled"),
                 null));
 
         return strokePlacementPopupButton;
     }
 
-    public static void addFontButtonsTo(JToolBar bar, DrawingEditor editor) {
-        bar.add(createFontButton(editor));
-        bar.add(createFontStyleBoldButton(editor));
-        bar.add(createFontStyleItalicButton(editor));
-        bar.add(createFontStyleUnderlineButton(editor));
+    public static void addFontButtonsTo(JToolBar toolbar, DrawingEditor editor) {
+        toolbar.add(createFontButton(editor));
+        toolbar.add(createFontStyleBoldButton(editor));
+        toolbar.add(createFontStyleItalicButton(editor));
+        toolbar.add(createFontStyleUnderlineButton(editor));
     }
 
     public static JPopupButton createFontButton(DrawingEditor editor) {
@@ -1325,17 +1334,17 @@ public class ButtonFactory {
 
     public static JButton createFontStyleBoldButton(DrawingEditor editor,
             ResourceBundleUtil labels) {
-        JButton btn;
-        btn = new JButton();
-        labels.configureToolBarButton(btn, "attribute.fontStyle.bold");
-        btn.setFocusable(false);
+        JButton button;
+        button = new JButton();
+        labels.configureToolBarButton(button, "attribute.fontStyle.bold");
+        button.setFocusable(false);
 
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_BOLD, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
         a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.bold.text"));
-        btn.addActionListener(a);
-        return btn;
+        button.addActionListener(a);
+        return button;
     }
 
     public static JButton createFontStyleItalicButton(DrawingEditor editor) {
@@ -1345,17 +1354,17 @@ public class ButtonFactory {
 
     public static JButton createFontStyleItalicButton(DrawingEditor editor,
             ResourceBundleUtil labels) {
-        JButton btn;
-        btn = new JButton();
-        labels.configureToolBarButton(btn, "attribute.fontStyle.italic");
-        btn.setFocusable(false);
+        JButton button;
+        button = new JButton();
+        labels.configureToolBarButton(button, "attribute.fontStyle.italic");
+        button.setFocusable(false);
 
-        AbstractAction a = new AttributeToggler<Boolean>(editor,
+        AbstractAction action = new AttributeToggler<Boolean>(editor,
                 FONT_ITALIC, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
-        a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.italic.text"));
-        btn.addActionListener(a);
-        return btn;
+        action.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.italic.text"));
+        button.addActionListener(action);
+        return button;
     }
 
     public static JButton createFontStyleUnderlineButton(DrawingEditor editor) {
@@ -1365,39 +1374,39 @@ public class ButtonFactory {
 
     public static JButton createFontStyleUnderlineButton(DrawingEditor editor,
             ResourceBundleUtil labels) {
-        JButton btn;
-        btn = new JButton();
-        labels.configureToolBarButton(btn, "attribute.fontStyle.underline");
-        btn.setFocusable(false);
+        JButton button;
+        button = new JButton();
+        labels.configureToolBarButton(button, "attribute.fontStyle.underline");
+        button.setFocusable(false);
 
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_UNDERLINE, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
         a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.underline.text"));
-        btn.addActionListener(a);
-        return btn;
+        button.addActionListener(a);
+        return button;
     }
 
     /**
      * Creates toolbar buttons and adds them to the specified JToolBar
      */
-    public static void addAlignmentButtonsTo(JToolBar bar, final DrawingEditor editor) {
+    public static void addAlignmentButtonsTo(JToolBar toolbar, final DrawingEditor editor) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
-        bar.add(new AlignAction.West(editor)).setFocusable(false);
-        bar.add(new AlignAction.East(editor)).setFocusable(false);
-        bar.add(new AlignAction.Horizontal(editor)).setFocusable(false);
-        bar.add(new AlignAction.North(editor)).setFocusable(false);
-        bar.add(new AlignAction.South(editor)).setFocusable(false);
-        bar.add(new AlignAction.Vertical(editor)).setFocusable(false);
-        bar.addSeparator();
-        bar.add(new MoveAction.West(editor)).setFocusable(false);
-        bar.add(new MoveAction.East(editor)).setFocusable(false);
-        bar.add(new MoveAction.North(editor)).setFocusable(false);
-        bar.add(new MoveAction.South(editor)).setFocusable(false);
-        bar.addSeparator();
-        bar.add(new BringToFrontAction(editor)).setFocusable(false);
-        bar.add(new SendToBackAction(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.West(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.East(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.Horizontal(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.North(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.South(editor)).setFocusable(false);
+        toolbar.add(new AlignAction.Vertical(editor)).setFocusable(false);
+        toolbar.addSeparator();
+        toolbar.add(new MoveAction.West(editor)).setFocusable(false);
+        toolbar.add(new MoveAction.East(editor)).setFocusable(false);
+        toolbar.add(new MoveAction.North(editor)).setFocusable(false);
+        toolbar.add(new MoveAction.South(editor)).setFocusable(false);
+        toolbar.addSeparator();
+        toolbar.add(new BringToFrontAction(editor)).setFocusable(false);
+        toolbar.add(new SendToBackAction(editor)).setFocusable(false);
 
     }
 
@@ -1444,29 +1453,29 @@ public class ButtonFactory {
         labels.configureToolBarButton(popupButton, "attribute.strokeCap");
         popupButton.setFocusable(false);
 
-        HashMap<AttributeKey, Object> attr;
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_CAP, BasicStroke.CAP_BUTT);
+        HashMap<AttributeKey, Object> attributes;
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_CAP, BasicStroke.CAP_BUTT);
         popupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeCap.butt"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_CAP, BasicStroke.CAP_ROUND);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_CAP, BasicStroke.CAP_ROUND);
         popupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeCap.round"),
                 null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_CAP, BasicStroke.CAP_SQUARE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_CAP, BasicStroke.CAP_SQUARE);
         popupButton.add(
                 new AttributeAction(
                 editor,
-                attr,
+                attributes,
                 labels.getString("attribute.strokeCap.square"),
                 null));
         return popupButton;
