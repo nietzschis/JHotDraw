@@ -63,15 +63,24 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private BufferedImage bufferedImage;
+    
+    private boolean edgeDetectorApplied; 
+    /**
+     * The original buffered image. This can be null, if we haven't yet applied
+     * the edge detector to an image.
+     */
+    private BufferedImage originalBufferedImage;
 
     /** Creates a new instance. */
     public SVGImageFigure() {
         this(0, 0, 0, 0);
+        edgeDetectorApplied = false;
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.IMAGE_TOOL)
     public SVGImageFigure(double x, double y, double width, double height) {
         rectangle = new Rectangle2D.Double(x, y, width, height);
+        edgeDetectorApplied = false;
         SVGAttributeKeys.setDefaults(this);
     }
 
@@ -338,6 +347,13 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
+    
+    public void setOriginalBufferedImage(BufferedImage oimage) {
+        willChange();
+        this.originalBufferedImage = oimage;
+        this.edgeDetectorApplied = true;
+        changed();
+    }
 
     /**
      * Sets the buffered image.
@@ -346,6 +362,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     public void setBufferedImage(BufferedImage image) {
         willChange();
         this.imageData = null;
+        this.originalBufferedImage = null;
+        this.edgeDetectorApplied = false;
         this.bufferedImage = image;
         changed();
     }
@@ -368,6 +386,20 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
             }
         }
         return bufferedImage;
+    }
+    
+    public boolean getEdgeDetectorApplied() {
+        return this.edgeDetectorApplied;
+    }
+    public void setEdgeDetectorApplied(boolean applied) {
+        this.edgeDetectorApplied = applied;
+    }
+    
+    /**
+     * Gets the original buffered image.
+     */
+    public BufferedImage getOriginalBufferedImage() {
+        return this.originalBufferedImage;
     }
 
     /**

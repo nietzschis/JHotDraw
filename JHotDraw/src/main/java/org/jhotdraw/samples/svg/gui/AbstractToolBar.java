@@ -90,6 +90,7 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
         this.editor = editor;
         if (editor != null) {
             init();
+            //Needs refactoring
             setDisclosureState(Math.max(0, Math.min(getDisclosureStateCount(), prefs.getInt(getID() + ".disclosureState", getDefaultDisclosureState()))));
             this.addPropertyChangeListener(getEventHandler());
         }
