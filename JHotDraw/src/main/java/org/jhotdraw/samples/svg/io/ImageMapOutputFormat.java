@@ -184,40 +184,47 @@ public class ImageMapOutputFormat implements OutputFormat {
         } else if (f instanceof SVGImageFigure) {
             writeImageElement(parent, (SVGImageFigure) f);
         } else if (f instanceof SVGPathFigure) {
-            SVGPathFigure path = (SVGPathFigure) f;
-            if (path.getChildCount() == 1) {
-                BezierFigure bezier = (BezierFigure) path.getChild(0);
-                boolean isLinear = true;
-                for (int i = 0, n = bezier.getNodeCount(); i < n; i++) {
-                    if (bezier.getNode(i).getMask() != 0) {
-                        isLinear = false;
-                        break;
-                    }
-                }
-                if (isLinear) {
-                    if (bezier.isClosed()) {
-                        writePolygonElement(parent, path);
-                    } else {
-                        if (bezier.getNodeCount() == 2) {
-                            writeLineElement(parent, path);
-                        } else {
-                            writePolylineElement(parent, path);
-                        }
-                    }
-                } else {
-                    writePathElement(parent, path);
-                }
-            } else {
-                writePathElement(parent, path);
-            }
+            writePathFigure(parent, f);
         } else if (f instanceof SVGRectFigure) {
             writeRectElement(parent, (SVGRectFigure) f);
+        } else if (f instanceof SVGTriangleFigure) {
+            writeTriangleElement(parent, (SVGTriangleFigure) f);
         } else if (f instanceof SVGTextFigure) {
             writeTextElement(parent, (SVGTextFigure) f);
         } else if (f instanceof SVGTextAreaFigure) {
             writeTextAreaElement(parent, (SVGTextAreaFigure) f);
         } else {
             System.out.println("Unable to write: " + f);
+        }
+    }
+    
+    // Refactored out from writeElement for easier reading
+    protected void writePathFigure(IXMLElement parent, Figure f) throws IOException {
+        SVGPathFigure path = (SVGPathFigure) f;
+        if (path.getChildCount() == 1) {
+            BezierFigure bezier = (BezierFigure) path.getChild(0);
+            boolean isLinear = true;
+            for (int i = 0, n = bezier.getNodeCount(); i < n; i++) {
+                if (bezier.getNode(i).getMask() != 0) {
+                    isLinear = false;
+                    break;
+                }
+            }
+            if (isLinear) {
+                if (bezier.isClosed()) {
+                    writePolygonElement(parent, path);
+                } else {
+                    if (bezier.getNodeCount() == 2) {
+                        writeLineElement(parent, path);
+                    } else {
+                        writePolylineElement(parent, path);
+                    }
+                }
+            } else {
+                writePathElement(parent, path);
+            }
+        } else {
+            writePathElement(parent, path);
         }
     }
 
@@ -299,6 +306,39 @@ public class ImageMapOutputFormat implements OutputFormat {
             return bounds.intersects(r);
         } else {
             return writePolyAttributes(elem, f, (Shape) rect);
+        }
+    }
+    
+    private boolean writeTriangleAttributes(IXMLElement elem, SVGFigure f, Rectangle2D.Double triangle) {
+        AffineTransform t = TRANSFORM.getClone(f);
+        if (t == null) {
+            t = drawingTransform;
+        } else {
+            t.preConcatenate(drawingTransform);
+        }
+
+        if ((t.getType() &
+                (AffineTransform.TYPE_UNIFORM_SCALE | AffineTransform.TYPE_TRANSLATION)) ==
+                t.getType()) {
+
+            Point2D.Double start = new Point2D.Double(triangle.x, triangle.y);
+            Point2D.Double end = new Point2D.Double(triangle.x + triangle.width, triangle.y + triangle.height);
+            t.transform(start, start);
+            t.transform(end, end);
+            triangle.x = Math.min(start.x, end.x);
+            triangle.y = Math.min(start.y, end.y);
+            triangle.width = Math.abs(start.x - end.x);
+            triangle.height = Math.abs(start.y - end.y);
+
+            elem.setAttribute("shape", "triangle");
+            elem.setAttribute("coords",
+                    (int) triangle.x + "," +
+                    (int) triangle.y + "," +
+                    (int) ((triangle.y + triangle.height) - ((triangle.x + triangle.width) / 2d)) );
+            writeHrefAttribute(elem, f);
+            return bounds.intersects(triangle.getBounds());
+        } else {
+            return writePolyAttributes(elem, f, (Shape) triangle);
         }
     }
 
@@ -461,6 +501,19 @@ public class ImageMapOutputFormat implements OutputFormat {
         double grow = getPerpendicularHitGrowth(f);
         Ellipse2D.Double ellipse = new Ellipse2D.Double(r.x - grow, r.y - grow, r.width + grow, r.height + grow);
         if (writeCircleAttributes(elem, f, ellipse)) {
+            parent.addChild(elem);
+        }
+    }
+    
+    private void writeTriangleElement(IXMLElement parent, SVGTriangleFigure f) throws IOException {
+        IXMLElement elem = parent.createElement("AREA");
+        Rectangle2D.Double triangle = f.getBounds();
+        double grow = getPerpendicularHitGrowth(f);
+        triangle.x -= grow;
+        triangle.y -= grow;
+        triangle.width += grow;
+        triangle.height += grow;
+        if (writeTriangleAttributes(elem, f, triangle)) {
             parent.addChild(elem);
         }
     }
