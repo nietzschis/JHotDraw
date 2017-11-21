@@ -16,8 +16,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
@@ -49,7 +47,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             single.execute(() -> {
                 try {
                     app.startServer();
-                    String ip = getPublicIp();
+                    String ip = getPrivateIp();
                     startingServerDialog.dispose();
                     if (shouldCopyIpToClipboard(ip)) {
                         copyIpToClipboard(ip);

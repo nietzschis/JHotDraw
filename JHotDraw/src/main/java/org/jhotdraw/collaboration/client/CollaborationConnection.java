@@ -135,4 +135,9 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             ex.printStackTrace();
         }
     }
+
+    @Override
+    public String getName() throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
