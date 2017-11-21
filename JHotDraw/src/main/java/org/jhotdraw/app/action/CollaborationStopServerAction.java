@@ -53,10 +53,10 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
-            if (evt.getPropertyName() == "startServer") {
+            if (evt.getPropertyName().equals("startServer")) {
                 setEnabled(true);
             }
-            if (evt.getPropertyName() == "stopServer") {
+            if (evt.getPropertyName().equals("stopServer")) {
                 setEnabled(false);
             }
         };
