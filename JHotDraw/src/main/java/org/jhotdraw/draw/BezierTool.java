@@ -306,22 +306,6 @@ public class BezierTool extends AbstractTool {
     }
 
     @Override
-    public void draw(Graphics2D g) {
-        if (createdFigure != null && //
-                anchor != null && //
-                mouseLocation != null &&//
-                getView() == creationView) {
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0f, new float[]{1f, 5f}, 0f));
-            g.drawLine(anchor.x, anchor.y, mouseLocation.x, mouseLocation.y);
-            if (!isWorking && createdFigure.isClosed() && createdFigure.getNodeCount() > 1) {
-                Point p = creationView.drawingToView(createdFigure.getStartPoint());
-                g.drawLine(mouseLocation.x, mouseLocation.y, p.x, p.y);
-            }
-        }
-    }
-
-    @Override
     public void mouseMoved(MouseEvent evt) {
         if (createdFigure != null && anchor != null && mouseLocation != null) {
             if (evt.getSource() == creationView) {
