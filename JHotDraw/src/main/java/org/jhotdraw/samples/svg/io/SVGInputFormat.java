@@ -212,32 +212,7 @@ public class SVGInputFormat implements InputFormat {
 
         // Search for the first 'svg' element in the XML document
         // in preorder sequence
-        IXMLElement svg = document;
-        Stack<Iterator<IXMLElement>> stack = new Stack<Iterator<IXMLElement>>();
-        LinkedList<IXMLElement> ll = new LinkedList<IXMLElement>();
-        ll.add(document);
-        stack.push(ll.iterator());
-        while (!stack.empty() && stack.peek().hasNext()) {
-            Iterator<IXMLElement> iter = stack.peek();
-            IXMLElement node = iter.next();
-
-            Iterator<IXMLElement> children = (node.getChildren() == null) ? null : node.getChildren().iterator();
-
-            if (!iter.hasNext()) {
-                stack.pop();
-            }
-            if (children != null && children.hasNext()) {
-                stack.push(children);
-            }
-            if (node.getName() != null &&
-                    node.getName().equals("svg") &&
-                    (node.getNamespace() == null ||
-                    node.getNamespace().equals(SVG_NAMESPACE))) {
-                svg = node;
-                break;
-            }
-        }
-
+        IXMLElement svg = svgSearch(document);
 
         if (svg.getName() == null ||
                 !svg.getName().equals("svg") ||
@@ -275,6 +250,36 @@ public class SVGInputFormat implements InputFormat {
             VIEWPORT_HEIGHT.basicSet(drawing, VIEWPORT_HEIGHT.get(viewport.attributes));
             VIEWPORT_WIDTH.basicSet(drawing, VIEWPORT_WIDTH.get(viewport.attributes));
         }
+    }
+    
+    // Refactored out from the above read method
+    private IXMLElement svgSearch(IXMLElement document) {
+        IXMLElement svg = document;
+        Stack<Iterator<IXMLElement>> stack = new Stack<Iterator<IXMLElement>>();
+        LinkedList<IXMLElement> ll = new LinkedList<IXMLElement>();
+        ll.add(document);
+        stack.push(ll.iterator());
+        while (!stack.empty() && stack.peek().hasNext()) {
+            Iterator<IXMLElement> iter = stack.peek();
+            IXMLElement node = iter.next();
+
+            Iterator<IXMLElement> children = (node.getChildren() == null) ? null : node.getChildren().iterator();
+
+            if (!iter.hasNext()) {
+                stack.pop();
+            }
+            if (children != null && children.hasNext()) {
+                stack.push(children);
+            }
+            if (node.getName() != null &&
+                    node.getName().equals("svg") &&
+                    (node.getNamespace() == null ||
+                    node.getNamespace().equals(SVG_NAMESPACE))) {
+                svg = node;
+                break;
+            }
+        }
+        return svg;
     }
 
     private void initStorageContext(IXMLElement root) {
@@ -389,6 +394,8 @@ public class SVGInputFormat implements InputFormat {
             } else if (name.equals("title")) {
                 //FIXME - Implement reading of title element
                 //f = readTitleElement(elem);
+            } else if (name.equals("triangle")) {
+                f = readTriangleElement(elem);
             } else if (name.equals("use")) {
                 f = readUseElement(elem);
             } else if (name.equals("style")) {
@@ -506,8 +513,38 @@ public class SVGInputFormat implements InputFormat {
     private Figure readSVGElement(IXMLElement elem)
             throws IOException {
         // Establish a new viewport
-        Viewport viewport = new Viewport();
+        Viewport viewport = viewportSetup(elem); //new Viewport();
+        
+        AffineTransform viewBoxTransform = createBoxTransform(viewport);
+        
+        viewportStack.push(viewport);
+        readViewportAttributes(elem, viewportStack.firstElement().attributes);
 
+        // Read the figures
+        for (IXMLElement node : elem.getChildren()) {
+            if (node instanceof IXMLElement) {
+                IXMLElement child = (IXMLElement) node;
+                Figure childFigure = readElement(child);
+                // skip invisible elements
+                if (readAttribute(child, "visibility", "visible").equals("visible") &&
+                        !readAttribute(child, "display", "inline").equals("none")) {
+
+                    if (childFigure != null) {
+                        childFigure.transform(viewBoxTransform);
+                        figures.add(childFigure);
+                    }
+                }
+            }
+        }
+
+        viewportStack.pop();
+        return null;
+    }
+    
+    // Refactored out from readSVGElement
+    private Viewport viewportSetup(IXMLElement elem) throws IOException {
+        Viewport viewport = new Viewport();
+        
         String widthValue = readAttribute(elem, "width", "100%");
         String heightValue = readAttribute(elem, "height", "100%");
 
@@ -545,7 +582,12 @@ public class SVGInputFormat implements InputFormat {
         viewport.numberFactor = Math.min(
                 viewport.width / viewport.viewBox.width,
                 viewport.height / viewport.viewBox.height);
-
+        
+        return viewport;
+    }
+    
+    // Refactored out from readSVGElement
+    private AffineTransform createBoxTransform(Viewport viewport) {
         AffineTransform viewBoxTransform = new AffineTransform();
 
         viewBoxTransform.translate(
@@ -561,30 +603,8 @@ public class SVGInputFormat implements InputFormat {
                     viewport.width / viewport.viewBox.width,
                     viewport.height / viewport.viewBox.height);
         }
-
-        viewportStack.push(viewport);
-        readViewportAttributes(elem, viewportStack.firstElement().attributes);
-
-
-        // Read the figures
-        for (IXMLElement node : elem.getChildren()) {
-            if (node instanceof IXMLElement) {
-                IXMLElement child = (IXMLElement) node;
-                Figure childFigure = readElement(child);
-                // skip invisible elements
-                if (readAttribute(child, "visibility", "visible").equals("visible") &&
-                        !readAttribute(child, "display", "inline").equals("none")) {
-
-                    if (childFigure != null) {
-                        childFigure.transform(viewBoxTransform);
-                        figures.add(childFigure);
-                    }
-                }
-            }
-        }
-
-        viewportStack.pop();
-        return null;
+        
+        return viewBoxTransform;
     }
 
     /**
@@ -659,6 +679,27 @@ public class SVGInputFormat implements InputFormat {
         elementObjects.put(elem, figure);
         return figure;
     }
+    
+    /**
+     * Reads an SVG "triangle" element.
+     */
+    private Figure readTriangleElement(IXMLElement elem)
+            throws IOException {
+        HashMap<AttributeKey, Object> a = new HashMap<AttributeKey, Object>();
+        readCoreAttributes(elem, a);
+        readTransformAttribute(elem, a);
+        readOpacityAttribute(elem, a);
+        readShapeAttributes(elem, a);
+
+        double x = toNumber(elem, readAttribute(elem, "x", "0"));
+        double y = toNumber(elem, readAttribute(elem, "y", "0"));
+        double w = toWidth(elem, readAttribute(elem, "width", "0"));
+        double h = toHeight(elem, readAttribute(elem, "height", "0"));
+
+        Figure figure = factory.createTriangle(x, y, w, h, a);
+        elementObjects.put(elem, figure);
+        return figure;
+    }
 
     /**
      * Reads an SVG "image" element.
@@ -674,7 +715,7 @@ public class SVGInputFormat implements InputFormat {
         double y = toNumber(elem, readAttribute(elem, "y", "0"));
         double w = toWidth(elem, readAttribute(elem, "width", "0"));
         double h = toHeight(elem, readAttribute(elem, "height", "0"));
-
+        
         String href = readAttribute(elem, "xlink:href", null);
         if (href == null) {
             href = readAttribute(elem, "href", null);
@@ -698,35 +739,13 @@ public class SVGInputFormat implements InputFormat {
                 // Check whether the imageURL is an SVG image.
                 // Load it as a group.
                 if (imageUrl.getFile().endsWith("svg")) {
-                    SVGInputFormat svgImage = new SVGInputFormat(factory);
-                    Drawing svgDrawing = new DefaultDrawing();
-                    svgImage.read(imageUrl, svgDrawing, true);
-                    CompositeFigure svgImageGroup = factory.createG(a);
-                    for (Figure f : svgDrawing.getChildren()) {
-                        svgImageGroup.add(f);
-                    }
-                    svgImageGroup.setBounds(new Point2D.Double(x, y), new Point2D.Double(x + w, y + h));
-                    return svgImageGroup;
+                    double[] coords = new double[4];
+                    coords[0] = x; coords[1] = y; coords[2] = w; coords[3] = h;
+                    return svgImageGroup(a, imageUrl, coords);
                 }
 
                 // Read the image data from the URL into a byte array
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                byte[] buf = new byte[512];
-                int len = 0;
-                InputStream in = null;
-                try {
-                    in = imageUrl.openStream();
-                    while ((len = in.read(buf)) > 0) {
-                        bout.write(buf, 0, len);
-                    }
-                    imageData = bout.toByteArray();
-                } catch (FileNotFoundException e) {
-                    // Use empty image
-                } finally {
-                    if (in != null) {
-                        in.close();
-                    }
-                }
+                readDataFromURL(imageUrl, imageData);
             }
         }
         // Create a buffered image from the image data
@@ -750,7 +769,45 @@ public class SVGInputFormat implements InputFormat {
         elementObjects.put(elem, figure);
         return figure;
     }
-
+    
+    // Refactored from readImageElement
+    private void readDataFromURL(URL imageUrl, byte[] imageData) throws IOException {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        byte[] buf = new byte[512];
+        int len = 0;
+        InputStream in = null;
+        try {
+            in = imageUrl.openStream();
+            while ((len = in.read(buf)) > 0) {
+                bout.write(buf, 0, len);
+            }
+            imageData = bout.toByteArray();
+        } catch (FileNotFoundException e) {
+            // Use empty image
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+    }
+    
+    // Refactored from readImageElement
+    private CompositeFigure svgImageGroup(HashMap<AttributeKey, Object> a, 
+                        URL imageUrl, double[] coords) throws IOException {
+        SVGInputFormat svgImage = new SVGInputFormat(factory);
+        Drawing svgDrawing = new DefaultDrawing();
+        svgImage.read(imageUrl, svgDrawing, true);
+        CompositeFigure svgGroup = factory.createG(a);
+        for (Figure f : svgDrawing.getChildren()) {
+            svgGroup.add(f);
+        }
+        svgGroup.setBounds(
+                new Point2D.Double(coords[0], coords[1]), 
+                new Point2D.Double(coords[0] + coords[2], coords[1] + coords[3]) );
+        
+        return svgGroup;
+    }
+    
     /**
      * Reads an SVG "line" element.
      */
@@ -1388,7 +1445,6 @@ public class SVGInputFormat implements InputFormat {
             tt.setReader(new StringReader(str));
         }
 
-
         char nextCommand = 'M';
         char command = 'M';
         Commands:
@@ -1401,403 +1457,99 @@ public class SVGInputFormat implements InputFormat {
             }
 
             BezierPath.Node node;
-
+            
             switch (command) {
                 case 'M':
                     // absolute-moveto x y
-                    if (path != null) {
-                        paths.add(path);
-                    }
-                    path = new BezierPath();
-
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'M' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'M' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.moveTo(p.x, p.y);
-                    nextCommand = 'L';
+                    doCmdM(str, paths, path, tt, p, command, nextCommand);
                     break;
                 case 'm':
                     // relative-moveto dx dy
-                    if (path != null) {
-                        paths.add(path);
-                    }
-                    path = new BezierPath();
-
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 'm' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 'm' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.moveTo(p.x, p.y);
-                    nextCommand = 'l';
-
+                    doCmdM(str, paths, path, tt, p, command, nextCommand);
                     break;
+                    
                 case 'Z':
                 case 'z':
                     // close path
-                    p.x = path.get(0).x[0];
-                    p.y = path.get(0).y[0];
-
-                    // If the last point and the first point are the same, we
-                    // can merge them
-                    if (path.size() > 1) {
-                        BezierPath.Node first = path.get(0);
-                        BezierPath.Node last = path.get(path.size() - 1);
-                        if (first.x[0] == last.x[0] &&
-                                first.y[0] == last.y[0]) {
-                            if ((last.mask & BezierPath.C1_MASK) != 0) {
-                                first.mask |= BezierPath.C1_MASK;
-                                first.x[1] = last.x[1];
-                                first.y[1] = last.y[1];
-                            }
-                            path.remove(path.size() - 1);
-                        }
-                    }
-                    path.setClosed(true);
-
+                    doCmdz(path, p);
                     break;
+                    
                 case 'L':
                     // absolute-lineto x y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'L' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'L' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'L';
-
+                    doCmdL(str, path, p, tt, command, nextCommand);
                     break;
                 case 'l':
                     // relative-lineto dx dy
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 'l' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 'l' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'l';
-
+                    doCmdL(str, path, p, tt, command, nextCommand);
                     break;
+                    
                 case 'H':
                     // absolute-horizontal-lineto x
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'H' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'H';
-
+                    doCmdH(str, path, p, tt, command, nextCommand);
                     break;
                 case 'h':
                     // relative-horizontal-lineto dx
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 'h' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'h';
-
+                    doCmdH(str, path, p, tt, command, nextCommand);
                     break;
+                    
                 case 'V':
                     // absolute-vertical-lineto y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'V' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'V';
-
+                    doCmdV(str, path, p, tt, command, nextCommand);
                     break;
                 case 'v':
                     // relative-vertical-lineto dy
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 'v' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.lineTo(p.x, p.y);
-                    nextCommand = 'v';
-
+                    doCmdV(str, path, p, tt, command, nextCommand);
                     break;
+                    
                 case 'C':
                     // absolute-curveto x1 y1 x2 y2 x y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x1 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y1 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.y = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x2 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y2 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.y = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
-                    nextCommand = 'C';
+                    doCmdC(str, path, p, c1, c2, tt, command, nextCommand);
                     break;
-
                 case 'c':
                     // relative-curveto dx1 dy1 dx2 dy2 dx dy
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx1 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.x = p.x + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy1 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.y = p.y + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx2 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.x = p.x + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy2 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.y = p.y + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
-                    nextCommand = 'c';
+                    doCmdC(str, path, p, c1, c2, tt, command, nextCommand);
                     break;
 
                 case 'S':
                     // absolute-shorthand-curveto x2 y2 x y
                     node = path.get(path.size() - 1);
-                    c1.x = node.x[0] * 2d - node.x[1];
-                    c1.y = node.y[0] * 2d - node.y[1];
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x2 coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y2 coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.y = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
-                    nextCommand = 'S';
+                    doCmdS(str, node, path, p, c1, c2, tt, command, nextCommand);
                     break;
-
                 case 's':
                     // relative-shorthand-curveto dx2 dy2 dx dy
                     node = path.get(path.size() - 1);
-                    c1.x = node.x[0] * 2d - node.x[1];
-                    c1.y = node.y[0] * 2d - node.y[1];
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx2 coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.x = p.x + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy2 coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c2.y = p.y + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
-                    nextCommand = 's';
+                    doCmdS(str, node, path, p, c1, c2, tt, command, nextCommand);
                     break;
 
                 case 'Q':
                     // absolute-quadto x1 y1 x y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x1 coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y1 coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.y = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.quadTo(c1.x, c1.y, p.x, p.y);
-                    nextCommand = 'Q';
-
+                    doCmdQ(str, path, p, c1, tt, command, nextCommand);
                     break;
-
                 case 'q':
                     // relative-quadto dx1 dy1 dx dy
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx1 coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.x = p.x + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy1 coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    c1.y = p.y + tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.quadTo(c1.x, c1.y, p.x, p.y);
-                    nextCommand = 'q';
-
+                    doCmdQ(str, path, p, c1, tt, command, nextCommand);
                     break;
+                    
                 case 'T':
                     // absolute-shorthand-quadto x y
                     node = path.get(path.size() - 1);
-                    c1.x = node.x[0] * 2d - node.x[1];
-                    c1.y = node.y[0] * 2d - node.y[1];
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'T' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'T' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-                    path.quadTo(c1.x, c1.y, p.x, p.y);
-                    nextCommand = 'T';
-
+                    doCmdT(str, node, path, p, c1, tt, command, nextCommand);
                     break;
 
                 case 't':
                     // relative-shorthand-quadto dx dy
                     node = path.get(path.size() - 1);
-                    c1.x = node.x[0] * 2d - node.x[1];
-                    c1.y = node.y[0] * 2d - node.y[1];
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dx coordinate missing for 't' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("dy coordinate missing for 't' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-                    path.quadTo(c1.x, c1.y, p.x, p.y);
-                    nextCommand = 's';
-
+                    doCmdT(str, node, path, p, c1, tt, command, nextCommand);
                     break;
-
 
                 case 'A': {
                     // absolute-elliptical-arc rx ry x-axis-rotation large-arc-flag sweep-flag x y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("rx coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    // If rX or rY have negative signs, these are dropped;
-                    // the absolute value is used instead.
-                    double rx = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("ry coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    double ry = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x-axis-rotation missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    double xAxisRotation = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("large-arc-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    boolean largeArcFlag = tt.nval != 0;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("sweep-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    boolean sweepFlag = tt.nval != 0;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y = tt.nval;
-
-                    path.arcTo(rx, ry, xAxisRotation, largeArcFlag, sweepFlag, p.x, p.y);
-
-                    nextCommand = 'A';
+                    doCmdA(str, path, p, tt, command, nextCommand);
                     break;
                 }
                 case 'a': {
                     // absolute-elliptical-arc rx ry x-axis-rotation large-arc-flag sweep-flag x y
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("rx coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    // If rX or rY have negative signs, these are dropped;
-                    // the absolute value is used instead.
-                    double rx = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("ry coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    double ry = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x-axis-rotation missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    double xAxisRotation = tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("large-arc-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    boolean largeArcFlag = tt.nval != 0;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("sweep-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    boolean sweepFlag = tt.nval != 0;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("x coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.x += tt.nval;
-                    if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
-                        throw new IOException("y coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
-                    }
-                    p.y += tt.nval;
-
-                    path.arcTo(rx, ry, xAxisRotation, largeArcFlag, sweepFlag, p.x, p.y);
-
-                    nextCommand = 'a';
+                    doCmdA(str, path, p, tt, command, nextCommand);
                     break;
                 }
                 default:
@@ -1814,6 +1566,380 @@ public class SVGInputFormat implements InputFormat {
 
         return paths.toArray(new BezierPath[paths.size()]);
     }
+    
+    // Refactored out from toPath
+    private void doCmdM(String str, LinkedList<BezierPath> paths, BezierPath path, 
+            StreamPosTokenizer tt, Point2D.Double p, char cmd, char nextCommand) throws IOException {
+        if (path != null) {
+            paths.add(path);
+        }
+        path = new BezierPath();
+        
+        if (cmd == 'M') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'M' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'M' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'L';
+        } 
+        else if (cmd == 'm') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 'm' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 'm' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'l';
+        }
+        p.y = tt.nval;
+        path.moveTo(p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdz(BezierPath path, Point2D.Double p) {
+        p.x = path.get(0).x[0];
+        p.y = path.get(0).y[0];
+
+        // If the last point and the first point are the same, we
+        // can merge them
+        if (path.size() > 1) {
+            BezierPath.Node first = path.get(0);
+            BezierPath.Node last = path.get(path.size() - 1);
+            if (first.x[0] == last.x[0] &&
+                    first.y[0] == last.y[0]) {
+                if ((last.mask & BezierPath.C1_MASK) != 0) {
+                    first.mask |= BezierPath.C1_MASK;
+                    first.x[1] = last.x[1];
+                    first.y[1] = last.y[1];
+                }
+                path.remove(path.size() - 1);
+            }
+        }
+        path.setClosed(true);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdL(String str, BezierPath path, Point2D.Double p, 
+            StreamPosTokenizer tt, char cmd, char nextCommand) throws IOException {
+        if (cmd == 'L') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'L' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'L' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'L';
+        }
+        else if (cmd == 'l') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 'l' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 'l' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'l';
+        }
+        p.y = tt.nval;
+        path.lineTo(p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdH(String str, BezierPath path, Point2D.Double p, 
+            StreamPosTokenizer tt, char cmd, char nextCommand) throws IOException {
+        if (cmd == 'H') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'H' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'H';
+        }
+        else if (cmd == 'h') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 'h' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'h';
+        }
+        p.x = tt.nval;
+        path.lineTo(p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdV(String str, BezierPath path, Point2D.Double p, 
+            StreamPosTokenizer tt, char cmd, char nextCommand) throws IOException {
+        if (cmd == 'V') {    
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'V' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'V';
+        }
+        else if (cmd == 'v') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 'v' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'v';
+        }
+        p.y = tt.nval;
+        path.lineTo(p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdC(String str, BezierPath path, Point2D.Double p, 
+            Point2D.Double c1, Point2D.Double c2, StreamPosTokenizer tt, 
+            char cmd, char nextCommand) throws IOException {
+        if (cmd == 'C') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x1 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y1 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.y = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x2 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y2 coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.y = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'C' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'C';
+        }
+        else if (cmd == 'c') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx1 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.x = p.x + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy1 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.y = p.y + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx2 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.x = p.x + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy2 coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.y = p.y + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 'c' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'c';
+        }
+        p.y = tt.nval;
+        path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdS(String str, BezierPath.Node node, BezierPath path, 
+            Point2D.Double p, Point2D.Double c1, Point2D.Double c2, 
+            StreamPosTokenizer tt, char cmd, char nextCommand) throws IOException {
+        c1.x = node.x[0] * 2d - node.x[1];
+        c1.y = node.y[0] * 2d - node.y[1];
+        if (cmd == 'S') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x2 coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y2 coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.y = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'S' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'S';
+        }
+        else if (cmd == 's') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx2 coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.x = p.x + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy2 coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c2.y = p.y + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 's' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 's';
+        }
+        p.y = tt.nval;
+        path.curveTo(c1.x, c1.y, c2.x, c2.y, p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdQ(String str, BezierPath path, Point2D.Double p, 
+            Point2D.Double c1, StreamPosTokenizer tt, 
+            char cmd, char nextCommand) throws IOException {
+        if (cmd == 'Q') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x1 coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y1 coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.y = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'Q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'Q';
+        }
+        else if (cmd == 'q') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx1 coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.x = p.x + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy1 coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            c1.y = p.y + tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 'q' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'q';
+        }
+        p.y = tt.nval;
+        path.quadTo(c1.x, c1.y, p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdT(String str, BezierPath.Node node, BezierPath path, 
+            Point2D.Double p, Point2D.Double c1, StreamPosTokenizer tt, 
+            char cmd, char nextCommand) throws IOException {
+        c1.x = node.x[0] * 2d - node.x[1];
+        c1.y = node.y[0] * 2d - node.y[1];
+        if (cmd == 'T') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'T' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'T' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 'T';
+        }
+        else if (cmd == 't') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dx coordinate missing for 't' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("dy coordinate missing for 't' at position " + tt.getStartPosition() + " in " + str);
+            }
+            nextCommand = 's';
+        }
+        p.y = tt.nval;
+        path.quadTo(c1.x, c1.y, p.x, p.y);
+    }
+    
+    // Refactored out from toPath
+    private void doCmdA(String str, BezierPath path, Point2D.Double p, 
+            StreamPosTokenizer tt, char cmd, char nextCommand) throws IOException {
+        if (cmd == 'A') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("rx coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            // If rX or rY have negative signs, these are dropped;
+            // the absolute value is used instead.
+            double rx = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("ry coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            double ry = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x-axis-rotation missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            double xAxisRotation = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("large-arc-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            boolean largeArcFlag = tt.nval != 0;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("sweep-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            boolean sweepFlag = tt.nval != 0;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.y = tt.nval;
+            path.arcTo(rx, ry, xAxisRotation, largeArcFlag, sweepFlag, p.x, p.y);
+            nextCommand = 'A';
+        }
+        else if (cmd == 'a') {
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("rx coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            // If rX or rY have negative signs, these are dropped;
+            // the absolute value is used instead.
+            double rx = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("ry coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            double ry = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x-axis-rotation missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            double xAxisRotation = tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("large-arc-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            boolean largeArcFlag = tt.nval != 0;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("sweep-flag missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            boolean sweepFlag = tt.nval != 0;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("x coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.x += tt.nval;
+            if (tt.nextToken() != StreamPosTokenizer.TT_NUMBER) {
+                throw new IOException("y coordinate missing for 'A' at position " + tt.getStartPosition() + " in " + str);
+            }
+            p.y = tt.nval;
+            path.arcTo(rx, ry, xAxisRotation, largeArcFlag, sweepFlag, p.x, p.y);
+            nextCommand = 'a';
+        }
+    }
+    
     /* Reads core attributes as listed in
      * http://www.w3.org/TR/SVGMobile12/feature.html#CoreAttribute
      */
