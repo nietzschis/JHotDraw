@@ -106,6 +106,7 @@ public class SVGView extends AbstractView implements ExportableView {
         outputFormats.add(new ImageOutputFormat());
         outputFormats.add(new ImageOutputFormat("JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
         outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
+        outputFormats.add(new ImageOutputFormat("PNG", "Compressed Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageMapOutputFormat());
         drawing.setOutputFormats(outputFormats);
 
@@ -350,14 +351,18 @@ public class SVGView extends AbstractView implements ExportableView {
 
     @FeatureEntryPoint(JHotDrawFeatures.EXPORT)
     public void export(File f, javax.swing.filechooser.FileFilter filter, Component accessory) throws IOException {
-
         OutputFormat format = fileFilterOutputFormatMap.get(filter);
 
         if (!f.getName().endsWith("." + format.getFileExtension())) {
             f = new File(f.getPath() + "." + format.getFileExtension());
         }
-
+        
         format.write(f, svgPanel.getDrawing());
+        
+        // If selected format was "compressed PNG", compress an image with a web service tinypng.
+        if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
+            TinyPngCompressAction.compressImage(f);
+        }
 
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());
