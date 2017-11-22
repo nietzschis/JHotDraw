@@ -251,19 +251,7 @@ public class BezierTool extends AbstractTool {
         }
         isWorking = false;
         if (createdFigure.getNodeCount() > nodeCountBeforeDrag + 1) {
-            createdFigure.willChange();
-            BezierPath figurePath = createdFigure.getBezierPath();
-            BezierPath digitizedPath = new BezierPath();
-            for (int i = nodeCountBeforeDrag - 1, n = figurePath.size(); i < n; i++) {
-                digitizedPath.add(figurePath.get(nodeCountBeforeDrag - 1));
-                figurePath.remove(nodeCountBeforeDrag - 1);
-            }
-            BezierPath fittedPath = calculateFittedCurve(digitizedPath);
-            //figurePath.addAll(digitizedPath);
-            figurePath.addAll(fittedPath);
-            createdFigure.setBezierPath(figurePath);
-            createdFigure.changed();
-            nodeCountBeforeDrag = createdFigure.getNodeCount();
+            figureChange();
         }
 
         if (finishWhenMouseReleased == Boolean.TRUE) {
@@ -277,15 +265,36 @@ public class BezierTool extends AbstractTool {
             finishWhenMouseReleased = Boolean.FALSE;
         }
 
-        // repaint dotted line
+        repaintDottedLine(evt);
+        
+    }
+    public void figureChange(){
+        createdFigure.willChange();
+            BezierPath figurePath = createdFigure.getBezierPath();
+            BezierPath digitizedPath = new BezierPath();
+            for (int i = nodeCountBeforeDrag - 1, n = figurePath.size(); i < n; i++) {
+                digitizedPath.add(figurePath.get(nodeCountBeforeDrag - 1));
+                figurePath.remove(nodeCountBeforeDrag - 1);
+            }
+            BezierPath fittedPath = calculateFittedCurve(digitizedPath);
+            //figurePath.addAll(digitizedPath);
+            figurePath.addAll(fittedPath);
+            createdFigure.setBezierPath(figurePath);
+            createdFigure.changed();
+            nodeCountBeforeDrag = createdFigure.getNodeCount();
+    }
+    
+    public Rectangle repaintDottedLine(MouseEvent e){
         Rectangle r = new Rectangle(anchor);
         r.add(mouseLocation);
-        r.add(evt.getPoint());
+        r.add(e.getPoint());
         r.grow(1, 1);
         fireAreaInvalidated(r);
-        anchor.x = evt.getX();
-        anchor.y = evt.getY();
-        mouseLocation = evt.getPoint();
+        anchor.x = e.getX();
+        anchor.y = e.getY();
+        mouseLocation = e.getPoint();
+        return r;
+        
     }
 
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
