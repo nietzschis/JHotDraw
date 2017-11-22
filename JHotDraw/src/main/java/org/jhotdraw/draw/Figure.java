@@ -489,5 +489,7 @@ public interface Figure extends Cloneable, Serializable, DOMStorable {
     
     void setCollaborationId();
     
+    void setCollaborationId(int id);
+    
     int getCollaborationId();
 }

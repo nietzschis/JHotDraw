@@ -46,14 +46,13 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
             collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
             addCollaborator();
-            
+
             return true;
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
             return false;
         }
 
-        
         //return true;
     }
 
@@ -70,9 +69,9 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     public void notifyUpdate(String source) {
         if (drawing != null) {
             List<SVGRectDTO> listToSend = new ArrayList<>();
-            
-            for(Figure f : drawing.getChildren()) {
-                if( f instanceof SVGRectFigure ) {
+
+            for (Figure f : drawing.getChildren()) {
+                if (f instanceof SVGRectFigure) {
                     SVGRectDTO fig = new SVGRectDTO();
                     fig.x = ((SVGRectFigure) f).getX();
                     fig.y = ((SVGRectFigure) f).getY();
@@ -83,12 +82,11 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     fig.attributes = f.getAttributes();
                     listToSend.add(fig);
                 }
-                
+
             }
 
             System.out.println("Collaboration Notified, action: " + source);
-            
-            
+
             try {
                 collaborationProxy.notifyAllCollaborators(drawing.getChildren());
             } catch (RemoteException ex) {
@@ -96,19 +94,33 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             }
         }
     }
-    
+
     // Server kalder denne på clienten
     @Override
     public void update(List<Figure> figures) throws RemoteException {
         System.out.println("update på klient");
-        for(Figure f : figures) {
-            drawing.add((SVGRectFigure) f.clone());
-            System.out.println(drawing.getChildCount());
-            for(Figure fi : drawing.getChildren()) {
-               System.out.println("Figure hash: " + fi.hashCode() + "; ColId: " + f.getCollaborationId());
+        for (Figure serverFigure : figures) {
+            boolean found = false;
+            for (Figure workingFigure : drawing.getChildren()) {
+                if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
+                    //drawing.add((SVGRectFigure) serverFigure.clone());
+                    System.out.println("Found same fig");
+                    found = true;
+                }
+                System.out.println("Working figure: " + workingFigure.getCollaborationId() + "; Server figure: " + serverFigure.getCollaborationId());
+            }
+            
+            if(!found) {
+                System.out.println("add");
+                SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
+                newFig.setCollaborationId(serverFigure.getCollaborationId());
+                drawing.add((SVGRectFigure) serverFigure.clone());
             }
         }
+        System.out.println(drawing.getChildCount());
+
     }
+
     /*public void update(List<SVGRectDTO> figures) throws RemoteException {
 
         List<Figure> serverList = new ArrayList<Figure>();
@@ -145,7 +157,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             }
         }
     }*/
-
     private void addCollaborator() {
         try {
             collaborationProxy.addCollaborator(this);
