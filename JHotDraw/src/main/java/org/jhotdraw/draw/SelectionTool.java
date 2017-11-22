@@ -67,7 +67,7 @@ public class SelectionTool extends AbstractTool
      * The tracker encapsulates the current state of the SelectionTool.
      */
     private SelectAreaTracker selectAreaTracker;
-    /**
+    /**private Tool tracker;
      * The tracker encapsulates the current state of the SelectionTool.
      */
     private DragTracker dragTracker;
