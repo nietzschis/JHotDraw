@@ -50,12 +50,14 @@ public abstract class AbstractFigure
         extends AbstractBean
         implements Figure {
 
-    protected EventListenerList listenerList = new EventListenerList();
-    private Drawing drawing;
+    protected transient EventListenerList listenerList = new EventListenerList();
+    private transient Drawing drawing;
     private boolean isSelectable = true;
     private boolean isRemovable = true;
     private boolean isVisible = true;
     private boolean isTransformable = true;
+    
+    private int collaborationId;
     /**
      * This variable is used to prevent endless change loops.
      * We increase its value on each invocation of willChange() and
@@ -67,6 +69,15 @@ public abstract class AbstractFigure
     public AbstractFigure() {
     }
 
+    public void setCollaborationId() {
+        Random r = new Random();
+        collaborationId = r.nextInt();
+    }
+    
+    public int getCollaborationId() {
+        return collaborationId;
+    }
+    
     // DRAWING
     // SHAPE AND BOUNDS
     // ATTRIBUTES

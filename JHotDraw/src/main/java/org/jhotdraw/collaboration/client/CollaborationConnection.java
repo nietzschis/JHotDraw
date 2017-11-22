@@ -15,6 +15,7 @@ import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
+import org.jhotdraw.collaboration.common.SVGRectDTO;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
@@ -68,47 +69,54 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public void notifyUpdate(String source) {
         if (drawing != null) {
-            List<Figure> listToSend = new ArrayList<>(drawing.getChildren());
+            List<SVGRectDTO> listToSend = new ArrayList<>();
             
             for(Figure f : drawing.getChildren()) {
-                //((SVGRectFigure) f).getAttributes()
+                if( f instanceof SVGRectFigure ) {
+                    SVGRectDTO fig = new SVGRectDTO();
+                    fig.x = ((SVGRectFigure) f).getX();
+                    fig.y = ((SVGRectFigure) f).getY();
+                    fig.height = ((SVGRectFigure) f).getHeight();
+                    fig.width = ((SVGRectFigure) f).getWidth();
+                    fig.rx = ((SVGRectFigure) f).getArcWidth();
+                    fig.ry = ((SVGRectFigure) f).getArcHeight();
+                    fig.attributes = f.getAttributes();
+                    listToSend.add(fig);
+                }
+                
             }
 
             System.out.println("Collaboration Notified, action: " + source);
             
             
             try {
-                collaborationProxy.notifyAllCollaborators(listToSend);
+                collaborationProxy.notifyAllCollaborators(drawing.getChildren());
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }
         }
     }
-
-    private void sendFiguresToServer() {
-        list = cloneList();
-        System.out.println("List saved");
-        System.out.println("Set List lenght " + list.size());
-        for (Figure f : list) {
-            System.out.println(f);
-        }
-        System.out.println("");
-    }
-
-    private List<Figure> cloneList() {
-        List<Figure> newList = new ArrayList<Figure>();
-        System.out.println("Children size: " + drawing.getChildren().size());
-        for (Figure f : drawing.getChildren()) {
-            newList.add((Figure) f.clone());
-        }
-        return newList;
-    }
-
+    
     // Server kalder denne på clienten
     @Override
     public void update(List<Figure> figures) throws RemoteException {
+        System.out.println("update på klient");
+        for(Figure f : figures) {
+            drawing.add((SVGRectFigure) f.clone());
+            System.out.println(drawing.getChildCount());
+            for(Figure fi : drawing.getChildren()) {
+               System.out.println("Figure hash: " + fi.hashCode() + "; ColId: " + f.getCollaborationId());
+            }
+        }
+    }
+    /*public void update(List<SVGRectDTO> figures) throws RemoteException {
 
-        List<Figure> serverList = null;
+        List<Figure> serverList = new ArrayList<Figure>();
+        for(SVGRectDTO dto : figures) {
+            SVGRectFigure newRect = new SVGRectFigure(dto.x, dto.y, dto.width, dto.height, dto.rx, dto.ry);
+            newRect.setAttributes(dto.attributes);
+            drawing.add(newRect);
+        }
         for (Figure workingFigure : drawing.getChildren()) {
             for (Figure serverFigure : serverList) {
 
@@ -136,7 +144,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                 drawing.remove(workingFigure);
             }
         }
-    }
+    }*/
 
     private void addCollaborator() {
         try {

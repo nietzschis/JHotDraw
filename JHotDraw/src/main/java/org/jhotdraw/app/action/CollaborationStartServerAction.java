@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
+import org.jhotdraw.samples.svg.SVGView;
 
 /**
  *
@@ -47,6 +49,7 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             single.execute(() -> {
                 try {
                     app.startServer();
+                    CollaborationConnection.getInstance().setDrawing(((SVGView) app.getActiveView()).getDrawing());
                     String ip = getPrivateIp();
                     startingServerDialog.dispose();
                     if (shouldCopyIpToClipboard(ip)) {

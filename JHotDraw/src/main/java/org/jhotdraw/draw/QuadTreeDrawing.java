@@ -66,7 +66,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
         super.basicRemoveChild(index);
         
         // Notify collaborator
-        CollaborationConnection.getInstance().notifyUpdate("remove");
+        //CollaborationConnection.getInstance().notifyUpdate("remove");
         return figure;
     }
 
