@@ -320,6 +320,9 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.addSeparator();
         m.add(model.getAction(SaveAction.ID));
         m.add(model.getAction(SaveAsAction.ID));
+        if (model.getAction(ImportWatermarkAction.ID) != null) {
+            mi = m.add(model.getAction(ImportWatermarkAction.ID));
+        }
         if (model.getAction(ExportAction.ID) != null) {
             mi = m.add(model.getAction(ExportAction.ID));
         }
