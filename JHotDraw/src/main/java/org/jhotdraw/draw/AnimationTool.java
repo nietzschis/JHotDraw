@@ -37,4 +37,9 @@ public class AnimationTool extends AbstractAction {
             System.out.println("Du trykkede på pause");
         }
     }
+    
+    public int getTool() {
+        return tool;
+    }
+
 }
