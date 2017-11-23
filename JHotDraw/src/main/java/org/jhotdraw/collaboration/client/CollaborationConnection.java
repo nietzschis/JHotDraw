@@ -1,5 +1,6 @@
 package org.jhotdraw.collaboration.client;
 
+import java.awt.geom.Point2D;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,6 +17,8 @@ import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.collaboration.common.SVGRectDTO;
+import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
+import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
@@ -98,65 +101,68 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     // Server kalder denne på clienten
     @Override
     public void update(List<Figure> figures) throws RemoteException {
-        System.out.println("update på klient");
+        //System.out.println("update på klient");
         for (Figure serverFigure : figures) {
             boolean found = false;
             for (Figure workingFigure : drawing.getChildren()) {
                 if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
                     //drawing.add((SVGRectFigure) serverFigure.clone());
-                    System.out.println("Found same fig");
+                    //System.out.println("Found same fig");
+
+                    // Same figure check bounds
+                    if (workingFigure.getBounds() != serverFigure.getBounds()) {
+                        System.out.println("Moved");
+                        //System.out.println(serverFigure.getBounds() + " " + workingFigure.getBounds());
+                        Point2D.Double start = new Point2D.Double(serverFigure.getBounds().x, serverFigure.getBounds().y);
+                        Point2D.Double end = new Point2D.Double(serverFigure.getBounds().x + serverFigure.getBounds().width, serverFigure.getBounds().y + serverFigure.getBounds().height);
+
+                        workingFigure.willChange();
+                        workingFigure.setBounds(start, end);
+                        workingFigure.changed();
+                    }
+
+                    // Same figure check attributes
+                    if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
+                        System.out.println("Changed attribute");
+                        workingFigure.willChange();
+                        workingFigure.restoreAttributesTo(serverFigure.getAttributesRestoreData());
+                        workingFigure.changed();
+                    }
+
                     found = true;
                 }
-                System.out.println("Working figure: " + workingFigure.getCollaborationId() + "; Server figure: " + serverFigure.getCollaborationId());
+                //System.out.println("Working figure: " + workingFigure.getCollaborationId() + "; Server figure: " + serverFigure.getCollaborationId());
             }
-            
-            if(!found) {
-                System.out.println("add");
-                SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
-                newFig.setCollaborationId(serverFigure.getCollaborationId());
-                drawing.add((SVGRectFigure) serverFigure.clone());
+
+            if (!found) {
+                
+                if (serverFigure instanceof SVGRectFigure) {
+                    System.out.println("add square");
+                    SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
+                    newFig.setCollaborationId(serverFigure.getCollaborationId());
+                    drawing.add(newFig);
+                }
+                else if(serverFigure instanceof SVGEllipseFigure) {
+                    System.out.println("Added circle");
+                    SVGEllipseFigure newFig = (SVGEllipseFigure) serverFigure.clone();
+                    newFig.setCollaborationId(serverFigure.getCollaborationId());
+                    drawing.add(newFig);
+                }
+                else if(serverFigure instanceof SVGPathFigure) {
+                    System.out.println("Added circle");
+                    SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
+                    newFig.setCollaborationId(serverFigure.getCollaborationId());
+                    drawing.add(newFig);
+                }
+                else {
+                    System.out.println("Unknown figure");
+                }
             }
         }
         System.out.println(drawing.getChildCount());
 
     }
 
-    /*public void update(List<SVGRectDTO> figures) throws RemoteException {
-
-        List<Figure> serverList = new ArrayList<Figure>();
-        for(SVGRectDTO dto : figures) {
-            SVGRectFigure newRect = new SVGRectFigure(dto.x, dto.y, dto.width, dto.height, dto.rx, dto.ry);
-            newRect.setAttributes(dto.attributes);
-            drawing.add(newRect);
-        }
-        for (Figure workingFigure : drawing.getChildren()) {
-            for (Figure serverFigure : serverList) {
-
-                // A figure exists on the client
-                if (serverFigure.equals(workingFigure)) {
-                    if (workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
-                        System.out.println("No difference");
-                    }
-                    else {
-                        System.out.println("Some difference");
-                        drawing.remove(workingFigure);
-                        drawing.add(serverFigure);
-                    }
-                }
-
-                // A figure from the server does not exist in the client
-                if (!drawing.getChildren().contains(serverFigure)) {
-                    drawing.add(serverFigure);
-                }
-
-            }
-
-            // A figure exists on client but not on server
-            if (!serverList.contains(workingFigure)) {
-                drawing.remove(workingFigure);
-            }
-        }
-    }*/
     private void addCollaborator() {
         try {
             collaborationProxy.addCollaborator(this);
