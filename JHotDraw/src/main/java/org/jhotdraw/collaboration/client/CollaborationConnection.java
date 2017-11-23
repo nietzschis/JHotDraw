@@ -6,12 +6,16 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
@@ -41,12 +45,14 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
             collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
             addCollaborator();
+            
             return true;
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
             return false;
         }
 
+        
         //return true;
     }
 
@@ -62,8 +68,20 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public void notifyUpdate(String source) {
         if (drawing != null) {
+            List<Figure> listToSend = new ArrayList<>(drawing.getChildren());
+            
+            for(Figure f : drawing.getChildren()) {
+                //((SVGRectFigure) f).getAttributes()
+            }
+
             System.out.println("Collaboration Notified, action: " + source);
-            //collaborationProxy.notifyAllCollaborators(drawing.getChildren());
+            
+            
+            try {
+                collaborationProxy.notifyAllCollaborators(listToSend);
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
