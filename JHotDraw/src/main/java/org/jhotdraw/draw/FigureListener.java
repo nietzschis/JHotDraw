@@ -15,6 +15,7 @@
 
 package org.jhotdraw.draw;
 
+import java.io.Serializable;
 import java.util.*;
 /**
  * Listener interested in Figure changes.

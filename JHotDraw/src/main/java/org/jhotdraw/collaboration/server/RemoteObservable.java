@@ -46,7 +46,7 @@ public class RemoteObservable extends UnicastRemoteObject implements IRemoteObse
     }
 
     @Override
-    public void notifyAllCollaborators(List<Figure> figures) throws RemoteException {
+    public synchronized void notifyAllCollaborators(List<Figure> figures) throws RemoteException {
         collaborators.parallelStream().forEach(collaborator -> {
             try {
                 collaborator.update(figures);

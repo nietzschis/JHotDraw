@@ -11,6 +11,7 @@ public interface IRemoteObservable extends Remote {
 
     void removeCollaborator(IRemoteObserver collaborator) throws RemoteException;
     
+    //void notifyAllCollaborators(List<SVGRectDTO> figures) throws RemoteException;
     void notifyAllCollaborators(List<Figure> figures) throws RemoteException;
     
 }

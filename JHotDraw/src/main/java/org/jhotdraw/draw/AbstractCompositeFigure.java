@@ -525,6 +525,7 @@ public abstract class AbstractCompositeFigure
     public void basicAdd(int index, Figure figure) {
         children.add(index, figure);
         figure.addFigureListener(eventHandler);
+        figure.setCollaborationId();
     }
 
     public Figure basicRemoveChild(int index) {
