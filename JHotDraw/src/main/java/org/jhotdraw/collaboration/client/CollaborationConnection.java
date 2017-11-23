@@ -20,6 +20,7 @@ import org.jhotdraw.collaboration.common.SVGRectDTO;
 import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
+import org.jhotdraw.samples.svg.figures.SVGTextFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
@@ -100,17 +101,16 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     // Server kalder denne på clienten
     @Override
-    public void update(List<Figure> figures) throws RemoteException {
+    public synchronized void update(List<Figure> figures) throws RemoteException {
         //System.out.println("update på klient");
         for (Figure serverFigure : figures) {
             boolean found = false;
             for (Figure workingFigure : drawing.getChildren()) {
                 if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
-                    //drawing.add((SVGRectFigure) serverFigure.clone());
-                    //System.out.println("Found same fig");
 
                     // Same figure check bounds
-                    if (workingFigure.getBounds() != serverFigure.getBounds()) {
+                    if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
+                            || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
                         System.out.println("Moved");
                         //System.out.println(serverFigure.getBounds() + " " + workingFigure.getBounds());
                         Point2D.Double start = new Point2D.Double(serverFigure.getBounds().x, serverFigure.getBounds().y);
@@ -149,8 +149,14 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     drawing.add(newFig);
                 }
                 else if(serverFigure instanceof SVGPathFigure) {
-                    System.out.println("Added circle");
+                    System.out.println("Added path");
                     SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
+                    newFig.setCollaborationId(serverFigure.getCollaborationId());
+                    drawing.add(newFig);
+                }
+                else if(serverFigure instanceof SVGTextFigure) {
+                    System.out.println("Added text");
+                    SVGTextFigure newFig = (SVGTextFigure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
                 }
