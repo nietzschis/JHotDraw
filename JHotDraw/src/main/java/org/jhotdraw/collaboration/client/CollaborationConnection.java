@@ -7,16 +7,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.collaboration.common.SVGRectDTO;
+import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
 import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
@@ -71,6 +69,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     public void notifyUpdate(String source) {
+        System.out.println("Call for " + source);
         if (drawing != null) {
             List<SVGRectDTO> listToSend = new ArrayList<>();
 
@@ -112,13 +111,20 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
                             || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
                         System.out.println("Moved");
-                        //System.out.println(serverFigure.getBounds() + " " + workingFigure.getBounds());
-                        Point2D.Double start = new Point2D.Double(serverFigure.getBounds().x, serverFigure.getBounds().y);
-                        Point2D.Double end = new Point2D.Double(serverFigure.getBounds().x + serverFigure.getBounds().width, serverFigure.getBounds().y + serverFigure.getBounds().height);
 
-                        workingFigure.willChange();
-                        workingFigure.setBounds(start, end);
-                        workingFigure.changed();
+                        if (workingFigure instanceof SVGPathFigure) {
+                            SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
+                            newFig.setCollaborationId(serverFigure.getCollaborationId());
+                            drawing.remove(workingFigure);
+                            drawing.add(newFig);
+                        } else {
+                            Point2D.Double start = new Point2D.Double(serverFigure.getBounds().x, serverFigure.getBounds().y);
+                            Point2D.Double end = new Point2D.Double(serverFigure.getBounds().x + serverFigure.getBounds().width, serverFigure.getBounds().y + serverFigure.getBounds().height);
+
+                            workingFigure.willChange();
+                            workingFigure.setBounds(start, end);
+                            workingFigure.changed();
+                        }
                     }
 
                     // Same figure check attributes
@@ -128,40 +134,35 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                         workingFigure.restoreAttributesTo(serverFigure.getAttributesRestoreData());
                         workingFigure.changed();
                     }
-
+                    System.out.println(serverFigure);
                     found = true;
                 }
-                //System.out.println("Working figure: " + workingFigure.getCollaborationId() + "; Server figure: " + serverFigure.getCollaborationId());
             }
 
             if (!found) {
-                
+
                 if (serverFigure instanceof SVGRectFigure) {
                     System.out.println("add square");
                     SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGEllipseFigure) {
+                } else if (serverFigure instanceof SVGEllipseFigure) {
                     System.out.println("Added circle");
                     SVGEllipseFigure newFig = (SVGEllipseFigure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGPathFigure) {
+                } else if (serverFigure instanceof SVGPathFigure) {
                     System.out.println("Added path");
                     SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGTextFigure) {
+                } else if (serverFigure instanceof SVGTextFigure) {
                     System.out.println("Added text");
                     SVGTextFigure newFig = (SVGTextFigure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
-                }
-                else {
-                    System.out.println("Unknown figure");
+                } else {
+                    System.out.println("Unsupported figure");
                 }
             }
         }
