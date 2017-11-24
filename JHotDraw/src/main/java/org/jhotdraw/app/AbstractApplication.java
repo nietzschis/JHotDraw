@@ -236,6 +236,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
         //recentFiles.clear();
         //prefs.putInt("recentFileCount", recentFiles.size());
         CollaborationServer.getInstance().startServer();
+        CollaborationConnection.getInstance().setCollaborationProxy(RemoteObservable.getInstance());
         RemoteObservable.getInstance().addCollaborator(CollaborationConnection.getInstance());
         firePropertyChange("startServer", null, null);
     }
