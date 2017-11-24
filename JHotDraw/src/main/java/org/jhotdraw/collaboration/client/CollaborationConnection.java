@@ -59,6 +59,10 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
         //return true;
     }
+    
+    public void setCollaborationProxy(IRemoteObservable server) {
+        collaborationProxy = server;
+    }
 
     public void disconnectFromServer() {
         this.removeCollaborator();
