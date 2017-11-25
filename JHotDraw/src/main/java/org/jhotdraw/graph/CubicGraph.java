@@ -25,12 +25,27 @@ public class CubicGraph implements Graph  {
     
     @Override
     public double calcYCoordinate(double x) {
-        return a*Math.pow(x, 3)+b*Math.pow(x, 2)+c*x;
+        return a*Math.pow(x, 3)+b*Math.pow(x, 2)+c*x+d;
     }
 
     @Override
     public double calcXCoordinate(double y) {
         return 1;
+    }
+
+    @Override
+    public double getStartX() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getEndX() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getLength() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

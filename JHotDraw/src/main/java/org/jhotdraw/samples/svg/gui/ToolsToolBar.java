@@ -213,6 +213,7 @@ public class ToolsToolBar extends AbstractToolBar {
 
         setOpaque(false);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }

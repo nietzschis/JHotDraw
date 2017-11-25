@@ -5,30 +5,29 @@
  */
 package org.jhotdraw.graph;
 
+import java.util.ArrayList;
+
 /**
  *
- * @author Joachim
+ * @author joach
  */
-public class QuadraticGraph implements Graph {
-
-    private double a;
-    private double b;
-    private double c;
+public class CompositeGraph implements Graph {
     
-    public QuadraticGraph (double a, double b, double c) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
-    }
+    
+    ArrayList<Graph> listOfFunctions = new ArrayList<>();
     
     @Override
     public double calcYCoordinate(double x) {
-        return a*Math.pow(x, 2)+b*x+c;
+        Graph workingGraph = listOfFunctions.get(0);
+        //if (workingGraph.)
+        
+        //return 1.0;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public double calcXCoordinate(double y) {
-        return 1;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

@@ -13,10 +13,16 @@ public class LinearGraph implements Graph {
 
     private double a;
     private double b;
+    private double startX;
+    private double endX;
+    private double length;
     
-    public LinearGraph (double a, double b) {
+    public LinearGraph (double a, double b, double startX, double endX, double length) {
         this.a = a;
         this.b = b;
+        this.startX = startX;
+        this.endX = endX;
+        this.length = length;
     }
     
     @Override
@@ -27,6 +33,21 @@ public class LinearGraph implements Graph {
     @Override
     public double calcXCoordinate(double y) {
         return y;
+    }
+
+    @Override
+    public double getStartX() {
+        return startX;
+    }
+
+    @Override
+    public double getEndX() {
+        return endX;
+    }
+
+    @Override
+    public double getLength() {
+        return length;
     }
     
 }

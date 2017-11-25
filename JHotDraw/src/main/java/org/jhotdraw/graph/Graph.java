@@ -11,11 +11,14 @@ package org.jhotdraw.graph;
  */
 public interface Graph {
     
+    public double getStartX();
+    
+    public double getEndX();
+    
+    public double getLength();
+    
     public double calcYCoordinate(double x);      
       
     
     public double calcXCoordinate(double y);
-    
-    
-    
 }
