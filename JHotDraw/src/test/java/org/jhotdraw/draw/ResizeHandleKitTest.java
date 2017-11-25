@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -121,12 +122,13 @@ public class ResizeHandleKitTest {
 
                 Point2D.Double p = view.viewToDrawing(new Point(lead.x + dx, lead.y + dy));
                 view.getConstrainer().constrainPoint(p);
+                Rectangle2D.Double originalBounds = figure.getBounds();
 
                 handles.get(i).trackStart(new Point(0, 0),0);
                 handles.get(i).trackStep(new Point(0,0), new Point(lead.x, lead.y),0);
                 Rectangle2D.Double bounds = figure.getBounds();
 
-                trackStepNormalized(p, mask);
+                trackStepNormalized(p, mask, originalBounds);
                 //System.out.println(" new bounds " + rect(bounds) + " tested against " + rect(figure.getBounds()));
                 collector.checkThat("Bounds doesnt match for "+ dir.name(), figure.getBounds(),equalTo(bounds));
 
@@ -140,8 +142,7 @@ public class ResizeHandleKitTest {
     }
 
 
-    private void trackStepNormalized(Point2D.Double p, int mask) {
-        Rectangle2D.Double r = figure.getBounds();
+    private void trackStepNormalized(Point2D.Double p, int mask, Rectangle2D.Double r) {
 
         double left = (mask & DIR_W) != 0 ? Math.min(r.x + r.width - 1, p.x) : r.x;
         double right = (mask & DIR_E) != 0 ? Math.max(r.x + 1, p.x) : r.x + r.width;
@@ -154,9 +155,96 @@ public class ResizeHandleKitTest {
     }
 
     @Test
-    public void keyPressed()
+    public void keyPressedTest() {
+        int keys[] = {
+                KeyEvent.VK_UP,
+                KeyEvent.VK_DOWN,
+                KeyEvent.VK_LEFT,
+                KeyEvent.VK_RIGHT
+        };
+
+        DrawingView view = new DefaultDrawingView();
+        DrawingEditorProxy editor = new DrawingEditorProxy();
+        editor.setTarget(new DefaultDrawingEditor());
+        view.addNotify(editor);
+        for (Handle h : handles)
+            h.setView(view);
+
+        for (int key:keys)
+        {
+            for (int i = 0; i < HandleDirections.values().length; i++)
+            {
+
+                HandleDirections dir = HandleDirections.values()[i];
+                //System.out.print("Checking "+ dir.name() + " & "+ rect(figure.getBounds()));
+                int mask = dir.dirMask;
+                Handle h = handles.get(i);
+
+                KeyEvent event1 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+                KeyEvent event2 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+
+                figure.setBounds(new Point2D.Double(50d, 50d), new Point2D.Double(100d, 100d));
+                h.keyPressed(event1);
+                Rectangle2D.Double actualBounds = figure.getBounds();
+                figure.setBounds(new Point2D.Double(50d, 50d), new Point2D.Double(100d, 100d));
+                keyPressed(event2,mask);
+                Rectangle2D.Double expectedBounds = figure.getBounds();
+
+                collector.checkThat("Bounds doesnt match for "+ dir.name() + " eventKey " + key, actualBounds, equalTo(expectedBounds));
+                collector.checkThat("Consumption doesnt match for "+ dir.name() + " eventKey " + key, event1.isConsumed(), equalTo(event2.isConsumed()));
+
+
+            }
+        }
+    }
+
+    private int nn(int x)
     {
-        assertEquals(true, false);
+        return x > 0 ? 1 : 0;
+    }
+
+    public void keyPressed(KeyEvent evt, int mask) {
+        Rectangle2D.Double r = figure.getBounds();
+
+        int up = 0;
+        int down = 0;
+        int left = 0;
+        int right = 0;
+
+        switch (evt.getKeyCode())
+        {
+            case KeyEvent.VK_UP:
+                if (r.height <= 1 && (mask & DIR_S) != 0)
+                    break;
+                down = -nn(mask & DIR_S);
+                up = -nn(mask & DIR_N);
+                break;
+            case KeyEvent.VK_DOWN:
+                if (r.height <= 1 && (mask & DIR_N) != 0)
+                    break;
+                up = nn(mask & DIR_N);
+                down = nn(mask & DIR_S);
+                break;
+            case KeyEvent.VK_LEFT:
+                if (r.width <= 1 && (mask & DIR_W) != 0)
+                    break;
+                left = -nn(mask & DIR_W);
+                right = -nn(mask & DIR_E);
+                break;
+            case KeyEvent.VK_RIGHT:
+                if (r.width <= 1 && (mask & DIR_E) != 0)
+                    break;
+                left = nn(mask & DIR_W);
+                right = nn(mask & DIR_E);
+                break;
+
+        }
+
+        figure.setBounds(
+                new Point2D.Double(r.x + left, r.y + up),
+                new Point2D.Double(r.x + r.width + right, r.y + r.height + down));
+
+        evt.consume();
     }
 
 }
