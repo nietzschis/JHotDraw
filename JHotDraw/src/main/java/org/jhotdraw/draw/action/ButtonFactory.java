@@ -59,6 +59,7 @@ import org.jhotdraw.gui.JFontChooser;
  */
 public class ButtonFactory {
 
+    private static ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
     /**
      * Mac OS X 'Apple Color Palette'. 
      * This palette has 8 columns.
@@ -435,26 +436,6 @@ public class ButtonFactory {
         //zoomPopupButton.setPreferredSize(new Dimension(16,16));
         zoomPopupButton.setFocusable(false);
         return zoomPopupButton;
-    }
-
-    /**
-     * Creates toolbar buttons and adds them to the specified JToolBar
-     */
-    public static void addAttributesButtonsTo(JToolBar toolbar, DrawingEditor editor) {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-        JButton button;
-
-        button = toolbar.add(new PickAttributesAction(editor));
-        button.setFocusable(false);
-        button = toolbar.add(new ApplyAttributesAction(editor));
-        button.setFocusable(false);
-        toolbar.addSeparator();
-
-        addColorButtonsTo(toolbar, editor);
-        toolbar.addSeparator();
-        addStrokeButtonsTo(toolbar, editor);
-        toolbar.addSeparator();
-        addFontButtonsTo(toolbar, editor);
     }
 
     public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor) {
@@ -1287,13 +1268,6 @@ public class ButtonFactory {
         return strokePlacementPopupButton;
     }
 
-    public static void addFontButtonsTo(JToolBar toolbar, DrawingEditor editor) {
-        toolbar.add(createFontButton(editor));
-        toolbar.add(createFontStyleBoldButton(editor));
-        toolbar.add(createFontStyleItalicButton(editor));
-        toolbar.add(createFontStyleUnderlineButton(editor));
-    }
-
     public static JPopupButton createFontButton(DrawingEditor editor) {
         return createFontButton(editor,
                 ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
@@ -1327,18 +1301,16 @@ public class ButtonFactory {
         return fontPopupButton;
     }
 
-    public static JButton createFontStyleBoldButton(DrawingEditor editor) {
-        return createFontStyleBoldButton(editor,
-                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
-    }
-
-    public static JButton createFontStyleBoldButton(DrawingEditor editor,
-            ResourceBundleUtil labels) {
+    public static JButton createButton(String configuration){
         JButton button;
         button = new JButton();
-        labels.configureToolBarButton(button, "attribute.fontStyle.bold");
+        labels.configureToolBarButton(button, configuration);
         button.setFocusable(false);
-
+        return button;
+    }
+    
+    public static JButton createFontStyleBoldButton(DrawingEditor editor, String configuration) {
+        JButton button = createButton(configuration);
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_BOLD, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
@@ -1347,18 +1319,8 @@ public class ButtonFactory {
         return button;
     }
 
-    public static JButton createFontStyleItalicButton(DrawingEditor editor) {
-        return createFontStyleItalicButton(editor,
-                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
-    }
-
-    public static JButton createFontStyleItalicButton(DrawingEditor editor,
-            ResourceBundleUtil labels) {
-        JButton button;
-        button = new JButton();
-        labels.configureToolBarButton(button, "attribute.fontStyle.italic");
-        button.setFocusable(false);
-
+    public static JButton createFontStyleItalicButton(DrawingEditor editor, String configuration) {
+        JButton button = createButton(configuration);
         AbstractAction action = new AttributeToggler<Boolean>(editor,
                 FONT_ITALIC, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
@@ -1367,18 +1329,8 @@ public class ButtonFactory {
         return button;
     }
 
-    public static JButton createFontStyleUnderlineButton(DrawingEditor editor) {
-        return createFontStyleUnderlineButton(editor,
-                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
-    }
-
-    public static JButton createFontStyleUnderlineButton(DrawingEditor editor,
-            ResourceBundleUtil labels) {
-        JButton button;
-        button = new JButton();
-        labels.configureToolBarButton(button, "attribute.fontStyle.underline");
-        button.setFocusable(false);
-
+    public static JButton createFontStyleUnderlineButton(DrawingEditor editor, String configuration) {
+        JButton button = createButton(configuration);
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_UNDERLINE, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
