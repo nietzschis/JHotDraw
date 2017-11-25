@@ -35,7 +35,7 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
         this(0, 0, 0, 0);
     }
 
-    //@FeatureEntryPoint(JHotDrawFeatures.TRIANGLE_TOOL)
+    @FeatureEntryPoint(JHotDrawFeatures.TRIANGLE_TOOL)
     public SVGTriangleFigure(double x, double y, double width, double height) {
         triangle = new Rectangle2D.Double(x, y, width, height);
         SVGAttributeKeys.setDefaults(this);
@@ -50,7 +50,7 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
         g.fill(p);
     }
     
-    //@FeatureEntryPoint(JHotDrawFeatures.TRIANGLE_TOOL)
+    @FeatureEntryPoint(JHotDrawFeatures.TRIANGLE_TOOL)
     protected void drawStroke(Graphics2D g) {
         GeneralPath p = new GeneralPath();
         p.moveTo((float) triangle.x, (float) (triangle.y + triangle.height));
