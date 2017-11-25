@@ -146,7 +146,7 @@ public class FontToolBar extends AbstractToolBar {
                     gbc.gridwidth = 2;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
                     p.add(faceField, gbc);
-                    btn = ButtonFactory.createFontButton(editor, labels);
+                    btn = ButtonFactory.createFontButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -266,7 +266,7 @@ public class FontToolBar extends AbstractToolBar {
                     gbc.gridwidth = 3;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
                     p.add(faceField, gbc);
-                    btn = ButtonFactory.createFontButton(editor, labels);
+                    btn = ButtonFactory.createFontButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.gridwidth = GridBagConstraints.REMAINDER;

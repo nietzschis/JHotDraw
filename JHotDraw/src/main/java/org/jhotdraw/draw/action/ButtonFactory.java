@@ -59,7 +59,8 @@ import org.jhotdraw.gui.JFontChooser;
  */
 public class ButtonFactory {
 
-    private static ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+    private static ResourceBundleUtil SVGlabels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+    private static ResourceBundleUtil DrawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
     /**
      * Mac OS X 'Apple Color Palette'. 
      * This palette has 8 columns.
@@ -965,16 +966,6 @@ public class ButtonFactory {
         return popupButton;
     }
 
-    public static void addStrokeButtonsTo(JToolBar toolbar, DrawingEditor editor) {
-        toolbar.add(createStrokeDecorationButton(editor));
-        toolbar.add(createStrokeWidthButton(editor));
-        toolbar.add(createStrokeDashesButton(editor));
-        toolbar.add(createStrokeTypeButton(editor));
-        toolbar.add(createStrokePlacementButton(editor));
-        toolbar.add(createStrokeCapButton(editor));
-        toolbar.add(createStrokeJoinButton(editor));
-    }
-
     public static JPopupButton createStrokeWidthButton(DrawingEditor editor) {
         return createStrokeWidthButton(
                 editor,
@@ -1174,7 +1165,7 @@ public class ButtonFactory {
 
         return strokeTypePopupButton;
     }
-
+    
     public static JPopupButton createStrokePlacementButton(DrawingEditor editor) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
 
@@ -1269,25 +1260,12 @@ public class ButtonFactory {
     }
 
     public static JPopupButton createFontButton(DrawingEditor editor) {
-        return createFontButton(editor,
-                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels"));
-    }
-
-    public static JPopupButton createFontButton(DrawingEditor editor,
-            ResourceBundleUtil labels) {
-        return createFontButton(editor, FONT_FACE, labels);
-
-    }
-
-    public static JPopupButton createFontButton(DrawingEditor editor,
-            AttributeKey<Font> key,
-            ResourceBundleUtil labels) {
-
+        AttributeKey<Font> key = FONT_FACE;
         JPopupButton fontPopupButton;
 
         fontPopupButton = new JPopupButton();
 
-        labels.configureToolBarButton(fontPopupButton, "attribute.font");
+        SVGlabels.configureToolBarButton(fontPopupButton, "attribute.font");
         fontPopupButton.setFocusable(false);
 
         JPopupMenu popupMenu = new JPopupMenu();
@@ -1304,7 +1282,7 @@ public class ButtonFactory {
     public static JButton createButton(String configuration){
         JButton button;
         button = new JButton();
-        labels.configureToolBarButton(button, configuration);
+        SVGlabels.configureToolBarButton(button, configuration);
         button.setFocusable(false);
         return button;
     }
@@ -1314,7 +1292,7 @@ public class ButtonFactory {
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_BOLD, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
-        a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.bold.text"));
+        a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, SVGlabels.getString("attribute.fontStyle.bold.text"));
         button.addActionListener(a);
         return button;
     }
@@ -1324,7 +1302,7 @@ public class ButtonFactory {
         AbstractAction action = new AttributeToggler<Boolean>(editor,
                 FONT_ITALIC, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
-        action.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.italic.text"));
+        action.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, SVGlabels.getString("attribute.fontStyle.italic.text"));
         button.addActionListener(action);
         return button;
     }
@@ -1334,32 +1312,9 @@ public class ButtonFactory {
         AbstractAction a = new AttributeToggler<Boolean>(editor,
                 FONT_UNDERLINE, Boolean.TRUE, Boolean.FALSE,
                 new StyledEditorKit.BoldAction());
-        a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, labels.getString("attribute.fontStyle.underline.text"));
+        a.putValue(Actions.UNDO_PRESENTATION_NAME_KEY, SVGlabels.getString("attribute.fontStyle.underline.text"));
         button.addActionListener(a);
         return button;
-    }
-
-    /**
-     * Creates toolbar buttons and adds them to the specified JToolBar
-     */
-    public static void addAlignmentButtonsTo(JToolBar toolbar, final DrawingEditor editor) {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
-        toolbar.add(new AlignAction.West(editor)).setFocusable(false);
-        toolbar.add(new AlignAction.East(editor)).setFocusable(false);
-        toolbar.add(new AlignAction.Horizontal(editor)).setFocusable(false);
-        toolbar.add(new AlignAction.North(editor)).setFocusable(false);
-        toolbar.add(new AlignAction.South(editor)).setFocusable(false);
-        toolbar.add(new AlignAction.Vertical(editor)).setFocusable(false);
-        toolbar.addSeparator();
-        toolbar.add(new MoveAction.West(editor)).setFocusable(false);
-        toolbar.add(new MoveAction.East(editor)).setFocusable(false);
-        toolbar.add(new MoveAction.North(editor)).setFocusable(false);
-        toolbar.add(new MoveAction.South(editor)).setFocusable(false);
-        toolbar.addSeparator();
-        toolbar.add(new BringToFrontAction(editor)).setFocusable(false);
-        toolbar.add(new SendToBackAction(editor)).setFocusable(false);
-
     }
 
     /**
