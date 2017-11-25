@@ -53,35 +53,35 @@ public class SVGTriangleFigureTest {
      */
     @Test
     public void testTriangleFigure1() {
-        SVGTriangleFigure instance = new SVGTriangleFigure();
-        Rectangle2D.Double expResult = 
+        SVGTriangleFigure instance1 = new SVGTriangleFigure();
+        Rectangle2D.Double expResult1 = 
                 new Rectangle2D.Double(
-                        instance.getX(), instance.getY(), 
-                        instance.getWidth(), instance.getHeight() );
-        Rectangle2D.Double result = instance.getBounds();
-        assertEquals(expResult, result);
+                        instance1.getX(), instance1.getY(), 
+                        instance1.getWidth(), instance1.getHeight() );
+        Rectangle2D.Double result1 = instance1.getBounds();
+        assertEquals(expResult1, result1);
     }
     
     @Test
     public void testTriangleFigure2() {
-        SVGTriangleFigure instance = new SVGTriangleFigure(-5,-5,10,10);
-        Rectangle2D.Double expResult = 
+        SVGTriangleFigure instance2 = new SVGTriangleFigure(-5,-5,10,10);
+        Rectangle2D.Double expResult2 = 
                 new Rectangle2D.Double(
-                        instance.getX(), instance.getY(), 
-                        instance.getWidth(), instance.getHeight() );
-        Rectangle2D.Double result = instance.getBounds();
-        assertEquals(expResult, result);
+                        instance2.getX(), instance2.getY(), 
+                        instance2.getWidth(), instance2.getHeight() );
+        Rectangle2D.Double result2 = instance2.getBounds();
+        assertEquals(expResult2, result2);
     }
     
     @Test
     public void testTriangleFigure3() {
-        SVGTriangleFigure instance = new SVGTriangleFigure(2,3,(-4),(-5));
-        Rectangle2D.Double expResult = 
+        SVGTriangleFigure instance3 = new SVGTriangleFigure(2,3,(-4),(-5));
+        Rectangle2D.Double expResult3 = 
                 new Rectangle2D.Double(
-                        instance.getX(), instance.getY(), 
-                        instance.getWidth(), instance.getHeight() );
-        Rectangle2D.Double result = instance.getBounds();
-        assertEquals(expResult, result);
+                        instance3.getX(), instance3.getY(), 
+                        instance3.getWidth(), instance3.getHeight() );
+        Rectangle2D.Double result3 = instance3.getBounds();
+        assertEquals(expResult3, result3);
     }
 
 }
