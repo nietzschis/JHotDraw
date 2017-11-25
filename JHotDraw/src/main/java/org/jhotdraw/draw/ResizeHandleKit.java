@@ -263,6 +263,7 @@ public class ResizeHandleKit {
                     evt.consume();
                     break;
                 case KeyEvent.VK_DOWN:
+                    evt.consume();
                     break;
                 case KeyEvent.VK_LEFT:
                     if (r.width > 1) {
