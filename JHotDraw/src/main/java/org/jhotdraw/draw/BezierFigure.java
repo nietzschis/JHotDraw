@@ -74,7 +74,7 @@ public class BezierFigure extends AbstractAttributedFigure {
      * are added to it. The <code>BezierPath</code> created by this constructor
      * is not closed.
      */
-    public BezierFigure() {
+        public BezierFigure() {
         this(false);
     }
     /**

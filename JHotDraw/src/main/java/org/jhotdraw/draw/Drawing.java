@@ -71,7 +71,7 @@ public interface Drawing extends CompositeFigure, Serializable, DOMStorable {
      * after it has been added.
      *
      * @see Figure#addNotify
-     *
+     *  
      * @param index The z-index of the figure.
      * @param figure to be added to the drawing
      */

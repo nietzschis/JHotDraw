@@ -23,6 +23,7 @@ import javax.swing.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
+import org.jhotdraw.graph.GraphClass;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
@@ -124,7 +125,16 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 3, 0, 0);
         p.add(btn, gbc);
-
+        
+        btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new GraphClass(), attributes), "createEllipse", labels);
+        creationTool.setToolDoneAfterCreation(false);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(3, 3, 0, 0);
+        p.add(btn, gbc);
+      
         attributes = new HashMap<AttributeKey, Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.black);
         attributes.put(AttributeKeys.STROKE_COLOR, null);
@@ -207,6 +217,7 @@ public class ToolsToolBar extends AbstractToolBar {
 
         setOpaque(false);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
