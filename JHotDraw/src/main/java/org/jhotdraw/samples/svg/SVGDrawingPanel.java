@@ -74,7 +74,19 @@ public class SVGDrawingPanel extends JPanel {
         }
 
         initComponents();
-        minimapToolBar = new MinimapToolBar();
+        minimapToolBar = new MinimapToolBar((Point.Double p) -> {
+            assert p.getX() >= 0 && p.getX() <= 1;
+            assert p.getY() >= 0 && p.getY() <= 1;
+            Dimension canvasSize = scrollPane.getViewport().getViewSize();
+            Rectangle newViewPort = scrollPane.getViewport().getViewRect();
+
+            p.setLocation(p.getX()*canvasSize.width, p.getY()*canvasSize.height); // Center the point relative to the full canvas.
+            p.setLocation(p.getX() - newViewPort.getWidth()/2, p.getY() - newViewPort.getHeight()/2); // Point to upperleft corner of the new viewport.
+            newViewPort.setLocation((int) p.getX(), (int) p.getY());
+
+            scrollPane.getHorizontalScrollBar().setValue((int) newViewPort.getX());
+            scrollPane.getVerticalScrollBar().setValue((int) newViewPort.getY());
+        });
         toolsPane.add(minimapToolBar);
         
         toolsPane.setLayout(new ToolBarLayout());
