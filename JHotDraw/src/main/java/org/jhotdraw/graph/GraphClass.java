@@ -58,7 +58,8 @@ public class GraphClass extends BezierFigure {
     public void setBounds(Point2D.Double anchor, Point2D.Double lead) {
         graphStartPos = anchor;
         
-        generatePath(graphChooser());
+        //generatePath(graphChooser());
+        generatePath(new LinearGraph(1,2, 0,300, 300));
         invalidate();
     }   
     
