@@ -92,12 +92,7 @@ public class ResizeHandleKitTest {
     @Test
     public void trackStepNormalizedTest()
     {
-        DrawingView view = new DefaultDrawingView();
-        DrawingEditorProxy editor = new DrawingEditorProxy();
-        editor.setTarget(new DefaultDrawingEditor());
-        view.addNotify(editor);
-        for (Handle h : handles)
-            h.setView(view);
+        DrawingView view = setUpView();
 
         Point[] points = {
                 new Point(0,0), // north east from rect
@@ -136,6 +131,7 @@ public class ResizeHandleKitTest {
         }
     }
 
+    // Shorter debug print
     private String rect(Rectangle2D.Double r)
     {
         return "x="+r.x + ", y=" + r.y + ", w=" + r.width + ", h=" + r.height;
@@ -154,6 +150,19 @@ public class ResizeHandleKitTest {
                 new Point2D.Double(right, bottom));
     }
 
+    // Function to set up editor and view needed for keyPressTest and trackStepNormalizedTest
+    private DrawingView setUpView()
+    {
+        DrawingView view = new DefaultDrawingView();
+        DrawingEditorProxy editor = new DrawingEditorProxy();
+        editor.setTarget(new DefaultDrawingEditor());
+        view.addNotify(editor);
+        for (Handle h : handles)
+            h.setView(view);
+
+        return view;
+    }
+
     @Test
     public void keyPressedTest() {
         int keys[] = {
@@ -163,47 +172,47 @@ public class ResizeHandleKitTest {
                 KeyEvent.VK_RIGHT
         };
 
-        DrawingView view = new DefaultDrawingView();
-        DrawingEditorProxy editor = new DrawingEditorProxy();
-        editor.setTarget(new DefaultDrawingEditor());
-        view.addNotify(editor);
-        for (Handle h : handles)
-            h.setView(view);
+        Rectangle2D.Double rects[] = {
+                new Rectangle2D.Double(1d, 1d, 1d, 1d),
+                new Rectangle2D.Double(50d, 50d, 100d, 100d),
+        };
 
-        for (int key:keys)
-        {
-            for (int i = 0; i < HandleDirections.values().length; i++)
-            {
+        setUpView();
 
-                HandleDirections dir = HandleDirections.values()[i];
-                //System.out.print("Checking "+ dir.name() + " & "+ rect(figure.getBounds()));
-                int mask = dir.dirMask;
-                Handle h = handles.get(i);
+        for (int key : keys) {
+            for (Rectangle2D.Double rect : rects) {
+                for (int i = 0; i < HandleDirections.values().length; i++) {
 
-                KeyEvent event1 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
-                KeyEvent event2 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+                    HandleDirections dir = HandleDirections.values()[i];
+                    int mask = dir.dirMask;
+                    Handle h = handles.get(i);
 
-                figure.setBounds(new Point2D.Double(50d, 50d), new Point2D.Double(100d, 100d));
-                h.keyPressed(event1);
-                Rectangle2D.Double actualBounds = figure.getBounds();
-                figure.setBounds(new Point2D.Double(50d, 50d), new Point2D.Double(100d, 100d));
-                keyPressed(event2,mask);
-                Rectangle2D.Double expectedBounds = figure.getBounds();
+                    KeyEvent event1 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+                    KeyEvent event2 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
 
-                collector.checkThat("Bounds doesnt match for "+ dir.name() + " eventKey " + key, actualBounds, equalTo(expectedBounds));
-                collector.checkThat("Consumption doesnt match for "+ dir.name() + " eventKey " + key, event1.isConsumed(), equalTo(event2.isConsumed()));
+                    figure.setBounds(rect);
+                    h.keyPressed(event1);
+                    Rectangle2D.Double actualBounds = figure.getBounds();
+                    figure.setBounds(rect);
+                    keyPressed(event2, mask);
+                    Rectangle2D.Double expectedBounds = figure.getBounds();
+
+                    collector.checkThat("Bounds doesnt match for " + dir.name() + " eventKey " + key, actualBounds, equalTo(expectedBounds));
+                    collector.checkThat("Consumption doesnt match for " + dir.name() + " eventKey " + key, event1.isConsumed(), equalTo(event2.isConsumed()));
 
 
+                }
             }
         }
     }
 
+    // ugly java alternative of !!
     private int nn(int x)
     {
         return x > 0 ? 1 : 0;
     }
 
-    public void keyPressed(KeyEvent evt, int mask) {
+    private void keyPressed(KeyEvent evt, int mask) {
         Rectangle2D.Double r = figure.getBounds();
 
         int up = 0;
@@ -226,13 +235,13 @@ public class ResizeHandleKitTest {
                 down = nn(mask & DIR_S);
                 break;
             case KeyEvent.VK_LEFT:
-                if (r.width <= 1 && (mask & DIR_W) != 0)
+                if (r.width <= 1 && (mask & DIR_E) != 0)
                     break;
                 left = -nn(mask & DIR_W);
                 right = -nn(mask & DIR_E);
                 break;
             case KeyEvent.VK_RIGHT:
-                if (r.width <= 1 && (mask & DIR_E) != 0)
+                if (r.width <= 1 && (mask & DIR_W) != 0)
                     break;
                 left = nn(mask & DIR_W);
                 right = nn(mask & DIR_E);
