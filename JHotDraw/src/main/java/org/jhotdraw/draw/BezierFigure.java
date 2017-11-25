@@ -55,7 +55,7 @@ import org.jhotdraw.xml.DOMOutput;
  * <br>1.0 March 14, 2004.
  * @author Werner Randelshofer
  */
-public class BezierFigure extends AbstractAttributedFigure {
+public abstract class BezierFigure extends AbstractAttributedFigure {
     /**
      * The BezierPath.
      */
@@ -100,7 +100,7 @@ public class BezierFigure extends AbstractAttributedFigure {
     /**
      * Returns the Figures connector for the specified location.
      * By default a ChopDiamondConnector is returned.
-     * @see ChopDiamondConnector
+     * @see ChopBezierConnector
      */
     public Connector findConnector(Point2D.Double p, ConnectionFigure prototype) {
         return new ChopBezierConnector(this);
