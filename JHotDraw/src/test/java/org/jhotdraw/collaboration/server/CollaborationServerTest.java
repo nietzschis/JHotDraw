@@ -25,12 +25,17 @@ public class CollaborationServerTest {
     private static IServer server;
 
     @BeforeClass
-    public static void initClass() {
+    public static void setUpClass() {
         server = CollaborationServer.getInstance();
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        server = null;
     }
 
     @Before
-    public void init() throws RemoteException {
+    public void setUp() throws RemoteException {
         try {
             server.startServer();
         }
@@ -39,17 +44,12 @@ public class CollaborationServerTest {
     }
 
     @After
-    public void destroy() {
+    public void tearDown() {
         try {
             server.stopServer();
         }
         catch (RemoteException | NotBoundException e) {
         }
-    }
-
-    @AfterClass
-    public static void destroyClass() {
-        server = null;
     }
 
     @Test(expected = ExportException.class)
