@@ -62,14 +62,14 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * The buffered image. This can be null, if we haven't yet parsed the
      * imageData.
      */
-    private BufferedImage bufferedImage;
+    private transient BufferedImage bufferedImage;
     
     private boolean edgeDetectorApplied; 
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
      */
-    private BufferedImage originalBufferedImage;
+    private transient BufferedImage originalBufferedImage;
 
     /** Creates a new instance. */
     public SVGImageFigure() {
