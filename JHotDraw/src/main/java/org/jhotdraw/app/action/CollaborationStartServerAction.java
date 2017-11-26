@@ -49,7 +49,6 @@ public class CollaborationStartServerAction extends AbstractApplicationAction {
             single.execute(() -> {
                 try {
                     app.startServer();
-                    CollaborationConnection.getInstance().setDrawing(((SVGView) app.getActiveView()).getDrawing());
                     String ip = getPrivateIp();
                     startingServerDialog.dispose();
                     if (shouldCopyIpToClipboard(ip)) {

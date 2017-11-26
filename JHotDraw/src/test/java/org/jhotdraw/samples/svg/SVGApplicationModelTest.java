@@ -4,6 +4,7 @@ import java.util.List;
 import javax.swing.JMenu;
 import org.jhotdraw.app.DefaultApplicationModel;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,10 +20,17 @@ public class SVGApplicationModelTest {
     private static List<JMenu> menus;
 
     @BeforeClass
-    public static void init() {
+    public static void setUpClass() {
         model = new SVGApplicationModel();
         appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         menus = model.createMenus(null, null);
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        model = null;
+        appLabels = null;
+        menus = null;
     }
     
     @Test
