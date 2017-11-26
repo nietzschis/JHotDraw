@@ -105,6 +105,18 @@ public class ViewToolBar extends AbstractToolBar {
                     gbc.weightx = 1;
                     btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, toggleGridButton.getPreferredSize().height));
                     p.add(btn, gbc);
+                    
+                    AbstractButton magnifyButton;
+                    magnifyButton = btn = ButtonFactory.createMagnifyButton(view);
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "view.magnifyGlass");
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.NONE;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    p.add(btn, gbc);
                 }
                 break;
             case 2:

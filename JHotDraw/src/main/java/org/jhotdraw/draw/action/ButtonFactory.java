@@ -1535,4 +1535,26 @@ public class ButtonFactory {
         btn.setFocusable(false);
         return btn;
     }
+    
+    public static AbstractButton createMagnifyButton(final DrawingView view) {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        final JToggleButton magnifyButton;
+        magnifyButton = new JToggleButton();
+
+        labels.configureToolBarButton(magnifyButton, "view.magnifyGlass");
+        magnifyButton.setFocusable(false);
+        magnifyButton.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (view.getScaleFactor() != 2) {
+                    view.setScaleFactor(2);
+                }else{
+                    view.setScaleFactor(1);
+                }
+            }
+
+        });
+
+        return magnifyButton;
+    }
 }
