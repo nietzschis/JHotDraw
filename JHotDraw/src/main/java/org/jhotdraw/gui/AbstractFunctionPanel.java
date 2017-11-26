@@ -7,7 +7,6 @@ package org.jhotdraw.gui;
 
 import javax.swing.JDialog;
 import org.jhotdraw.draw.PredefinedFunction;
-import org.jhotdraw.graph.Graph;
 
 /**
  *
@@ -40,13 +39,10 @@ public abstract class AbstractFunctionPanel extends javax.swing.JPanel {
         return this.function;
     }
     
-    public AbstractFunctionPanel changeFrame(){
-        return ((AbstractFunctionPanel)jComboBox1.getSelectedItem());
-    }
+    public abstract AbstractFunctionPanel changeFrame();
     
     @Override
     public abstract String toString();
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,23 +54,23 @@ public abstract class AbstractFunctionPanel extends javax.swing.JPanel {
 
         jComboBox1 = new javax.swing.JComboBox<>();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new AbstractFunctionPanel[] { }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new org.jhotdraw.gui.AbstractFunctionPanel[] {}));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(328, Short.MAX_VALUE)
+                .addContainerGap(326, Short.MAX_VALUE)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(188, Short.MAX_VALUE)
+                .addContainerGap(170, Short.MAX_VALUE)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(86, 86, 86))
+                .addGap(104, 104, 104))
         );
     }// </editor-fold>//GEN-END:initComponents
 

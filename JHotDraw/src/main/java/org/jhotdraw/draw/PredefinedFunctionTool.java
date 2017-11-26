@@ -184,15 +184,14 @@ public class PredefinedFunctionTool extends AbstractTool {
         AbstractFunctionPanel panel = null;
         JDialog f = null;
         while (notdone) {
-            f = null;
             f = new JDialog();
             if (panel == null) {
                 panel = new LinearGraphPanel();
             } else {
                 panel = panel.changeFrame();
-            }      
-            panel.setList(jPanel);
+            }
             panel.setDialog(f);
+            panel.setList(jPanel);
             f.setUndecorated(true);
             f.setTitle("");
             f.setType(javax.swing.JFrame.Type.UTILITY);
