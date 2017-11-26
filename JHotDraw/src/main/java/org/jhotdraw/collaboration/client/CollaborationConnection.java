@@ -13,20 +13,16 @@ import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
-import org.jhotdraw.collaboration.common.SVGRectDTO;
-import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
-import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
+import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
-import org.jhotdraw.samples.svg.figures.SVGTextFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
     private static CollaborationConnection singleton;
-    private Drawing drawing;
+    private QuadTreeDrawing drawing;
     private IRemoteObservable collaborationProxy;
-    private List<Figure> list;
-
+    private String name;
     private CollaborationConnection() throws RemoteException {
         super();
     }
@@ -66,32 +62,17 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         this.removeCollaborator();
         this.drawing = null;
         this.collaborationProxy = null;
+        this.name = null;
     }
 
     public void setDrawing(Drawing drawing) {
-        this.drawing = drawing;
+        this.drawing = (QuadTreeDrawing) drawing;
     }
 
     public void notifyUpdate(String source) {
         System.out.println("Call for " + source);
         if (drawing != null) {
-            List<SVGRectDTO> listToSend = new ArrayList<>();
-
-            for (Figure f : drawing.getChildren()) {
-                if (f instanceof SVGRectFigure) {
-                    SVGRectDTO fig = new SVGRectDTO();
-                    fig.x = ((SVGRectFigure) f).getX();
-                    fig.y = ((SVGRectFigure) f).getY();
-                    fig.height = ((SVGRectFigure) f).getHeight();
-                    fig.width = ((SVGRectFigure) f).getWidth();
-                    fig.rx = ((SVGRectFigure) f).getArcWidth();
-                    fig.ry = ((SVGRectFigure) f).getArcHeight();
-                    fig.attributes = f.getAttributes();
-                    listToSend.add(fig);
-                }
-
-            }
-
+            
             System.out.println("Collaboration Notified, action: " + source);
 
             try {
@@ -105,7 +86,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     // Server kalder denne på clienten
     @Override
     public synchronized void update(List<Figure> figures) throws RemoteException {
-        //System.out.println("update på klient");
         for (Figure serverFigure : figures) {
             boolean found = false;
             for (Figure workingFigure : drawing.getChildren()) {
@@ -145,24 +125,9 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
             if (!found) {
 
-                if (serverFigure instanceof SVGRectFigure) {
+                if (true) {
                     System.out.println("add square");
-                    SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                } else if (serverFigure instanceof SVGEllipseFigure) {
-                    System.out.println("Added circle");
-                    SVGEllipseFigure newFig = (SVGEllipseFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                } else if (serverFigure instanceof SVGPathFigure) {
-                    System.out.println("Added path");
-                    SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                } else if (serverFigure instanceof SVGTextFigure) {
-                    System.out.println("Added text");
-                    SVGTextFigure newFig = (SVGTextFigure) serverFigure.clone();
+                    Figure newFig = (Figure) serverFigure.clone();
                     newFig.setCollaborationId(serverFigure.getCollaborationId());
                     drawing.add(newFig);
                 } else {
@@ -170,8 +135,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                 }
             }
         }
-        System.out.println(drawing.getChildCount());
-
     }
 
     private void addCollaborator() {
@@ -192,9 +155,13 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             ex.printStackTrace();
         }
     }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String getName() throws RemoteException {
-        return "Anton" + (Math.random() * 100);
+        return name;
     }
 }
