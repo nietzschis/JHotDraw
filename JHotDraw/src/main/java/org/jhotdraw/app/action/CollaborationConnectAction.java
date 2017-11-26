@@ -77,22 +77,14 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
     }
 
     private void connectToServer(String IP) {
-        if (CollaborationConnection.getInstance().connectToServer(IP)) {
-
-            Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
-            CollaborationConnection.getInstance().setDrawing(drawing);
-            app.firePropertyEvent("connect", null, null);
-            setEnabled(false);
-
-            // Clear own canvas
-            if (drawing.getChildCount() > 0) {
-                drawing.removeAllChildren();
-            }
-        }
+        app.connectToServer(IP);
     }
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName() == "connect") {
+                setEnabled(false);
+            }
             if (evt.getPropertyName() == "disconnect") {
                 setEnabled(true);
             }

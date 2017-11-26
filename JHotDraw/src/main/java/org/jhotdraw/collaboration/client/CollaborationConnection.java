@@ -37,7 +37,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     public boolean connectToServer(String IP) {
-        // TOOD: Opret forbindelse
         Registry registry;
         try {
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
@@ -69,11 +68,8 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     public void notifyUpdate(String source) {
-        System.out.println("Call for " + source);
         if (drawing != null) {
-
             System.out.println("Collaboration Notified, action: " + source);
-
             try {
                 collaborationProxy.notifyAllCollaborators(drawing.getChildren());
             } catch (RemoteException ex) {
@@ -144,16 +140,15 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                         changeAttributesOnFigure(workingFigure, serverFigure);
                     }
 
-                    // Found the same figures so its not new 
+                    // Found the same figures so its not missing 
                     found = true;
                 }
             }
 
             if (!found) {
-                // Add new figure to list
+                // Remove figure from list
                 figuresToBeDeleted.add(workingFigure);
             }
-            System.out.println(found);
         }
 
         if (!figuresToBeDeleted.isEmpty()) {

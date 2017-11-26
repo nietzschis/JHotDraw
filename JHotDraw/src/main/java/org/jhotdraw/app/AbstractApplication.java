@@ -28,6 +28,7 @@ import java.rmi.RemoteException;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.collaboration.server.CollaborationServer;
 import org.jhotdraw.collaboration.server.RemoteObservable;
+import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.samples.svg.SVGView;
 
 /**
@@ -242,6 +243,27 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     public void stopServer() throws RemoteException, NotBoundException {
         CollaborationServer.getInstance().stopServer();
         firePropertyChange("stopServer", null, null);
+    }
+
+    public boolean connectToServer(String IP) {
+        if (CollaborationConnection.getInstance().connectToServer(IP)) {
+
+            Drawing drawing = ((SVGView) getActiveView()).getDrawing();
+            CollaborationConnection.getInstance().setDrawing(drawing);
+            firePropertyEvent("connect", null, null);
+
+            // Clear own canvas
+            if (drawing.getChildCount() > 0) {
+                drawing.removeAllChildren();
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    public void disconnectFromServer() {
+        CollaborationConnection.getInstance().disconnectFromServer();
+        firePropertyEvent("disconnect", null, null);
     }
 
     public java.util.List<File> recentFiles() {

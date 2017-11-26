@@ -226,6 +226,10 @@ public interface Application {
     
     public void stopServer() throws RemoteException, NotBoundException;
     
+    public boolean connectToServer(String IP);
+    
+    public void disconnectFromServer();
+    
     /**
      * Adds a palette window to the application.
      */

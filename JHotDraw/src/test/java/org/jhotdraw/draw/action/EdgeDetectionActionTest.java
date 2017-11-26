@@ -67,7 +67,6 @@ public class EdgeDetectionActionTest {
     }
     */
 
-    @Ignore
     @Test
     public void testEdgeDetection() {
         BufferedImage img = loadTestImage();
