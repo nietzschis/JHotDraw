@@ -23,7 +23,7 @@ import javax.swing.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
-import org.jhotdraw.graph.GraphClass;
+import org.jhotdraw.graph.GraphBezierFigure;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
@@ -61,6 +61,7 @@ public class ToolsToolBar extends AbstractToolBar {
         GridBagConstraints gbc;
         AbstractButton btn;
         CreationTool creationTool;
+        PredefinedFunctionTool predefinedFunctionTool;
         PathTool pathTool;
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
@@ -126,8 +127,8 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.insets = new Insets(0, 3, 0, 0);
         p.add(btn, gbc);
         
-        btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new GraphClass(), attributes), "createEllipse", labels);
-        creationTool.setToolDoneAfterCreation(false);
+        btn = ButtonFactory.addToolTo(this, editor, predefinedFunctionTool = new PredefinedFunctionTool(new GraphBezierFigure(), attributes), "createEllipse", labels);
+        predefinedFunctionTool.setToolDoneAfterCreation(false);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
         gbc.gridx = 3;

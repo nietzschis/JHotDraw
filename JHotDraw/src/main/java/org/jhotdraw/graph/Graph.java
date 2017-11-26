@@ -5,20 +5,19 @@
  */
 package org.jhotdraw.graph;
 
+import org.jhotdraw.draw.PredefinedFunction;
+
 /**
  *
  * @author Joachim
  */
-public interface Graph {
+public interface Graph extends PredefinedFunction {
     
-    public double getStartX();
+    double getStartX();
     
-    public double getEndX();
-    
-    public double getLength();
-    
-    public double calcYCoordinate(double x);      
-      
-    
-    public double calcXCoordinate(double y);
+    double getEndX();
+
+    double calcYCoordinate(double x);
+
+    double calcXCoordinate(double y);
 }
