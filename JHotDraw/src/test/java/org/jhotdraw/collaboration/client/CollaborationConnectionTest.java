@@ -13,7 +13,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.app.DefaultSDIApplication;
-import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.samples.svg.SVGView;
@@ -24,10 +23,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
-import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -59,7 +55,7 @@ public class CollaborationConnectionTest {
         client.setActiveView(clientView);
 
         serverCollaboration = CollaborationConnection.getInstance();
-        serverCollaboration.setDrawing((Drawing) serverDrawing);
+        serverCollaboration.setDrawing(serverDrawing);
 
         server.startServer();
     }
@@ -135,7 +131,7 @@ public class CollaborationConnectionTest {
         serverCollaboration.update(clientDrawing.getChildren());
         assertEquals("Server list have not removed the figure", 0, serverDrawing.getChildCount());
     }
-
+    
     @AfterClass
     public static void teardown() throws RemoteException, NotBoundException {
         server.stopServer();
