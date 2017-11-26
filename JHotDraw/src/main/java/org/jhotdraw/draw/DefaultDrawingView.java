@@ -134,7 +134,6 @@ public class DefaultDrawingView
     private class EventHandler implements FigureListener, CompositeFigureListener, HandleListener, FocusListener {
 
         public void figureAdded(CompositeFigureEvent evt) {
-            System.out.println("Figure added");
             if (drawing.getChildCount() == 1 && getEmptyDrawingMessage() != null) {
                 repaint();
             } else {
@@ -1075,7 +1074,6 @@ public class DefaultDrawingView
             }
         });
         // Hookpoint for collaborate delete
-        System.out.println("Removed figure");
         CollaborationConnection.getInstance().notifyUpdate("Remove");
     }
 

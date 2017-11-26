@@ -21,7 +21,6 @@ import java.awt.geom.*;
 import org.jhotdraw.util.*;
 import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.Geom;
 
 /**
@@ -65,8 +64,6 @@ public class QuadTreeDrawing extends AbstractDrawing {
         needsSorting = true;
         super.basicRemoveChild(index);
         
-        // Notify collaborator
-        //CollaborationConnection.getInstance().notifyUpdate("remove");
         return figure;
     }
 

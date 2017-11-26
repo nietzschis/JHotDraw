@@ -21,6 +21,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoableEdit;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 /**
  * A tool to create figures which implement the {@code TextHolderFigure}
@@ -188,6 +189,8 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             typingTarget = null;
             
             textField.endOverlay();
+            
+            CollaborationConnection.getInstance().notifyUpdate("create");
         }
         //	        view().checkDamage();
     }
