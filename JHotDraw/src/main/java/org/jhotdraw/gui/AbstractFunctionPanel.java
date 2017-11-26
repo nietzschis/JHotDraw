@@ -40,9 +40,7 @@ public abstract class AbstractFunctionPanel extends javax.swing.JPanel {
         return this.function;
     }
     
-    public AbstractFunctionPanel changeFrame(){
-        return ((AbstractFunctionPanel)jComboBox1.getSelectedItem());
-    }
+    public abstract AbstractFunctionPanel changeFrame();
     
     @Override
     public abstract String toString();
@@ -79,7 +77,7 @@ public abstract class AbstractFunctionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JComboBox<org.jhotdraw.gui.AbstractFunctionPanel> jComboBox1;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }

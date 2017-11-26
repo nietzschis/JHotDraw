@@ -28,8 +28,13 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
             jComboBox1.addItem(item);
         }
     }
-    
-     @Override
+
+    @Override
+    public AbstractFunctionPanel changeFrame() {
+        return (AbstractFunctionPanel) jComboBox1.getSelectedItem();
+    }
+
+    @Override
     public String toString() {
         return "Linear Graph";
     }
@@ -126,22 +131,22 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         double a = Double.parseDouble(jTextField1.getText());
         double b = Double.parseDouble(jTextField2.getText());
         
         function = new LinearGraph(a, b, 0, 300, 300);
         notDone = false;
         close();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         notDone = true;
         close();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }
 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -150,7 +155,7 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 
    
 }

@@ -28,7 +28,12 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
             jComboBox1.addItem(item);
         }
     }
-    
+
+    @Override
+    public AbstractFunctionPanel changeFrame() {
+        return (AbstractFunctionPanel) jComboBox1.getSelectedItem();
+    }
+
     @Override
     public String toString() {
         return "Quadratic Graph";
@@ -131,7 +136,7 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         double a = Double.parseDouble(jTextField1.getText());
         double b = Double.parseDouble(jTextField2.getText());
         double c = Double.parseDouble(jTextField3.getText());
@@ -139,15 +144,15 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
         function = new QuadraticGraph(a, b, c);
         notDone = false;
         close();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         notDone = true;
         close();
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }
 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<org.jhotdraw.gui.AbstractFunctionPanel> jComboBox1;
@@ -157,5 +162,5 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }
