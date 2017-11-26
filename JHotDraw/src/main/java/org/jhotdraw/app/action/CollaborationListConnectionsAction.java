@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 import org.jhotdraw.collaboration.server.RemoteObservable;
@@ -19,28 +21,30 @@ public class CollaborationListConnectionsAction extends AbstractApplicationActio
 
     private PropertyChangeListener applicationListener;
     private Application app;
+    private ExecutorService single;
 
     public CollaborationListConnectionsAction(Application app) {
         super(app);
         this.app = app;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
+        single = Executors.newSingleThreadExecutor();
         setEnabled(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        try {
-            StringBuilder names = new StringBuilder();
-            ((RemoteObservable) RemoteObservable.getInstance()).getCollaboratorNames().forEach(name -> names.append(name).append("\n"));
-            JOptionPane.showMessageDialog(app.getComponent(),
-                    "All currently connected clients:"
-                    + "\n\n" + names.toString(),
-                    "Collaboration", JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        single.execute(() -> {
+            try {
+                JOptionPane.showMessageDialog(app.getComponent(),
+                        "All currently connected clients:"
+                        + "\n\n" + ((RemoteObservable) RemoteObservable.getInstance()).getCollaboratorNames(),
+                        "Collaboration", JOptionPane.INFORMATION_MESSAGE);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private PropertyChangeListener createApplicationListener() {
