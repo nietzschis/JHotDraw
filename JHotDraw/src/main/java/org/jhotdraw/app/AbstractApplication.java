@@ -35,9 +35,8 @@ import org.jhotdraw.samples.svg.SVGView;
  *
  *
  * @author Werner Randelshofer
- * @version 1.3 2007-12-24 Added support for active view. 
- * <br>1.2 2007-11-25 Method View.clear is now invoked on a worker
- * thread.
+ * @version 1.3 2007-12-24 Added support for active view.
+ * <br>1.2 2007-11-25 Method View.clear is now invoked on a worker thread.
  * <br>1.1 2006-05-01 System.exit(0) explicitly in method stop().
  * <br>1.0 October 4, 2005 Created.
  */
@@ -54,13 +53,15 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     private View activeView;
     public final static String VIEW_COUNT_PROPERTY = "viewCount";
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public AbstractApplication() {
     }
 
     public void init() {
         prefs = Preferences.userNodeForPackage((getModel() == null) ? getClass() : getModel().getClass());
-       
+
         int count = prefs.getInt("recentFileCount", 0);
         for (int i = 0; i < count; i++) {
             String path = prefs.get("recentFile." + i, null);
@@ -118,9 +119,9 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     }
 
     /**
-     * Sets the active view. Calls deactivate on the previously
-     * active view, and then calls activate on the given view.
-     * 
+     * Sets the active view. Calls deactivate on the previously active view, and
+     * then calls activate on the given view.
+     *
      * @param newValue Active view, can be null.
      */
     public void setActiveView(View newValue) {
@@ -137,7 +138,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     /**
      * Gets the active view.
-     * 
+     *
      * @return The active view, can be null.
      */
     public View getActiveView() {
@@ -229,24 +230,16 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     public void configure(String[] args) {
     }
-    
+
     public void startServer() throws RemoteException, AlreadyBoundException {
-        //@SuppressWarnings("unchecked")
-        //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
-        //recentFiles.clear();
-        //prefs.putInt("recentFileCount", recentFiles.size());
         CollaborationServer.getInstance().startServer();
         CollaborationConnection.getInstance().setCollaborationProxy(RemoteObservable.getInstance());
         CollaborationConnection.getInstance().setDrawing(((SVGView) getActiveView()).getDrawing());
         RemoteObservable.getInstance().addCollaborator(CollaborationConnection.getInstance());
         firePropertyChange("startServer", null, null);
     }
-    
+
     public void stopServer() throws RemoteException, NotBoundException {
-        //@SuppressWarnings("unchecked")
-        //java.util.List<File> oldValue = (java.util.List<File>) recentFiles.clone();
-        //recentFiles.clear();
-        //prefs.putInt("recentFileCount", recentFiles.size());
         CollaborationServer.getInstance().stopServer();
         firePropertyChange("stopServer", null, null);
     }
@@ -300,7 +293,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     public void addWindow(Window window, View p) {
     }
-    
+
     public void firePropertyEvent(String eventName, Object oldValue, Object newValue) {
         firePropertyChange(eventName, oldValue, newValue);
     }
