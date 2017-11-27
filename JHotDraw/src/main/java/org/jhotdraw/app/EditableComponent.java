@@ -37,6 +37,10 @@ public interface EditableComponent {
 	 * Duplicates the selected region.
 	 */
 	public void duplicate();
+        /**
+	 * Flips the selected region.
+	 */
+	public void flip();
 	/**
 	 * Selects all.
 	 */

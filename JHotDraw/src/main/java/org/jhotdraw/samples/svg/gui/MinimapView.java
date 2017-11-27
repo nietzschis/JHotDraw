@@ -126,7 +126,7 @@ public class MinimapView extends JPanel{
         Double minX = Double.MAX_VALUE;
         Double minY = Double.MAX_VALUE;
         for(Figure f: getDrawing().getChildren()){
-            Rectangle2D.Double r = f.getBounds();
+            Rectangle2D.Double r = f.getBounds();            
             if (AttributeKeys.TRANSFORM.get(f) != null) {
                 Rectangle2D rt = AttributeKeys.TRANSFORM.get(f).createTransformedShape(r).getBounds2D();
                 r = (rt instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rt : new Rectangle2D.Double(rt.getX(), rt.getY(), rt.getWidth(), rt.getHeight());
@@ -157,6 +157,13 @@ public class MinimapView extends JPanel{
         smallestContainer.y = minY;
         smallestContainer.width -= minX;
         smallestContainer.height -= minY;
+        
+        // add 10% to border
+        smallestContainer.x -= smallestContainer.width*0.1;
+        smallestContainer.y -= smallestContainer.height*0.1;
+        smallestContainer.width *= 1.2;
+        smallestContainer.height *= 1.2;
+        
         return smallestContainer;
     }
     

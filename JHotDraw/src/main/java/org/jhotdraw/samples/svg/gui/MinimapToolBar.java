@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import org.jhotdraw.draw.CompositeFigureEvent;
 import org.jhotdraw.draw.CompositeFigureListener;
 import org.jhotdraw.draw.Drawing;
@@ -16,6 +13,7 @@ import org.jhotdraw.draw.DrawingEditor;
 import static org.jhotdraw.draw.DrawingEditor.ACTIVE_VIEW_PROPERTY;
 import org.jhotdraw.draw.FigureEvent;
 import org.jhotdraw.draw.FigureListener;
+import org.jhotdraw.samples.svg.ViewportModifier;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -26,16 +24,44 @@ public class MinimapToolBar extends AbstractToolBar {
     private final FigureChangeListener figureListener;
     private final MinimapView minimapView;
     private final DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    private final UndoableEditListener undoableEditListener = new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+            minimapView.repaint();
+        }
+    };
     private Drawing activeDrawing;
+    private final Dimension size = new Dimension();
+    private MinimapEventHandler minimapEventHandler;
     
-    /** Creates new instance. */
-    public MinimapToolBar() {
+    /**
+     * Creates a new {@link MinimapToolBar} with custom size.
+     * @param viewportModifier used to move the viewport on the canvas then moved.
+     * @param width The width of the {@link MinimapView}
+     * @param height The height of the {@link MinimapView}
+     */
+    public MinimapToolBar(ViewportModifier viewportModifier, int width, int height) {
+        size.setSize(width, height);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
         this.figureListener = new FigureChangeListener();
         minimapView = new MinimapView(this);
-        minimapView.setPreferredSize(new Dimension(80,80));
-        //getEditor().getActiveView()
+        minimapView.setPreferredSize(size);
+        
+        if(viewportModifier != null){
+            minimapEventHandler = new MinimapEventHandler(minimapView, viewportModifier);
+        }
+    }
+    
+    /**
+     * Creates a new {@link MinimapToolBar} with fixed size.
+     */
+    public MinimapToolBar() {
+        this(null, 80, 80);
+    }
+
+    public MinimapToolBar(ViewportModifier viewportModifier) {
+        this(viewportModifier, 80, 80);
     }
     
     @Override
@@ -73,49 +99,47 @@ public class MinimapToolBar extends AbstractToolBar {
 
         @Override
         public void areaInvalidated(FigureEvent e) {
-            //System.out.println(e);
-            minimapView.invalidate();
-            //minimapView.repaint();
+            minimapView.repaint();
         }
 
         @Override
         public void attributeChanged(FigureEvent e) {
-            System.out.println("attributeChanged");
+            //ignored
         }
 
         @Override
         public void figureHandlesChanged(FigureEvent e) {
-            System.out.println("figureHandlesChanged");
+            //ignored
         }
 
         @Override
         public void figureChanged(FigureEvent e) {
-            System.out.println("figureChanged");
+            //ignored
         }
 
         @Override
         public void figureAdded(FigureEvent e) {
-            System.out.println("figureAdded");
+            //ignored
         }
 
         @Override
         public void figureRemoved(FigureEvent e) {
-            System.out.println("figureRemoved");
+            //ignored
         }
 
         @Override
         public void figureRequestRemove(FigureEvent e) {
-            System.out.println("figureRequestRemove");
+            //ignored
         }
 
         @Override
         public void figureAdded(CompositeFigureEvent e) {
-            System.out.println("comp figureAdded");
+            //ignored
         }
 
         @Override
         public void figureRemoved(CompositeFigureEvent e) {
-            System.out.println("comp figureRemoved");
+            //ignored
         }
         
     }
@@ -128,25 +152,28 @@ public class MinimapToolBar extends AbstractToolBar {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if(evt.getPropertyName().equals(ACTIVE_VIEW_PROPERTY)){
-                setDrawing((Drawing) evt.getNewValue());
+                setDrawing((Drawing) evt.getNewValue()); // update whenever the active drawing changes.
             }
+            minimapView.repaint();
         }
     }
     
     /**
      * Sets the drawing that should be shown on the minimap.
-     * @param d 
+     * @param d the new drawing
      */
     private void setDrawing(Drawing d){
         if (activeDrawing != null){
             activeDrawing.removeFigureListener(figureListener);
             activeDrawing.removeCompositeFigureListener(figureListener);
+            activeDrawing.removeUndoableEditListener(undoableEditListener);
         }
         activeDrawing = d;
         
         if (activeDrawing != null){
             activeDrawing.addFigureListener(figureListener);
             activeDrawing.addCompositeFigureListener(figureListener);
+            activeDrawing.addUndoableEditListener(undoableEditListener);
         }
         
         minimapView.invalidate();
