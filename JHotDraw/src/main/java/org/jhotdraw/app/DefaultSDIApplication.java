@@ -131,6 +131,7 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(DeleteAction.ID, new DeleteAction());
         m.putAction(DuplicateAction.ID, new DuplicateAction());
         m.putAction(SelectAllAction.ID, new SelectAllAction());
+        m.putAction(FlipAction.ID, new FlipAction());
     }
 
     protected void initViewActions(View p) {
