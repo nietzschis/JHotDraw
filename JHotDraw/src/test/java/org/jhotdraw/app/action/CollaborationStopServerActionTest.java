@@ -3,11 +3,13 @@ package org.jhotdraw.app.action;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import org.jhotdraw.app.Application;
+import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.app.DefaultSDIApplication;
+import org.jhotdraw.samples.svg.SVGView;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -17,7 +19,8 @@ public class CollaborationStopServerActionTest {
 
     @Test
     public void testChangeListener() throws RemoteException, AlreadyBoundException, NotBoundException {
-        Application app = new DefaultSDIApplication();
+        AbstractApplication app = new DefaultSDIApplication();
+        app.setActiveView(mock(SVGView.class));
         AbstractApplicationAction stopServerAction = new CollaborationStopServerAction(app);
 
         assertFalse(stopServerAction.isEnabled());

@@ -256,7 +256,6 @@ public class CreationTool extends AbstractTool {
                 createdFigure = null;
                 // TODO: Her bliver ikke SVG figurer tegnet
                 CollaborationConnection.getInstance().notifyUpdate("create");
-                System.out.println("Creation Tool finished");
             }
         } else {
             if (isToolDoneAfterCreation()) {

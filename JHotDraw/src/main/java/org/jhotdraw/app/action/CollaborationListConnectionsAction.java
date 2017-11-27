@@ -5,8 +5,8 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 import org.jhotdraw.collaboration.server.RemoteObservable;
@@ -21,51 +21,38 @@ public class CollaborationListConnectionsAction extends AbstractApplicationActio
 
     private PropertyChangeListener applicationListener;
     private Application app;
+    private ExecutorService single;
 
     public CollaborationListConnectionsAction(Application app) {
         super(app);
         this.app = app;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
+        single = Executors.newSingleThreadExecutor();
         setEnabled(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        try {
-            ((RemoteObservable) RemoteObservable.getInstance()).getCollaboratorNames().forEach(name -> System.out.println(name));
-            
-            /*if (shouldStopServer()) {
+        single.execute(() -> {
             try {
-            app.stopServer();
+                JOptionPane.showMessageDialog(app.getComponent(),
+                        "All currently connected clients:"
+                        + "\n\n" + ((RemoteObservable) RemoteObservable.getInstance()).getCollaboratorNames(),
+                        "Collaboration", JOptionPane.INFORMATION_MESSAGE);
             }
-            catch (RemoteException | NotBoundException e) {
-            JOptionPane.showMessageDialog(app.getComponent(),
-            "Error shutting down server."
-            + "\n\n" + e,
-            "Collaboration error", JOptionPane.ERROR_MESSAGE);
+            catch (RemoteException e) {
+                e.printStackTrace();
             }
-            }*/
-        }
-        catch (RemoteException ex) {
-            Logger.getLogger(CollaborationListConnectionsAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private boolean shouldStopServer() {
-        return JOptionPane.showConfirmDialog(app.getComponent(),
-                "If you stop being a server, people currently"
-                + "\nconnected to you will get disconnected."
-                + "\n\nAre you sure?",
-                "Collaboration", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        });
     }
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
-            if (evt.getPropertyName() == "startServer") {
+            if (evt.getPropertyName().equals("startServer")) {
                 setEnabled(true);
             }
-            if (evt.getPropertyName() == "stopServer") {
+            if (evt.getPropertyName().equals("stopServer")) {
                 setEnabled(false);
             }
         };

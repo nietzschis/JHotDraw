@@ -32,18 +32,23 @@ public class RemoteObservableTest {
     private ArgumentCaptor<List<Figure>> argument;
 
     @BeforeClass
-    public static void initClass() throws RemoteException {
+    public static void setUpClass() throws RemoteException {
         server = RemoteObservable.getInstance();
     }
 
+    @AfterClass
+    public static void tearDownClass() {
+        server = null;
+    }
+
     @Before
-    public void init() {
+    public void setUp() {
         client = mock(CollaborationConnection.class);
         argument = ArgumentCaptor.forClass(List.class);
     }
 
     @After
-    public void destroy() {
+    public void tearDown() {
         try {
             ((RemoteObservable) RemoteObservable.getInstance()).clearAllCollaborators();
         }
@@ -51,11 +56,6 @@ public class RemoteObservableTest {
         }
         client = null;
         argument = null;
-    }
-
-    @AfterClass
-    public static void destroyClass() {
-        server = null;
     }
 
     @Test

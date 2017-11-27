@@ -48,38 +48,43 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
         }
     }
 
+    private String setCollaboratorName() {
+        String input = "";
+        boolean run = true;
+        while (run) {
+            input = JOptionPane.showInputDialog(app.getComponent(), "Write your name");
+            if (!input.equals("")) {
+                run = false;
+            }
+        }
+        return input;
+    }
+
     private void verifyIP(String IP) {
         String IPRegExpr = "\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
-        if (IP.matches(IPRegExpr));
-        if (IP.length() >= 7) {
-            // TODO: Implement Server connection
+        if (IP.matches(IPRegExpr)) {
+            // TODO: Implement Server 
+            CollaborationConnection.getInstance().setName(setCollaboratorName());
             connectToServer(IP);
             JOptionPane.showMessageDialog(app.getComponent(), "Connected to server! ");
+
         } else {
             showInputDialog("Wrong IP, try again:");
         }
     }
 
     private void connectToServer(String IP) {
-        if (CollaborationConnection.getInstance().connectToServer(IP)) {
-
-            Drawing drawing = ((SVGView) app.getActiveView()).getDrawing();
-            CollaborationConnection.getInstance().setDrawing(drawing);
-            app.firePropertyEvent("connect", null, null);
-            setEnabled(false);
-            
-            // Clear own canvas
-            if(drawing.getChildCount() > 0) {
-                drawing.removeAllChildren();
-            }
-        }
+        app.connectToServer(IP);
     }
 
     private PropertyChangeListener createApplicationListener() {
         return (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName() == "connect") {
+                setEnabled(false);
+            }
             if (evt.getPropertyName() == "disconnect") {
                 setEnabled(true);
             }
