@@ -139,6 +139,7 @@ public class ActionsToolBar extends AbstractToolBar {
                 pb.setItemFont(UIManager.getFont("MenuItem.font"));
                 labels.configureToolBarButton(pb, "actions");
                 pb.add(new DuplicateAction());
+                pb.add(new FlipAction());
                 pb.addSeparator();
                 pb.add(new GroupAction(editor, new SVGGroupFigure()));
                 pb.add(new UngroupAction(editor, new SVGGroupFigure()));
