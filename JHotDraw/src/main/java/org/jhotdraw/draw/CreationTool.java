@@ -250,7 +250,7 @@ public class CreationTool extends AbstractTool {
                         super.redo();
                         addedDrawing.add(addedFigure);
                     }
-                });
+                }) ;
                 creationFinished(createdFigure);
                 createdFigure = null;
             }
