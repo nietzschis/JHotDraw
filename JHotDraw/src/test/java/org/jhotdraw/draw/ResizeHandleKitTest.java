@@ -9,31 +9,30 @@ import org.junit.rules.ErrorCollector;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import static java.awt.Cursor.*;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
 
 public class ResizeHandleKitTest {
-    SVGRectFigure figure;
-    ArrayList<Handle> handles = new ArrayList<>();
+
+    private SVGRectFigure figure;
+    private final ArrayList<Handle> handles = new ArrayList<>();
 
     @Rule
     public ErrorCollector collector = new ErrorCollector();
 
 
-    static final int DIR_S = 1;
-    static final int DIR_N = 2;
-    static final int DIR_E = 4;
-    static final int DIR_W = 8;
-    static final int DIR_SE = DIR_S|DIR_E;
-    static final int DIR_SW = DIR_S|DIR_W;
-    static final int DIR_NE = DIR_N|DIR_E;
-    static final int DIR_NW = DIR_N|DIR_W;
+    private static final int DIR_S = 1;
+    private static final int DIR_N = 2;
+    private static final int DIR_E = 4;
+    private static final int DIR_W = 8;
+    private static final int DIR_SE = DIR_S|DIR_E;
+    private static final int DIR_SW = DIR_S|DIR_W;
+    private static final int DIR_NE = DIR_N|DIR_E;
+    private static final int DIR_NW = DIR_N|DIR_W;
 
     enum HandleDirections
     {
@@ -53,13 +52,13 @@ public class ResizeHandleKitTest {
             this.dirMask = mask;
         }
 
-        int cursor;
-        Locator locator;
-        int dirMask;
+        final int cursor;
+        final Locator locator;
+        final int dirMask;
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         figure = new SVGRectFigure(50d,50d,50d,50d);
         ResizeHandleKit.addEdgeResizeHandles(figure,handles);
         ResizeHandleKit.addCornerResizeHandles(figure, handles);
@@ -72,10 +71,13 @@ public class ResizeHandleKitTest {
         {
             HandleDirections dir = HandleDirections.values()[i];
             figure.setTransformable(false);
-            collector.checkThat("Cursor type doesnt max when not transformable for "+ dir.name(),Cursor.DEFAULT_CURSOR, equalTo(handles.get(i).getCursor().getType()));
+            int handleCursorType = handles.get(i).getCursor().getType();
+
+            collector.checkThat("Cursor type doesn't max when not transformable for "+ dir.name(),Cursor.DEFAULT_CURSOR, equalTo(handleCursorType));
 
             figure.setTransformable(true);
-            collector.checkThat("Cursor type doesnt max when not transformable for "+ dir.name(),dir.cursor, equalTo(handles.get(i).getCursor().getType()));
+            handleCursorType = handles.get(i).getCursor().getType();
+            collector.checkThat("Cursor type doesn't max when not transformable for "+ dir.name(),dir.cursor, equalTo(handleCursorType));
         }
     }
 
@@ -101,13 +103,11 @@ public class ResizeHandleKitTest {
 
         for (Point lead : points)
         {
-            //System.out.println("Lead: "+lead);
             for (int i = 0; i < HandleDirections.values().length; i++)
             {
                 figure.setBounds(new Point2D.Double(50d,50d),new Point2D.Double(100d,100d));
 
                 HandleDirections dir = HandleDirections.values()[i];
-                //System.out.print("Checking "+ dir.name() + " & "+ rect(figure.getBounds()));
                 int mask = dir.dirMask;
                 Handle h = handles.get(i);
 
@@ -124,17 +124,10 @@ public class ResizeHandleKitTest {
                 Rectangle2D.Double bounds = figure.getBounds();
 
                 trackStepNormalized(p, mask, originalBounds);
-                //System.out.println(" new bounds " + rect(bounds) + " tested against " + rect(figure.getBounds()));
-                collector.checkThat("Bounds doesnt match for "+ dir.name(), figure.getBounds(),equalTo(bounds));
+                collector.checkThat("Bounds doesn't match for "+ dir.name(), figure.getBounds(),equalTo(bounds));
 
             }
         }
-    }
-
-    // Shorter debug print
-    private String rect(Rectangle2D.Double r)
-    {
-        return "x="+r.x + ", y=" + r.y + ", w=" + r.width + ", h=" + r.height;
     }
 
 
@@ -172,7 +165,7 @@ public class ResizeHandleKitTest {
                 KeyEvent.VK_RIGHT
         };
 
-        Rectangle2D.Double rects[] = {
+        Rectangle2D.Double rectangles [] = {
                 new Rectangle2D.Double(1d, 1d, 1d, 1d),
                 new Rectangle2D.Double(50d, 50d, 100d, 100d),
         };
@@ -180,7 +173,7 @@ public class ResizeHandleKitTest {
         setUpView();
 
         for (int key : keys) {
-            for (Rectangle2D.Double rect : rects) {
+            for (Rectangle2D.Double rect : rectangles) {
                 for (int i = 0; i < HandleDirections.values().length; i++) {
 
                     HandleDirections dir = HandleDirections.values()[i];
@@ -197,8 +190,8 @@ public class ResizeHandleKitTest {
                     keyPressed(event2, mask);
                     Rectangle2D.Double expectedBounds = figure.getBounds();
 
-                    collector.checkThat("Bounds doesnt match for " + dir.name() + " eventKey " + key, actualBounds, equalTo(expectedBounds));
-                    collector.checkThat("Consumption doesnt match for " + dir.name() + " eventKey " + key, event1.isConsumed(), equalTo(event2.isConsumed()));
+                    collector.checkThat("Bounds doesn't match for " + dir.name() + " eventKey " + key, actualBounds, equalTo(expectedBounds));
+                    collector.checkThat("Consumption doesn't match for " + dir.name() + " eventKey " + key, event1.isConsumed(), equalTo(event2.isConsumed()));
 
 
                 }
