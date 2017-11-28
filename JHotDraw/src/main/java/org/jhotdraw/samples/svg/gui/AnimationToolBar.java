@@ -21,6 +21,7 @@ import java.util.*;
 import javax.swing.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
+import static org.jhotdraw.draw.AnimationToolDefinition.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
@@ -61,7 +62,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 AnimationTool animationTool;
                 
                 
-                btn = new JButton(new AnimationTool(1));
+                btn = new JButton(new AnimationTool(ADD_FRAME_TOOL));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "addFrame");
                 gbc = new GridBagConstraints();
@@ -70,7 +71,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(0, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton(new AnimationTool(2));
+                btn = new JButton(new AnimationTool(REMOVE_FRAME_TOOL));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "removeFrame");
                 gbc = new GridBagConstraints();
@@ -79,7 +80,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(5, 0, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton(new AnimationTool(3));
+                btn = new JButton(new AnimationTool(PLAY_TOOL));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "play");
                 gbc = new GridBagConstraints();
@@ -88,7 +89,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(0, 5, 0, 0);
                 p.add(btn, gbc);
                 
-                btn = new JButton(new AnimationTool(4));
+                btn = new JButton(new AnimationTool(PAUSE_TOOL));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "pause");
                 gbc = new GridBagConstraints();

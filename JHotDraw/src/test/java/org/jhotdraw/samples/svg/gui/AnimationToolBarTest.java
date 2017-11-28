@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.jhotdraw.draw.AnimationTool;
+import static org.jhotdraw.draw.AnimationToolDefinition.*;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.util.ResourceBundleUtil;
@@ -55,7 +56,7 @@ public class AnimationToolBarTest {
         JPanel panel = new JPanel();
         
         // Insert a new button with a animation action
-        JButton addButton = new JButton(new AnimationTool(1));
+        JButton addButton = new JButton(new AnimationTool(ADD_FRAME_TOOL));
         panel.add(addButton);
         
         // Cast to JButton, because it returns Component, which we're not interested in. 

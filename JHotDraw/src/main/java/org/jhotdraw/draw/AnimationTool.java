@@ -8,6 +8,7 @@ package org.jhotdraw.draw;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
+import static org.jhotdraw.draw.AnimationToolDefinition.*;
 
 /**
  *
@@ -15,30 +16,30 @@ import javax.swing.AbstractAction;
  */
 public class AnimationTool extends AbstractAction {
     
-    protected int tool;
+    protected AnimationToolDefinition tool;
     
-    public AnimationTool(int toolmode) {
-        
+    public AnimationTool(AnimationToolDefinition toolmode) {
         tool = toolmode;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(tool == 1){
+        
+        if(tool == ADD_FRAME_TOOL){
             System.out.println("Du trykkede på add");
         }
-        if(tool == 2){
+        if(tool == REMOVE_FRAME_TOOL){
             System.out.println("Du trykkede på remove");
         }
-        if(tool == 3){
+        if(tool == PLAY_TOOL){
             System.out.println("Du trykkede på play");
         }
-        if(tool == 4){
+        if(tool == PAUSE_TOOL){
             System.out.println("Du trykkede på pause");
         }
     }
     
-    public int getTool() {
+    public AnimationToolDefinition getTool() {
         return tool;
     }
 
