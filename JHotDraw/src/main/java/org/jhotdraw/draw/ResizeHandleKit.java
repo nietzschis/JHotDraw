@@ -33,6 +33,15 @@ public class ResizeHandleKit {
 
     private final static boolean DEBUG = false;
 
+    static final int DIR_S = 1;
+    static final int DIR_N = 2;
+    static final int DIR_E = 4;
+    static final int DIR_W = 8;
+    static final int DIR_SE = DIR_S|DIR_E;
+    static final int DIR_SW = DIR_S|DIR_W;
+    static final int DIR_NE = DIR_N|DIR_E;
+    static final int DIR_NW = DIR_N|DIR_W;
+
     /** Creates a new instance. */
     public ResizeHandleKit() {
     }
@@ -70,44 +79,77 @@ public class ResizeHandleKit {
     }
 
     static public Handle south(Figure owner) {
-        return new SouthHandle(owner);
+        return new ResizeHandle(owner, DIR_S);
     }
 
     static public Handle southEast(Figure owner) {
-        return new SouthEastHandle(owner);
+        return new ResizeHandle(owner, DIR_SE);
     }
 
     static public Handle southWest(Figure owner) {
-        return new SouthWestHandle(owner);
+        return new ResizeHandle(owner, DIR_SW);
     }
 
     static public Handle north(Figure owner) {
-        return new NorthHandle(owner);
+        return new ResizeHandle(owner, DIR_N);
     }
 
     static public Handle northEast(Figure owner) {
-        return new NorthEastHandle(owner);
+        return new ResizeHandle(owner, DIR_NE);
     }
 
     static public Handle northWest(Figure owner) {
-        return new NorthWestHandle(owner);
+        return new ResizeHandle(owner, DIR_NW);
     }
 
     static public Handle east(Figure owner) {
-        return new EastHandle(owner);
+        return new ResizeHandle(owner, DIR_E);
     }
 
     static public Handle west(Figure owner) {
-        return new WestHandle(owner);
+        return new ResizeHandle(owner, DIR_W);
     }
 
     private static class ResizeHandle extends LocatorHandle {
 
-        private int dx,  dy;
+        private int dx,  dy, direction;
         Object geometry;
 
-        ResizeHandle(Figure owner, Locator loc) {
-            super(owner, loc);
+        ResizeHandle(Figure owner, int direction)
+        {
+            super(owner, chooseLocator(direction));
+            this.direction = direction;
+        }
+
+        private static Locator chooseLocator(int direction)
+        {
+            switch (direction)
+            {
+                case DIR_S: return RelativeLocator.south(true);
+                case DIR_N: return RelativeLocator.north(true);
+                case DIR_E: return RelativeLocator.east(true);
+                case DIR_W: return RelativeLocator.west(true);
+                case DIR_SE: return RelativeLocator.southEast(true);
+                case DIR_SW: return RelativeLocator.southWest(true);
+                case DIR_NE: return RelativeLocator.northEast(true);
+                case DIR_NW: return RelativeLocator.northWest(true);
+                default: return null;
+            }
+        }
+        private static int chooseCursor(int direction)
+        {
+            switch (direction)
+            {
+                case DIR_S: return Cursor.S_RESIZE_CURSOR;
+                case DIR_N: return Cursor.N_RESIZE_CURSOR;
+                case DIR_E: return Cursor.E_RESIZE_CURSOR;
+                case DIR_W: return Cursor.W_RESIZE_CURSOR;
+                case DIR_SE: return Cursor.SE_RESIZE_CURSOR;
+                case DIR_SW: return Cursor.SW_RESIZE_CURSOR;
+                case DIR_NE: return Cursor.NE_RESIZE_CURSOR;
+                case DIR_NW: return Cursor.NW_RESIZE_CURSOR;
+                default: return Cursor.DEFAULT_CURSOR;
+            }
         }
 
         @Override
@@ -175,7 +217,16 @@ public class ResizeHandleKit {
             }
         }
 
-        protected void trackStepNormalized(Point2D.Double p) {
+        void trackStepNormalized(Point2D.Double p) {
+            Rectangle2D.Double r = getOwner().getBounds();
+            double left = (direction & DIR_W) != 0 ? Math.min(r.x + r.width - 1, p.x) : r.x;
+            double right = (direction & DIR_E) != 0 ? Math.max(r.x + 1, p.x) : r.x + r.width;
+            double bottom = (direction & DIR_S) != 0 ? Math.max(r.y + 1, p.y) : r.y + r.height;
+            double top = (direction & DIR_N) != 0 ? Math.min(r.y + r.height - 1, p.y) : r.y;
+
+            setBounds(
+                    new Point2D.Double(left, top),
+                    new Point2D.Double(right, bottom));
         }
 
         protected void setBounds(Point2D.Double anchor, Point2D.Double lead) {
@@ -184,419 +235,62 @@ public class ResizeHandleKit {
             f.setBounds(anchor, lead);
             f.changed();
         }
-    }
 
-    private static class NorthEastHandle extends ResizeHandle {
-
-        NorthEastHandle(Figure owner) {
-            super(owner, RelativeLocator.northEast(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(r.x, Math.min(r.y + r.height - 1, p.y)),
-                    new Point2D.Double(Math.max(r.x, p.x), r.y + r.height));
+        // ugly java alternative of !!
+        private static int nn(int x)
+        {
+            return x > 0 ? 1 : 0;
         }
 
         @Override
         public void keyPressed(KeyEvent evt) {
             Rectangle2D.Double r = getOwner().getBounds();
 
-            switch (evt.getKeyCode()) {
+            int up = 0;
+            int down = 0;
+            int left = 0;
+            int right = 0;
+
+            switch (evt.getKeyCode())
+            {
                 case KeyEvent.VK_UP:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y - 1),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
+                    if (r.height <= 1 && (direction & DIR_S) != 0)
+                        break;
+                    down = -nn(direction & DIR_S);
+                    up = -nn(direction & DIR_N);
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y + 1),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
+                    if (r.height <= 1 && (direction & DIR_N) != 0)
+                        break;
+                    up = nn(direction & DIR_N);
+                    down = nn(direction & DIR_S);
                     break;
                 case KeyEvent.VK_LEFT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width - 1, r.y + r.height));
-                    }
-                    evt.consume();
+                    if (r.width <= 1 && (direction & DIR_E) != 0)
+                        break;
+                    left = -nn(direction & DIR_W);
+                    right = -nn(direction & DIR_E);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width + 1, r.y + r.height));
-                    evt.consume();
+                    if (r.width <= 1 && (direction & DIR_W) != 0)
+                        break;
+                    left = nn(direction & DIR_W);
+                    right = nn(direction & DIR_E);
                     break;
+
             }
-        }
 
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.NE_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class EastHandle extends ResizeHandle {
-
-        EastHandle(Figure owner) {
-            super(owner, RelativeLocator.east(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
             setBounds(
-                    new Point2D.Double(r.x, r.y),
-                    new Point2D.Double(Math.max(r.x + 1, p.x), r.y + r.height));
-        }
+                    new Point2D.Double(r.x + left, r.y + up),
+                    new Point2D.Double(r.x + r.width + right, r.y + r.height + down));
 
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width - 1, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width + 1, r.y + r.height));
-                    evt.consume();
-                    break;
-            }
+            evt.consume();
         }
 
         @Override
         public Cursor getCursor() {
             return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.E_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class NorthHandle extends ResizeHandle {
-
-        NorthHandle(Figure owner) {
-            super(owner, RelativeLocator.north(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(r.x, Math.min(r.y + r.height - 1, p.y)),
-                    new Point2D.Double(r.x + r.width, r.y + r.height));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y - 1),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y + 1),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    evt.consume();
-                    break;
-            }
-        }
-
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.N_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class NorthWestHandle extends ResizeHandle {
-
-        NorthWestHandle(Figure owner) {
-            super(owner, RelativeLocator.northWest(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(Math.min(r.x + r.width - 1, p.x), Math.min(r.y + r.height - 1, p.y)),
-                    new Point2D.Double(r.x + r.width, r.y + r.height));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y - 1),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y + 1),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    setBounds(
-                            new Point2D.Double(r.x - 1, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x + 1, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-            }
-        }
-
-        @Override
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.NW_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class SouthEastHandle extends ResizeHandle {
-
-        SouthEastHandle(Figure owner) {
-            super(owner, RelativeLocator.southEast(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(r.x, r.y),
-                    new Point2D.Double(Math.max(r.x + 1, p.x), Math.max(r.y + 1, p.y)));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height - 1));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height + 1));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width - 1, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width + 1, r.y + r.height));
-                    evt.consume();
-                    break;
-            }
-        }
-
-        @Override
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.SE_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class SouthHandle extends ResizeHandle {
-
-        SouthHandle(Figure owner) {
-            super(owner, RelativeLocator.south(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(r.x, r.y),
-                    new Point2D.Double(r.x + r.width, Math.max(r.y + 1, p.y)));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height - 1));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height + 1));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    evt.consume();
-                    break;
-            }
-        }
-
-        @Override
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.S_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class SouthWestHandle extends ResizeHandle {
-
-        SouthWestHandle(Figure owner) {
-            super(owner, RelativeLocator.southWest(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(Math.min(r.x + r.width - 1, p.x), r.y),
-                    new Point2D.Double(r.x + r.width, Math.max(r.y + 1, p.y)));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    if (r.height > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height - 1));
-                    }
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    setBounds(
-                            new Point2D.Double(r.x, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height + 1));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    setBounds(
-                            new Point2D.Double(r.x - 1, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x + 1, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-            }
-        }
-
-        @Override
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.SW_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
-        }
-    }
-
-    private static class WestHandle extends ResizeHandle {
-
-        WestHandle(Figure owner) {
-            super(owner, RelativeLocator.west(true));
-        }
-
-        protected void trackStepNormalized(Point2D.Double p) {
-            Rectangle2D.Double r = getOwner().getBounds();
-            setBounds(
-                    new Point2D.Double(Math.min(r.x + r.width - 1, p.x), r.y),
-                    new Point2D.Double(r.x + r.width, r.y + r.height));
-        }
-
-        @Override
-        public void keyPressed(KeyEvent evt) {
-            Rectangle2D.Double r = getOwner().getBounds();
-
-            switch (evt.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_LEFT:
-                    setBounds(
-                            new Point2D.Double(r.x - 1, r.y),
-                            new Point2D.Double(r.x + r.width, r.y + r.height));
-                    evt.consume();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if (r.width > 1) {
-                        setBounds(
-                                new Point2D.Double(r.x + 1, r.y),
-                                new Point2D.Double(r.x + r.width, r.y + r.height));
-                    }
-                    evt.consume();
-                    break;
-            }
-        }
-
-        @Override
-        public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? Cursor.W_RESIZE_CURSOR : Cursor.DEFAULT_CURSOR);
+                    getOwner().isTransformable() ? chooseCursor(direction) : Cursor.DEFAULT_CURSOR);
         }
     }
 }
