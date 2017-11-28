@@ -61,7 +61,7 @@ public class ToolsToolBar extends AbstractToolBar {
         AbstractButton btn;
         CreationTool creationTool;
         PathTool pathTool;
-        FreeFormSelection freeFormTool;
+
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
