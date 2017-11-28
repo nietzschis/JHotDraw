@@ -7,27 +7,20 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
-import org.jhotdraw.collaboration.common.SVGRectDTO;
-import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
-import org.jhotdraw.samples.svg.figures.SVGRectFigure;
-import org.jhotdraw.samples.svg.figures.SVGTextFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
     private static CollaborationConnection singleton;
     private Drawing drawing;
     private IRemoteObservable collaborationProxy;
-    private List<Figure> list;
+    private String name;
 
     private CollaborationConnection() throws RemoteException {
         super();
@@ -44,7 +37,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     }
 
     public boolean connectToServer(String IP) {
-        // TOOD: Opret forbindelse
         Registry registry;
         try {
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
@@ -59,7 +51,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
         //return true;
     }
-    
+
     public void setCollaborationProxy(IRemoteObservable server) {
         collaborationProxy = server;
     }
@@ -68,6 +60,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         this.removeCollaborator();
         this.drawing = null;
         this.collaborationProxy = null;
+        this.name = null;
     }
 
     public void setDrawing(Drawing drawing) {
@@ -76,25 +69,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
 
     public void notifyUpdate(String source) {
         if (drawing != null) {
-            List<SVGRectDTO> listToSend = new ArrayList<>();
-
-            for (Figure f : drawing.getChildren()) {
-                if (f instanceof SVGRectFigure) {
-                    SVGRectDTO fig = new SVGRectDTO();
-                    fig.x = ((SVGRectFigure) f).getX();
-                    fig.y = ((SVGRectFigure) f).getY();
-                    fig.height = ((SVGRectFigure) f).getHeight();
-                    fig.width = ((SVGRectFigure) f).getWidth();
-                    fig.rx = ((SVGRectFigure) f).getArcWidth();
-                    fig.ry = ((SVGRectFigure) f).getArcHeight();
-                    fig.attributes = f.getAttributes();
-                    listToSend.add(fig);
-                }
-
-            }
-
             System.out.println("Collaboration Notified, action: " + source);
-
             try {
                 collaborationProxy.notifyAllCollaborators(drawing.getChildren());
             } catch (RemoteException ex) {
@@ -106,71 +81,114 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     // Server kalder denne på clienten
     @Override
     public synchronized void update(List<Figure> figures) throws RemoteException {
-        //System.out.println("update på klient");
-        for (Figure serverFigure : figures) {
+        System.out.println("Serverlist: " + figures.size() + "\nClientlist: " + drawing.getChildCount());
+        if (figures.size() > drawing.getChildCount()) {
+            serverListLongest(figures);
+        } else {
+            clientListLongest(figures);
+        }
+    }
+
+    private void serverListLongest(List<Figure> serverList) {
+        for (Figure serverFigure : serverList) {
             boolean found = false;
             for (Figure workingFigure : drawing.getChildren()) {
+
+                // Figures have the same Id, so must be the same figure, check for updates
                 if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
 
                     // Same figure check bounds
                     if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
                             || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
-                        System.out.println("Moved");
-                        //System.out.println(serverFigure.getBounds() + " " + workingFigure.getBounds());
-                        Point2D.Double start = new Point2D.Double(serverFigure.getBounds().x, serverFigure.getBounds().y);
-                        Point2D.Double end = new Point2D.Double(serverFigure.getBounds().x + serverFigure.getBounds().width, serverFigure.getBounds().y + serverFigure.getBounds().height);
-
-                        workingFigure.willChange();
-                        workingFigure.setBounds(start, end);
-                        workingFigure.changed();
+                        changeBoundsOnFigure(workingFigure, serverFigure);
                     }
 
                     // Same figure check attributes
                     if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
-                        System.out.println("Changed attribute");
-                        workingFigure.willChange();
-                        workingFigure.restoreAttributesTo(serverFigure.getAttributesRestoreData());
-                        workingFigure.changed();
+                        changeAttributesOnFigure(workingFigure, serverFigure);
                     }
 
+                    // Found the same figures so its not new 
                     found = true;
                 }
-                //System.out.println("Working figure: " + workingFigure.getCollaborationId() + "; Server figure: " + serverFigure.getCollaborationId());
             }
 
             if (!found) {
-                
-                if (serverFigure instanceof SVGRectFigure) {
-                    System.out.println("add square");
-                    SVGRectFigure newFig = (SVGRectFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGEllipseFigure) {
-                    System.out.println("Added circle");
-                    SVGEllipseFigure newFig = (SVGEllipseFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGPathFigure) {
-                    System.out.println("Added path");
-                    SVGPathFigure newFig = (SVGPathFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                }
-                else if(serverFigure instanceof SVGTextFigure) {
-                    System.out.println("Added text");
-                    SVGTextFigure newFig = (SVGTextFigure) serverFigure.clone();
-                    newFig.setCollaborationId(serverFigure.getCollaborationId());
-                    drawing.add(newFig);
-                }
-                else {
-                    System.out.println("Unknown figure");
-                }
+                // Add new figure to list
+                addFigure(serverFigure);
             }
         }
-        System.out.println(drawing.getChildCount());
+    }
 
+    private void clientListLongest(List<Figure> serverList) {
+        List<Figure> figuresToBeDeleted = new ArrayList();
+        for (Figure workingFigure : drawing.getChildren()) {
+            boolean found = false;
+            for (Figure serverFigure : serverList) {
+
+                // Figures have the same Id, so must be the same figure, check for updates
+                if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
+
+                    // Same figure check bounds
+                    if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
+                            || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
+                        changeBoundsOnFigure(workingFigure, serverFigure);
+                    }
+
+                    // Same figure check attributes
+                    if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
+                        changeAttributesOnFigure(workingFigure, serverFigure);
+                    }
+
+                    // Found the same figures so its not missing 
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                // Remove figure from list
+                figuresToBeDeleted.add(workingFigure);
+            }
+        }
+
+        if (!figuresToBeDeleted.isEmpty()) {
+            removeFigure(figuresToBeDeleted);
+        }
+    }
+
+    private void removeFigure(List<Figure> figures) {
+        drawing.removeAll(figures);
+
+    }
+
+    private void changeBoundsOnFigure(Figure oldFigure, Figure newFigure) {
+
+        // Paths are a little funny, needs to be readded
+        if (oldFigure instanceof SVGPathFigure) {
+            SVGPathFigure newPathFig = (SVGPathFigure) newFigure.clone();
+            newPathFig.setCollaborationId(newFigure.getCollaborationId());
+            drawing.remove(oldFigure);
+            drawing.add(newPathFig);
+        } else {
+            Point2D.Double start = new Point2D.Double(newFigure.getBounds().x, newFigure.getBounds().y);
+            Point2D.Double end = new Point2D.Double(newFigure.getBounds().x + newFigure.getBounds().width, newFigure.getBounds().y + newFigure.getBounds().height);
+
+            oldFigure.willChange();
+            oldFigure.setBounds(start, end);
+            oldFigure.changed();
+        }
+    }
+
+    private void changeAttributesOnFigure(Figure oldFigure, Figure newFigure) {
+        oldFigure.willChange();
+        oldFigure.restoreAttributesTo(newFigure.getAttributesRestoreData());
+        oldFigure.changed();
+    }
+
+    private void addFigure(Figure figure) {
+        Figure newFig = (Figure) figure.clone();
+        newFig.setCollaborationId(figure.getCollaborationId());
+        drawing.add(newFig);
     }
 
     private void addCollaborator() {
@@ -192,8 +210,12 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String getName() throws RemoteException {
-        return "Anton" + (Math.random() * 100);
+        return name;
     }
 }

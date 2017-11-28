@@ -38,7 +38,7 @@ public class TinyPngCompressActionTest {
     /**
      * Test of compressImage method, of class TinyPngCompressAction.
      */
-    @Ignore
+    
     @Test
     public void testCompressImage() {
         URL url = getClass().getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");

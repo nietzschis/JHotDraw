@@ -32,9 +32,7 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         app = getApplication();
-        CollaborationConnection.getInstance().disconnectFromServer();
-        app.firePropertyEvent("disconnect", null, null);
-        setEnabled(false);
+        app.disconnectFromServer();
     }
     
     private PropertyChangeListener createApplicationListener() { 
@@ -42,6 +40,9 @@ public class CollaborationDisconnectAction extends AbstractApplicationAction {
             if (evt.getPropertyName() == "connect") {
                 setEnabled(true);
             } 
+            if (evt.getPropertyName() == "disconnect") {
+                setEnabled(false);
+            }
         }; 
     }
 }
