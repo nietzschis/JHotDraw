@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import static java.awt.Cursor.*;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.jhotdraw.draw.ResizeHandleKit.*;
 
 public class ResizeHandleKitTest {
 
@@ -23,16 +24,6 @@ public class ResizeHandleKitTest {
 
     @Rule
     public ErrorCollector collector = new ErrorCollector();
-
-
-    private static final int DIR_S = 1;
-    private static final int DIR_N = 2;
-    private static final int DIR_E = 4;
-    private static final int DIR_W = 8;
-    private static final int DIR_SE = DIR_S|DIR_E;
-    private static final int DIR_SW = DIR_S|DIR_W;
-    private static final int DIR_NE = DIR_N|DIR_E;
-    private static final int DIR_NW = DIR_N|DIR_W;
 
     enum HandleDirections
     {
