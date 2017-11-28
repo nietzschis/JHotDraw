@@ -7,7 +7,9 @@ package org.jhotdraw.draw;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.JFrame;
 import static org.jhotdraw.draw.AnimationToolDefinition.*;
 
 /**
@@ -17,22 +19,34 @@ import static org.jhotdraw.draw.AnimationToolDefinition.*;
 public class AnimationTool extends AbstractAction {
     
     protected AnimationToolDefinition tool;
+    protected Animation animation;
+    private boolean stopPlaying;
     
     public AnimationTool(AnimationToolDefinition toolmode) {
         tool = toolmode;
+        animation = new Animation();
+        stopPlaying = false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         
         if(tool == ADD_FRAME_TOOL){
-            System.out.println("Du trykkede på add");
+            animation.addFrame(new JFrame());
         }
         if(tool == REMOVE_FRAME_TOOL){
-            System.out.println("Du trykkede på remove");
+            animation.removeFrame(new JFrame());
         }
         if(tool == PLAY_TOOL){
-            System.out.println("Du trykkede på play");
+            List<JFrame> list = animation.getFrames();
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i);
+                if(i == list.size() && !stopPlaying){
+                    i = 0;
+                }else {
+                    break;
+                }
+            }
         }
         if(tool == PAUSE_TOOL){
             System.out.println("Du trykkede på pause");

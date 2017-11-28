@@ -29,12 +29,16 @@ public class Animation {
     public JFrame getCurrentFrame() {
         return currentFrame;
     }
-
-    public void setFrames(List<JFrame> frames) {
-        this.frames = frames;
+    
+    public JFrame setFrame(int frame) {
+        return frames.get(frame);
     }
 
-    public void setCurrentFrame(JFrame currentFrame) {
-        this.currentFrame = currentFrame;
+    public void addFrame(JFrame frame) {
+        frames.add(frame);
+    }
+
+    public void removeFrame(JFrame frameToRemove) {
+        frames.remove(frameToRemove);
     }
 }
