@@ -87,12 +87,15 @@ public class MinimapView extends JPanel{
     
     private void handleEvent(MouseEvent e){
         Dimension minimapSize = e.getComponent().getPreferredSize();
+        Rectangle2D.Double canvasSize = getCanvasSize();
+        double largerSide = Math.max(canvasSize.width, canvasSize.height);
         
         Point.Double p = new Point.Double(e.getPoint().getX(), e.getPoint().getY());
-        p.setLocation(constrain(p.x, 0, minimapSize.width), constrain(p.y, 0, minimapSize.height)); // constrain the values to be within the container.
-        p.setLocation(p.getX()/minimapSize.width, p.getY()/minimapSize.height); // Center the point relative to the full canvas.
-        assert p.getX() >= 0 && p.getX() <= 1 && p.getY() >= 0 && p.getY() <= 1;
+        p.setLocation((p.getX()*largerSide)/(minimapSize.width*canvasSize.width), (p.getY()*largerSide)/(minimapSize.height*canvasSize.height)); // Center the point relative.
+        p.setLocation(constrain(p.x, 0, 1), constrain(p.y, 0, 1)); // constrain the values to be within the container.
+        
         System.out.println(p);
+        
         notifyListeners(p);
     }
     
@@ -133,12 +136,7 @@ public class MinimapView extends JPanel{
         
         Graphics2D g = (Graphics2D) gr.create();
         
-        Rectangle2D.Double size;
-        if(getCanvasWidth() != null && getCanvasHeight() != null){
-            size = new Rectangle2D.Double(0, 0, getCanvasWidth(), getCanvasHeight());
-        }else{
-            size = getSmallestSize();
-        }
+        Rectangle2D.Double size = getCanvasSize();
         
         if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or it doesn't have a size, paint the minimap white and return.
             g.setColor(Color.white);
@@ -159,6 +157,20 @@ public class MinimapView extends JPanel{
         getDrawing().draw(g);
                 
         g.dispose();
+    }
+    
+    /**
+     * Returns the rectangle of the canvas, wich the minimap should draw.
+     * For fixed size canvas, this is full canvas located at (0,0).
+     * For dynamic this is the smallest possible rectangle located so the left-top figure is just within.
+     * @return the pratical size of the canvas.
+     */
+    private Rectangle2D.Double getCanvasSize(){
+        if(getCanvasWidth() != null && getCanvasHeight() != null){
+            return new Rectangle2D.Double(0, 0, getCanvasWidth(), getCanvasHeight());
+        }else{
+            return getSmallestSize();
+        }
     }
     
     /**
