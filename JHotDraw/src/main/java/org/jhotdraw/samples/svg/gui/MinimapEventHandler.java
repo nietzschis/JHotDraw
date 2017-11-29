@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import javax.swing.JPanel;
 import org.jhotdraw.samples.svg.ViewportModifier;
 
 /**
@@ -14,13 +15,23 @@ import org.jhotdraw.samples.svg.ViewportModifier;
  */
 public class MinimapEventHandler {
     
-    private final MinimapView minimapView;
+    private final JPanel view;
     private final ViewportModifier viewportModifier;
 
-    public MinimapEventHandler(MinimapView minimapView, ViewportModifier viewportModifier) {
-        this.minimapView = minimapView;
+    /**
+     * Creates a null object for this class, used then events should not be handled.
+     */
+    public MinimapEventHandler() {
+        view = null;
+        viewportModifier = null;
+    }
+    
+    public MinimapEventHandler(JPanel view, ViewportModifier viewportModifier) {
+        assert view != null;
+        assert viewportModifier != null;
+        this.view = view;
         this.viewportModifier = viewportModifier;
-        minimapView.addMouseListener(new MouseListener() {
+        view.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //ignored
@@ -47,7 +58,7 @@ public class MinimapEventHandler {
             }
         });
         
-        minimapView.addMouseMotionListener(new MouseMotionListener() {
+        view.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 handleEvent(e);
@@ -66,6 +77,7 @@ public class MinimapEventHandler {
         Point.Double p = new Point.Double(e.getPoint().getX(), e.getPoint().getY());
         p.setLocation(constrain(p.x, 0, minimapSize.width), constrain(p.y, 0, minimapSize.height)); // constrain the values to be within the container.
         p.setLocation(p.getX()/minimapSize.width, p.getY()/minimapSize.height); // Center the point relative to the full canvas.
+        assert p.getX() >= 0 && p.getX() <= 1 && p.getY() >= 0 && p.getY() <= 1;
         viewportModifier.centerPointOnCanvas(p);
     }
     

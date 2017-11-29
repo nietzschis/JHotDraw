@@ -50,6 +50,8 @@ public class MinimapToolBar extends AbstractToolBar {
         
         if(viewportModifier != null){
             minimapEventHandler = new MinimapEventHandler(minimapView, viewportModifier);
+        }else{
+            minimapEventHandler = new MinimapEventHandler(); // null object
         }
     }
     
