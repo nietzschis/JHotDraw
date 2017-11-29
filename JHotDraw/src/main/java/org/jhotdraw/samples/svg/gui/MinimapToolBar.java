@@ -1,6 +1,7 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
@@ -32,7 +33,6 @@ public class MinimapToolBar extends AbstractToolBar {
     };
     private Drawing activeDrawing;
     private final Dimension size = new Dimension();
-    private MinimapEventHandler minimapEventHandler;
     
     /**
      * Creates a new {@link MinimapToolBar} with custom size.
@@ -47,12 +47,7 @@ public class MinimapToolBar extends AbstractToolBar {
         this.figureListener = new FigureChangeListener();
         minimapView = new MinimapView(this);
         minimapView.setPreferredSize(size);
-        
-        if(viewportModifier != null){
-            minimapEventHandler = new MinimapEventHandler(minimapView, viewportModifier);
-        }else{
-            minimapEventHandler = new MinimapEventHandler(); // null object
-        }
+        minimapView.addListener(viewportModifier::centerPointOnCanvas);
     }
     
     /**

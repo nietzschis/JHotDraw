@@ -6,9 +6,17 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JPanel;
 import org.jhotdraw.draw.AttributeKeys;
 import static org.jhotdraw.draw.AttributeKeys.CANVAS_FILL_COLOR;
@@ -26,7 +34,8 @@ import org.jhotdraw.draw.Figure;
  */
 public class MinimapView extends JPanel{
     
-    AbstractToolBar toolBar;
+    private final AbstractToolBar toolBar;
+    private final List<MinimapViewListener> listeners = new LinkedList<>();
 
     /**
      * Creates a new view to draw a {@link Drawing} onto the minimap.
@@ -35,6 +44,87 @@ public class MinimapView extends JPanel{
     public MinimapView(AbstractToolBar toolBar) {
         assert toolBar != null;
         this.toolBar = toolBar;
+        
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                handleEvent(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                //ignored
+            }
+        });
+        
+        this.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                handleEvent(e);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                //ignored
+            }
+        });
+    }
+    
+    private void handleEvent(MouseEvent e){
+        Dimension minimapSize = e.getComponent().getPreferredSize();
+        
+        Point.Double p = new Point.Double(e.getPoint().getX(), e.getPoint().getY());
+        p.setLocation(constrain(p.x, 0, minimapSize.width), constrain(p.y, 0, minimapSize.height)); // constrain the values to be within the container.
+        p.setLocation(p.getX()/minimapSize.width, p.getY()/minimapSize.height); // Center the point relative to the full canvas.
+        assert p.getX() >= 0 && p.getX() <= 1 && p.getY() >= 0 && p.getY() <= 1;
+        System.out.println(p);
+        notifyListeners(p);
+    }
+    
+    private double constrain(double value, double min, double max) {
+        return Math.min(Math.max(value, min), max);
+    }
+    
+    /**
+     * Notify listeners that a click occured.
+     * @param p The relative coordinates describing where the click occured.
+     */
+    private void notifyListeners(Point2D.Double p) {
+        for(MinimapViewListener listener: listeners){
+            listener.relativeOnClick(p);
+        }
+    }
+    
+    /**
+     * Add a new listener to be invoked, whenever an event occurs.
+     * @param listener The event listener.
+     */
+    public void addListener(MinimapViewListener listener){
+        listeners.add(listener);
+    }
+    
+    /**
+     * Removes a listener, or noop if the listner is not registered on this instance.
+     * @param listener The event listener.
+     * @return True, if the listener was registered, false otherwise.
+     */
+    public boolean removeListener(MinimapViewListener listener){
+        return listeners.remove(listener);
     }
     
     @Override
