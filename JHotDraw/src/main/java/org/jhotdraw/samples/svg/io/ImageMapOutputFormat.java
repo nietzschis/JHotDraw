@@ -309,6 +309,7 @@ public class ImageMapOutputFormat implements OutputFormat {
         }
     }
     
+    //Writes the coordinates and href attributes for a triangle.
     private boolean writeTriangleAttributes(IXMLElement elem, SVGFigure f, Rectangle2D.Double triangle) {
         AffineTransform t = TRANSFORM.getClone(f);
         if (t == null) {

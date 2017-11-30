@@ -65,7 +65,7 @@ public class SVGTriangleFigureTest {
     
     @Test
     public void testTriangleFigure2() {
-        SVGTriangleFigure instance2 = new SVGTriangleFigure(-5,-5,10,10);
+        SVGTriangleFigure instance2 = new SVGTriangleFigure((-5),(-5),10,10);
         Rectangle2D.Double expResult2 = 
                 new Rectangle2D.Double(
                         instance2.getX(), instance2.getY(), 

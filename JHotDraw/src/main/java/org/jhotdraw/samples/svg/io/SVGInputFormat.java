@@ -681,7 +681,8 @@ public class SVGInputFormat implements InputFormat {
     }
     
     /**
-     * Reads an SVG "triangle" element.
+     * Reads a "triangle" element. Creates it using the
+     * createTriangle method in DefaultSVGFigureFactory
      */
     private Figure readTriangleElement(IXMLElement elem)
             throws IOException {

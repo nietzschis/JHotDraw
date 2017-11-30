@@ -40,7 +40,8 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
         triangle = new Rectangle2D.Double(x, y, width, height);
         SVGAttributeKeys.setDefaults(this);
     }
-
+    
+    //drawing method for filling the triangle
     protected void drawFill(Graphics2D g) {
         GeneralPath p = new GeneralPath();
         p.moveTo((float) triangle.x, (float) (triangle.y + triangle.height));
@@ -50,6 +51,7 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
         g.fill(p);
     }
     
+    //drawing the lines of the triangle
     @FeatureEntryPoint(JHotDrawFeatures.TRIANGLE_TOOL)
     protected void drawStroke(Graphics2D g) {
         GeneralPath p = new GeneralPath();
@@ -75,7 +77,8 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
     public double getHeight() {
           return triangle.height;
     }
-
+    
+    //Surrounding rectangular box
     public Rectangle2D.Double getBounds() {
         return (Rectangle2D.Double) triangle.getBounds2D();
     }

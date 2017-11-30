@@ -20,6 +20,9 @@ import org.junit.Test;
  */
 public class TriangleJGivenTest extends SimpleScenarioTest<TriangleJGivenTest.Stages> {
     
+    // Adding a triangle to a drawing.
+    // If there's no triangle in the drawing,
+    // the behavior is wrong.
     @Test
     public void test_scanario() {
         given().a_drawing();
