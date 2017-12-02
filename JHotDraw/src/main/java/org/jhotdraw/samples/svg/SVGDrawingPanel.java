@@ -66,7 +66,7 @@ public class SVGDrawingPanel extends JPanel {
     public SVGDrawingPanel() {
         labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
+        
         try {
             prefs = Preferences.userNodeForPackage(getClass());
         } catch (SecurityException e) {

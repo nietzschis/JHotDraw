@@ -94,8 +94,6 @@ public class MinimapView extends JPanel{
         p.setLocation((p.getX()*largerSide)/(minimapSize.width*canvasSize.width), (p.getY()*largerSide)/(minimapSize.height*canvasSize.height)); // Center the point relative.
         p.setLocation(constrain(p.x, 0, 1), constrain(p.y, 0, 1)); // constrain the values to be within the container.
         
-        System.out.println(p);
-        
         notifyListeners(p);
     }
     

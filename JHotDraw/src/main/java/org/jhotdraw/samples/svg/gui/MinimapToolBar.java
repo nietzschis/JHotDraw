@@ -1,7 +1,6 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Dimension;
-import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
@@ -173,6 +172,6 @@ public class MinimapToolBar extends AbstractToolBar {
             activeDrawing.addUndoableEditListener(undoableEditListener);
         }
         
-        minimapView.invalidate();
+        minimapView.repaint();
     }
 }
