@@ -5,8 +5,11 @@
  */
 
 package org.jhotdraw.samples.svg.gui;
+import com.sun.javafx.scene.DirtyBits;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.geom.Point2D;
 import java.text.NumberFormat;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -24,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.LabelUI;
 import javax.swing.text.NumberFormatter;
 import static org.jhotdraw.draw.AttributeKeys.CANVAS_HEIGHT;
 import static org.jhotdraw.draw.AttributeKeys.CANVAS_WIDTH;
@@ -31,8 +36,12 @@ import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH;
 import org.jhotdraw.draw.Drawing;
+import org.jhotdraw.draw.Figure;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
+import org.jhotdraw.gui.plaf.palette.PaletteLabelUI;
+import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
 import org.jhotdraw.samples.svg.figures.SVGFigure;
+import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 import org.jhotdraw.util.ResourceBundleUtil;
 /**
@@ -41,252 +50,267 @@ import org.jhotdraw.util.ResourceBundleUtil;
  */
 public class ComicsToolBar extends AbstractToolBar{
     public ComicsToolBar() {
-    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-    setName(labels.getString(getID() + ".toolbar"));
-    setDisclosureStateCount(3);
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+        setName(labels.getString(getID() + ".toolbar"));
+        setDisclosureStateCount(3);
     }
+    
     @Override
     protected JComponent createDisclosedComponent(int state) {
     JPanel p = null;
     ActionListener buttonListener = new ActionListener(){
+         @Override
          public void actionPerformed(ActionEvent e){
-             if (setCanvas()){
+            if (setCanvas()){
                 clearPanel();
-              newrectangle(0, 0, CANVAS_WIDTH.get(getDrawing()),CANVAS_HEIGHT.get(getDrawing()));
-                 switch (e.getActionCommand()) {
-                     case "Template1":
-                         {
-                             int pause = 10;
-                             int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/2)-((pause*3)/2));
-                             int width = (int) ((CANVAS_WIDTH.get(getDrawing())/2)-((pause*3)/2));
-                             int point_a =pause*2 + height;
-                             int point_b =pause*2 + width;
-                             newrectangle(pause,pause,width,height);
-                             newrectangle(point_b,pause,width,height);
-                             newrectangle(pause,point_a,width,height);
-                             newrectangle(point_b,point_a,width,height);
-                             break;
-                         }
-                     case "Template2":
-                         {
-                             int pause = 10;
-                             int height = (int) (CANVAS_HEIGHT.get(getDrawing())-(pause*2));
-                             int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
-                             newrectangle(pause,pause,width,height);
-                             break;
-                         }
-                     case "Template3":
-                         {
-                             int pause = 10;
-                             int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
-                             int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
-                             int point_a =pause*2 + height;
-                             int point_b =pause*3 + height*2;
-                             newrectangle(pause,pause,width,height);
-                             newrectangle(pause,point_a,width,height);
-                             newrectangle(pause,point_b,width,height);
-                             break;
-                         }
-                     case "Template4":
-                         {
-                             int pause = 10;
-                             int height = (int) (CANVAS_HEIGHT.get(getDrawing())-(pause*2));
-                             int width = (int) ((CANVAS_WIDTH.get(getDrawing())/3)-((pause*4)/3));
-                             int point_a =pause*2 + width;
-                             int point_b =pause*3 + width*2;
-                             newrectangle(pause,pause,width,height);
-                             newrectangle(point_a,pause,width,height);
-                             newrectangle(point_b,pause,width,height);
-                             break;
-                         }
-                     case "Template5":
-                         {
-                             int pause = 10;
-                             int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
-                             int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
-                             int width_1 = (int) ((CANVAS_WIDTH.get(getDrawing())/2)-(pause*3)/2);
-                             int point_a =pause*2 + height;
-                             int point_b = pause*2 + width_1;
-                             int point_c = pause*2 + height;
-                             int point_d =pause*3 + height*2;
-                             newrectangle(pause,pause,width,height);
-                             newrectangle(pause,point_a,width_1,height);
-                             newrectangle(point_b,point_c,width_1,height);
-                             newrectangle(pause,point_d,width,height);
-                             break;
-                         }
-                     case "Template6":
-                         {
-                             int pause = 10;
-                             int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
-                             int height_1 = (int) ((CANVAS_HEIGHT.get(getDrawing())-height)-((pause*3)));
-                             int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
-                             int width_1 = (int) ((CANVAS_WIDTH.get(getDrawing())/3)-((pause*4)/3));
-                             int point_a = pause*2 + height;
-                             int point_b =pause *2 + width_1;
-                             int point_c = pause*3 + width_1*2;
-                             newrectangle(pause,pause,width,height);
-                             newrectangle(pause,point_a,width_1,height_1);
-                             newrectangle(point_b,point_a,width_1,height_1);
-                             newrectangle(point_c,point_a,width_1,height_1);
-                             break;
-                         }
-                     default:
-                         break;
-                 }
-              }
+                newRectangle(0, 0, CANVAS_WIDTH.get(getDrawing()),CANVAS_HEIGHT.get(getDrawing()));
+                switch (e.getActionCommand()) {
+                    case "Template1":
+                        {
+                            int pause = 10;
+                            int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/2)-((pause*3)/2));
+                            int width = (int) ((CANVAS_WIDTH.get(getDrawing())/2)-((pause*3)/2));
+                            int point_a =pause*2 + height;
+                            int point_b =pause*2 + width;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(point_b,pause,width,height);
+                            newRectangle(pause,point_a,width,height);
+                            newRectangle(point_b,point_a,width,height);
+                            break;
+                        }
+                    case "Template2":
+                        {
+                            int pause = 10;
+                            int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
+                            int width = (int) ((CANVAS_WIDTH.get(getDrawing())/2)-((pause*3)/2));
+                            int height_1 = (int) (CANVAS_HEIGHT.get(getDrawing())-pause*2);
+                            int point_a =pause*2 + height;
+                            int point_b =pause*3 + height*2;
+                            int point_c =width + pause *2;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(pause,point_a,width,height);
+                            newRectangle(pause,point_b,width,height);
+                            newRectangle(point_c,pause,width,height_1);
+                            break;
+                        }
+                    case "Template3":
+                        {
+                            int pause = 10;
+                            int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
+                            int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
+                            int point_a =pause*2 + height;
+                            int point_b =pause*3 + height*2;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(pause,point_a,width,height);
+                            newRectangle(pause,point_b,width,height);
+                            break;
+                        }
+                    case "Template4":
+                        {
+                            int pause = 10;
+                            int height = (int) (CANVAS_HEIGHT.get(getDrawing())-(pause*2));
+                            int width = (int) ((CANVAS_WIDTH.get(getDrawing())/3)-((pause*4)/3));
+                            int point_a =pause*2 + width;
+                            int point_b =pause*3 + width*2;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(point_a,pause,width,height);
+                            newRectangle(point_b,pause,width,height);
+                            break;
+                        }
+                    case "Template5":
+                        {
+                            int pause = 10;
+                            int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
+                            int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
+                            int width_1 = (int) ((CANVAS_WIDTH.get(getDrawing())/2)-(pause*3)/2);
+                            int point_a =pause*2 + height;
+                            int point_b = pause*2 + width_1;
+                            int point_c = pause*2 + height;
+                            int point_d =pause*3 + height*2;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(pause,point_a,width_1,height);
+                            newRectangle(point_b,point_c,width_1,height);
+                            newRectangle(pause,point_d,width,height);
+                            break;
+                        }
+                    case "Template6":
+                        {
+                            int pause = 10;
+                            int height = (int) ((CANVAS_HEIGHT.get(getDrawing())/3)-((pause*4)/3));
+                            int height_1 = (int) ((CANVAS_HEIGHT.get(getDrawing())-height)-((pause*3)));
+                            int width = (int) (CANVAS_WIDTH.get(getDrawing())-(pause*2));
+                            int width_1 = (int) ((CANVAS_WIDTH.get(getDrawing())/3)-((pause*4)/3));
+                            int point_a = pause*2 + height;
+                            int point_b =pause *2 + width_1;
+                            int point_c = pause*3 + width_1*2;
+                            newRectangle(pause,pause,width,height);
+                            newRectangle(pause,point_a,width_1,height_1);
+                            newRectangle(point_b,point_a,width_1,height_1);
+                            newRectangle(point_c,point_a,width_1,height_1);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
         }
     };
         switch (state) {
             case 1:
-                 {
+                {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+                    JButton btn;
+                    GridBagLayout layout = new GridBagLayout();
+                    GridBagConstraints gbc;
+                    gbc = new GridBagConstraints();
+                    
                     p = new JPanel();
                     p.setOpaque(false);
                     p.removeAll();
                     p.setBorder(new EmptyBorder(5, 5, 5, 8));
-                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-                    GridBagLayout layout = new GridBagLayout();
                     p.setLayout(layout);
-                    GridBagConstraints gbc;
-                    AbstractButton btn;
-
-                    btn = new JButton();
-                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template1");
-                    gbc = new GridBagConstraints();
-                    btn.setPreferredSize(new Dimension(32, 32));
+                  
+                    
                     gbc.insets = new Insets(0, 0, 3, 0);
                     gbc.gridy = 0;
                     gbc.gridwidth=1;
-                    p.add(btn, gbc);
+                    //1st button
+                    btn = new JButton();
                     btn.setActionCommand("Template1");
                     btn.addActionListener(buttonListener);
-                    
-                    btn = new JButton();
+                    labels.configureToolBarButton(btn, "comics.Template1");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template2");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
-                    gbc.gridy = 1;
-                    gbc.gridwidth=1;
+                    
                     p.add(btn, gbc);
+                    //2nd button
+                    btn = new JButton();
                     btn.setActionCommand("Template2");
                     btn.addActionListener(buttonListener);
+                    labels.configureToolBarButton(btn, "comics.Template2");
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    btn.setPreferredSize(new Dimension(32, 32));
+                    
+                    gbc = new GridBagConstraints();
+                    gbc.gridy = 1;
+                    gbc.gridwidth=1;
+                    
+                    p.add(btn, gbc);
                 }
                 break;
             case 2:
                  {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+                    JButton btn;
+                    GridBagLayout layout = new GridBagLayout();
+                    GridBagConstraints gbc;
+                    gbc = new GridBagConstraints();
+                    
                     p = new JPanel();
                     p.setOpaque(false);
                     p.removeAll();
                     p.setBorder(new EmptyBorder(5, 5, 5, 8));
-                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-                    GridBagLayout layout = new GridBagLayout();
                     p.setLayout(layout);
-                    GridBagConstraints gbc;
-                    AbstractButton btn;
                     
                     JPanel p1 = new JPanel(new GridBagLayout());
                     JPanel p2 = new JPanel(new GridBagLayout());
                     p1.setOpaque(false);
                     p2.setOpaque(false);
 
-                    btn = new JButton();
-                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template1");
-                    gbc = new GridBagConstraints();
-                    btn.setPreferredSize(new Dimension(32, 32));
+                  
+                    //1st button upper panel
                     gbc.insets = new Insets(0, 0, 3, 3);
-                    gbc.gridwidth=1;
-                    gbc.gridx = 0;
                     gbc.gridy = 0;
+                    gbc.gridx = 0;
+                    gbc.gridwidth=1;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
                     
-                    p1.add(btn, gbc);
+                    btn = new JButton();
                     btn.setActionCommand("Template1");
                     btn.addActionListener(buttonListener);
-                    
-                    btn = new JButton();
+                    labels.configureToolBarButton(btn, "comics.Template1");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template3");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
+                   
+                    p1.add(btn, gbc);
+                    
+                    //2nd button upper panel
                     gbc.insets = new Insets(0, 0, 3, 3);
                     gbc.gridwidth=1;
                     gbc.gridx = 1;
                     gbc.gridy = 0;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
-
-                    p1.add(btn, gbc);
-                    btn.setActionCommand("Template3");
-                    btn.addActionListener(buttonListener);
                     
                     btn = new JButton();
+                    btn.setActionCommand("Template3");
+                    btn.addActionListener(buttonListener);
+                    labels.configureToolBarButton(btn, "comics.Template3");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template5");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
+                    
+                    p1.add(btn, gbc);
+                   
+                    //3th button upper panel
                     gbc.insets = new Insets(0, 0, 3, 0);
                     gbc.gridwidth=1;
                     gbc.gridx = 2;
                     gbc.gridy = 0;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
-                    p1.add(btn, gbc);
-                    btn.setActionCommand("Template5");
-                    btn.addActionListener(buttonListener);
                     
                     btn = new JButton();
+                    btn.setActionCommand("Template5");
+                    btn.addActionListener(buttonListener);
+                    labels.configureToolBarButton(btn, "comics.Template5");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template2");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
+                   
+                    p1.add(btn, gbc);
+                    //1st button lower panel
                     gbc.insets = new Insets(0, 0, 0, 3);
                     gbc.gridwidth=1;
                     gbc.gridx = 0;
                     gbc.gridy = 0;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
                     
-                    p2.add(btn, gbc);
+                    btn = new JButton();
                     btn.setActionCommand("Template2");
                     btn.addActionListener(buttonListener);
-                    
-                    btn = new JButton();
+                    labels.configureToolBarButton(btn, "comics.Template2");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template4");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
+                   
+                    p2.add(btn, gbc);
+                    
                     gbc.insets = new Insets(0, 0, 0, 3);
                     gbc.gridwidth=1;
                     gbc.gridx = 1;
                     gbc.gridy = 0;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
-                    
-                    p2.add(btn, gbc);
+                    //2nd button lower panel
+                    btn = new JButton();
                     btn.setActionCommand("Template4");
                     btn.addActionListener(buttonListener);
-                    
-                    btn = new JButton();
+                    labels.configureToolBarButton(btn, "comics.Template4");
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    btn.setText(null);
-                    labels.configureToolBarButton(btn, "comics.Template6");
-                    gbc = new GridBagConstraints();
                     btn.setPreferredSize(new Dimension(32, 32));
+                   
+                    p2.add(btn, gbc);
+                    //3th button lower panel
+                    gbc.insets = new Insets(0, 0, 0, 3);
                     gbc.gridwidth=1;
                     gbc.gridx = 2;
                     gbc.gridy = 0;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
-
-                    p2.add(btn, gbc);
+                    
+                    btn = new JButton();
                     btn.setActionCommand("Template6");
                     btn.addActionListener(buttonListener);
-                    gbc = new GridBagConstraints();                    
+                    labels.configureToolBarButton(btn, "comics.Template6");
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    btn.setPreferredSize(new Dimension(32, 32));
+                   
+                    p2.add(btn, gbc);
+
                     gbc.gridy = 0;
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                     p.add(p1, gbc);
@@ -300,14 +324,7 @@ public class ComicsToolBar extends AbstractToolBar{
     }
         public boolean setCanvas(){
         Boolean result = true;
-        String[] options = { "New Canvas", "Use old Canvas",
-                "Cancel" };
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel();
-        JLabel W = new JLabel("W:");
-        JLabel H = new JLabel("H:");
-        panel.add(new JLabel("Enter new size of canvas: "));
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         NumberFormat format = NumberFormat.getInstance();
         format.setGroupingUsed(false);
         NumberFormatter formatter = new NumberFormatter(format);
@@ -315,46 +332,70 @@ public class ComicsToolBar extends AbstractToolBar{
         formatter.setMinimum(0);
         formatter.setMaximum(Integer.MAX_VALUE);
         formatter.setAllowsInvalid(false);
-     
         JFormattedTextField width = new JFormattedTextField(formatter);
-        JFormattedTextField height = new JFormattedTextField(formatter); 
+        width.setToolTipText(labels.getString("attribute.canvasWidth.toolTipText"));
         width.setPreferredSize(new Dimension(80,24));
+
+        JFormattedTextField height = new JFormattedTextField(formatter); 
         height.setPreferredSize(new Dimension(80,24));
+        height.setToolTipText(labels.getString("attribute.canvasHeight.toolTipText"));
+
+        JLabel widthLabel,heightLabel;
+        widthLabel = new javax.swing.JLabel();
+        heightLabel = new javax.swing.JLabel();
+        widthLabel.setUI((LabelUI) PaletteLabelUI.createUI(widthLabel));
+        widthLabel.setLabelFor(width);
+        widthLabel.setToolTipText(labels.getString("attribute.canvasWidth.toolTipText"));
+        widthLabel.setText(labels.getString("attribute.canvasWidth.text"));
+
+
+        heightLabel.setUI((LabelUI) PaletteLabelUI.createUI(heightLabel));
+        heightLabel.setLabelFor(height);
+        heightLabel.setToolTipText(labels.getString("attribute.canvasHeight.toolTipText"));
+        heightLabel.setText(labels.getString("attribute.canvasHeight.text")); // NOI18N
+
+        String[] options = { "New Canvas", "Use old Canvas",
+                "Cancel" };
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.add(new JLabel(labels.getString("comics.canvasSize.text")));
+
         width.addFocusListener(new FocusListener() {
-       
+
         @Override
         public void focusGained(FocusEvent e) {
-                width.setText("");
-                JFormattedTextField width = new JFormattedTextField(formatter); 
-                
+            width.setText("");
+            JFormattedTextField width = new JFormattedTextField(formatter); 
+
         }
-        
+
         @Override
         public void focusLost(java.awt.event.FocusEvent e) {
            JFormattedTextField width = new JFormattedTextField(formatter); 
            }
         });
-       
+
         height.addFocusListener(new FocusListener() {
-        
+
         @Override
         public void focusGained(FocusEvent e) {
             height.setText("");
             JFormattedTextField height = new JFormattedTextField(formatter); 
-       
+
         }
         @Override
         public void focusLost(FocusEvent e) {
             JFormattedTextField width = new JFormattedTextField(formatter); 
         }
         }); 
-        
-        panel.add(W);
+
+        panel.add(widthLabel);
         panel.add(width);
-        panel.add(H);
+        panel.add(heightLabel);
         panel.add(height);
-        
-        int option =JOptionPane.showOptionDialog(frame,panel,"Size of Canvas",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
+
+        int option =JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
 
         switch (option){
             case 0:
@@ -368,9 +409,9 @@ public class ComicsToolBar extends AbstractToolBar{
                  else if (width.getText().isEmpty() == true && height.getText().isEmpty() == true){
                     result = false;
                     setCanvas();
-                     
+
                  }
-                 
+
                 else if (width.getText().isEmpty() == true || height.getText().isEmpty() == true){
                     if (width.getText().isEmpty() == false){
                         double x = Double.parseDouble(width.getText());
@@ -399,8 +440,8 @@ public class ComicsToolBar extends AbstractToolBar{
         }
        return result;
     }
-        
-     private SVGFigure newrectangle(int x, int y, double w, double h){
+
+    private SVGFigure newRectangle(int x, int y, double w, double h){
         SVGFigure r = new SVGRectFigure(x, y, w, h);
         getDrawing().add(r);
         FILL_COLOR.set(r, Color.white);
@@ -408,18 +449,19 @@ public class ComicsToolBar extends AbstractToolBar{
         STROKE_WIDTH.set(r, 2.0);
         return r;
     }
-     
+   
     private Drawing getDrawing(){
         return getEditor().getActiveView().getDrawing();
     }   
-    
+
     public void clearPanel(){
         getDrawing().removeAllChildren();
     }   
+
     @Override
      protected String getID(){
         return "comics";
     }
-    
+
 }
 
