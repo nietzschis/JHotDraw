@@ -1,18 +1,13 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
-import org.jhotdraw.draw.CompositeFigureEvent;
-import org.jhotdraw.draw.CompositeFigureListener;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import static org.jhotdraw.draw.DrawingEditor.ACTIVE_VIEW_PROPERTY;
-import org.jhotdraw.draw.FigureEvent;
-import org.jhotdraw.draw.FigureListener;
 import org.jhotdraw.samples.svg.ViewportModifier;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -46,7 +41,9 @@ public class MinimapToolBar extends AbstractToolBar {
      * Creates a new {@link MinimapToolBar} with fixed size.
      */
     public MinimapToolBar() {
-        this(null, 80, 80);
+        this((Point2D.Double p) -> {
+            // do nothing
+        }, 80, 80);
     }
 
     public MinimapToolBar(ViewportModifier viewportModifier) {
@@ -85,16 +82,9 @@ public class MinimapToolBar extends AbstractToolBar {
     }
     
     private class DrawingEditorChangeListener implements PropertyChangeListener {
-
-        public DrawingEditorChangeListener() {
-        }
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if(evt.getPropertyName().equals(ACTIVE_VIEW_PROPERTY)){
-                minimapController.setDrawing((Drawing) evt.getNewValue()); // update whenever the active drawing changes.
-            }
-            minimapView.repaint();
+            minimapController.setDrawing(getEditor().getActiveView().getDrawing());
         }
     }
 }

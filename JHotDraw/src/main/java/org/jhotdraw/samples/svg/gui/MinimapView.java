@@ -219,7 +219,7 @@ public class MinimapView extends JPanel{
     private Rectangle2D.Double getSmallestSize(){
         
         if (getDrawing() != null && getDrawing().getChildren().isEmpty()){
-            return new Rectangle2D.Double();
+            return new Rectangle2D.Double(1,1,1,1);
         }
         
         Rectangle2D.Double smallestContainer = new Rectangle2D.Double();
