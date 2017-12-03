@@ -66,6 +66,8 @@ public abstract class AbstractCompositeFigure
 
     protected class EventHandler extends FigureAdapter implements UndoableEditListener, Serializable {
 
+        private static final long serialVersionUID = -2379252028260378610L;
+        
         @Override
         public void figureRequestRemove(FigureEvent e) {
             remove(e.getFigure());
