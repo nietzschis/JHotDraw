@@ -5,12 +5,8 @@
  */
 package org.jhotdraw.collaboration.client;
 
-import com.google.common.collect.Lists;
 import java.awt.geom.Point2D;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import org.jhotdraw.app.AbstractApplication;
@@ -20,8 +16,6 @@ import org.jhotdraw.draw.Figure;
 import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;

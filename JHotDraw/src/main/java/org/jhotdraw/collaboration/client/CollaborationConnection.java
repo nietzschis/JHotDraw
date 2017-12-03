@@ -14,6 +14,7 @@ import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
@@ -109,6 +110,16 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
                         drawingHandler.changeAttributes(workingFigure, serverFigure);
                     }
+                    
+                    // If rect, check for arc
+                    if (workingFigure instanceof SVGRectFigure) {
+                        SVGRectFigure rectWorkingFig = (SVGRectFigure) workingFigure;
+                        SVGRectFigure rectServerFig = (SVGRectFigure) serverFigure;
+                        
+                        if (!rectWorkingFig.getArc().equals(rectServerFig.getArc())) {
+                            drawingHandler.changeArc((SVGRectFigure) workingFigure, (SVGRectFigure) serverFigure);
+                        }
+                    }
 
                     // Found the same figures so its not new 
                     found = true;
@@ -140,6 +151,17 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                     // Same figure check attributes
                     if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
                         drawingHandler.changeAttributes(workingFigure, serverFigure);
+                    }
+                    
+                    // If rect, check for arc
+                    if (workingFigure instanceof SVGRectFigure) {
+                        SVGRectFigure rectWorkingFig = (SVGRectFigure) workingFigure;
+                        SVGRectFigure rectServerFig = (SVGRectFigure) serverFigure;
+                        
+                        System.out.println(rectWorkingFig.getArc().equals(rectServerFig.getArc()));
+                        if (!rectWorkingFig.getArc().equals(rectServerFig.getArc())) {
+                            drawingHandler.changeArc((SVGRectFigure) workingFigure, (SVGRectFigure) serverFigure);
+                        }
                     }
 
                     // Found the same figures so its not missing 

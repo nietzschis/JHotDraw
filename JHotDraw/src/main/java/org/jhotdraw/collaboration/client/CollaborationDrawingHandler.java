@@ -6,6 +6,7 @@ import java.util.List;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.samples.svg.figures.SVGPathFigure;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 /**
  *
@@ -42,6 +43,12 @@ public class CollaborationDrawingHandler {
             oldFigure.setBounds(start, end);
             oldFigure.changed();
         } 
+    }
+    
+    public void changeArc(SVGRectFigure oldFigure, SVGRectFigure newFigure) {
+        oldFigure.willChange();
+            oldFigure.setArc(newFigure.getArc());
+        oldFigure.changed();
     }
     
     public void changeAttributes(Figure oldFigure, Figure newFigure) {
