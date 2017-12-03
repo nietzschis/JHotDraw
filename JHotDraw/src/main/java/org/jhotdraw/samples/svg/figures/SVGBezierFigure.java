@@ -39,6 +39,8 @@ public class SVGBezierFigure extends BezierFigure {
 
     private transient Rectangle2D.Double cachedDrawingArea;
     
+    private static final long serialVersionUID = -1988543765686497975L;
+
 
     /** Creates a new instance. */
     public SVGBezierFigure() {
