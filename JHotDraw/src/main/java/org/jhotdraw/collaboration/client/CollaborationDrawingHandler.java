@@ -38,7 +38,7 @@ public class CollaborationDrawingHandler {
         } else {
             Point2D.Double start = new Point2D.Double(newFigure.getBounds().x, newFigure.getBounds().y);
             Point2D.Double end = new Point2D.Double(newFigure.getBounds().x + newFigure.getBounds().width, newFigure.getBounds().y + newFigure.getBounds().height);
-
+            
             oldFigure.willChange();
             oldFigure.setBounds(start, end);
             oldFigure.changed();
