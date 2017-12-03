@@ -1,6 +1,5 @@
 package org.jhotdraw.collaboration.client;
 
-import java.awt.geom.Point2D;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -13,7 +12,6 @@ import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
-import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
@@ -22,7 +20,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     private Drawing drawing;
     private IRemoteObservable collaborationProxy;
     private String name;
-    private CollaborationDrawingHandler drawingHandler;
+    private final CollaborationDrawingHandler drawingHandler;
 
     private CollaborationConnection() throws RemoteException {
         super();
@@ -158,7 +156,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
                         SVGRectFigure rectWorkingFig = (SVGRectFigure) workingFigure;
                         SVGRectFigure rectServerFig = (SVGRectFigure) serverFigure;
                         
-                        System.out.println(rectWorkingFig.getArc().equals(rectServerFig.getArc()));
                         if (!rectWorkingFig.getArc().equals(rectServerFig.getArc())) {
                             drawingHandler.changeArc((SVGRectFigure) workingFigure, (SVGRectFigure) serverFigure);
                         }
