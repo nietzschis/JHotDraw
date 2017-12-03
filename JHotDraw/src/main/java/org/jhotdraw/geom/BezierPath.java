@@ -40,6 +40,8 @@ import java.util.*;
  */
 public class BezierPath extends ArrayList<BezierPath.Node>
         implements Shape, Serializable {
+    
+    private static final long serialVersionUID = -1262681553025231467L;
 
     /** Constant for having only control point C0 in effect. C0 is the point
      * through whitch the curve passes. */
