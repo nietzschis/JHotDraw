@@ -37,6 +37,8 @@ public abstract class AbstractCompositeFigure
         extends AbstractFigure
         implements CompositeFigure {
 
+    private static final long serialVersionUID = -5328533915004039844L;
+    
     /**
      * A Layouter determines how the children of the CompositeFigure
      * are laid out graphically.
