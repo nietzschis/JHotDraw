@@ -160,7 +160,7 @@ public class DefaultSDIApplication extends AbstractApplication {
             f.setMinimumSize(new Dimension(200, 200));
             f.setPreferredSize(new Dimension(600, 400));
 
-            f.setJMenuBar(createMenuBar(p, (java.util.List<Action>) panel.getClientProperty("toolBarActions")));
+            f.setJMenuBar(createMenuBar(p));
 
             PreferencesUtil.installFramePrefsHandler(prefs, "view", f);
             Point loc = f.getLocation();
@@ -266,7 +266,7 @@ public class DefaultSDIApplication extends AbstractApplication {
      * The view menu bar is displayed for a view. The default implementation
      * returns a new screen menu bar.
      */
-    protected JMenuBar createMenuBar(final View p, java.util.List<Action> toolBarActions) {
+    protected JMenuBar createMenuBar(final View p) {
         JMenuBar mb = new JMenuBar();
         for (JMenu mm : getModel().createMenus(this, p)) {
             mb.add(mm);
