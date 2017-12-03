@@ -3,6 +3,7 @@ package org.jhotdraw.samples.svg;
 import java.util.List;
 import javax.swing.JMenu;
 import org.jhotdraw.app.DefaultApplicationModel;
+import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.junit.AfterClass;
 import static org.junit.Assert.fail;
@@ -23,7 +24,7 @@ public class SVGApplicationModelTest {
     public static void setUpClass() {
         model = new SVGApplicationModel();
         appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        menus = model.createMenus(null, null);
+        menus = model.createMenus(new DefaultSDIApplication(), new SVGView());
     }
     
     @AfterClass
@@ -31,6 +32,16 @@ public class SVGApplicationModelTest {
         model = null;
         appLabels = null;
         menus = null;
+    }
+    
+    @Test
+    public void testFileMenuCreation() {
+        for (JMenu menu : menus) {
+            if (menu.getText().equals(appLabels.getTextProperty("file"))) {
+                return;
+            }
+        }
+        fail("File menu not created");
     }
     
     @Test
@@ -61,6 +72,16 @@ public class SVGApplicationModelTest {
             }
         }
         fail("View menu not created");
+    }
+    
+    @Test
+    public void testHelpMenuCreation() {
+        for (JMenu menu : menus) {
+            if (menu.getText().equals(appLabels.getTextProperty("help"))) {
+                return;
+            }
+        }
+        fail("Help menu not created");
     }
 
 }
