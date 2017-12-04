@@ -250,7 +250,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
             Drawing drawing = ((SVGView) getActiveView()).getDrawing();
             CollaborationConnection.getInstance().setDrawing(drawing);
-            firePropertyEvent("connect", null, null);
+            firePropertyChange("connect", null, null);
 
             // Clear own canvas
             if (drawing.getChildCount() > 0) {
@@ -263,7 +263,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     
     public void disconnectFromServer() {
         CollaborationConnection.getInstance().disconnectFromServer();
-        firePropertyEvent("disconnect", null, null);
+        firePropertyChange("disconnect", null, null);
     }
 
     public java.util.List<File> recentFiles() {
@@ -314,9 +314,5 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     }
 
     public void addWindow(Window window, View p) {
-    }
-
-    public void firePropertyEvent(String eventName, Object oldValue, Object newValue) {
-        firePropertyChange(eventName, oldValue, newValue);
     }
 }
