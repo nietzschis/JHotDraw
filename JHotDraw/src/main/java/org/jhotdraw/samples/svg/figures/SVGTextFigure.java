@@ -47,6 +47,8 @@ public class SVGTextFigure
         extends SVGAttributedFigure
         implements TextHolderFigure, SVGFigure {
     
+    private static final long serialVersionUID = 6595675253179529515L;
+    
     protected Point2D.Double[] coordinates = new Point2D.Double[] { new Point2D.Double() };
     protected double[] rotates = new double[] { 0 };
     private boolean editable = true;

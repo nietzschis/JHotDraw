@@ -56,6 +56,7 @@ public abstract class AbstractFigure
     private boolean isRemovable = true;
     private boolean isVisible = true;
     private boolean isTransformable = true;
+    private static final long serialVersionUID = 8894174659374389833L;
 
     private int collaborationId;
     /**
