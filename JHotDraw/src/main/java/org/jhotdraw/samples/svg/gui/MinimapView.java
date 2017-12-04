@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
@@ -42,6 +37,7 @@ public class MinimapView extends JPanel{
      * @param toolBar The {@link AbstractToolBar} used to disply the drawing. A reference to {@link Drawing} is obatained througt the toolbar.
      */
     public MinimapView(AbstractToolBar toolBar) {
+        setName("minimapView");
         assert toolBar != null;
         this.toolBar = toolBar;
         
@@ -85,7 +81,11 @@ public class MinimapView extends JPanel{
         });
     }
     
-    private void handleEvent(MouseEvent e){
+    /**
+     * Handels mouse events.
+     * @param e describes the event
+     */
+    private void handleEvent(MouseEvent e){    
         Dimension minimapSize = e.getComponent().getPreferredSize();
         Rectangle2D.Double canvasSize = getCanvasSize();
         double largerSide = Math.max(canvasSize.width, canvasSize.height);
@@ -136,7 +136,7 @@ public class MinimapView extends JPanel{
         
         Rectangle2D.Double size = getCanvasSize();
         
-        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or it doesn't have a size, paint the minimap white and return.
+        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or have a size of 0, paint the minimap white and return.
             g.setColor(Color.white);
             g.fillRect(0, 0, getPreferredSize().width, getPreferredSize().height);
             
@@ -160,7 +160,7 @@ public class MinimapView extends JPanel{
     /**
      * Returns the rectangle of the canvas, wich the minimap should draw.
      * For fixed size canvas, this is full canvas located at (0,0).
-     * For dynamic this is the smallest possible rectangle located so the left-top figure is just within.
+     * For dynamic this is the smallest possible rectangle located so the most left-top figure is just within.
      * @return the pratical size of the canvas.
      */
     private Rectangle2D.Double getCanvasSize(){

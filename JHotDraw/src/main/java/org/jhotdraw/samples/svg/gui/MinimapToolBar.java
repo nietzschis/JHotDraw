@@ -5,9 +5,7 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
-import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
-import static org.jhotdraw.draw.DrawingEditor.ACTIVE_VIEW_PROPERTY;
 import org.jhotdraw.samples.svg.ViewportModifier;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -16,11 +14,15 @@ import org.jhotdraw.util.ResourceBundleUtil;
  */
 public class MinimapToolBar extends AbstractToolBar {
     
-    private final DrawingEditorChangeListener editorListener = new DrawingEditorChangeListener();
+    private final PropertyChangeListener editorListener = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            minimapController.setDrawing(getEditor().getActiveView().getDrawing());
+        }
+    };
+    
     private final MinimapView minimapView;
     private final MinimapController minimapController;
-    
-    private final Dimension size = new Dimension();
     
     /**
      * Creates a new {@link MinimapToolBar} with custom size.
@@ -29,11 +31,10 @@ public class MinimapToolBar extends AbstractToolBar {
      * @param height The height of the {@link MinimapView}
      */
     public MinimapToolBar(ViewportModifier viewportModifier, int width, int height) {
-        size.setSize(width, height);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
         minimapView = new MinimapView(this);
-        minimapView.setPreferredSize(size);
+        minimapView.setPreferredSize(new Dimension(width, height));
         minimapController = new MinimapController(viewportModifier, minimapView);
     }
     
@@ -46,6 +47,11 @@ public class MinimapToolBar extends AbstractToolBar {
         }, 80, 80);
     }
 
+     /**
+     * Creates a new {@link MinimapToolBar} with fixed size, using given {@link ViewportModifier}.
+     * 
+     * @param viewportModifier 
+     */
     public MinimapToolBar(ViewportModifier viewportModifier) {
         this(viewportModifier, 80, 80);
     }
@@ -79,12 +85,5 @@ public class MinimapToolBar extends AbstractToolBar {
     @Override
     protected int getDefaultDisclosureState() {
         return 1;
-    }
-    
-    private class DrawingEditorChangeListener implements PropertyChangeListener {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            minimapController.setDrawing(getEditor().getActiveView().getDrawing());
-        }
     }
 }
