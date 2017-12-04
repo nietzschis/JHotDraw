@@ -40,6 +40,8 @@ import org.jhotdraw.geom.*;
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, ImageHolderFigure {
+    
+    private static final long serialVersionUID = -6200643115553321938L;
 
     /**
      * This rectangle describes the bounds into which we draw the image.
