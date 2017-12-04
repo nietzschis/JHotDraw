@@ -201,6 +201,8 @@ public class MinimapView extends JPanel{
      * @return The width of {@link Drawing}.
      */
     private Double getCanvasWidth(){
+        if(getDrawing() == null)
+            return null;
         return CANVAS_WIDTH.get(getDrawing());
     }
     
@@ -209,6 +211,8 @@ public class MinimapView extends JPanel{
      * @return The height of {@link Drawing}.
      */
     private Double getCanvasHeight(){
+        if(getDrawing() == null)
+            return null;
         return CANVAS_HEIGHT.get(getDrawing());
     }
     
@@ -218,7 +222,7 @@ public class MinimapView extends JPanel{
      */
     private Rectangle2D.Double getSmallestSize(){
         
-        if (getDrawing() != null && getDrawing().getChildren().isEmpty()){
+        if (getDrawing() == null || getDrawing().getChildren().isEmpty()){
             return new Rectangle2D.Double(1,1,1,1);
         }
         
