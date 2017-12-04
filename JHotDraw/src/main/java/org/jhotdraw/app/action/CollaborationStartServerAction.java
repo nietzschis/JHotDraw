@@ -19,8 +19,6 @@ import java.util.concurrent.Executors;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.*;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
-import org.jhotdraw.samples.svg.SVGView;
 
 /**
  *
