@@ -145,20 +145,23 @@ public class ResizeHandleKit {
                 default: return null;
             }
         }
-        private static int chooseCursor(int direction)
+        private static Cursor chooseCursor(int direction)
         {
+            int cur;
             switch (direction)
             {
-                case DIR_S: return Cursor.S_RESIZE_CURSOR;
-                case DIR_N: return Cursor.N_RESIZE_CURSOR;
-                case DIR_E: return Cursor.E_RESIZE_CURSOR;
-                case DIR_W: return Cursor.W_RESIZE_CURSOR;
-                case DIR_SE: return Cursor.SE_RESIZE_CURSOR;
-                case DIR_SW: return Cursor.SW_RESIZE_CURSOR;
-                case DIR_NE: return Cursor.NE_RESIZE_CURSOR;
-                case DIR_NW: return Cursor.NW_RESIZE_CURSOR;
-                default: return Cursor.DEFAULT_CURSOR;
+                case DIR_S: cur = Cursor.S_RESIZE_CURSOR; break;
+                case DIR_N: cur = Cursor.N_RESIZE_CURSOR; break;
+                case DIR_E: cur = Cursor.E_RESIZE_CURSOR; break;
+                case DIR_W: cur = Cursor.W_RESIZE_CURSOR; break;
+                case DIR_SE: cur = Cursor.SE_RESIZE_CURSOR; break;
+                case DIR_SW: cur = Cursor.SW_RESIZE_CURSOR; break;
+                case DIR_NE: cur = Cursor.NE_RESIZE_CURSOR; break;
+                case DIR_NW: cur = Cursor.NW_RESIZE_CURSOR; break;
+                default: cur = Cursor.DEFAULT_CURSOR; break;
             }
+
+            return Cursor.getPredefinedCursor(cur);
         }
 
         @Override
@@ -374,9 +377,10 @@ public class ResizeHandleKit {
                 }
             }
         }
+
+        @Override
         public Cursor getCursor() {
-            return Cursor.getPredefinedCursor(
-                    getOwner().isTransformable() ? chooseCursor(direction) : Cursor.DEFAULT_CURSOR);
+            return getOwner().isTransformable() ? chooseCursor(direction) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
         }
     }
 }
