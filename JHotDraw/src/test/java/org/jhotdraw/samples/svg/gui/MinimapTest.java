@@ -47,13 +47,17 @@ public class MinimapTest {
         minimapView.setPreferredSize(new Dimension(80, 80));
         minimapController = new MinimapController(viewportModifier, minimapView);
         
+        startEnvironment();
+    }
+    
+    private void startEnvironment(){
         JFrame frame = GuiActionRunner.execute(() -> new JFrame());
         frame.add(minimapView);
         
         window = new FrameFixture(frame);
         window.show();
     }
-    
+
     @Test
     public void respondsToUserInput(){
         verify(viewportModifier, never()).centerViewportOnPoint(Matchers.any());
@@ -66,6 +70,13 @@ public class MinimapTest {
         if (dview.getDrawing() != null) {
             verify(drawing, atLeastOnce()).draw(Matchers.any());
         }
+    }
+    
+    @Test
+    public void worksWithNullDrawing(){
+        window.cleanUp();
+        Mockito.when(dview.getDrawing()).thenReturn(null);
+        startEnvironment();
     }
     
     @After
