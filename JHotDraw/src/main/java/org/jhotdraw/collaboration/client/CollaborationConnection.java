@@ -84,98 +84,12 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     @Override
     public synchronized void update(List<Figure> figures) throws RemoteException {
         if (figures.size() > drawing.getChildCount()) {
-            serverListLongest(figures);
+            drawingHandler.serverListLongest(figures, this);
         } else {
-            clientListLongest(figures);
+            drawingHandler.clientListLongest(figures, this);
         }
     }
 
-    private void serverListLongest(List<Figure> serverList) {
-        for (Figure serverFigure : serverList) {
-            boolean found = false;
-            for (Figure workingFigure : drawing.getChildren()) {
-
-                // Figures have the same Id, so must be the same figure, check for updates
-                if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
-
-                    // Same figure check bounds
-                    if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
-                            || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
-                        drawingHandler.changeBounds(workingFigure, serverFigure);
-                    }
-
-                    // Same figure check attributes
-                    if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
-                        drawingHandler.changeAttributes(workingFigure, serverFigure);
-                    }
-                    
-                    // If rect, check for arc
-                    if (workingFigure instanceof SVGRectFigure) {
-                        SVGRectFigure rectWorkingFig = (SVGRectFigure) workingFigure;
-                        SVGRectFigure rectServerFig = (SVGRectFigure) serverFigure;
-                        
-                        if (!rectWorkingFig.getArc().equals(rectServerFig.getArc())) {
-                            drawingHandler.changeArc((SVGRectFigure) workingFigure, (SVGRectFigure) serverFigure);
-                        }
-                    }
-
-                    // Found the same figures so its not new 
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                // Add new figure to list
-                drawingHandler.addFigure(serverFigure);
-            }
-        }
-    }
-
-    private void clientListLongest(List<Figure> serverList) {
-        List<Figure> figuresToBeDeleted = new ArrayList();
-        for (Figure workingFigure : drawing.getChildren()) {
-            boolean found = false;
-            for (Figure serverFigure : serverList) {
-
-                // Figures have the same Id, so must be the same figure, check for updates
-                if (workingFigure.getCollaborationId() == serverFigure.getCollaborationId()) {
-
-                    // Same figure check bounds
-                    if ((workingFigure.getBounds().x != serverFigure.getBounds().x) || (workingFigure.getBounds().y != serverFigure.getBounds().y)
-                            || (workingFigure.getBounds().height != serverFigure.getBounds().height) || (workingFigure.getBounds().width != serverFigure.getBounds().width)) {
-                        drawingHandler.changeBounds(workingFigure, serverFigure);
-                    }
-
-                    // Same figure check attributes
-                    if (!workingFigure.getAttributes().equals(serverFigure.getAttributes())) {
-                        drawingHandler.changeAttributes(workingFigure, serverFigure);
-                    }
-                    
-                    // If rect, check for arc
-                    if (workingFigure instanceof SVGRectFigure) {
-                        SVGRectFigure rectWorkingFig = (SVGRectFigure) workingFigure;
-                        SVGRectFigure rectServerFig = (SVGRectFigure) serverFigure;
-                        
-                        if (!rectWorkingFig.getArc().equals(rectServerFig.getArc())) {
-                            drawingHandler.changeArc((SVGRectFigure) workingFigure, (SVGRectFigure) serverFigure);
-                        }
-                    }
-
-                    // Found the same figures so its not missing 
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                // Remove figure from list
-                figuresToBeDeleted.add(workingFigure);
-            }
-        }
-
-        if (!figuresToBeDeleted.isEmpty()) {
-            drawingHandler.removeFigures(figuresToBeDeleted);
-        }
-    }
 
     private void addCollaborator() {
         try {
