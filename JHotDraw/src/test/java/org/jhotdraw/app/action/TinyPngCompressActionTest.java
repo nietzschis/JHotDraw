@@ -41,18 +41,26 @@ public class TinyPngCompressActionTest {
     
     @Test
     public void testCompressImage() {
-        URL url = getClass().getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");
+        URL url = getTestImageUrl(getClass());
         File f = new File(url.getPath());
-        String compressedFileName = f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_compressed.png";
+        String compressedFileName = getCompressedFileName(f);
         File fCompressed = new File(compressedFileName);
         boolean compressed = TinyPngCompressAction.compressImage(f);
         assertTrue(isCompressedSmaller(f, fCompressed));
     }
     
-    public boolean isCompressedSmaller(File original, File compressed) {
+    public static boolean isCompressedSmaller(File original, File compressed) {
         if(compressed.length() < original.length())
             return true;
         return false;
+    }
+    
+    public static URL getTestImageUrl(Class c) {
+        return c.getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");
+    }
+    
+    public static String getCompressedFileName(File f) {
+        return f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_compressed.png";
     }
 
 }
