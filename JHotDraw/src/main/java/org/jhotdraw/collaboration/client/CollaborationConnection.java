@@ -18,7 +18,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     private Drawing drawing;
     private IRemoteObservable collaborationProxy;
     private String name;
-    private final CollaborationDrawingHandler drawingHandler;
+    private final transient CollaborationDrawingHandler drawingHandler;
     private boolean connected = false;
 
     private CollaborationConnection() throws RemoteException {
@@ -30,7 +30,8 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         if (singleton == null) {
             try {
                 singleton = new CollaborationConnection();
-            } catch (RemoteException ex) {
+            }
+            catch (RemoteException ex) {
             }
         }
         return singleton;
@@ -45,7 +46,8 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             connected = true;
 
             return true;
-        } catch (RemoteException | NotBoundException e) {
+        }
+        catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
             return false;
         }
@@ -75,7 +77,8 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             System.out.println("Collaboration Notified, action: " + source);
             try {
                 collaborationProxy.notifyAllCollaborators(drawing.getChildren());
-            } catch (RemoteException ex) {
+            }
+            catch (RemoteException ex) {
                 ex.printStackTrace();
             }
         }
@@ -84,18 +87,23 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     // Server kalder denne på clienten
     @Override
     public synchronized void update(List<Figure> figures) throws RemoteException {
-        if (figures.size() > drawing.getChildCount()) {
-            drawingHandler.serverListLongest(figures, this);
-        } else {
-            drawingHandler.clientListLongest(figures, this);
+        try {
+            if (figures.size() > drawing.getChildCount()) {
+                drawingHandler.serverListLongest(figures, this);
+            }
+            else {
+                drawingHandler.clientListLongest(figures, this);
+            }
+        }
+        catch (NullPointerException e) {
         }
     }
-
 
     private void addCollaborator() {
         try {
             collaborationProxy.addCollaborator(this);
-        } catch (RemoteException ex) {
+        }
+        catch (RemoteException ex) {
             ex.printStackTrace();
         }
     }
@@ -105,7 +113,8 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         try {
             collaborationProxy.removeCollaborator(this);
             System.out.println("removed as collab");
-        } catch (RemoteException ex) {
+        }
+        catch (RemoteException ex) {
             System.out.println("collab error");
             ex.printStackTrace();
         }
@@ -123,6 +132,5 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     public boolean isConnected() {
         return connected;
     }
-    
-    
+
 }
