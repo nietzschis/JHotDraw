@@ -5,14 +5,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.collaboration.common.IRemoteObserver;
-import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class CollaborationConnection extends UnicastRemoteObject implements IRemoteObserver {
 
@@ -21,6 +19,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     private IRemoteObservable collaborationProxy;
     private String name;
     private final CollaborationDrawingHandler drawingHandler;
+    private boolean connected = false;
 
     private CollaborationConnection() throws RemoteException {
         super();
@@ -43,6 +42,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             registry = LocateRegistry.getRegistry(IP, CollaborationConfig.PORT);
             collaborationProxy = (IRemoteObservable) registry.lookup(CollaborationConfig.NAME);
             addCollaborator();
+            connected = true;
 
             return true;
         } catch (RemoteException | NotBoundException e) {
@@ -62,6 +62,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
         this.drawing = null;
         this.collaborationProxy = null;
         this.name = null;
+        connected = false;
     }
 
     public void setDrawing(Drawing drawing) {
@@ -118,4 +119,10 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     public String getName() throws RemoteException {
         return name;
     }
+
+    public boolean isConnected() {
+        return connected;
+    }
+    
+    
 }

@@ -11,8 +11,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
-import org.jhotdraw.draw.Drawing;
-import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 public class CollaborationConnectAction extends AbstractApplicationAction {
