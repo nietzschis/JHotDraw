@@ -1347,32 +1347,7 @@ public class ButtonFactory {
         JPopupButton popupButton = createPopupWithOptions(editor, labels, strokes, STROKE_CAP);
         SVGlabels.configureToolBarButton(popupButton, "attribute.strokeCap");
         popupButton.setFocusable(false);
-/*
-        HashMap<AttributeKey, Object> attributes;
-        attributes = new HashMap<AttributeKey, Object>();
-        attributes.put(STROKE_CAP, BasicStroke.CAP_BUTT);
-        popupButton.add(
-                new AttributeAction(
-                        editor,
-                        attributes,
-                        SVGlabels.getString("attribute.strokeCap.butt"),
-                        null));
-        attributes = new HashMap<AttributeKey, Object>();
-        attributes.put(STROKE_CAP, BasicStroke.CAP_ROUND);
-        popupButton.add(
-                new AttributeAction(
-                        editor,
-                        attributes,
-                        SVGlabels.getString("attribute.strokeCap.round"),
-                        null));
-        attributes = new HashMap<AttributeKey, Object>();
-        attributes.put(STROKE_CAP, BasicStroke.CAP_SQUARE); 
-        popupButton.add(
-                new AttributeAction(
-                        editor,
-                        attributes,
-                        SVGlabels.getString("attribute.strokeCap.square"),
-                        null));*/
+        
         return popupButton;
     }
 
