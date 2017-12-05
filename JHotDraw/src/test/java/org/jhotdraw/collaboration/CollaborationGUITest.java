@@ -30,43 +30,33 @@ import org.junit.Test;
 public class CollaborationGUITest {
 
     private FrameFixture window;
-    
+
     @BeforeClass
     public static void setUp() {
-        FailOnThreadViolationRepaintManager.install();
+        //FailOnThreadViolationRepaintManager.install();
     }
 
     @Test(expected = ExportException.class)
-    public void test() throws InterruptedException, InvocationTargetException {
+    public void test() throws InterruptedException, InvocationTargetException, RemoteException, AlreadyBoundException {
         Application app = new DefaultSDIApplication();
         SVGApplicationModel model = new SVGApplicationModel();
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
         app.launch(null);
-        Thread.sleep(3000);
-        assertNotNull(app.getFrame());
         
-        //SwingUtilities.invokeLater(() -> {
+        Thread.sleep(5000);
+        
+        assertNotNull(app.getFrame());
         
         window = new FrameFixture(app.getFrame());
         window.show();
-        window.focus();
         window.menuItem("collaboration").click();
-        //Thread.sleep(1000);
-        //window.menuItem("collaboration").click().click();
-        //Thread.sleep(1000);
         window.menuItem("collaboration.start").click();
-        //Thread.sleep(1000);
         window.optionPane().buttonWithText("Yes").click();
 
-        Thread.sleep(5000);
-
-        try {
-            LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) CollaborationServer.getInstance());
-            fail();
-        }
-        catch (RemoteException | AlreadyBoundException ex) {
-        }
+        app.startServer();
+        LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) CollaborationServer.getInstance());
+        //fail();
         //});
 
     }
