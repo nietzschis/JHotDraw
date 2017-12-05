@@ -49,8 +49,7 @@ public class ButtonFactoryTest {
     
     @Before
     public void setUp() {
-        final DrawingView view;
-            
+                   
     }
     
     @After
