@@ -88,16 +88,11 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("swing.aatext", "true");
     }
 
+    
     protected void initLookAndFeel() {
         try {
-            String lafName;
-            if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
-                JFrame.setDefaultLookAndFeelDecorated(true);
-                JDialog.setDefaultLookAndFeelDecorated(true);
-                lafName = UIManager.getCrossPlatformLookAndFeelClassName();
-            } else {
-                lafName = UIManager.getSystemLookAndFeelClassName();
-            }
+            String lafName;                                             //ChangedByMe Removed if-block for mac os. Now mac os look and feel
+            lafName = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(lafName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,6 +141,11 @@ public class DefaultSDIApplication extends AbstractApplication {
             final JFrame f = new JFrame();
             f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             updateViewTitle(p, f);
+            
+            if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {       //ChangedByMe 
+                com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(f,true);
+                com.apple.eawt.Application.getApplication().requestToggleFullScreen(f);
+            }
 
             JPanel panel = (JPanel) wrapViewComponent(p);
             f.add(panel);
