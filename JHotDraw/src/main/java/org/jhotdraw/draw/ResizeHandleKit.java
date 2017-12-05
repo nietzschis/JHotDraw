@@ -81,41 +81,42 @@ public class ResizeHandleKit {
         addEdgeResizeHandles(f, handles);
     }
 
-    static public Handle south(Figure owner) {
+    private static Handle south(Figure owner) {
         return new ResizeHandle(owner, DIR_S);
     }
 
-    static public Handle southEast(Figure owner) {
+    private static Handle southEast(Figure owner) {
         return new ResizeHandle(owner, DIR_SE);
     }
 
-    static public Handle southWest(Figure owner) {
+    private static Handle southWest(Figure owner) {
         return new ResizeHandle(owner, DIR_SW);
     }
 
-    static public Handle north(Figure owner) {
+    private static Handle north(Figure owner) {
         return new ResizeHandle(owner, DIR_N);
     }
 
-    static public Handle northEast(Figure owner) {
+    private static Handle northEast(Figure owner) {
         return new ResizeHandle(owner, DIR_NE);
     }
 
-    static public Handle northWest(Figure owner) {
+    private static Handle northWest(Figure owner) {
         return new ResizeHandle(owner, DIR_NW);
     }
 
-    static public Handle east(Figure owner) {
+    private static Handle east(Figure owner) {
         return new ResizeHandle(owner, DIR_E);
     }
 
-    static public Handle west(Figure owner) {
+    private static Handle west(Figure owner) {
         return new ResizeHandle(owner, DIR_W);
     }
 
     private static class ResizeHandle extends LocatorHandle {
 
-        private int dx,  dy, direction;
+        private int dx,  dy;
+        private final int direction;
         Object geometry;
 
         @Nullable
@@ -182,17 +183,17 @@ public class ResizeHandleKit {
             if (getEditor().getTool().supportsHandleInteraction()) {
                 if (getOwner().isTransformable()) {
                     drawRectangle(g,
-                            (Color) getEditor().getHandleAttribute(HandleAttributeKeys.RESIZE_HANDLE_FILL_COLOR),
-                            (Color) getEditor().getHandleAttribute(HandleAttributeKeys.RESIZE_HANDLE_STROKE_COLOR));
+                            getEditor().getHandleAttribute(HandleAttributeKeys.RESIZE_HANDLE_FILL_COLOR),
+                            getEditor().getHandleAttribute(HandleAttributeKeys.RESIZE_HANDLE_STROKE_COLOR));
                 } else {
                     drawRectangle(g,
-                            (Color) getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_FILL_COLOR),
-                            (Color) getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_STROKE_COLOR));
+                            getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_FILL_COLOR),
+                            getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_STROKE_COLOR));
                 }
             } else {
                 drawRectangle(g,
-                        (Color) getEditor().getHandleAttribute(HandleAttributeKeys.HANDLE_FILL_COLOR_DISABLED),
-                        (Color) getEditor().getHandleAttribute(HandleAttributeKeys.HANDLE_STROKE_COLOR_DISABLED));
+                        getEditor().getHandleAttribute(HandleAttributeKeys.HANDLE_FILL_COLOR_DISABLED),
+                        getEditor().getHandleAttribute(HandleAttributeKeys.HANDLE_STROKE_COLOR_DISABLED));
             }
         }
 
