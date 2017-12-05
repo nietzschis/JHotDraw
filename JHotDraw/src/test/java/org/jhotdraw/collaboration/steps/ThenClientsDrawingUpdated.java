@@ -18,7 +18,7 @@ public class ThenClientsDrawingUpdated {
     @ExpectedScenarioState
     List<Figure> myUpdatedList;
     
-    public void figure_have_been_added_to_client() {
+    public void the_figure_has_been_added_to_client() {
         assertEquals(1, myUpdatedList.size());
         assertEquals(1, clientsDrawing.getChildCount());
         
@@ -28,7 +28,7 @@ public class ThenClientsDrawingUpdated {
         assertEquals(myFigure.getCollaborationId(), clientsFigure.getCollaborationId());
     }
     
-    public void figure_have_been_changed_on_client() {
+    public void the_figure_has_been_changed_on_the_client() {
         Figure myFigure = myUpdatedList.get(0);
         Figure clientsFigure = clientsDrawing.getChild(0);
         
@@ -40,7 +40,7 @@ public class ThenClientsDrawingUpdated {
         assertEquals(myFigure.getAttributes(), clientsFigure.getAttributes());
     }
     
-    public void figure_have_been_removed_on_client() {
+    public void the_figure_has_been_removed_on_the_client() {
         assertEquals(0, myUpdatedList.size());
         assertEquals(0, clientsDrawing.getChildCount());
     }
