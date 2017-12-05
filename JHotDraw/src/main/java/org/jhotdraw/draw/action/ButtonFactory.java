@@ -1341,11 +1341,13 @@ public class ButtonFactory {
     }
 
     public static JPopupButton createStrokeCapButton(DrawingEditor editor) {
-
-        JPopupButton popupButton = new JPopupButton();
+        String[] labels = {"attribute.strokeCap.butt", "attribute.strokeCap.round", "attribute.strokeCap.square"};
+        int[] strokes = {BasicStroke.CAP_BUTT, BasicStroke.CAP_ROUND, BasicStroke.CAP_SQUARE};
+        
+        JPopupButton popupButton = createPopupWithOptions(editor, labels, strokes, STROKE_CAP);
         SVGlabels.configureToolBarButton(popupButton, "attribute.strokeCap");
         popupButton.setFocusable(false);
-
+/*
         HashMap<AttributeKey, Object> attributes;
         attributes = new HashMap<AttributeKey, Object>();
         attributes.put(STROKE_CAP, BasicStroke.CAP_BUTT);
@@ -1364,37 +1366,36 @@ public class ButtonFactory {
                         SVGlabels.getString("attribute.strokeCap.round"),
                         null));
         attributes = new HashMap<AttributeKey, Object>();
-        attributes.put(STROKE_CAP, BasicStroke.CAP_SQUARE);
+        attributes.put(STROKE_CAP, BasicStroke.CAP_SQUARE); 
         popupButton.add(
                 new AttributeAction(
                         editor,
                         attributes,
                         SVGlabels.getString("attribute.strokeCap.square"),
-                        null));
+                        null));*/
         return popupButton;
     }
 
     public static JPopupButton createStrokeJoinButton(DrawingEditor editor) {
-
-        JPopupButton popupButton = new JPopupButton();
-        SVGlabels.configureToolBarButton(popupButton, "attribute.strokeJoin");
-        popupButton.setFocusable(false);
+        String[] labels = {"attribute.strokeJoin.bevel", "attribute.strokeJoin.round", "attribute.strokeJoin.miter"};
+        int[] strokes = {BasicStroke.JOIN_BEVEL, BasicStroke.JOIN_ROUND, BasicStroke.JOIN_MITER};
         
-        popupButton = addOptionsToPopup(popupButton, editor);
+        JPopupButton popupButton = createPopupWithOptions(editor, labels, strokes, STROKE_JOIN);
+        SVGlabels.configureToolBarButton(popupButton, "attribute.strokeJoin");
+        popupButton.setFocusable(false); 
         
         return popupButton;
     }
 
-    private static JPopupButton addOptionsToPopup(JPopupButton button, DrawingEditor editor) {
-        String[] labels = {"bevel", "round", "miter"};
-        int[] strokes = {BasicStroke.JOIN_BEVEL, BasicStroke.JOIN_ROUND, BasicStroke.JOIN_MITER};
+    private static JPopupButton createPopupWithOptions(DrawingEditor editor, String[] labels, int[] strokes, AttributeKey<Integer> attributeKey) {
+        JPopupButton button = new JPopupButton();
         Map<AttributeKey, Object> attributes;
         
         for(int i = 0, k = 0; i < labels.length && k < strokes.length; i++, k++) {
             attributes = new HashMap<>();
-            attributes.put(STROKE_JOIN, strokes[k]);
+            attributes.put(attributeKey, strokes[k]);
             button.add(new AttributeAction(editor, attributes,
-                    SVGlabels.getString("attribute.strokeJoin." + labels[i]),
+                    SVGlabels.getString(labels[i]),
                     null));
         }
         return button;
