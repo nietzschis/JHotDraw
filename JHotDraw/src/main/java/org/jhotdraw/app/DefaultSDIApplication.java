@@ -151,9 +151,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     @SuppressWarnings("unchecked")
     public void show(final View p) {
-        System.out.println("show");
         if (!p.isShowing()) {
-            System.out.println("if");
             p.setShowing(true);
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -311,7 +309,6 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     @Override
     public JFrame getFrame() {
-        System.out.println("defaultsdi getframe");
         return frame;
     }
 
