@@ -11,8 +11,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
-import org.jhotdraw.draw.Drawing;
-import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 public class CollaborationConnectAction extends AbstractApplicationAction {
@@ -66,18 +64,21 @@ public class CollaborationConnectAction extends AbstractApplicationAction {
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
         if (IP.matches(IPRegExpr)) {
-            // TODO: Implement Server 
-            CollaborationConnection.getInstance().setName(setCollaboratorName());
-            connectToServer(IP);
-            JOptionPane.showMessageDialog(app.getComponent(), "Connected to server! ");
+            if(connectToServer(IP)) {
+                CollaborationConnection.getInstance().setName(setCollaboratorName());
+                JOptionPane.showMessageDialog(app.getComponent(), "Connected to server! ");
+            }
+            else {
+                JOptionPane.showMessageDialog(app.getComponent(), "Something went wrong during the connection, try again!");
+            }
 
         } else {
             showInputDialog("Wrong IP, try again:");
         }
     }
 
-    private void connectToServer(String IP) {
-        app.connectToServer(IP);
+    private boolean connectToServer(String IP) {
+        return app.connectToServer(IP);
     }
 
     private PropertyChangeListener createApplicationListener() {

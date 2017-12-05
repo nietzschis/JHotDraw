@@ -2,7 +2,6 @@ package org.jhotdraw.collaboration.server;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ExportException;
@@ -54,7 +53,7 @@ public class CollaborationServerTest {
 
     @Test(expected = ExportException.class)
     public void testStartServer() throws RemoteException, AlreadyBoundException {
-        LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) CollaborationServer.getInstance());
+        LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
     }
 
     @Test(expected = NotBoundException.class)
