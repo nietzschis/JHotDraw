@@ -20,7 +20,9 @@ public abstract class AbstractMenu extends JMenu {
     }
 
     public final JMenuItem addAction(String id) {
-        return super.add(model.getAction(id));
+        JMenuItem item = super.add(model.getAction(id));
+        item.setName(id);
+        return item;
     }
 
 }

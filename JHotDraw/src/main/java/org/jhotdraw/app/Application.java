@@ -252,4 +252,7 @@ public interface Application {
     public void removeWindow(Window window);
     
     public void firePropertyEvent(String eventName, Object oldValue, Object newValue);
+    
+    JFrame getFrame();
+    
 }

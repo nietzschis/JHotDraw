@@ -15,6 +15,7 @@ public class CollaborationMenu extends AbstractMenu {
 
     public CollaborationMenu(ApplicationModel model) {
         super("collaboration", model);
+        setName("collaboration");
 
         addAction(CollaborationStartServerAction.ID);
         addAction(CollaborationStopServerAction.ID);
