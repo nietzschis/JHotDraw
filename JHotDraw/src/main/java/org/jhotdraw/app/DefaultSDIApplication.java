@@ -31,7 +31,7 @@ import org.jhotdraw.util.prefs.*;
  * to work with the document, such as a menu bar, tool bars and palette windows.
  * <p>
  * The life cycle of the application is tied to the JFrame. Closing the JFrame
- * quits the application. 
+ * quits the application.
  *
  * @author Werner Randelshofer
  * @version 1.5.1 2008-07-13 Don't add the view menu to the menu bar if it is
@@ -88,7 +88,6 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("swing.aatext", "true");
     }
 
-    
     protected void initLookAndFeel() {
         try {
             String lafName;                                              
@@ -146,7 +145,6 @@ public class DefaultSDIApplication extends AbstractApplication {
                 com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(f,true);
                 com.apple.eawt.Application.getApplication().requestToggleFullScreen(f);
             }
-
             JPanel panel = (JPanel) wrapViewComponent(p);
             f.add(panel);
             f.setMinimumSize(new Dimension(200, 200));
