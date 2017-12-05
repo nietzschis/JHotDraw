@@ -21,8 +21,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -43,11 +41,6 @@ public class CollaborationGUITest {
         app.launch(null);
         Thread.sleep(5000);
         window = new FrameFixture(app.getFrame());
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-        //FailOnThreadViolationRepaintManager.install();
     }
     
     @After
