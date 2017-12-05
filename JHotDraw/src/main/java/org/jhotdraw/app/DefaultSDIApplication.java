@@ -49,6 +49,7 @@ import org.jhotdraw.util.prefs.*;
 public class DefaultSDIApplication extends AbstractApplication {
 
     private Preferences prefs;
+    private JFrame frame;
 
     /**
      * Creates a new instance.
@@ -149,21 +150,23 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     @SuppressWarnings("unchecked")
     public void show(final View p) {
+        System.out.println("show");
         if (!p.isShowing()) {
+            System.out.println("if");
             p.setShowing(true);
-            final JFrame f = new JFrame();
-            f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            updateViewTitle(p, f);
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            updateViewTitle(p, frame);
 
             JPanel panel = (JPanel) wrapViewComponent(p);
-            f.add(panel);
-            f.setMinimumSize(new Dimension(200, 200));
-            f.setPreferredSize(new Dimension(600, 400));
+            frame.add(panel);
+            frame.setMinimumSize(new Dimension(200, 200));
+            frame.setPreferredSize(new Dimension(600, 400));
 
-            f.setJMenuBar(createMenuBar(p));
+            frame.setJMenuBar(createMenuBar(p));
 
-            PreferencesUtil.installFramePrefsHandler(prefs, "view", f);
-            Point loc = f.getLocation();
+            PreferencesUtil.installFramePrefsHandler(prefs, "view", frame);
+            Point loc = frame.getLocation();
             boolean moved;
             do {
                 moved = false;
@@ -180,13 +183,13 @@ public class DefaultSDIApplication extends AbstractApplication {
                     }
                 }
             } while (moved);
-            f.setLocation(loc);
+            frame.setLocation(loc);
 
-            f.addWindowListener(new WindowAdapter() {
+            frame.addWindowListener(new WindowAdapter() {
 
                 public void windowClosing(final WindowEvent evt) {
                     getModel().getAction(CloseAction.ID).actionPerformed(
-                            new ActionEvent(f, ActionEvent.ACTION_PERFORMED,
+                            new ActionEvent(frame, ActionEvent.ACTION_PERFORMED,
                                     "windowClosing"));
                 }
 
@@ -210,12 +213,12 @@ public class DefaultSDIApplication extends AbstractApplication {
                     if (name.equals(View.HAS_UNSAVED_CHANGES_PROPERTY)
                             || name.equals(View.FILE_PROPERTY)
                             || name.equals(View.MULTIPLE_OPEN_ID_PROPERTY)) {
-                        updateViewTitle(p, f);
+                        updateViewTitle(p, frame);
                     }
                 }
             });
 
-            f.setVisible(true);
+            frame.setVisible(true);
             p.start();
         }
     }
@@ -303,6 +306,12 @@ public class DefaultSDIApplication extends AbstractApplication {
     public Component getComponent() {
         View p = getActiveView();
         return (p == null) ? null : p.getComponent();
+    }
+
+    @Override
+    public JFrame getFrame() {
+        System.out.println("defaultsdi getframe");
+        return frame;
     }
 
 }

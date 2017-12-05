@@ -14,9 +14,6 @@
 package org.jhotdraw.samples.svg;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
@@ -24,6 +21,12 @@ import org.jhotdraw.util.*;
 import java.util.*;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.app.menu.CollaborationMenu;
+import org.jhotdraw.app.menu.EditMenu;
+import org.jhotdraw.app.menu.FileMenu;
+import org.jhotdraw.app.menu.HelpMenu;
+import org.jhotdraw.app.menu.OpenRecentMenu;
+import org.jhotdraw.app.menu.ViewMenu;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 
@@ -117,136 +120,13 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     @Override
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<>();
-        mb.add(createFileMenu(a, pr));
-        mb.add(createEditMenu(a, pr));
-        mb.add(createCollaborationMenu());
-        mb.add(createViewMenu());
-        mb.add(createHelpMenu());
+        mb.add(new FileMenu(this, new OpenRecentMenu(this, a, pr)));
+        mb.add(new EditMenu(this, pr));
+        mb.add(new CollaborationMenu(this));
+        mb.add(new ViewMenu(this));
+        mb.add(new HelpMenu(this));
         
         return mb;
-    }
-    
-    private JMenu createFileMenu(Application a, View p) {
-        JMenu m = new JMenu();
-        final JMenu openRecentMenu;
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
-        labels.configureMenu(m, "file");
-        m.add(getAction(ClearAction.ID));
-        m.add(getAction(NewAction.ID));
-        m.add(getAction(LoadAction.ID));
-        if (getAction(LoadDirectoryAction.ID) != null) {
-            m.add(getAction(LoadDirectoryAction.ID));
-        }
-        openRecentMenu = new JMenu();
-        labels.configureMenu(openRecentMenu, "file.openRecent");
-        openRecentMenu.add(getAction(ClearRecentFilesAction.ID));
-        updateOpenRecentMenu(openRecentMenu, a);
-        m.add(openRecentMenu);
-        m.addSeparator();
-        m.add(getAction(SaveAction.ID));
-        m.add(getAction(SaveAsAction.ID));
-        if (getAction(ExportAction.ID) != null) {
-            m.add(getAction(ExportAction.ID));
-        }
-        if (getAction(PrintAction.ID) != null) {
-            m.addSeparator();
-            m.add(getAction(PrintAction.ID));
-        }
-        m.addSeparator();
-        m.add(getAction(ExitAction.ID));
-        
-        
-        a.addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                if (name == "viewCount") {
-                    if (p == null || a.views().contains(p)) {
-                    } else {
-                        a.removePropertyChangeListener(this);
-                    }
-                } else if (name == "recentFiles") {
-                    updateOpenRecentMenu(openRecentMenu, a);
-                }
-            }
-        });
-
-        return m;
-    }
-    
-    private void updateOpenRecentMenu(JMenu openRecentMenu, Application a) {
-        if (openRecentMenu.getItemCount() > 0) {
-            JMenuItem clearRecentFilesItem = (JMenuItem) openRecentMenu.getItem(
-                    openRecentMenu.getItemCount() - 1);
-            openRecentMenu.removeAll();
-            for (File f : a.recentFiles()) {
-                openRecentMenu.add(new LoadRecentAction(a, f));
-            }
-            if (a.recentFiles().size() > 0) {
-                openRecentMenu.addSeparator();
-            }
-            openRecentMenu.add(clearRecentFilesItem);
-        }
-    }
-
-    private JMenu createViewMenu() {
-        JMenu m;
-        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-
-        m = new JMenu();
-        appLabels.configureMenu(m, "view");
-        m.add(getAction(ViewSourceAction.ID));
-
-        return m;
-    }
-    
-    private JMenu createCollaborationMenu() {
-        JMenu menu = new JMenu();
-        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");       
-        appLabels.configureMenu(menu, "collaboration");
-        
-        menu.add(getAction(CollaborationStartServerAction.ID));   
-        menu.add(getAction(CollaborationStopServerAction.ID));      
-        menu.add(getAction(CollaborationListConnectionsAction.ID));     
-        menu.addSeparator();      
-        menu.add(getAction(CollaborationConnectAction.ID));       
-        menu.add(getAction(CollaborationDisconnectAction.ID));
-
-        return menu;
-    }
-
-    @Override
-    protected JMenu createEditMenu(Application a, View p) {
-        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
-        JMenu m = super.createEditMenu(a, p);
-        JMenuItem mi;
-
-        mi = m.add(getAction(ClearSelectionAction.ID));
-        mi.setIcon(null);
-
-        if (p != null) {
-            mi = m.add(p.getAction(SelectSameAction.ID));
-        } else {
-            mi = new JMenuItem();
-            drawLabels.configureMenu(mi, SelectSameAction.ID);
-            mi.setEnabled(false);
-            m.add(mi);
-        }
-        mi.setIcon(null);
-        return m;
-    }
-    
-    private JMenu createHelpMenu() {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        JMenu m;
-
-        m = new JMenu();
-        labels.configureMenu(m, "help");
-        m.add(getAction(AboutAction.ID));
-
-        return m;
     }
 
     /**

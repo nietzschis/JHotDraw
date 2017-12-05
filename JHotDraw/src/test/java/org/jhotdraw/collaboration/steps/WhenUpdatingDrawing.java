@@ -56,7 +56,7 @@ public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
         return this;
     }*/
     
-    public WhenUpdatingDrawing a_client_waiting_for_updates() {
+    public WhenUpdatingDrawing the_client_is_waiting_for_updates() {
         assertThat(client).isNotNull();
         assertThat(clientsApplication).isNotNull();
         return this;
@@ -75,7 +75,7 @@ public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
         return this;
     }
     
-    public WhenUpdatingDrawing I_update_my_drawing() throws RemoteException {
+    public WhenUpdatingDrawing I_edit_my_drawing() throws RemoteException {
         Figure rectFig = myList.get(0);
         rectFig.setBounds(new Point2D.Double(4, 4), new Point2D.Double(12, 12));
         
