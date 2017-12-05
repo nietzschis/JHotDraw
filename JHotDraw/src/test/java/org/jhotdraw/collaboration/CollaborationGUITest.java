@@ -1,5 +1,9 @@
 package org.jhotdraw.collaboration;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
@@ -13,9 +17,11 @@ import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
+import org.jhotdraw.collaboration.server.CollaborationServer;
 import org.jhotdraw.collaboration.server.RemoteObservable;
 import org.jhotdraw.samples.svg.SVGApplicationModel;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -55,9 +61,7 @@ public class CollaborationGUITest {
     }
 
     @Test(expected = ExportException.class)
-    public void GUIStartServerTest() throws RemoteException, AlreadyBoundException, InterruptedException {
-        System.out.println("TestStartGUI");
-        
+    public void GUIStartServerTest() throws RemoteException, AlreadyBoundException, InterruptedException, UnsupportedFlavorException, UnknownHostException, IOException {
         assertNotNull(app.getFrame());
         
         window.show();
@@ -68,17 +72,18 @@ public class CollaborationGUITest {
 
         Thread.sleep(10000);
         
+        window.optionPane().yesButton().click();
+        assertEquals(InetAddress.getLocalHost().getHostAddress(), Toolkit.getDefaultToolkit()
+                .getSystemClipboard().getData(DataFlavor.stringFlavor));
+        
         LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
     }
     
     @Test
-    public void GUIConnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
-        System.out.println("TestConnectGUI");
-        
+    public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
         assertNotNull(app.getFrame());
         
-        LocateRegistry.createRegistry(
-                    CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
+        CollaborationServer.getInstance().startServer();
         
         window.show();
         assertFalse(CollaborationConnection.getInstance().isConnected());
