@@ -52,12 +52,10 @@ public class CollaborationGUITest {
         window.show();
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.start").click();
-        window.optionPane().buttonWithText("Yes").click();
+        window.optionPane().yesButton().click();
 
         app.startServer();
         LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, (Remote) CollaborationServer.getInstance());
-        //fail();
-        //});
 
     }
 
