@@ -91,7 +91,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     
     protected void initLookAndFeel() {
         try {
-            String lafName;                                             //ChangedByMe Removed if-block for mac os. Now mac os look and feel
+            String lafName;                                              
             lafName = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(lafName);
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class DefaultSDIApplication extends AbstractApplication {
             f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             updateViewTitle(p, f);
             
-            if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {       //ChangedByMe 
+            if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {       
                 com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(f,true);
                 com.apple.eawt.Application.getApplication().requestToggleFullScreen(f);
             }
