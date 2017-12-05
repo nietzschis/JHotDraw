@@ -4,11 +4,15 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import java.awt.geom.Point2D;
+import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
+import org.jhotdraw.collaboration.common.IRemoteObservable;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.samples.svg.SVGView;
@@ -18,12 +22,14 @@ import org.jhotdraw.samples.svg.figures.SVGRectFigure;
  *
  * @author Niels & Niclas
  */
-public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
+public class WhenCollaboration extends Stage<WhenCollaboration> {
 
-    /*@ExpectedScenarioState
-    IServer server;
-    */
     @ExpectedScenarioState
+    @ProvidedScenarioState
+    IRemoteObservable server;
+    
+    @ExpectedScenarioState
+    @ProvidedScenarioState
     CollaborationConnection client;
     
     @ExpectedScenarioState
@@ -37,32 +43,48 @@ public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
     
     @ProvidedScenarioState
     List<Figure> myUpdatedList;
-    /*
-    @ProvidedScenarioState
-    boolean connected;
-    */
-    /*public WhenConnection they_are_connected() throws RemoteException, AlreadyBoundException, UnknownHostException {
+    
+    public WhenCollaboration they_are_connected() throws RemoteException, AlreadyBoundException, UnknownHostException {
         assertThat(server).isNotNull();
         assertThat(client).isNotNull();
         
-        AbstractApplication app = new DefaultSDIApplication();
-        SVGView view = new SVGView();
-        view.init();
-        app.setActiveView(view);
-
-        app.startServer();
-
-        connected = app.connectToServer(InetAddress.getLocalHost().getHostAddress());
+        client.setCollaborationProxy(server);
+        server.addCollaborator(client);
+        
         return this;
-    }*/
+    }
     
-    public WhenUpdatingDrawing the_client_is_waiting_for_updates() {
+    public WhenCollaboration the_client_disconnects() throws RemoteException, AlreadyBoundException, UnknownHostException {
+        client.setCollaborationProxy(null);
+        server.removeCollaborator(client);
+        return this;
+    }
+    
+    public WhenCollaboration the_server_has_an_update() throws RemoteException {
+        server.notifyAllCollaborators(new ArrayList<>());
+        
+        return this;
+    }
+    
+    public WhenCollaboration a_figure_is_added() throws RemoteException {
+        List<Figure> figList = new ArrayList<>();
+        Figure rectFig = new SVGRectFigure();
+        rectFig.setBounds(new Point2D.Double(2, 2), new Point2D.Double(10, 10));
+        rectFig.setCollaborationId();
+        figList.add(rectFig);
+        
+        server.notifyAllCollaborators(figList);
+        
+        return this;
+    }
+    
+    public WhenCollaboration the_client_is_waiting_for_updates() {
         assertThat(client).isNotNull();
         assertThat(clientsApplication).isNotNull();
         return this;
     }
     
-    public WhenUpdatingDrawing I_add_a_figure() throws RemoteException {
+    public WhenCollaboration I_add_a_figure() throws RemoteException {
         Figure rectFig = new SVGRectFigure();
         rectFig.setBounds(new Point2D.Double(2, 2), new Point2D.Double(10, 10));
         rectFig.setCollaborationId();
@@ -75,7 +97,7 @@ public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
         return this;
     }
     
-    public WhenUpdatingDrawing I_edit_my_drawing() throws RemoteException {
+    public WhenCollaboration I_edit_my_drawing() throws RemoteException {
         Figure rectFig = myList.get(0);
         rectFig.setBounds(new Point2D.Double(4, 4), new Point2D.Double(12, 12));
         
@@ -86,7 +108,7 @@ public class WhenUpdatingDrawing extends Stage<WhenUpdatingDrawing> {
         return this;
     }
     
-    public WhenUpdatingDrawing I_remove_a_figure() throws RemoteException {
+    public WhenCollaboration I_remove_a_figure() throws RemoteException {
         Figure rectFig = myList.get(0);
         myList.remove(rectFig);
         
