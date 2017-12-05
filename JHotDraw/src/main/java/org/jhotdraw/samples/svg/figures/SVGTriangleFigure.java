@@ -207,6 +207,7 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
                 break;
             case 0:
                 ResizeHandleKit.addResizeHandles(this, handles);
+                handles.add(new RotateHandle(this));
                 handles.add(new LinkHandle(this));
                 break;
             case 1:
