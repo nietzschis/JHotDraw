@@ -37,7 +37,6 @@ public class CollaborationGUITest {
     @Before
     public void setUp() throws InterruptedException {
         app = new DefaultSDIApplication();
-        
         SVGApplicationModel model = new SVGApplicationModel();
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
