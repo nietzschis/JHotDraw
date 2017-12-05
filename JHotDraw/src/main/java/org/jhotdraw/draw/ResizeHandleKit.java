@@ -17,6 +17,9 @@ import java.util.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
+
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -115,10 +118,16 @@ public class ResizeHandleKit {
         private int dx,  dy, direction;
         Object geometry;
 
+        @Nullable
+        private Point2D.Double aspectRatio;
+        private boolean shiftPressed;
+
         ResizeHandle(Figure owner, int direction)
         {
             super(owner, chooseLocator(direction));
             this.direction = direction;
+            this.aspectRatio = null;
+            this.shiftPressed = false;
         }
 
         private static Locator chooseLocator(int direction)
@@ -189,6 +198,13 @@ public class ResizeHandleKit {
             Point location = getLocation();
             dx = -anchor.x + location.x;
             dy = -anchor.y + location.y;
+            saveAspectRatio();
+        }
+
+        private void saveAspectRatio()
+        {
+            Rectangle.Double r = getOwner().getBounds();
+            aspectRatio = new Point2D.Double(r.width / r.height, r.height / r.width);
         }
 
         public void trackStep(Point anchor, Point lead, int modifiersEx) {
@@ -215,6 +231,8 @@ public class ResizeHandleKit {
                 fireUndoableEditHappened(
                         new GeometryEdit(getOwner(), geometry, getOwner().getTransformRestoreData()));
             }
+            aspectRatio = null;
+            shiftPressed = false;
         }
 
         void trackStepNormalized(Point2D.Double p) {
@@ -226,10 +244,58 @@ public class ResizeHandleKit {
 
             setBounds(
                     new Point2D.Double(left, top),
-                    new Point2D.Double(right, bottom));
+                    new Point2D.Double(right, bottom),
+                    shiftPressed ? aspectRatio : null);
         }
 
-        protected void setBounds(Point2D.Double anchor, Point2D.Double lead) {
+        void applyAspectRatio(@NotNull Point2D.Double topLeft, @NotNull Point2D.Double bottomRight, @NotNull Point2D.Double aspectRatio)
+        {
+            double height = bottomRight.y -  topLeft.y;
+            double width = bottomRight.x -  topLeft.x;
+
+            if ((direction & (DIR_W | DIR_E)) == 0)
+            {
+                width = height*aspectRatio.x;
+            }
+            else
+            {
+                height = width*aspectRatio.y;
+            }
+
+            switch (direction)
+            {
+                case DIR_N:
+                case DIR_NW:
+                    bottomRight.x = topLeft.x + width;
+                    topLeft.y = bottomRight.y - height;
+                    break;
+                case DIR_W:
+                    bottomRight.x = topLeft.x + width;
+                    bottomRight.y = topLeft.y + height;
+                    break;
+                case DIR_E:
+                case DIR_SW:
+                    topLeft.x = bottomRight.x - width;
+                    bottomRight.y = topLeft.y + height;
+                    break;
+                case DIR_NE:
+                    topLeft.x = bottomRight.x - width;
+                    topLeft.y = bottomRight.y - height;
+                    break;
+                case DIR_SE:
+                case DIR_S:
+                    bottomRight.x = topLeft.x + width;
+                    bottomRight.y = topLeft.y + height;
+                    break;
+            }
+        }
+
+        void setBounds(Point2D.Double anchor, Point2D.Double lead, @Nullable Point2D.Double aspectRatio) {
+            //if (aspectRatio != null)
+            {
+                applyAspectRatio(anchor, lead, aspectRatio);
+            }
+
             Figure f = getOwner();
             f.willChange();
             f.setBounds(anchor, lead);
@@ -277,17 +343,37 @@ public class ResizeHandleKit {
                     left = nn(direction & DIR_W);
                     right = nn(direction & DIR_E);
                     break;
-
+                case KeyEvent.VK_SHIFT:
+                    shiftPressed = true;
+                    saveAspectRatio();
+                    if (aspectRatio != null)
+                    {
+                        setBounds(new Point2D.Double(r.x,r.y), new Point2D.Double(r.x + r.width, r.y + r.height), aspectRatio);
+                    }
+                    break;
             }
 
             setBounds(
                     new Point2D.Double(r.x + left, r.y + up),
-                    new Point2D.Double(r.x + r.width + right, r.y + r.height + down));
+                    new Point2D.Double(r.x + r.width + right, r.y + r.height + down),
+                    null);
 
             evt.consume();
         }
 
         @Override
+        public void keyReleased(KeyEvent evt) {
+            super.keyReleased(evt);
+
+            if (evt.getKeyCode() == KeyEvent.VK_SHIFT) {
+                shiftPressed = false;
+                if (aspectRatio != null)
+                {
+                    Rectangle2D.Double r = getOwner().getBounds();
+                    setBounds(new Point2D.Double(r.x,r.y), new Point2D.Double(r.x + r.width, r.y + r.height), null);
+                }
+            }
+        }
         public Cursor getCursor() {
             return Cursor.getPredefinedCursor(
                     getOwner().isTransformable() ? chooseCursor(direction) : Cursor.DEFAULT_CURSOR);
