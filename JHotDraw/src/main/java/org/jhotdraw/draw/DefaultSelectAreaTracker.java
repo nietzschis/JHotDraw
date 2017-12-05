@@ -101,7 +101,7 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
         } else {
             invalidatedArea = invalidatedArea.union(rubberband);
         }
-        invalidatedArea.grow(rubberband.height,rubberband.width);                    //ChangedByMe
+        invalidatedArea.grow(rubberband.height,rubberband.width);                    
         fireAreaInvalidated(invalidatedArea);
     }
 
@@ -145,7 +145,7 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
 
     private void clearRubberBand() {
         if (!rubberband.isEmpty()) {
-            rubberband.grow(1, 1);            //ChangedByMe
+            rubberband.grow(1, 1);            
             fireAreaInvalidated(rubberband);
             rubberband.width = -1;
         }
