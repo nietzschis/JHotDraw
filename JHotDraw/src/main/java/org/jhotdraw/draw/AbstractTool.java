@@ -178,6 +178,11 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
      */
     public void editDuplicate() {
     }
+     /**
+     * Flips the selection.
+     */
+    public void editFlip(){
+    }
     /**
      * Pastes the contents of the clipboard.
      * Depending on the tool, this could be selected figures, selected points
