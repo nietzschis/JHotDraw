@@ -31,7 +31,7 @@ import org.jhotdraw.util.prefs.*;
  * to work with the document, such as a menu bar, tool bars and palette windows.
  * <p>
  * The life cycle of the application is tied to the JFrame. Closing the JFrame
- * quits the application.
+ * quits the application. 
  *
  * @author Werner Randelshofer
  * @version 1.5.1 2008-07-13 Don't add the view menu to the menu bar if it is
