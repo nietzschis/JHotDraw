@@ -1377,16 +1377,9 @@ public class ButtonFactory {
     }
 
     public static JButton createPickAttributesButton(DrawingEditor editor) {
-        JButton btn;
-        btn = new JButton(new PickAttributesAction(editor));
-        if (btn.getIcon() != null) {
-            btn.putClientProperty("hideActionText", Boolean.TRUE);
-        }
-        btn.setHorizontalTextPosition(JButton.CENTER);
-        btn.setVerticalTextPosition(JButton.BOTTOM);
-        btn.setText(null);
-        btn.setFocusable(false);
-        return btn;
+        JButton button = new JButton(new PickAttributesAction(editor));
+        button = setButtonProperties(button, editor);
+        return button;
     }
 
     /**
@@ -1394,8 +1387,12 @@ public class ButtonFactory {
      * current selection.
      */
     public static JButton createApplyAttributesButton(DrawingEditor editor) {
-        JButton btn;
-        btn = new JButton(new ApplyAttributesAction(editor));
+        JButton button = new JButton(new ApplyAttributesAction(editor));
+        button = setButtonProperties(button, editor);
+        return button;
+    }
+    
+    private static JButton setButtonProperties(JButton btn, DrawingEditor editor) {
         if (btn.getIcon() != null) {
             btn.putClientProperty("hideActionText", Boolean.TRUE);
         }
