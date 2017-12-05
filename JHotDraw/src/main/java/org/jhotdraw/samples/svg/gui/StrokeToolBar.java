@@ -130,7 +130,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(STROKE_WIDTH, strokeWidthSlider, editor);
 
                     // Create stroke dashes buttons
-                    btn = ButtonFactory.createStrokeJoinButton(editor, labels);
+                    btn = ButtonFactory.createStrokeJoinButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -138,7 +138,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     gbc.insets = new Insets(0, 3, 0, 0);
                     p.add(btn, gbc);
 
-                    btn = ButtonFactory.createStrokeCapButton(editor, labels);
+                    btn = ButtonFactory.createStrokeCapButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -263,7 +263,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(STROKE_WIDTH, strokeWidthSlider, editor);
 
 
-                    btn = ButtonFactory.createStrokeJoinButton(editor, labels);
+                    btn = ButtonFactory.createStrokeJoinButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -273,7 +273,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     gbc.insets = new Insets(0, 3, 0, 0);
                     p.add(btn, gbc);
 
-                    btn = ButtonFactory.createStrokeCapButton(editor, labels);
+                    btn = ButtonFactory.createStrokeCapButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;

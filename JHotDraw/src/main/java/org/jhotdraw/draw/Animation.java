@@ -15,11 +15,19 @@ import javax.swing.JFrame;
  */
 public class Animation {
     
+    private static Animation instance;
     private List<JFrame> frames;
     private JFrame currentFrame;
 
     public Animation() {
         frames = new ArrayList<>();
+    }
+    
+    public static Animation getInstance() {
+        if(instance == null){
+            instance = new Animation();
+        }
+        return instance;
     }
 
     public List<JFrame> getFrames() {
