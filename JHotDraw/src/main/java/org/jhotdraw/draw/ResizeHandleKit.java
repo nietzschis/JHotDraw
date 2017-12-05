@@ -46,7 +46,7 @@ public class ResizeHandleKit {
     static final int DIR_NW = DIR_N|DIR_W;
 
     /** Creates a new instance. */
-    public ResizeHandleKit() {
+    private ResizeHandleKit() {
     }
 
     /**
@@ -295,7 +295,7 @@ public class ResizeHandleKit {
         }
 
         void setBounds(Point2D.Double anchor, Point2D.Double lead, @Nullable Point2D.Double aspectRatio) {
-            //if (aspectRatio != null)
+            if (aspectRatio != null)
             {
                 applyAspectRatio(anchor, lead, aspectRatio);
             }
