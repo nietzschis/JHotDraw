@@ -10,6 +10,7 @@ import java.rmi.server.ExportException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.jhotdraw.app.Application;
@@ -19,6 +20,7 @@ import org.jhotdraw.collaboration.server.CollaborationServer;
 import org.jhotdraw.samples.svg.SVGApplicationModel;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -28,6 +30,11 @@ import org.junit.Test;
 public class CollaborationGUITest {
 
     private FrameFixture window;
+    
+    @BeforeClass
+    public static void setUp() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     @Test(expected = ExportException.class)
     public void test() throws InterruptedException, InvocationTargetException {
@@ -43,12 +50,13 @@ public class CollaborationGUITest {
         
         window = new FrameFixture(app.getFrame());
         window.show();
+        window.focus();
         window.menuItem("collaboration").click();
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         //window.menuItem("collaboration").click().click();
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         window.menuItem("collaboration.start").click();
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         window.optionPane().buttonWithText("Yes").click();
 
         Thread.sleep(5000);
