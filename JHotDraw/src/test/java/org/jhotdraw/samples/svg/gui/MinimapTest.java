@@ -69,6 +69,20 @@ public class MinimapTest {
         startEnvironment();
     }
     
+    @Test
+    public void listenerRegistration(){
+        MinimapViewListener list = mock(MinimapViewListener.class);
+        MinimapViewListener list2 = mock(MinimapViewListener.class);
+        minimapView.addListener(list);
+        minimapView.addListener(list2);
+        minimapView.removeListener(list);
+        
+        window.panel("minimapView").click();
+        
+        verify(list, never()).relativeOnClick(Matchers.any());
+        verify(list2, atLeastOnce()).relativeOnClick(Matchers.any());
+    }
+    
     @After
     public void tearDown() {
         window.cleanUp();
