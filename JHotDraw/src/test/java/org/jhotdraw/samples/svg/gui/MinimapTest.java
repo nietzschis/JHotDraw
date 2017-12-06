@@ -28,24 +28,16 @@ public class MinimapTest {
     private FrameFixture window;
     private Drawing drawing;
     private ViewportModifier viewportModifier;
-    private DrawingView dview;
     
     @Before
     public void setUp() {
-        AbstractToolBar toolBar = mock(AbstractToolBar.class);
-        DrawingEditor editor = mock(DrawingEditor.class);
-        dview = mock(DrawingView.class);
         drawing = mock(Drawing.class);
-        
         viewportModifier = mock(ViewportModifier.class);
         
-        Mockito.when(toolBar.getEditor()).thenReturn(editor);
-        Mockito.when(editor.getActiveView()).thenReturn(dview);
-        Mockito.when(dview.getDrawing()).thenReturn(drawing);
-        
-        minimapView = new MinimapView(toolBar);
+        minimapView = new MinimapView();
         minimapView.setPreferredSize(new Dimension(80, 80));
         minimapController = new MinimapController(viewportModifier, minimapView);
+        minimapController.setDrawing(drawing);
         
         startEnvironment();
     }
@@ -67,16 +59,28 @@ public class MinimapTest {
     
     @Test
     public void drawingIsDrawnOnMinimap(){
-        if (dview.getDrawing() != null) {
-            verify(drawing, atLeastOnce()).draw(Matchers.any());
-        }
+        verify(drawing, atLeastOnce()).draw(Matchers.any());
     }
     
     @Test
     public void worksWithNullDrawing(){
         window.cleanUp();
-        Mockito.when(dview.getDrawing()).thenReturn(null);
+        minimapController.setDrawing(null);
         startEnvironment();
+    }
+    
+    @Test
+    public void listenerRegistration(){
+        MinimapViewListener list = mock(MinimapViewListener.class);
+        MinimapViewListener list2 = mock(MinimapViewListener.class);
+        minimapView.addListener(list);
+        minimapView.addListener(list2);
+        minimapView.removeListener(list);
+        
+        window.panel("minimapView").click();
+        
+        verify(list, never()).relativeOnClick(Matchers.any());
+        verify(list2, atLeastOnce()).relativeOnClick(Matchers.any());
     }
     
     @After

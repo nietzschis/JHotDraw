@@ -56,6 +56,7 @@ public class MinimapController {
             activeDrawing.addUndoableEditListener(undoableEditListener);
         }
         
+        minimapView.setDrawing(d);
         minimapView.repaint();
     }
     
