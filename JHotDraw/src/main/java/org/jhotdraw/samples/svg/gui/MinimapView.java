@@ -29,17 +29,14 @@ import org.jhotdraw.draw.Figure;
  */
 public class MinimapView extends JPanel{
     
-    private final AbstractToolBar toolBar;
+    private Drawing drawing;
     private final List<MinimapViewListener> listeners = new LinkedList<>();
 
     /**
      * Creates a new view to draw a {@link Drawing} onto the minimap.
-     * @param toolBar The {@link AbstractToolBar} used to disply the drawing. A reference to {@link Drawing} is obatained througt the toolbar.
      */
-    public MinimapView(AbstractToolBar toolBar) {
+    public MinimapView() {
         setName("minimapView");
-        assert toolBar != null;
-        this.toolBar = toolBar;
         
         this.addMouseListener(new MouseListener() {
             @Override
@@ -176,11 +173,11 @@ public class MinimapView extends JPanel{
      * @return The {@link Drawing}, or null if not available.
      */
     private Drawing getDrawing(){
-        if(toolBar.getEditor() != null && toolBar.getEditor().getActiveView() != null){
-            return toolBar.getEditor().getActiveView().getDrawing();
-        }
-        
-        return null;
+        return drawing;
+    }
+    
+    void setDrawing(Drawing drawing){
+        this.drawing = drawing;
     }
     
     /**

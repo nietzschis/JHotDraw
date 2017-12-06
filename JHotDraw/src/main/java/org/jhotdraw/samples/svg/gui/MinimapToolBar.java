@@ -33,7 +33,7 @@ public class MinimapToolBar extends AbstractToolBar {
     public MinimapToolBar(ViewportModifier viewportModifier, int width, int height) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
-        minimapView = new MinimapView(this);
+        minimapView = new MinimapView();
         minimapView.setPreferredSize(new Dimension(width, height));
         minimapController = new MinimapController(viewportModifier, minimapView);
     }
