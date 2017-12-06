@@ -97,4 +97,11 @@ public class ViewSourceAction extends AbstractViewAction {
             ex.printStackTrace();
         }
     }
+    
+    /**
+     * Window for viewing source. Refactored for easier testing
+     */
+    public class ViewSourceWindow {
+        
+    }
 }
