@@ -2,6 +2,8 @@ package org.jhotdraw;
 
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
+import org.jhotdraw.draw.action.ButtonFactoryTest;
+import org.jhotdraw.draw.action.MagnifyingGlassAcceptanceTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
 import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactoryTest;
@@ -19,7 +21,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class, TinyPngCompressActionTest.class,
-                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class})
+                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class,
+                     ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass
