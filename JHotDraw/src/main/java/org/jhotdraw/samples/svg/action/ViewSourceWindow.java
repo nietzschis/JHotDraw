@@ -44,14 +44,22 @@ public class ViewSourceWindow {
             this.ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
             this.ta.setText(source);
         }
-        
+
         this.dialog.addWindowListener(new WindowAdapter() {
 
-                @Override
-                public void windowClosed(WindowEvent evt) {
-                    
+            @Override
+            public void windowClosed(WindowEvent evt) {
+                try {
+                    saveChanges();
+                } catch(IOException ex) {
+                    ex.printStackTrace();
                 }
-            });
+            }
+        });
+    }
+    
+    private void saveChanges() throws IOException{
+        
     }
 
     private String generateSource(SVGView p) throws IOException {
