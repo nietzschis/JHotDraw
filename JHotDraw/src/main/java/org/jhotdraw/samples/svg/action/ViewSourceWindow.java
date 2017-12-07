@@ -6,6 +6,8 @@
 package org.jhotdraw.samples.svg.action;
 
 import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.swing.JDialog;
@@ -42,6 +44,14 @@ public class ViewSourceWindow {
             this.ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
             this.ta.setText(source);
         }
+        
+        this.dialog.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosed(WindowEvent evt) {
+                    
+                }
+            });
     }
 
     private String generateSource(SVGView p) throws IOException {
