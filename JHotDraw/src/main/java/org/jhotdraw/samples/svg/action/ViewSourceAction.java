@@ -111,7 +111,7 @@ public class ViewSourceAction extends AbstractViewAction {
         public ViewSourceWindow(SVGView p) throws IOException{
             this.p = p;
 
-            this.source = getSource(p);
+            this.source = generateSource(p);
 
             if (p.getClientProperty(DIALOG_CLIENT_PROPERTY) == null) {
                 this.ta = new JTextArea(source);
@@ -123,7 +123,7 @@ public class ViewSourceAction extends AbstractViewAction {
             }
         }
 
-        private String getSource(SVGView p) throws IOException {
+        private String generateSource(SVGView p) throws IOException {
             SVGOutputFormat format = new SVGOutputFormat();
             format.setPrettyPrint(true);
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
