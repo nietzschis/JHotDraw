@@ -41,7 +41,9 @@ public class ViewSourceAction extends AbstractViewAction {
      */
     private final static String DIALOG_CLIENT_PROPERTY = "view.viewSource.dialog";
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public ViewSourceAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
@@ -55,8 +57,8 @@ public class ViewSourceAction extends AbstractViewAction {
         format.setPrettyPrint(true);
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
         try {
-                format.write(buf, p.getDrawing());
-                String source = buf.toString("UTF-8");
+            format.write(buf, p.getDrawing());
+            String source = buf.toString("UTF-8");
 
             final JDialog dialog;
             if (p.getClientProperty(DIALOG_CLIENT_PROPERTY) == null) {
@@ -76,7 +78,7 @@ public class ViewSourceAction extends AbstractViewAction {
             } else {
                 dialog = (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
                 JTextArea ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
-                 ta.setText(source);
+                ta.setText(source);
             }
 
             Preferences prefs = Preferences.userNodeForPackage(getClass());
@@ -97,11 +99,69 @@ public class ViewSourceAction extends AbstractViewAction {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Window for viewing source. Refactored for easier testing
      */
     public class ViewSourceWindow {
+
+        private final SVGView p;
+        private final Application application;
+        private final JDialog dialog;
+        private final JTextArea ta;
+        private String source;
+
+        public ViewSourceWindow(SVGView p, Application application) throws IOException{
+            this.p = p;
+            this.application = application;
+
+            this.source = getSource(p);
+
+            if (p.getClientProperty(DIALOG_CLIENT_PROPERTY) == null) {
+                this.ta = new JTextArea(source);
+                this.dialog = createNewDialog(p, ta);
+            } else {
+                this.dialog = (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
+                this.ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
+                this.ta.setText(source);
+            }
+        }
         
+        public void openWindow() {
+            application.addWindow(dialog, p);
+            dialog.setVisible(true);
+        }
+
+        private String getSource(SVGView p) throws IOException {
+            SVGOutputFormat format = new SVGOutputFormat();
+            format.setPrettyPrint(true);
+            ByteArrayOutputStream buf = new ByteArrayOutputStream();
+
+            format.write(buf, p.getDrawing());
+            String source = buf.toString("UTF-8");
+
+            return source;
+        }
+
+        private JDialog createNewDialog(SVGView p, JTextArea ta) {
+            JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(p.getComponent()));
+            p.putClientProperty(DIALOG_CLIENT_PROPERTY, dialog);
+            dialog.setTitle(p.getTitle());
+            dialog.setResizable(true);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            ta.setWrapStyleWord(true);
+            ta.setLineWrap(true);
+            JScrollPane sp = new JScrollPane(ta);
+            //sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            dialog.getContentPane().add(sp);
+            dialog.setSize(400, 400);
+            dialog.setLocationByPlatform(true);
+
+            return dialog;
+        }
+
+        private JDialog getExistingDialog(SVGView p) {
+            return (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
+        }
     }
 }
