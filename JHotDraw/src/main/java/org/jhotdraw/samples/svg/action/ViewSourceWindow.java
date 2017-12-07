@@ -8,13 +8,16 @@ package org.jhotdraw.samples.svg.action;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.jhotdraw.samples.svg.SVGView;
+import org.jhotdraw.samples.svg.io.SVGInputFormat;
 import org.jhotdraw.samples.svg.io.SVGOutputFormat;
 
 /**
@@ -59,7 +62,10 @@ public class ViewSourceWindow {
     }
     
     private void saveChanges() throws IOException{
-        
+        String newSource = this.ta.getText();
+        SVGInputFormat in = new SVGInputFormat();
+        InputStream stream = new ByteArrayInputStream(newSource.getBytes("UTF-8"));
+        in.read(stream, p.getDrawing(), true);
     }
 
     private String generateSource(SVGView p) throws IOException {
