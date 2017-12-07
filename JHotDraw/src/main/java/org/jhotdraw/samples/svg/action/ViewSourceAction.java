@@ -50,34 +50,11 @@ public class ViewSourceAction extends AbstractViewAction {
 
     @FeatureEntryPoint(JHotDrawFeatures.VIEW_SOURCE)
     public void actionPerformed(ActionEvent e) {
-        final SVGView p = (SVGView) getActiveView();
-        SVGOutputFormat format = new SVGOutputFormat();
-        format.setPrettyPrint(true);
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
         try {
-            format.write(buf, p.getDrawing());
-            String source = buf.toString("UTF-8");
-
-            final JDialog dialog;
-            if (p.getClientProperty(DIALOG_CLIENT_PROPERTY) == null) {
-                dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(p.getComponent()));
-                p.putClientProperty(DIALOG_CLIENT_PROPERTY, dialog);
-                dialog.setTitle(p.getTitle());
-                dialog.setResizable(true);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                JTextArea ta = new JTextArea(source);
-                ta.setWrapStyleWord(true);
-                ta.setLineWrap(true);
-                JScrollPane sp = new JScrollPane(ta);
-                //sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                dialog.getContentPane().add(sp);
-                dialog.setSize(400, 400);
-                dialog.setLocationByPlatform(true);
-            } else {
-                dialog = (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
-                JTextArea ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
-                ta.setText(source);
-            }
+            SVGView p = (SVGView) getActiveView();
+            ViewSourceWindow viewSourceWindow = new ViewSourceWindow(p);
+            
+            JDialog dialog = viewSourceWindow.getDialog();
 
             Preferences prefs = Preferences.userNodeForPackage(getClass());
             PreferencesUtil.installFramePrefsHandler(prefs, "viewSource", dialog);
