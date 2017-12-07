@@ -99,7 +99,7 @@ public class CollaborationGUITest {
         window.optionPane().okButton().click();
         
         assertTrue(CollaborationConnection.getInstance().isConnected());
-        assertNotNull(CollaborationConnection.getInstance().getName());
+        assertEquals("TestUser", CollaborationConnection.getInstance().getName());
         
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.disConnect").click();
