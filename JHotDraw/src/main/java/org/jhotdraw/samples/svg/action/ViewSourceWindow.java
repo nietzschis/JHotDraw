@@ -29,20 +29,20 @@ public class ViewSourceWindow {
     private final SVGView p;
     private final JDialog dialog;
     private final JTextArea ta;
-    private String source;
+    private String originalSource;
 
     public ViewSourceWindow(SVGView p) throws IOException {
         this.p = p;
 
-        this.source = generateSource(p);
+        this.originalSource = generateSource(p);
 
         if (p.getClientProperty(DIALOG_CLIENT_PROPERTY) == null) {
-            this.ta = new JTextArea(source);
+            this.ta = new JTextArea(originalSource);
             this.dialog = createNewDialog(p, ta);
         } else {
             this.dialog = (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
             this.ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
-            this.ta.setText(source);
+            this.ta.setText(originalSource);
         }
 
         this.dialog.addWindowListener(new WindowAdapter() {
@@ -103,6 +103,6 @@ public class ViewSourceWindow {
     }
 
     public String getSource() {
-        return source;
+        return originalSource;
     }
 }
