@@ -41,9 +41,7 @@ public class ViewSourceAction extends AbstractViewAction {
      */
     private final static String DIALOG_CLIENT_PROPERTY = "view.viewSource.dialog";
 
-    /**
-     * Creates a new instance.
-     */
+    /** Creates a new instance. */
     public ViewSourceAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
@@ -106,14 +104,12 @@ public class ViewSourceAction extends AbstractViewAction {
     public class ViewSourceWindow {
 
         private final SVGView p;
-        private final Application application;
         private final JDialog dialog;
         private final JTextArea ta;
         private String source;
 
-        public ViewSourceWindow(SVGView p, Application application) throws IOException{
+        public ViewSourceWindow(SVGView p) throws IOException{
             this.p = p;
-            this.application = application;
 
             this.source = getSource(p);
 
@@ -125,11 +121,6 @@ public class ViewSourceAction extends AbstractViewAction {
                 this.ta = (JTextArea) ((JScrollPane) dialog.getContentPane().getComponent(0)).getViewport().getView();
                 this.ta.setText(source);
             }
-        }
-        
-        public void openWindow() {
-            application.addWindow(dialog, p);
-            dialog.setVisible(true);
         }
 
         private String getSource(SVGView p) throws IOException {
