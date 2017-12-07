@@ -16,7 +16,7 @@ import org.junit.Test;
 public class ViewSourceActionJGivenTest extends ScenarioTest<GivenDrawing, WhenUser, ThenSomeOutcome>{
     
     @Test
-    public void something_should_happen() {
+    public void drawing_should_be_updated_when_user_edits_source() {
         given().a_view_with_an_empty_drawing();
         
         when().the_user_opens_the_view_source_window().
