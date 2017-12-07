@@ -20,7 +20,7 @@ public class ViewSourceActionJGivenTest extends ScenarioTest<GivenDrawing, WhenU
         given().a_view_with_an_empty_drawing();
         
         when().the_user_opens_the_view_source_window().
-                and().the_user_inserts_xml_in_the_source_window_to_add_a_square().
+                and().the_user_inserts_xml_in_the_source_window_to_add_a_rectangle().
                 and().the_user_closes_the_view_source_window();
         
         then().the_drawing_should_contain_exactly_one_figure();

@@ -34,7 +34,7 @@ public class WhenUser extends Stage<WhenUser> {
         return self();
     }
     
-    public WhenUser the_user_inserts_xml_in_the_source_window_to_add_a_square() {
+    public WhenUser the_user_inserts_xml_in_the_source_window_to_add_a_rectangle() {
         viewSourceWindow.getTextArea().setText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                                                 "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.2\" baseProfile=\"tiny\">\n" +
                                                 "    <defs/>\n" +
