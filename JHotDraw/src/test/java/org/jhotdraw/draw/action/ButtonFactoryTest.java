@@ -5,23 +5,8 @@
  */
 package org.jhotdraw.draw.action;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Shape;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import javax.swing.AbstractButton;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import org.jhotdraw.draw.AttributeKey;
-import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
-import org.jhotdraw.draw.Tool;
-import org.jhotdraw.gui.JPopupButton;
-import org.jhotdraw.util.ResourceBundleUtil;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -106,6 +106,7 @@ public class ViewToolBar extends AbstractToolBar {
                     btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, toggleGridButton.getPreferredSize().height));
                     p.add(btn, gbc);
                     
+                    //Magnifying button
                     AbstractButton magnifyButton;
                     magnifyButton = btn = ButtonFactory.createMagnifyButton(view);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
