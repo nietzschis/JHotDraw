@@ -154,5 +154,17 @@ public class ViewSourceAction extends AbstractViewAction {
         private JDialog getExistingDialog(SVGView p) {
             return (JDialog) p.getClientProperty(DIALOG_CLIENT_PROPERTY);
         }
+        
+                public JDialog getDialog() {
+            return dialog;
+        }
+
+        public JTextArea getTa() {
+            return ta;
+        }
+
+        public String getSource() {
+            return source;
+        }
     }
 }
