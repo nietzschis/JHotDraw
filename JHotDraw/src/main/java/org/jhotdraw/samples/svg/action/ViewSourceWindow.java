@@ -80,7 +80,7 @@ public class ViewSourceWindow {
         return dialog;
     }
 
-    public JTextArea getTa() {
+    public JTextArea getTextArea() {
         return ta;
     }
 
