@@ -92,7 +92,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     
     protected void initLookAndFeel() {
         try {
-            String lafName;                                             //ChangedByMe Removed if-block for mac os. Now mac os look and feel
+            String lafName;                                             
             lafName = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(lafName);
         } catch (Exception e) {
