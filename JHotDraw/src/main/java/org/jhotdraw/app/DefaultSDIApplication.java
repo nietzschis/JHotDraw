@@ -13,6 +13,7 @@
  */
 package org.jhotdraw.app;
 
+import java.lang.reflect.Method;
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.*;
 import java.awt.event.*;
@@ -88,16 +89,11 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("swing.aatext", "true");
     }
 
+    
     protected void initLookAndFeel() {
         try {
-            String lafName;
-            if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
-                JFrame.setDefaultLookAndFeelDecorated(true);
-                JDialog.setDefaultLookAndFeelDecorated(true);
-                lafName = UIManager.getCrossPlatformLookAndFeelClassName();
-            } else {
-                lafName = UIManager.getSystemLookAndFeelClassName();
-            }
+            String lafName;                                             //ChangedByMe Removed if-block for mac os. Now mac os look and feel
+            lafName = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(lafName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,6 +135,23 @@ public class DefaultSDIApplication extends AbstractApplication {
         p.putAction(LoadAction.ID, m.getAction(LoadAction.ID));
     }
 
+    protected void enableOSXFullScreen(JFrame f){
+        if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {       
+                
+                try{
+                 Class utilClass = Class.forName("com.apple.eawt.FullScreenUtilities");
+                 Class[] classes = new Class[2];
+                 classes[0] = Window.class;
+                 classes[1] = boolean.class;
+                 Method meth = utilClass.getMethod("setWindowCanFullScreen", classes);
+                 meth.invoke(null, f, true);
+                
+                } catch (Exception e) {
+                   e.printStackTrace();
+                }
+            }
+    }
+    
     @SuppressWarnings("unchecked")
     public void show(final View p) {
         if (!p.isShowing()) {
@@ -146,7 +159,8 @@ public class DefaultSDIApplication extends AbstractApplication {
             final JFrame f = new JFrame();
             f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             updateViewTitle(p, f);
-
+            enableOSXFullScreen(f);
+         
             JPanel panel = (JPanel) wrapViewComponent(p);
             f.add(panel);
             f.setMinimumSize(new Dimension(200, 200));
