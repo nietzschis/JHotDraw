@@ -51,7 +51,7 @@ public class ViewSourceWindow {
         this.dialog.addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosed(WindowEvent evt) {
+            public void windowClosing(WindowEvent evt) {
                 try {
                     saveChanges();
                 } catch(IOException ex) {
