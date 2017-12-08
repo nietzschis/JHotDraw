@@ -182,6 +182,9 @@ public class PredefinedFunctionTool extends AbstractTool {
     private PredefinedFunction createFunction(AbstractFunctionPanel[] jPanel) {
         boolean notdone = true;
         AbstractFunctionPanel panel = null;
+        for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
+            abstractFunctionPanel.setList(jPanel);
+        }
         JDialog f = null;
         while (notdone) {
             f = new JDialog();
@@ -191,7 +194,6 @@ public class PredefinedFunctionTool extends AbstractTool {
                 panel = panel.changeFrame();
             }
             panel.setDialog(f);
-            panel.setList(jPanel);
             f.setUndecorated(true);
             f.setTitle("");
             f.setType(javax.swing.JFrame.Type.UTILITY);
