@@ -5,13 +5,20 @@
  */
 package org.jhotdraw.tabs;
 
+import java.util.Collection;
+import org.jhotdraw.draw.Drawing;
+
 /**
  *
  * @author pc4
  */
 public interface Tabs
 {
-    Tab currentTab();
+    Tab getCurrentTab();
+    Collection<Tab> getAllTabs();
+    
+    Drawing getCurrentDrawing();  
+    
     void setCurrentTab(Tab tab);
     void add(Tab tab);
     void remove(Tab tab);

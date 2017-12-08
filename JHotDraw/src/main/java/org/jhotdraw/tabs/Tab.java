@@ -44,6 +44,15 @@ public class Tab
     {
         return id;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Tab{" + "drawing=" + drawing + ", name=" + name + ", id=" + id + '}';
+    }
+
+
+    
     
     
 }

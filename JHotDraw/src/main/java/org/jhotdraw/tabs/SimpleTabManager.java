@@ -5,7 +5,10 @@
  */
 package org.jhotdraw.tabs;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import org.jhotdraw.draw.Drawing;
 
 /**
  *
@@ -22,9 +25,21 @@ public class SimpleTabManager implements  Tabs
     }
     
     @Override
-    public Tab currentTab()
+    public Tab getCurrentTab()
     {
         return currentTab;
+    }
+    
+        @Override
+    public Collection<Tab> getAllTabs()
+    {
+        return tabs.values();
+    }
+    
+    @Override
+    public Drawing getCurrentDrawing()
+    {
+        return currentTab.getDrawing();
     }
 
     @Override
@@ -48,5 +63,7 @@ public class SimpleTabManager implements  Tabs
     {
         tabs.remove(tab.getId());
     }
+
+
     
 }
