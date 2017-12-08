@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.text.NumberFormat;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -27,139 +19,152 @@ import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  *
- * @author Karol
+ * @author Karol Zdunek
  */
 public class ComicsCanvasCheck {
-    public static boolean result;
-    public boolean setCanvas(Drawing d){
-        JLabel widthLabel,heightLabel;
-        JFrame frame = new JFrame();  
-        JPanel panel = new JPanel();
-        FocusListener clearFields;
-        KeyListener fastCreate;
-        JFormattedTextField width,height;
-        
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-        NumberFormat format = NumberFormat.getInstance();
+    
+    private boolean result;
+    private static final ComicsCanvasCheck instance = new ComicsCanvasCheck();
+    private JLabel widthLabel,heightLabel;
+    private NumberFormat format;
+    private NumberFormatter formatter;
+    private JFormattedTextField heightField,widthField;
+    private static final String width = "width", height = "height";
+    private final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+
+    private ComicsCanvasCheck() {}
+    
+    public static ComicsCanvasCheck getInstance() {
+       return instance;
+   }
+    
+   /**
+    * Creating new option pane with given fields and labes, that user
+    * can choose to adjust new size of canvas or use the old.
+    */
+    public int setCanvas() {
+        format = NumberFormat.getInstance();
         format.setGroupingUsed(false);
-        //formatater to receive only numbers to textFields
-        NumberFormatter formatter = new NumberFormatter(format);
+        formatter = new NumberFormatter(format);
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(0);
         formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        //width JFormattedTextField
-        width = new JFormattedTextField(formatter);
-        width.setText("600");
-        width.setToolTipText(labels.getString("attribute.canvasWidth.toolTipText"));
-        width.setPreferredSize(new Dimension(80,24));
-
-        //height JFormattedTextField
-        height = new JFormattedTextField(formatter);
-        height.setText("600");
-        height.setToolTipText(labels.getString("attribute.canvasHeight.toolTipText"));
-        height.setPreferredSize(new Dimension(80,24));
-
-        //Labels with width and height
-        widthLabel = new javax.swing.JLabel();
-        heightLabel = new javax.swing.JLabel();
-        widthLabel.setUI((LabelUI) PaletteLabelUI.createUI(widthLabel));
-        widthLabel.setToolTipText(labels.getString("attribute.canvasWidth.toolTipText"));
-        widthLabel.setText(labels.getString("attribute.canvasWidth.text"));
-
-        heightLabel.setUI((LabelUI) PaletteLabelUI.createUI(heightLabel));
-        heightLabel.setToolTipText(labels.getString("attribute.canvasHeight.toolTipText"));
-        heightLabel.setText(labels.getString("attribute.canvasHeight.text")); // NOI18N
-
-        //button options in JOptionPane
-        String[] options = { "New Canvas", "Use old Canvas",
-                "Cancel" };
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       
-        //FocusListener for JFormattedTextFields
-        clearFields = new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if(e.getSource().equals(width)){
-                    width.setText("");
-                    JFormattedTextField width = new JFormattedTextField(formatter); 
-                }
-                else if (e.getSource().equals(height)){
-                    height.setText("");
-                    JFormattedTextField height = new JFormattedTextField(formatter); 
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if(e.getSource().equals(width)){
-                    JFormattedTextField width = new JFormattedTextField(formatter); 
-                }
-                else if (e.getSource().equals(height)){
-                    JFormattedTextField height = new JFormattedTextField(formatter); 
-                }
-            }
-            
-        };
         
-        width.addFocusListener(clearFields);
-        height.addFocusListener(clearFields);
+        heightField = createField(heightField,height);
+        widthField = createField(widthField,width);
         
-       
-        //add components to panel
-        //JLabel with "Enter size of Canvas"
+        widthLabel = createLabel(widthLabel,width);
+        heightLabel = createLabel(heightLabel,height);
+
+        JPanel panel = new JPanel();
+        
         panel.add(new JLabel(labels.getString("comics.canvasSize.text")));
         panel.add(widthLabel);
-        panel.add(width);
+        panel.add(widthField);
         panel.add(heightLabel);
-        panel.add(height);
-
-        //optionPane
+        panel.add(heightField);
+        
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /**
+        *Option pane with given options as buttons.
+        */
+        //OptionPane
+        String[] options = { "New Canvas", "Use old Canvas", "Cancel" };
         int option = JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
         //swtich for optionPane
+        return option;
+    }
+    
+    public boolean getOption(Drawing d){
+        int option = setCanvas();
         switch (option){
-            case 0:
-                if (width.getText().isEmpty() == false && height.getText().isEmpty() == false){
-                    double x = Double.parseDouble(width.getText());
-                    double y = Double.parseDouble(height.getText());
+           case 0:
+                if (!widthField.getText().isEmpty() && !heightField.getText().isEmpty()) {
+                    double x = Double.parseDouble(widthField.getText());
+                    double y = Double.parseDouble(heightField.getText());
                     CANVAS_WIDTH.set(d,x);
                     CANVAS_HEIGHT.set(d,y);
                     result = true;
-                }
-                else if (width.getText().isEmpty() == true && height.getText().isEmpty() == true){
+                } else if (widthField.getText().isEmpty() && heightField.getText().isEmpty()) {
                     result = false;
-                    setCanvas(d);
-                }
-
-                else if (width.getText().isEmpty() == true || height.getText().isEmpty() == true){
-                    if (width.getText().isEmpty() == false){
-                        double x = Double.parseDouble(width.getText());
+                    setCanvas();
+                } else if (widthField.getText().isEmpty() || heightField.getText().isEmpty()) {
+                    if (widthField.getText().isEmpty()){
+                        double y = Double.parseDouble(heightField.getText());
+                        double x = y;
+                        CANVAS_WIDTH.set(d,x);
+                        CANVAS_HEIGHT.set(d,y);
+                    } else if (heightField.getText().isEmpty()) {
+                        double x = Double.parseDouble(widthField.getText());
                         double y = x;
                         CANVAS_WIDTH.set(d,x);
                         CANVAS_HEIGHT.set(d,y);
                     }
-                    
-                    else if (height.getText().isEmpty() == false){
-                        double y = Double.parseDouble(height.getText());
-                        double x = y;
-                        CANVAS_WIDTH.set(d,x);
-                        CANVAS_HEIGHT.set(d,y);
-                    }
-                    
                     result = true;
-                }
+                    }
+                result = true;
                 break;
             case 1:
-                if((CANVAS_WIDTH.get(d) == null) || (CANVAS_HEIGHT.get(d) == null)){
+                if((CANVAS_WIDTH.get(d) == null) || (CANVAS_HEIGHT.get(d) == null)) {
+                    setCanvas();
                     result = false;
-                    setCanvas(d);
                 }
+                result = true;
                 break;
-           default:
+            default:
                 result = false;
                 break;
         }
-    return result;
+        return result;
     }
     
+    public boolean getResult() {
+        return result;
+    }
+    
+    private JLabel createLabel (JLabel newLabel,String s){
+        newLabel = new JLabel();
+        newLabel.setUI((LabelUI) PaletteLabelUI.createUI(newLabel));
+        newLabel.setToolTipText(labels.getString("comics."+s+".toolTipText"));
+        newLabel.setText(labels.getString("comics."+s+".text"));
+
+        return newLabel;
+    }
+     
+    private JFormattedTextField createField(JFormattedTextField newField,String s){
+        newField = new JFormattedTextField(formatter);
+        newField.setText("600");
+        newField.setToolTipText(labels.getString("comics."+s+".toolTipText"));
+        newField.setPreferredSize(new Dimension(80, 24));
+        newField.addFocusListener(new clearFields());
+        
+        return newField;
+    }
+     
+    class clearFields implements FocusListener{
+    @Override
+        public void focusGained(FocusEvent e) {
+            if(e.getSource().equals(widthField)){
+                widthField.setText("");
+                JFormattedTextField widthField = null;
+                widthField = createField(widthField, width);
+            } else if (e.getSource().equals(heightField)){
+                heightField.setText("");
+                JFormattedTextField heightField = null;
+                heightField = createField(heightField,height);
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if(e.getSource().equals(widthField)){
+                JFormattedTextField widthField = null;
+                widthField = createField(widthField, width);
+            } else if (e.getSource().equals(heightField)){
+                JFormattedTextField heightField = null;
+                heightField = createField(heightField,height);
+            }
+        }
+    }
 }

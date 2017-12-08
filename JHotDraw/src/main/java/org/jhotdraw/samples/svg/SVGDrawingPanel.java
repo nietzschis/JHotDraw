@@ -66,7 +66,7 @@ public class SVGDrawingPanel extends JPanel {
     public SVGDrawingPanel() {
         labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
+        
         try {
             prefs = Preferences.userNodeForPackage(getClass());
         } catch (SecurityException e) {
@@ -77,7 +77,18 @@ public class SVGDrawingPanel extends JPanel {
         
         comicsToolBar = new ComicsToolBar();
         toolsPane.add(comicsToolBar);
-        minimapToolBar = new MinimapToolBar();
+        minimapToolBar = new MinimapToolBar((Point.Double p) -> {
+            assert p.getX() >= 0 && p.getX() <= 1;
+            assert p.getY() >= 0 && p.getY() <= 1;
+            Dimension canvasSize = scrollPane.getViewport().getViewSize();
+            Rectangle viewPortSize = scrollPane.getViewport().getViewRect();
+            
+            p.setLocation(p.getX()*canvasSize.width, p.getY()*canvasSize.height); // Center the point relative to the full canvas.
+            p.setLocation(p.getX() - viewPortSize.getWidth()/2, p.getY() - viewPortSize.getHeight()/2); // Point to upperleft corner of the new viewport.
+            
+            scrollPane.getHorizontalScrollBar().setValue((int) p.getX());
+            scrollPane.getVerticalScrollBar().setValue((int) p.getY());
+        });
         toolsPane.add(minimapToolBar);
         
         toolsPane.setLayout(new ToolBarLayout());
