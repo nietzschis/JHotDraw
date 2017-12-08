@@ -61,6 +61,7 @@ public class ToolsToolBar extends AbstractToolBar {
         AbstractButton btn;
         CreationTool creationTool;
         PathTool pathTool;
+        EraserTool eraserTool;
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
@@ -159,6 +160,15 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 2;
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
+        p.add(btn, gbc);
+        
+        //The code below adds the eraser button to the toolbar in JHotDraw
+        btn = ButtonFactory.addToolTo(this, editor, eraserTool = new EraserTool(this), "createEraserTool", labels);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 3, 0, 0);
         p.add(btn, gbc);
                 }
                 break;
