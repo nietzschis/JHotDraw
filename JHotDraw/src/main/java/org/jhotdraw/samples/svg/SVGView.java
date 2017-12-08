@@ -101,6 +101,7 @@ public class SVGView extends AbstractView implements ExportableView {
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "GIF", "Graphics Interchange Format (GIF)", "gif", BufferedImage.TYPE_INT_ARGB));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "PNG", "Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
+        inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
         inputFormats.add(new PictImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new TextInputFormat(new SVGTextFigure()));
         drawing.setInputFormats(inputFormats);
@@ -109,6 +110,7 @@ public class SVGView extends AbstractView implements ExportableView {
         outputFormats.add(new SVGZOutputFormat());
         outputFormats.add(new ImageOutputFormat());
         outputFormats.add(new ImageOutputFormat("JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
+        outputFormats.add(new ImageOutputFormat("GIF", "Graphics Interchange Format (GIF)", "gif", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
         outputFormats.add(new ImageOutputFormat("PNG", "Compressed Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageMapOutputFormat());
