@@ -29,33 +29,50 @@ import org.jhotdraw.geom.BezierPath.Node;
 public class BezierText extends JPanel {
    /* private String text;
     private Font font; */
-    private Font font = new Font ("Garamond", Font.BOLD | Font.ITALIC , 30);
-    private String text = "Testing jaja";
+    private Font font;
+    private String text;
     
     private  AffineTransform transform = new AffineTransform();
     
     private float flatness = 1;
     
+    public BezierText(){
+        this.text="q";
+        this.font= new Font ("Garamond", Font.BOLD | Font.ITALIC , 30);
+    }
+    
+    public BezierText(String text, Font font){
+        this.font = font == null ? new Font ("Garamond", Font.BOLD | Font.ITALIC , 30) : font;
+        this.text = text== null ? "" : text;
+        System.out.println("assdafd");
+    }
+    
     public Shape pathText(Shape shape){
+        GeneralPath textPath = new GeneralPath();
+        System.out.println(text);
+        if (text == null || font==null || shape== null){
+            return textPath;
+        }
+        System.out.println("asasadsas");
         FontRenderContext fontrc = new FontRenderContext(null,true,true);
         GlyphVector textVector = font.createGlyphVector(fontrc, text);
         
-        GeneralPath textPath = new GeneralPath();
+        
         PathIterator iterator = new FlatteningPathIterator( shape.getPathIterator(null), flatness );
         
         pathTextVars vars = new pathTextVars();
         vars.strLen = textVector.getNumGlyphs();
-        
+        System.out.println(vars.strLen);
         if (vars.strLen == 0){
             return textPath;
         }
         
-        
+        System.out.println("tttt");
         while(vars.currentChr < vars.strLen && !iterator.isDone()){
             vars.segType = iterator.currentSegment(vars.coords);
-            System.out.print(ui);
             switch(vars.segType){
                 case PathIterator.SEG_MOVETO:
+                    System.out.println("move");
                     vars.moveX = vars.lastX = vars.coords[0];
                     vars.moveY = vars.lastY = vars.coords[1];
                     textPath.moveTo(vars.moveX, vars.moveY);
@@ -64,6 +81,7 @@ public class BezierText extends JPanel {
                     break;
                     
                 case PathIterator.SEG_LINETO:
+                    System.out.println("line");
                     vars.thisX = vars.coords[0];
                     vars.thisY = vars.coords[1];
                     float difX = vars.thisX - vars.lastX;
@@ -91,6 +109,7 @@ public class BezierText extends JPanel {
             }
             iterator.next();
         }
+        System.out.println("asdafewrqw");
         return textPath;
     }
     
