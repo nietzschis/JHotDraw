@@ -113,6 +113,50 @@ public class ResizeHandleKit {
         return new ResizeHandle(owner, DIR_W);
     }
 
+
+    static void applyAspectRatio(int direction, @NotNull Point2D.Double topLeft, @NotNull Point2D.Double bottomRight, @NotNull Point2D.Double aspectRatio)
+    {
+        double height = bottomRight.y -  topLeft.y;
+        double width = bottomRight.x -  topLeft.x;
+
+        if ((direction & (DIR_W | DIR_E)) == 0)
+        {
+            width = height*aspectRatio.x;
+        }
+        else
+        {
+            height = width*aspectRatio.y;
+        }
+
+        switch (direction)
+        {
+            case DIR_N:
+            case DIR_NW:
+                bottomRight.x = topLeft.x + width;
+                topLeft.y = bottomRight.y - height;
+                break;
+            case DIR_W:
+                bottomRight.x = topLeft.x + width;
+                bottomRight.y = topLeft.y + height;
+                break;
+            case DIR_E:
+            case DIR_SW:
+                topLeft.x = bottomRight.x - width;
+                bottomRight.y = topLeft.y + height;
+                break;
+            case DIR_NE:
+                topLeft.x = bottomRight.x - width;
+                topLeft.y = bottomRight.y - height;
+                break;
+            case DIR_SE:
+            case DIR_S:
+                bottomRight.x = topLeft.x + width;
+                bottomRight.y = topLeft.y + height;
+                break;
+        }
+    }
+
+
     private static class ResizeHandle extends LocatorHandle {
 
         private int dx,  dy;
@@ -252,52 +296,10 @@ public class ResizeHandleKit {
                     shiftPressed ? aspectRatio : null);
         }
 
-        void applyAspectRatio(@NotNull Point2D.Double topLeft, @NotNull Point2D.Double bottomRight, @NotNull Point2D.Double aspectRatio)
-        {
-            double height = bottomRight.y -  topLeft.y;
-            double width = bottomRight.x -  topLeft.x;
-
-            if ((direction & (DIR_W | DIR_E)) == 0)
-            {
-                width = height*aspectRatio.x;
-            }
-            else
-            {
-                height = width*aspectRatio.y;
-            }
-
-            switch (direction)
-            {
-                case DIR_N:
-                case DIR_NW:
-                    bottomRight.x = topLeft.x + width;
-                    topLeft.y = bottomRight.y - height;
-                    break;
-                case DIR_W:
-                    bottomRight.x = topLeft.x + width;
-                    bottomRight.y = topLeft.y + height;
-                    break;
-                case DIR_E:
-                case DIR_SW:
-                    topLeft.x = bottomRight.x - width;
-                    bottomRight.y = topLeft.y + height;
-                    break;
-                case DIR_NE:
-                    topLeft.x = bottomRight.x - width;
-                    topLeft.y = bottomRight.y - height;
-                    break;
-                case DIR_SE:
-                case DIR_S:
-                    bottomRight.x = topLeft.x + width;
-                    bottomRight.y = topLeft.y + height;
-                    break;
-            }
-        }
-
         void setBounds(Point2D.Double anchor, Point2D.Double lead, @Nullable Point2D.Double aspectRatio) {
             if (aspectRatio != null)
             {
-                applyAspectRatio(anchor, lead, aspectRatio);
+                applyAspectRatio(direction, anchor, lead, aspectRatio);
             }
 
             Figure f = getOwner();

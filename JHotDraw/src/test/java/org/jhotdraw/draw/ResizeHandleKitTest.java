@@ -240,4 +240,10 @@ public class ResizeHandleKitTest {
         evt.consume();
     }
 
+
+    @Test
+    public void applyAspectRatio() {
+
+    }
+
 }
