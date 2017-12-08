@@ -7,6 +7,8 @@ package org.jhotdraw.tabs.gui;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.temporal.Temporal;
@@ -79,70 +81,50 @@ public class TabPanel extends JPanel
     
     private JPanel createTab(ButtonGroup group, Tab tab)
     {
-        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-        layout.setVgap(0);
-        layout.setHgap(0);
-        
-        JPanel temp = new JPanel(layout);
-        temp.putClientProperty("ID", tab.getId());
-        temp.add(createLabelButton(group, tab));
-        temp.add(createCloseTabButton(tab, this));
-        return temp;
-    }
-    
-    private JToggleButton createLabelButton(ButtonGroup group, Tab tab) 
-    {
-        JToggleButton button = new JToggleButton("\t" + tab.getName() + "\t");
-        button.setUI((PaletteButtonUI) PaletteButtonUI.createUI(button));
-        button.setFocusable(false);
-        button.addItemListener((e) ->
+        return new TabElement(group, tab,
+        (ItemEvent e) ->
         {
             if(e.getStateChange() == ItemEvent.SELECTED)
             {
                 tabs.setCurrentTab(tab);
                 tabHandle.ChangeTab();
-            }
-            
-        }
-        );
-        group.add(button);
-        button.setSelected(true);
-        
-        return button;
-    }
-    
-    private JButton createCloseTabButton(Tab tab, JPanel parrent)
-     {
-        JButton button = new JButton("x");
-        button.setUI((PaletteButtonUI) PaletteButtonUI.createUI(button));
-        button.setFocusable(false);
-        button.addActionListener((e) ->
+            }  
+        }, 
+        (ActionEvent e) ->
         {
-            Component temp = null;
-            for(Component c : parrent.getComponents())
-            {
-                if(c instanceof JPanel)
-                {
-                    if(((JPanel)c).getClientProperty("ID") == tab.getId())
-                    {
-                        tabs.remove(tab);
-                        temp = c;
-                        break;
-                    }
-                }
-            }
+            Component component = getTabElement(tabs.getCurrentTab());
+            tabs.remove(tab);
+            this.remove(component);
+            tabHandle.ChangeTab();
+            revalidate();
+            repaint();
             
-            if(temp != null)
-            {
-                parrent.remove(temp);
-                tabHandle.ChangeTab();
-                revalidate();
-                repaint();
-            }
         });
         
-        return button;
-     }
+        
+        
+            
+    }
+    
+    private TabElement getTabElement(Tab tab)
+    {
+         for(Component c : this.getComponents())
+            if(c instanceof TabElement)
+               if(((JPanel)c).getClientProperty("ID") == tab.getId())
+                    return (TabElement)c;
+
+         return null;
+    }
+    
+    
+    public void setTabName(String name)
+    {
+        getTabElement(tabs.getCurrentTab()).ChangeName(name);
+    }
+    
+
+    
+    
     
     
     public TabListener getItemHandle()

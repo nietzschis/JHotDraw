@@ -185,6 +185,8 @@ public class SVGView extends AbstractView implements ExportableView {
                 out.close();
             }
         }
+        
+        tabs.setTabName(f.getName());
     }
 
     /**
