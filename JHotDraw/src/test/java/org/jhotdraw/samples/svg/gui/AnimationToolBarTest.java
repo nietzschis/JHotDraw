@@ -64,24 +64,4 @@ public class AnimationToolBarTest {
         JButton existingToolToTest = (JButton) toolbarPanel.getComponent(0);
         assertEquals(createdToolToTest.getAction().getClass(), existingToolToTest.getAction().getClass());
     }
-    
-    @Test
-    public void testAddFrameButton() {
-        
-    }
-    
-    @Test
-    public void testRemoveFrameButton() {
-        
-    }
-    
-    @Test
-    public void testPlayButton() {
-        
-    }
-    
-    @Test
-    public void testPauseFrameButton() {
-        
-    }
 }

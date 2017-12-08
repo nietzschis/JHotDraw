@@ -50,5 +50,12 @@
             <artifactId>tinify</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-junit</artifactId>
+            <version>0.15.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
     </dependencies>   
 </project>
