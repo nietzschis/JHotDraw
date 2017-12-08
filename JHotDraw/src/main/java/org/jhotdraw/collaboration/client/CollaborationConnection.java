@@ -88,12 +88,7 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
     @Override
     public synchronized void update(List<Figure> figures) throws RemoteException {
         try {
-            if (figures.size() > drawing.getChildCount()) {
-                drawingHandler.serverListLongest(figures, this);
-            }
-            else {
-                drawingHandler.clientListLongest(figures, this);
-            }
+            drawingHandler.mergeFigures(figures);
         }
         catch (NullPointerException e) {
         }

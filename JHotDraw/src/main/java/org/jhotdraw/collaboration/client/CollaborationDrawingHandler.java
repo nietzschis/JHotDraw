@@ -14,9 +14,9 @@ import org.jhotdraw.samples.svg.figures.SVGRectFigure;
  * @author Niclas
  */
 public class CollaborationDrawingHandler {
-    
+
     private Drawing drawing;
-     
+
     public void setDrawing(Drawing drawing) {
         this.drawing = drawing;
     }
@@ -26,39 +26,39 @@ public class CollaborationDrawingHandler {
         newFig.setCollaborationId(figure.getCollaborationId());
         drawing.add(newFig);
     }
-    
+
     public void removeFigures(List<Figure> figures) {
         drawing.removeAll(figures);
     }
-    
+
     public void changeBounds(Figure oldFigure, Figure newFigure) {
-       // Paths are a little funny, needs to be readded
+        // Paths are a little funny, needs to be readded
         if (oldFigure instanceof SVGPathFigure) {
             removeFigures(Arrays.asList(oldFigure));
             addFigure(newFigure);
         } else {
             Point2D.Double start = new Point2D.Double(newFigure.getBounds().x, newFigure.getBounds().y);
             Point2D.Double end = new Point2D.Double(newFigure.getBounds().x + newFigure.getBounds().width, newFigure.getBounds().y + newFigure.getBounds().height);
-            
+
             oldFigure.willChange();
             oldFigure.setBounds(start, end);
             oldFigure.changed();
-        } 
+        }
     }
-    
+
     public void changeArc(SVGRectFigure oldFigure, SVGRectFigure newFigure) {
         oldFigure.willChange();
-            oldFigure.setArc(newFigure.getArc());
+        oldFigure.setArc(newFigure.getArc());
         oldFigure.changed();
     }
-    
+
     public void changeAttributes(Figure oldFigure, Figure newFigure) {
         oldFigure.willChange();
         oldFigure.restoreAttributesTo(newFigure.getAttributesRestoreData());
         oldFigure.changed();
     }
 
-    void clientListLongest(List<Figure> serverList, CollaborationConnection collaborationConnection) {
+    void clientListLongest(List<Figure> serverList) {
         List<Figure> figuresToBeDeleted = new ArrayList();
         for (Figure workingFigure : drawing.getChildren()) {
             boolean found = false;
@@ -95,7 +95,7 @@ public class CollaborationDrawingHandler {
         }
     }
 
-    void serverListLongest(List<Figure> serverList, CollaborationConnection collaborationConnection) {
+    void serverListLongest(List<Figure> serverList) {
         for (Figure serverFigure : serverList) {
             boolean found = false;
             for (Figure workingFigure : drawing.getChildren()) {
@@ -125,6 +125,14 @@ public class CollaborationDrawingHandler {
                 // Add new figure to list
                 addFigure(serverFigure);
             }
+        }
+    }
+
+    public void mergeFigures(List<Figure> serverFigures) {
+        if (serverFigures.size() > drawing.getChildCount()) {
+            serverListLongest(serverFigures);
+        } else {
+            clientListLongest(serverFigures);
         }
     }
 }
