@@ -29,6 +29,7 @@ import org.jhotdraw.samples.svg.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.xml.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.text.BezierText;
 
 /**
  * SVGPath is a composite Figure which contains one or more
@@ -53,8 +54,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * This is used to perform faster hit testing.
      */
     private transient Shape cachedHitShape;
-    private final static boolean DEBUG = false;
+    private final static boolean DEBUG = true;
 
+    private transient GeneralPath cachedTextPath;
+    
     /** Creates a new instance. */
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure() {
@@ -115,6 +118,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             g.setPaint(paint);
             drawFill(g);
         }
+        drawText(g);
         paint = SVGAttributeKeys.getStrokePaint(this);
         if (paint != null) {
             g.setPaint(paint);
@@ -130,6 +134,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     // empty
     }
 
+    public void drawText(Graphics2D g){
+        g.fill(cachedTextPath);
+    }
+    
     public void drawFill(Graphics2D g) {
         g.fill(getPath());
     }
@@ -143,15 +151,20 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         cachedPath = null;
         cachedDrawingArea = null;
         cachedHitShape = null;
+        cachedTextPath = null;
     }
 
     protected GeneralPath getPath() {
+        System.out.println(children.size());
         if (cachedPath == null) {
             cachedPath = new GeneralPath();
+            cachedTextPath = new GeneralPath();
             cachedPath.setWindingRule(WINDING_RULE.get(this) == WindingRule.EVEN_ODD ? GeneralPath.WIND_EVEN_ODD : GeneralPath.WIND_NON_ZERO);
             for (Figure child : getChildren()) {
                 SVGBezierFigure b = (SVGBezierFigure) child;
                 cachedPath.append(b.getBezierPath(), false);
+                BezierText t = new BezierText("testing", b.getFont());
+                cachedTextPath.append(t.pathText(b.getBezierPath()), false);
             }
         }
         return cachedPath;
@@ -166,8 +179,14 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         }
         return cachedHitShape;
     }
-
     
+    protected Shape getTextPath(){
+        if (cachedTextPath==null){
+            getPath();
+        }
+        return cachedTextPath;
+    }
+
     // int count;
     public Rectangle2D.Double getDrawingArea() {
         if (cachedDrawingArea == null) {
