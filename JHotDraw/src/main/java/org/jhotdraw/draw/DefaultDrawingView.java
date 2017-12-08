@@ -1119,6 +1119,55 @@ public class DefaultDrawingView
             }
         });
     }
+    
+     @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
+    public void flip() {
+        Collection<Figure> sorted = getDrawing().sort(getSelectedFigures());
+        HashMap<Figure, Figure> originalToFlipMap = new HashMap<Figure, Figure>(sorted.size());
+        
+        clearSelection();
+
+        final ArrayList<Figure> flips = new ArrayList<Figure>(sorted.size());
+        AffineTransform tx = AffineTransform.getScaleInstance(1, -1); //inverts, but goes out of bounds of canvas        
+        tx.translate(0, -(getHeight())); //minus height of canvas so figure returns to canvas.        
+        
+        for (Figure f : sorted) {
+            Figure d = (Figure) f.clone();
+            d.transform(tx);
+            flips.add(d);
+            originalToFlipMap.put(f, d);
+            drawing.add(d);
+        }
+
+
+        for (Figure f : flips) {
+            f.remap(originalToFlipMap, false);
+        }
+
+        addToSelection(flips);
+
+        getDrawing().fireUndoableEditHappened(new AbstractUndoableEdit() {
+
+            @Override
+            public String getPresentationName() {
+                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                return labels.getString("edit.flip.text");
+            }
+
+            @Override
+            public void undo() throws CannotUndoException {
+                super.undo();
+                getDrawing().removeAll(flips);
+            }
+
+            @Override
+            public void redo() throws CannotRedoException {
+                super.redo();
+                getDrawing().addAll(flips);
+            }
+        });
+    }
+    
 
     public void removeNotify(DrawingEditor editor) {
         this.editor = null;
