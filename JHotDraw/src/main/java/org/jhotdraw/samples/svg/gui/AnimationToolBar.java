@@ -97,6 +97,20 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.gridy = 1;
                 gbc.insets = new Insets(5, 5, 0, 0);
                 p.add(btn, gbc);
+                
+                HashMap<AttributeKey, Object> attributes = new HashMap<>();
+                Tool frameEditorTool;
+                Tool selectionTool = 
+                        new DelegationSelectionTool(ButtonFactory.createDrawingActions(editor), ButtonFactory.createSelectionActions(editor));
+                CreationTool creationTool = new CreationTool(new SVGGroupFigure(), attributes);
+                btn = ButtonFactory.addToolTo(this, editor, frameEditorTool = new FrameEditorTool(selectionTool, creationTool), "createRectangle", labels);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                //labels.configureToolBarButton(btn, "pause");
+                gbc = new GridBagConstraints();
+                gbc.gridx = 2;
+                gbc.gridy = 0;
+                gbc.insets = new Insets(10, 5, 0, 0);
+                p.add(btn, gbc);
             }
             break;
         }
