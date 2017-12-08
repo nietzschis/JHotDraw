@@ -13,23 +13,15 @@
  */
 package org.jhotdraw.draw;
 
-import org.jhotdraw.draw.*;
 import org.jhotdraw.graph.Graph;
-import org.jhotdraw.graph.LinearGraph;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Map;
 import org.jhotdraw.gui.AbstractFunctionPanel;
-import org.jhotdraw.gui.AbstractGraphPanel;
-import org.jhotdraw.gui.LinearGraphPanel;
-import org.jhotdraw.gui.QuadraticGraphPanel;
 
 /**
  * A tool to create new figures. The figure to be created is specified by a
@@ -179,17 +171,15 @@ public class PredefinedFunctionTool extends AbstractTool {
         return prototype;
     }
 
-    private PredefinedFunction createFunction(AbstractFunctionPanel[] jPanel) {
+    private PredefinedFunction createFunction() {
         boolean notdone = true;
         AbstractFunctionPanel panel = null;
-        for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
-            abstractFunctionPanel.setList(jPanel);
-        }
+        
         JDialog f = null;
         while (notdone) {
             f = new JDialog();
             if (panel == null) {
-                panel = new LinearGraphPanel();
+                panel = jPanel[0];
             } else {
                 panel = panel.changeFrame();
             }
@@ -209,22 +199,19 @@ public class PredefinedFunctionTool extends AbstractTool {
         return panel.getGraph();
     }
 
-    private AbstractFunctionPanel[] jPanel = {new LinearGraphPanel(), new QuadraticGraphPanel()};
+    private AbstractFunctionPanel[] jPanel;
     
     @Override
     public void activate(DrawingEditor editor) {
         super.activate(editor);
-        graf = (Graph) createFunction(jPanel);
-        //getView().clearSelection();
+        graf = (Graph) createFunction();
+        if (graf == null) {
+            fireToolDone();
+        }
         getView().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
     private Graph graf;
-
-    private void setGraph() {
-        graf = new LinearGraph(2,2,0,300,300);
-
-    }
 
     @Override
     public void deactivate(DrawingEditor editor) {
@@ -289,6 +276,13 @@ public class PredefinedFunctionTool extends AbstractTool {
         if (isToolDoneAfterCreation()) {
             fireToolDone();
         }
+    }
+    
+    public void setList(AbstractFunctionPanel[] jPanel) {
+        for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
+            abstractFunctionPanel.setList(jPanel);
+        }
+        this.jPanel = jPanel;
     }
 
     /**

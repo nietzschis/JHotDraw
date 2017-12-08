@@ -24,6 +24,9 @@ import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.graph.GraphBezierFigure;
+import org.jhotdraw.gui.AbstractFunctionPanel;
+import org.jhotdraw.gui.LinearGraphPanel;
+import org.jhotdraw.gui.QuadraticGraphPanel;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
@@ -129,6 +132,8 @@ public class ToolsToolBar extends AbstractToolBar {
         
         btn = ButtonFactory.addToolTo(this, editor, predefinedFunctionTool = new PredefinedFunctionTool(new GraphBezierFigure(), attributes), "createEllipse", labels);
         predefinedFunctionTool.setToolDoneAfterCreation(false);
+        AbstractFunctionPanel[] jPanel = {new LinearGraphPanel(), new QuadraticGraphPanel()};
+        predefinedFunctionTool.setList(jPanel);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
