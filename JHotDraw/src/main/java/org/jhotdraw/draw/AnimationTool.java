@@ -24,21 +24,28 @@ public class AnimationTool extends AbstractAction {
     
     public AnimationTool(AnimationToolDefinition toolmode) {
         tool = toolmode;
-        animation = new Animation();
         stopPlaying = false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        if(tool == ADD_FRAME_TOOL){
-            animation.addFrame(new JFrame());
+        switch(tool){
+            case ADD_FRAME_TOOL: addFrame();
+                break;
+                
+            case REMOVE_FRAME_TOOL: removeFrame();
+                break;
+                
+            case PLAY_TOOL: play();
+                break;
+                
+            case PAUSE_TOOL: pause();
+                break;
         }
-        if(tool == REMOVE_FRAME_TOOL){
-            animation.removeFrame(new JFrame());
-        }
-        if(tool == PLAY_TOOL){
-            List<JFrame> list = animation.getFrames();
+    }
+    
+    private void play() {
+        List<JFrame> list = animation.getFrames();
             for (int i = 0; i < list.size(); i++) {
                 list.get(i);
                 if(i == list.size() && !stopPlaying){
@@ -47,14 +54,25 @@ public class AnimationTool extends AbstractAction {
                     break;
                 }
             }
-        }
-        if(tool == PAUSE_TOOL){
-            System.out.println("Du trykkede på pause");
-        }
+    }
+    
+    private void pause() {
+        stopPlaying = true;
+    }
+    
+    private void addFrame() {
+        getAnimation().addFrame(new JFrame());
+    }
+    
+    private void removeFrame() {
+        getAnimation().removeFrame(new JFrame());
+    }
+    
+    private Animation getAnimation() {
+        return Animation.getInstance();
     }
     
     public AnimationToolDefinition getTool() {
         return tool;
     }
-
 }

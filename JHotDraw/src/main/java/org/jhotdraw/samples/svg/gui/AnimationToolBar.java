@@ -27,11 +27,9 @@ import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
 
 /**
- * DrawToolsPane.
+ * AnimationToolbar
  *
- * @author Werner Randelshofer
- * @version 2.0 2008-04-06 Reworked.
- * <br>1.0 May 1, 2007 Created.
+ * @author Antonio Lascari & Alexander Nytofte Markussen
  */
 public class AnimationToolBar extends AbstractToolBar {
 
@@ -53,7 +51,8 @@ public class AnimationToolBar extends AbstractToolBar {
                 p.setOpaque(false);
                 p.setBorder(new EmptyBorder(5, 5, 5, 8));
 
-                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org."
+                        + "jhotdraw.samples.svg.Labels");
 
                 GridBagLayout layout = new GridBagLayout();
                 p.setLayout(layout);
