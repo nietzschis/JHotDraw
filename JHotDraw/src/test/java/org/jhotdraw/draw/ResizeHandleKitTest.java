@@ -241,9 +241,50 @@ public class ResizeHandleKitTest {
     }
 
 
-    @Test
-    public void applyAspectRatio() {
+    enum eAspectDir
+    {
+        S(DIR_S,   new Rectangle2D.Double(0,0,0,20)),
+        N(DIR_N,   new Rectangle2D.Double(0,-20,0,20)),
+        E(DIR_E,   new Rectangle2D.Double(0,0,20,0)),
+        W(DIR_W,   new Rectangle2D.Double(-20,0,20,0)),
+        SE(DIR_SE, new Rectangle2D.Double(0,0,20,20)),
+        SW(DIR_SW, new Rectangle2D.Double(-20,0,20,20)),
+        NE(DIR_NE, new Rectangle2D.Double(0,-20,20,20)),
+        NW(DIR_NW, new Rectangle2D.Double(-20,-20,20,20));
 
+        eAspectDir(int mask, Rectangle2D.Double change)
+        {
+            this.dirMask = mask;
+            this.rect = change;
+        }
+
+        final int dirMask;
+        final  Rectangle2D.Double rect;
     }
 
+    @Test
+    public void applyAspectRatioTest()
+    {
+        Rectangle2D.Double rects[] =
+                {
+                        new Rectangle2D.Double(100d, 100d, 200d, 200d),
+                        new Rectangle2D.Double(50d, 73d, 150d, 300d)
+                };
+
+        for (Rectangle2D.Double originalRect : rects) {
+            Point2D.Double aspectRatio = new Point2D.Double(originalRect.width / originalRect.height, originalRect.height / originalRect.width);
+
+            for (eAspectDir aspChange : eAspectDir.values()) {
+                Rectangle2D.Double rect = new Rectangle2D.Double(originalRect.x + aspChange.rect.x, originalRect.y + aspChange.rect.y, originalRect.width + aspChange.rect.width, originalRect.height + aspChange.rect.height);
+                Point2D.Double topLeft = new Point2D.Double(rect.x, rect.y);
+                Point2D.Double bottomRight = new Point2D.Double(rect.x + rect.width, rect.y + rect.height);
+
+                ResizeHandleKit.applyAspectRatio(aspChange.dirMask, topLeft, bottomRight, aspectRatio);
+                Rectangle2D.Double newRect = new Rectangle2D.Double(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+                Point2D.Double newAspectRatio = new Point2D.Double(newRect.width / newRect.height, newRect.height / newRect.width);
+
+                collector.checkThat("Aspect ration doesnt match for " + aspChange.name(), aspectRatio, equalTo(newAspectRatio));
+            }
+        }
+    }
 }
