@@ -52,7 +52,7 @@ public class CollaborationServerTest {
     }
 
     @Test(expected = ExportException.class)
-    public void testStartServer() throws RemoteException, AlreadyBoundException {
+    public void testIfServerIsAlreadyStarted() throws RemoteException, AlreadyBoundException {
         LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
     }
 
