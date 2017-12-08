@@ -6,6 +6,7 @@
 package org.jhotdraw.samples.svg;
 
 import java.awt.Frame;
+import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -29,6 +30,7 @@ import org.assertj.swing.core.Robot;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import static org.assertj.swing.core.MouseButton.LEFT_BUTTON;
 import static org.assertj.swing.core.MouseClickInfo.leftButton;
+import org.assertj.swing.fixture.JToggleButtonFixture;
 import static org.assertj.swing.timing.Timeout.timeout;
 import org.jhotdraw.samples.svg.EraserTool;
 import org.jhotdraw.samples.svg.Erasing;
@@ -63,10 +65,8 @@ public class EraserToolTest extends AssertJSwingJUnitTestCase {
         return frame.isShowing();
         }
     }).using(robot());
-        
-        
-        
-        
+                
+       robot().settings().delayBetweenEvents(1000);
 //         frame.button("Rectangle").click(LEFT_BUTTON);
 //         frame.button().requireToolTip("Rectangle").click(LEFT_BUTTON);
 //          SVGApplicationModel model = GuiActionRunner.execute(() -> new SVGApplicationModel());
@@ -87,11 +87,15 @@ public class EraserToolTest extends AssertJSwingJUnitTestCase {
 //        robot().settings().delayBetweenEvents(1000);
 //          final JButtonFixture button1 = frame.toolBar("Tools").button();
 //          GuiActionRunner.execute(() -> button1.setText("Name:"));
-          
 //          frame.button().click();
-            
-            frame.button().requireEnabled().requireVisible().requireText("Rectangle").click();
-            
+        JToggleButtonFixture tb = frame.toggleButton("Rectangle");
+            tb.focus();
+           
+                
+            tb.requireToolTip("Rectangle");
+            //tb.requireNotSelected();
+            tb.click(leftButton().times(1));            
+            frame.moveTo(new Point(10,100)).click().moveTo(new Point(100,200));
 //        GenericTypeMatcher<Frame> matcher = new GenericTypeMatcher<Frame>() {
 //        protected boolean isMatching(Frame frame) {
 //        return "JHotDraw - SVG".equals(frame.getTitle());
