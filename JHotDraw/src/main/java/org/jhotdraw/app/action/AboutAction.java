@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Displays a dialog showing information about the application.
@@ -27,8 +28,14 @@ import org.jhotdraw.app.*;
  * @author  Werner Randelshofer
  * @version 1.0  04 January 2005  Created.
  */
-public class AboutAction extends AbstractApplicationAction {
+
+@ServiceProvider(service = ActionSPI.class)
+
+public class AboutAction extends AbstractApplicationAction implements ActionSPI{
     public final static String ID = "application.about";
+    
+    public AboutAction(){
+    }
     
     /** Creates a new instance. */
     public AboutAction(Application app) {
@@ -44,5 +51,10 @@ public class AboutAction extends AbstractApplicationAction {
                 "\n\nRunning on Java "+System.getProperty("java.vm.version")+
                 ", "+System.getProperty("java.vendor"), 
                 "About", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    @Override
+    public String getServiceID() {
+        return this.ID;
     }
 }

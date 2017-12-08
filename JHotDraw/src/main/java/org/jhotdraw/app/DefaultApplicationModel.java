@@ -19,6 +19,7 @@ import org.jhotdraw.beans.*;
 import java.util.*;
 import javax.swing.*;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.openide.util.Lookup;
 /**
  * DefaultApplicationModel.
  *
@@ -42,6 +43,9 @@ public class DefaultApplicationModel
     public final static String COPYRIGHT_PROPERTY = "copyright";
     public final static String VIEW_CLASS_NAME_PROPERTY = "viewClassName";
     public final static String VIEW_CLASS_PROPERTY = "viewClass";
+    
+    private final Lookup lookup = Lookup.getDefault();
+    private Lookup.Result<ActionSPI> ActionResult;
     
     
     /** Creates a new instance. */
@@ -220,7 +224,34 @@ public class DefaultApplicationModel
      * Returns the action with the specified id.
      */
     public Action getAction(String id) {
+        //RedoAction r = new RedoAction();
+        //System.out.println("cutaction: " + r);
+        
+        ActionResult = lookup.lookupResult(ActionSPI.class);
+        //gamePluginResult.addLookupListener(gamePluginlookupListener);
+        ActionResult.allItems();
+        for (ActionSPI action : ActionResult.allInstances()) {
+
+//            System.out.println("action: " + action.getClass());
+//            String testID = action.getServiceID();
+//            System.out.println(testID);
+//            System.out.println("testname: " + action.getClass());
+
+//        if(id == null ? action.getServiceID() == null : id.equals(action.getServiceID())){
+//            return (Action) action;
+//        }
+            System.out.println(action);
+            if(RedoAction.class.equals(action.getClass())){
+                System.out.println("same class");
+                System.out.println("class: " + action.getClass());
+                
+            }
+        }
+        Action a = (Action) actions.get(id);
+        System.out.println(ActionResult.allInstances().size());
+        System.out.println("actions w. id; " + actions.get(id));
         return (actions == null) ? null : (Action) actions.get(id);
+        //return null;
     }
     
     /**

@@ -19,11 +19,14 @@ import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.*;
 import javax.swing.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.util.prefs.*;
+import org.openide.util.Lookup;
 
 /**
  * A DefaultSDIApplication can handle the life cycle of a single document window
@@ -47,8 +50,10 @@ import org.jhotdraw.util.prefs.*;
  * <br>1.0 October 16, 2005 Created.
  */
 public class DefaultSDIApplication extends AbstractApplication {
+    private final Lookup lookup = Lookup.getDefault();
 
     private Preferences prefs;
+    private Lookup.Result<ActionSPI> ActionResult;
 
     /**
      * Creates a new instance.
@@ -330,6 +335,21 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.addSeparator();
         m.add(model.getAction(ExitAction.ID));
         mb.add(m);
+        
+        m.addSeparator();
+//        ActionResult = lookup.lookupResult(ActionSPI.class);
+//        //gamePluginResult.addLookupListener(gamePluginlookupListener);
+//        ActionResult.allItems();
+//        for (ActionSPI action : ActionResult.allInstances()) {
+////            //System.out.println(action);
+//            //System.out.println(ActionResult.allInstances().toString());
+//            String testID = action.getServiceID();
+//            System.out.println(testID);
+//            System.out.println("testname: " + action.getClass());
+//            m.add(model.getAction(action.getServiceID()));
+//            mb.add(m);
+//        }
+//        System.out.println(ActionResult.allInstances().size());
 
         addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -345,7 +365,7 @@ public class DefaultSDIApplication extends AbstractApplication {
                 }
             }
         });
-
+        
         return m;
     }
 

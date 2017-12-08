@@ -32,6 +32,9 @@ public abstract class AbstractApplicationAction extends AbstractAction {
     
     private PropertyChangeListener applicationListener;
     
+    public AbstractApplicationAction(){
+    }
+    
     /** Creates a new instance. */
     public AbstractApplicationAction(Application app) {
         this.app = app;
