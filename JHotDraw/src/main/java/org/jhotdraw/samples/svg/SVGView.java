@@ -34,6 +34,7 @@ import javax.swing.*;
 import org.jhotdraw.app.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.tabs.gui.TabListener;
 import org.jhotdraw.tabs.gui.TabPanel;
 
 /**
@@ -80,13 +81,15 @@ public class SVGView extends AbstractView implements ExportableView {
         undo = new UndoRedoManager();
         
         tabs = new TabPanel();
-        tabs.setItemHandle( new ItemListener()
+        tabs.setItemHandle( new TabListener()
         {
             @Override
-            public void itemStateChanged(ItemEvent e)
+            public void ChangeTab()
             {
-                if(e.getStateChange() == ItemEvent.SELECTED)
+                if(tabs.tabExist())
                     changeDrawing(tabs.getCurrentDrawing());
+                else
+                    newDrawing(createDrawing(), "untitled");
             }
         });
         

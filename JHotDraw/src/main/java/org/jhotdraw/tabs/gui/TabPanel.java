@@ -5,9 +5,11 @@
  */
 package org.jhotdraw.tabs.gui;
 
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.time.temporal.Temporal;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -28,9 +30,7 @@ public class TabPanel extends JPanel
 {
     Tabs tabs;
     ButtonGroup group;
-    ItemListener itemHandle;
-
-
+    TabListener tabHandle;
 
     public TabPanel()
     {
@@ -57,10 +57,23 @@ public class TabPanel extends JPanel
         revalidate();
         repaint();
     }
-    
+
+    public boolean tabExist()
+    {
+        return tabs.getCurrentTab() != null || !tabs.getAllTabs().isEmpty();
+    }
     
     public Drawing getCurrentDrawing()
     {
+        if(tabExist() && tabs.getCurrentTab() == null)
+        {
+            for(Tab t : tabs.getAllTabs())
+            {
+                tabs.setCurrentTab(t);
+                break;
+            }
+        }
+        
         return tabs.getCurrentDrawing();
     }
     
@@ -71,8 +84,9 @@ public class TabPanel extends JPanel
         layout.setHgap(0);
         
         JPanel temp = new JPanel(layout);
+        temp.putClientProperty("ID", tab.getId());
         temp.add(createLabelButton(group, tab));
-        temp.add(createCloseTabButton(tab));
+        temp.add(createCloseTabButton(tab, this));
         return temp;
     }
     
@@ -86,8 +100,9 @@ public class TabPanel extends JPanel
             if(e.getStateChange() == ItemEvent.SELECTED)
             {
                 tabs.setCurrentTab(tab);
+                tabHandle.ChangeTab();
             }
-            itemHandle.itemStateChanged(e);
+            
         }
         );
         group.add(button);
@@ -96,28 +111,48 @@ public class TabPanel extends JPanel
         return button;
     }
     
-    private JButton createCloseTabButton(Tab tab)
+    private JButton createCloseTabButton(Tab tab, JPanel parrent)
      {
         JButton button = new JButton("x");
         button.setUI((PaletteButtonUI) PaletteButtonUI.createUI(button));
         button.setFocusable(false);
         button.addActionListener((e) ->
         {
-            //remove();
+            Component temp = null;
+            for(Component c : parrent.getComponents())
+            {
+                if(c instanceof JPanel)
+                {
+                    if(((JPanel)c).getClientProperty("ID") == tab.getId())
+                    {
+                        tabs.remove(tab);
+                        temp = c;
+                        break;
+                    }
+                }
+            }
+            
+            if(temp != null)
+            {
+                parrent.remove(temp);
+                tabHandle.ChangeTab();
+                revalidate();
+                repaint();
+            }
         });
         
         return button;
      }
     
     
-    public ItemListener getItemHandle()
+    public TabListener getItemHandle()
     {
-        return itemHandle;
+        return tabHandle;
     }
 
-    public void setItemHandle(ItemListener itemHandle)
+    public void setItemHandle(TabListener tabHandle)
     {
-        this.itemHandle = itemHandle;
+        this.tabHandle = tabHandle;
     }
     
 }

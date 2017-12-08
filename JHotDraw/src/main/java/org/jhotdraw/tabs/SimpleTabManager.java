@@ -61,6 +61,9 @@ public class SimpleTabManager implements  Tabs
     @Override
     public void remove(Tab tab)
     {
+        if(tab == currentTab)
+            currentTab = null;
+        
         tabs.remove(tab.getId());
     }
 
