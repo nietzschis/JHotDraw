@@ -883,7 +883,7 @@ public class ButtonFactory {
                 labels.configureToolBarButton(clear, "clear.myColors");
                 clear.addActionListener((ActionEvent e) -> { 
                     list.clear();
-                    
+                    //Clears only list to be saved not UI
                 });
                 return clear;
      }
