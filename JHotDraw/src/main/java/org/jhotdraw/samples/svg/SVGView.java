@@ -97,6 +97,7 @@ public class SVGView extends AbstractView implements ExportableView {
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "GIF", "Graphics Interchange Format (GIF)", "gif", BufferedImage.TYPE_INT_ARGB));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "PNG", "Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
+        inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
         inputFormats.add(new PictImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new TextInputFormat(new SVGTextFigure()));
         drawing.setInputFormats(inputFormats);
@@ -105,7 +106,9 @@ public class SVGView extends AbstractView implements ExportableView {
         outputFormats.add(new SVGZOutputFormat());
         outputFormats.add(new ImageOutputFormat());
         outputFormats.add(new ImageOutputFormat("JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
+        outputFormats.add(new ImageOutputFormat("GIF", "Graphics Interchange Format (GIF)", "gif", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
+        outputFormats.add(new ImageOutputFormat("PNG", "Compressed Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageMapOutputFormat());
         drawing.setOutputFormats(outputFormats);
 
@@ -350,14 +353,18 @@ public class SVGView extends AbstractView implements ExportableView {
 
     @FeatureEntryPoint(JHotDrawFeatures.EXPORT)
     public void export(File f, javax.swing.filechooser.FileFilter filter, Component accessory) throws IOException {
-
         OutputFormat format = fileFilterOutputFormatMap.get(filter);
 
         if (!f.getName().endsWith("." + format.getFileExtension())) {
             f = new File(f.getPath() + "." + format.getFileExtension());
         }
-
+        
         format.write(f, svgPanel.getDrawing());
+        
+        // If selected format was "compressed PNG", compress an image with a web service tinypng.
+        if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
+            TinyPngCompressAction.compressImage(f);
+        }
 
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());

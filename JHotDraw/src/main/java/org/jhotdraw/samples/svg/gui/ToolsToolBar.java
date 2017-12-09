@@ -64,6 +64,7 @@ public class ToolsToolBar extends AbstractToolBar {
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
+        CoordinateTool coTool;
 
         HashMap<AttributeKey, Object> attributes;
         btn = ButtonFactory.addSelectionToolTo(this, editor,
@@ -85,6 +86,15 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 0, 0, 0);
         p.add(btn, gbc);
+        
+        btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGTriangleFigure(), attributes), "createTriangle", labels);
+        creationTool.setToolDoneAfterCreation(false);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 3, 0, 0);
+        p.add(btn, gbc); 
 
         btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGEllipseFigure(), attributes), "createEllipse", labels);
         creationTool.setToolDoneAfterCreation(false);
@@ -160,6 +170,16 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
+        
+        // Creation of coordinate system button
+        btn = ButtonFactory.addToolTo(this, editor, coTool = new CoordinateTool(), "createCoordinate", labels);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(3, 3, 0, 0);
+        p.add(btn, gbc);
+        
                 }
                 break;
         }
@@ -181,6 +201,10 @@ public class ToolsToolBar extends AbstractToolBar {
 
         a.add(new BringToFrontAction(editor));
         a.add(new SendToBackAction(editor));
+        
+        a.add(null); // separator
+
+        a.add(new EdgeDetectionAction(editor));
 
         return a;
     }
