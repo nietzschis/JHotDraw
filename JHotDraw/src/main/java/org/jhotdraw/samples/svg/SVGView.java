@@ -53,6 +53,11 @@ public class SVGView extends AbstractView implements ExportableView {
 
     protected JFileChooser exportChooser;
     protected TabPanel tabs;
+
+    public TabPanel getTabs()
+    {
+        return tabs;
+    }
     /**
      * Each SVGView uses its own undo redo manager.
      * This allows for undoing and redoing actions per view.
@@ -291,6 +296,9 @@ public class SVGView extends AbstractView implements ExportableView {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+        
+        if(tabs.getApp() == null)
+            tabs.setApp(getApplication());
     }
 
     @Override

@@ -58,6 +58,11 @@ public class TabElement extends JPanel{
         labelButton.setText("\t" + name + "\t");
     }
     
+    public void SetActive()
+    {
+        labelButton.setSelected(true);
+    }
+    
     
     private JToggleButton createLabelButton(ButtonGroup group, Tab tab) 
     {

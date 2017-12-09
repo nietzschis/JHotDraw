@@ -18,11 +18,14 @@ import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import org.jhotdraw.app.action.CloseAction;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.tabs.SimpleTabManager;
 import org.jhotdraw.tabs.Tab;
 import org.jhotdraw.tabs.Tabs;
+import org.jhotdraw.app.Application;
+import org.jhotdraw.app.action.CloseTabAction;
 
 /**
  *
@@ -33,6 +36,11 @@ public class TabPanel extends JPanel
     Tabs tabs;
     ButtonGroup group;
     TabListener tabHandle;
+    
+    private Tab tabToClose;
+    
+    private Application app;
+    
 
     public TabPanel()
     {
@@ -67,16 +75,20 @@ public class TabPanel extends JPanel
     
     public Drawing getCurrentDrawing()
     {
+        return tabs.getCurrentDrawing();
+    }
+    
+    private void ValidateTab()
+    {
         if(tabExist() && tabs.getCurrentTab() == null)
         {
             for(Tab t : tabs.getAllTabs())
             {
                 tabs.setCurrentTab(t);
+                getTabElement(t).SetActive();
                 break;
             }
         }
-        
-        return tabs.getCurrentDrawing();
     }
     
     private JPanel createTab(ButtonGroup group, Tab tab)
@@ -92,18 +104,24 @@ public class TabPanel extends JPanel
         }, 
         (ActionEvent e) ->
         {
-            Component component = getTabElement(tabs.getCurrentTab());
-            tabs.remove(tab);
-            this.remove(component);
-            tabHandle.ChangeTab();
-            revalidate();
-            repaint();
-            
+            tabToClose = tab;
+            new CloseTabAction(app).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "tabClosing"));
         });
+         
+    }
+    
+    public void ClosePressedTab()
+    {
+        TabElement component = getTabElement(tabToClose);
+        tabs.remove(tabToClose);
+        this.remove(component);
         
+        ValidateTab();
+       
+        tabHandle.ChangeTab();
         
-        
-            
+        revalidate();
+        repaint();
     }
     
     private TabElement getTabElement(Tab tab)
@@ -135,6 +153,16 @@ public class TabPanel extends JPanel
     public void setItemHandle(TabListener tabHandle)
     {
         this.tabHandle = tabHandle;
+    }
+
+    public Application getApp()
+    {
+        return app;
+    }
+
+    public void setApp(Application app)
+    {
+        this.app = app;
     }
     
 }
