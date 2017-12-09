@@ -104,7 +104,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
-        
+
         attributes = new HashMap<AttributeKey, Object>();
         attributes.put(AttributeKeys.FILL_COLOR, null);
         attributes.put(CLOSED, false);
@@ -162,7 +162,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
         
-        // making of coordinate system button
+        // Creation of coordinate system button
         btn = ButtonFactory.addToolTo(this, editor, coTool = new CoordinateTool(), "createCoordinate", labels);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
