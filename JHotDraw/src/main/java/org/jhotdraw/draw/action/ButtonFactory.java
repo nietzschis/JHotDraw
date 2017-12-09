@@ -224,7 +224,6 @@ public class ButtonFactory {
         a.add(new CopyAction());
         a.add(new PasteAction());
         a.add(new SelectSameAction(editor));
-        a.add(new FlipAction());
 
         return a;
     }
