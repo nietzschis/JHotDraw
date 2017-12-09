@@ -15,11 +15,12 @@ import org.jhotdraw.samples.svg.figures.SVGGroupFigure;
  *
  * @author Alexander
  */
-public class FrameEditorTool extends AbstractTool implements ToolListener{
+public class FrameEditorTool extends AbstractTool implements ToolListener {
 
-    private Tool creationTool;
+    private CreationTool creationTool;
     private Tool selectionTool;
     private DrawingEditor editor;
+    private SVGGroupFigure groupFigure = new SVGGroupFigure();
 
     public FrameEditorTool(Tool selectionTool, CreationTool creationTool, DrawingEditor editor) {
         this.selectionTool = selectionTool;
@@ -36,16 +37,16 @@ public class FrameEditorTool extends AbstractTool implements ToolListener{
 
     @Override
     public void activate(DrawingEditor editor) {
-        super.activate(editor); 
+        super.activate(editor);
         getView().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
-    
 
     @Override
-    public void mouseMoved(MouseEvent evt) {
-        //selectionTool.mouseMoved(evt);
+    public void mouseReleased(MouseEvent evt) {
+        SelectionTool selectionToolFromEvent = (SelectionTool) selectionTool;
     }
-
+    
+    
     @Override
     public void mousePressed(MouseEvent evt) {
         super.mousePressed(evt);
@@ -56,23 +57,27 @@ public class FrameEditorTool extends AbstractTool implements ToolListener{
 
     @Override
     public void toolStarted(ToolEvent event) {
-        
+
     }
 
     @Override
     public void toolDone(ToolEvent event) {
         //TODO: create figure when selection tool is done.
         System.out.println("tool done is fired");
-        Collection<Figure> figuresSelected = event.getView().findFigures(event.getInvalidatedArea());
-        SVGGroupFigure groupFigure = new SVGGroupFigure();
-        groupFigure.addAll(figuresSelected);
-        event.getView().getDrawing().add(groupFigure);
-        
+
     }
 
     @Override
-    public void areaInvalidated(ToolEvent e) {
-        
+    public void areaInvalidated(ToolEvent event) {
+        SelectionTool selectionToolFromEvent = (SelectionTool) event.getTool();
+        if (!event.getView().findFigures(event.getInvalidatedArea()).isEmpty() && !selectionToolFromEvent.isWorking) {
+            //creationTool.createFigure();
+            Collection<Figure> figuresSelected = event.getView().findFigures(event.getInvalidatedArea());
+            
+            groupFigure.basicAddAll(0, figuresSelected);
+            event.getView().getDrawing().add(groupFigure);
+        }
+
     }
 
     private void addToolListenerToSelectionTool() {
