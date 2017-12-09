@@ -28,7 +28,6 @@ public class ComicsToolBar extends AbstractToolBar {
     */
     @Override
     protected JComponent createDisclosedComponent(int state) {
-        ComicsCanvasCheck checkCanvas = ComicsCanvasCheck.getInstance();
         JPanel p = null;
         //initialize new panel on bottom of screen
         switch (state) {
@@ -78,7 +77,7 @@ public class ComicsToolBar extends AbstractToolBar {
                 p1.add(btn, gbc);
 
                 //2nd button upper panel
-                 gbc.insets = new Insets(0, 0, 3, 3);
+                gbc.insets = new Insets(0, 0, 3, 3);
                 btn = createTemplateButton(1, 0, 3, gbc, getDrawing());
                 p1.add(btn, gbc);
 

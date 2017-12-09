@@ -41,6 +41,7 @@ public class ComicsCanvasCheck {
    /**
     * Creating new option pane with given fields and labes, that user
     * can choose to adjust new size of canvas or use the old.
+    * @return 
     */
     public int setCanvas() {
         format = NumberFormat.getInstance();
@@ -69,10 +70,9 @@ public class ComicsCanvasCheck {
         /**
         *Option pane with given options as buttons.
         */
-        //OptionPane
         String[] options = { "New Canvas", "Use old Canvas", "Cancel" };
         int option = JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
-        //swtich for optionPane
+        
         return option;
     }
     

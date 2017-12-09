@@ -14,11 +14,11 @@ import org.jhotdraw.samples.svg.figures.SVGRectFigure;
  *
  * @author Karol Zdunek
  */
-public class TemplateFactory {
+public class TemplateFactory  {
     
     private static final int pause = 10;
     
-    private TemplateFactory() {
+    public TemplateFactory() {
     }
     
     public interface TemplateDescriptor {
