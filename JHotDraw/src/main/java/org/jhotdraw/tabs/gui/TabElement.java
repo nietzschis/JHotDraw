@@ -67,6 +67,7 @@ public class TabElement extends JPanel{
     private JToggleButton createLabelButton(ButtonGroup group, Tab tab) 
     {
         JToggleButton button = new JToggleButton("\t" + tab.getName() + "\t");
+        button.setName(tab.getId() + "Label");
         button.setUI((PaletteButtonUI) PaletteButtonUI.createUI(button));
         button.setFocusable(false);
         button.addItemListener(tabButtonPressed);
@@ -79,6 +80,7 @@ public class TabElement extends JPanel{
     private JButton createCloseTabButton(Tab tab)
      {
         JButton button = new JButton("x");
+        button.setName(tab.getId() + "Close");
         button.setUI((PaletteButtonUI) PaletteButtonUI.createUI(button));
         button.setFocusable(false);
         button.addActionListener(closeButtonPressed);

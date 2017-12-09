@@ -25,6 +25,7 @@ import org.jhotdraw.samples.svg.io.*;
 import org.jhotdraw.undo.*;
 import org.jhotdraw.util.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.*;
@@ -93,7 +94,7 @@ public class SVGView extends AbstractView implements ExportableView {
         
         
         tabs = new TabPanel();
-        tabs.setItemHandle( new TabListener()
+        tabs.setSelectedTabChanged( new TabListener()
         {
             @Override
             public void ChangeTab()
@@ -102,6 +103,11 @@ public class SVGView extends AbstractView implements ExportableView {
                     changeDrawing(tabs.getCurrentDrawing());
                 else
                     newDrawing(createDrawing(), "untitled");
+            }
+            @Override
+            public void CloseTab()
+            {
+                new CloseTabAction(getApplication()).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "tabClosing"));
             }
         });
         
@@ -328,9 +334,6 @@ public class SVGView extends AbstractView implements ExportableView {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-        
-        if(tabs.getApp() == null)
-            tabs.setApp(getApplication());
     }
 
     @Override

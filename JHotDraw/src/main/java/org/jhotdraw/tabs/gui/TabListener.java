@@ -12,4 +12,5 @@ package org.jhotdraw.tabs.gui;
 public interface TabListener
 {
     void ChangeTab();
+    void CloseTab();
 }

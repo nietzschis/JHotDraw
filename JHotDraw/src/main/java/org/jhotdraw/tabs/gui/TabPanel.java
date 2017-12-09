@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.temporal.Temporal;
+import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -33,13 +34,20 @@ import org.jhotdraw.app.action.CloseTabAction;
  */
 public class TabPanel extends JPanel
 {
-    Tabs tabs;
-    ButtonGroup group;
-    TabListener tabHandle;
+    private Tabs tabs;
+    private ButtonGroup group;
+    private TabListener selectedTabChanged = new TabListener()
+    {
+        @Override
+        public void ChangeTab(){ }
+        
+        @Override
+        public void CloseTab(){ ClosePressedTab();}
+       
+    };
+    
     
     private Tab tabToClose;
-    
-    private Application app;
     
 
     public TabPanel()
@@ -57,10 +65,14 @@ public class TabPanel extends JPanel
     
     public void addTab(Drawing d, String title)
     {
-        Tab t = new Tab(d, title);
-        tabs.add(t);
-        tabs.setCurrentTab(t);
-        add(createTab(group, t));
+        addTab(new Tab(d,title));
+    }
+    
+    public void addTab(Tab tab)
+    {
+        tabs.add(tab);
+        tabs.setCurrentTab(tab);
+        add(createTab(group, tab));
 
         revalidate();
         repaint();
@@ -68,7 +80,12 @@ public class TabPanel extends JPanel
 
     public boolean tabExist()
     {
-        return tabs.getCurrentTab() != null || !tabs.getAllTabs().isEmpty();
+        return tabExist(tabs.getCurrentTab());
+    }
+    
+    public boolean tabExist(Tab tab)
+    {
+        return tab != null || !tabs.getAllTabs().isEmpty();
     }
     
     public Drawing getCurrentDrawing()
@@ -97,13 +114,13 @@ public class TabPanel extends JPanel
             if(e.getStateChange() == ItemEvent.SELECTED)
             {
                 tabs.setCurrentTab(tab);
-                tabHandle.ChangeTab();
+                selectedTabChanged.ChangeTab();
             }  
         }, 
         (ActionEvent e) ->
         {
             tabToClose = tab;
-            new CloseTabAction(app).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "tabClosing"));
+            selectedTabChanged.CloseTab();
         });
          
     }
@@ -116,7 +133,7 @@ public class TabPanel extends JPanel
         
         ValidateTab();
        
-        tabHandle.ChangeTab();
+        selectedTabChanged.ChangeTab();
         
         revalidate();
         repaint();
@@ -135,33 +152,29 @@ public class TabPanel extends JPanel
     
     public void setTabName(String name)
     {
+        tabs.getCurrentTab().setName(name);
         getTabElement(tabs.getCurrentTab()).ChangeName(name);
     }
     
+    public Collection<Tab> getTabs()
+    {
+        return tabs.getAllTabs();
+    }
 
     
     
     
     
-    public TabListener getItemHandle()
+    public TabListener getSelectedTabChanged()
     {
-        return tabHandle;
+        return selectedTabChanged;
     }
 
-    public void setItemHandle(TabListener tabHandle)
+    public void setSelectedTabChanged(TabListener tabHandle)
     {
-        this.tabHandle = tabHandle;
+        this.selectedTabChanged = tabHandle;
     }
 
-    public Application getApp()
-    {
-        return app;
-    }
-
-    public void setApp(Application app)
-    {
-        this.app = app;
-    }
     
 }
 
