@@ -23,7 +23,6 @@ import javax.swing.undo.*;
 import java.io.*;
 import static org.jhotdraw.draw.AttributeKeys.*;
 import org.jhotdraw.geom.*;
-import org.jhotdraw.samples.svg.SVGAttributeKeys;
 import org.jhotdraw.xml.DOMInput;
 import org.jhotdraw.xml.DOMOutput;
 /**
@@ -56,7 +55,7 @@ import org.jhotdraw.xml.DOMOutput;
  * <br>1.0 March 14, 2004.
  * @author Werner Randelshofer
  */
-public class BezierFigure extends AbstractAttributedFigure implements TextHolderFigure {
+public class BezierFigure extends AbstractAttributedFigure {
     /**
      * The BezierPath.
      */
@@ -707,75 +706,5 @@ public class BezierFigure extends AbstractAttributedFigure implements TextHolder
             in.closeElement();
         }
         in.closeElement();
-    }
-
-    @Override
-    public boolean isEditable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Font getFont() {
-        return SVGAttributeKeys.getFont(this);
-    }
-
-    @Override
-    public Color getTextColor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Color getFillColor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public TextHolderFigure getLabelFor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getTabSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getText() {
-        return TEXT.get(this);
-    }
-
-    @Override
-    public void setText(String newText) {
-        TEXT.set(this, newText);
-    }
-
-    @Override
-    public int getTextColumns() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setFontSize(float size) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public float getFontSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getBaseline() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Insets2D.Double getInsets() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isTextOverflow() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
