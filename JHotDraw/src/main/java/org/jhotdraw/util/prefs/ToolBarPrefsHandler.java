@@ -52,27 +52,8 @@ public class ToolBarPrefsHandler implements ComponentListener, AncestorListener 
         
         toolbar.addComponentListener(this);
         toolbar.addAncestorListener(this);
-    }
+    }   
     
-    
-    
-    /*
-     * XXX - This does not work
-    private void makeToolBarFloat() {
-        BasicToolBarUI ui = (BasicToolBarUI) toolbar.getUI();
-        Window window = SwingUtilities.getWindowAncestor(toolbar);
-        System.out.println("Window Ancestor:"+window+" instanceof Frame:"+(window instanceof Frame));
-        ui.setFloating(true, new Point(
-        prefs.getInt(prefsPrefix+".floatingX", 0),
-        prefs.getInt(prefsPrefix+".floatingY", 0)
-        ));
-        window = SwingUtilities.getWindowAncestor(toolbar);
-        window.setLocation(
-        prefs.getInt(prefsPrefix+".floatingX", 0),
-        prefs.getInt(prefsPrefix+".floatingY", 0)
-        );
-        window.toFront();
-    }*/
     public void componentHidden(ComponentEvent e) {
         prefs.putBoolean(prefsPrefix+".visible", false);
     }

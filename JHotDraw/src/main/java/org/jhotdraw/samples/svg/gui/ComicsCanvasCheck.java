@@ -70,8 +70,8 @@ public class ComicsCanvasCheck {
         /**
         *Option pane with given options as buttons.
         */
-        String[] options = { "New Canvas", "Use old Canvas", "Cancel" };
-        int option = JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
+        String[] options = {"Cancel", "Use old Canvas", "New Canvas"};
+        int option = JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[2]);
         
         return option;
     }
@@ -79,7 +79,7 @@ public class ComicsCanvasCheck {
     public boolean getOption(Drawing d){
         int option = setCanvas();
         switch (option){
-           case 0:
+           case 2:
                 if (!widthField.getText().isEmpty() && !heightField.getText().isEmpty()) {
                     double x = Double.parseDouble(widthField.getText());
                     double y = Double.parseDouble(heightField.getText());
