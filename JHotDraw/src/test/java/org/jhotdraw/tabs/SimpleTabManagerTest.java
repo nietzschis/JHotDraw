@@ -5,8 +5,11 @@
  */
 package org.jhotdraw.tabs;
 
+import org.hamcrest.CoreMatchers;
 import org.jhotdraw.draw.QuadTreeDrawing;
 import org.junit.Test;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -39,11 +42,11 @@ public class SimpleTabManagerTest
 
         Tab firstTab = new Tab(new QuadTreeDrawing(), "First");
         tabs.add(firstTab);
-        assertTrue(tabs.getAllTabs().size() == 1);
+        assertEquals(tabs.getAllTabs().size(), 1);
 
         Tab secondTab = new Tab(new QuadTreeDrawing(), "Second");
         tabs.add(secondTab);
-        assertTrue(tabs.getAllTabs().size() == 2);
+        assertEquals(tabs.getAllTabs().size(), 2);
     }
     
     @Test
@@ -52,17 +55,17 @@ public class SimpleTabManagerTest
         Tabs tabs = new SimpleTabManager();
         Tab firstTab = new Tab(new QuadTreeDrawing(), "First");
         tabs.add(firstTab);
-        assertTrue(firstTab.equals(tabs.getCurrentTab()));
+        assertEquals(firstTab,tabs.getCurrentTab());
         
         Tab secondTab = new Tab(new QuadTreeDrawing(), "Second");
         tabs.add(secondTab);
-        assertTrue(firstTab.equals(tabs.getCurrentTab()));
+        assertEquals(firstTab,tabs.getCurrentTab());
         
         tabs.setCurrentTab(secondTab);
-        assertTrue(secondTab.equals(tabs.getCurrentTab()));
+        assertEquals(secondTab,tabs.getCurrentTab());
         
         tabs.setCurrentTab(firstTab);
-        assertTrue(firstTab.equals(tabs.getCurrentTab()));
+        assertEquals(firstTab,tabs.getCurrentTab());
     }
     
     @Test
@@ -73,11 +76,11 @@ public class SimpleTabManagerTest
 
         Tab firstTab = new Tab(new QuadTreeDrawing(), "First");
         tabs.add(firstTab);
-        assertTrue(firstTab.getDrawing().equals(tabs.getCurrentDrawing()));
+        assertEquals(firstTab.getDrawing(),tabs.getCurrentDrawing());
 
         Tab secondTab = new Tab(new QuadTreeDrawing(), "Second");
         tabs.add(secondTab);
-        assertTrue(firstTab.getDrawing().equals(tabs.getCurrentDrawing()));
+        assertEquals(firstTab.getDrawing(),tabs.getCurrentDrawing());
     }
     
     @Test
@@ -88,14 +91,14 @@ public class SimpleTabManagerTest
 
         Tab firstTab = new Tab(new QuadTreeDrawing(), "First");
         tabs.add(firstTab);
-        assertTrue(tabs.getAllTabs().size() == 1);
+        assertEquals(tabs.getAllTabs().size(), 1);
 
         Tab secondTab = new Tab(new QuadTreeDrawing(), "Second");
         tabs.add(secondTab);
-        assertTrue(tabs.getAllTabs().size() == 2);
+        assertEquals(tabs.getAllTabs().size(), 2);
         
         tabs.remove(secondTab);
-        assertFalse(tabs.getAllTabs().contains(secondTab));
+        assertThat(tabs.getAllTabs(),hasItem(firstTab));
         
         tabs.remove(firstTab);
         assertTrue(tabs.getAllTabs().isEmpty());
