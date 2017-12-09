@@ -60,10 +60,8 @@ public class TabPanel extends JPanel
         Tab t = new Tab(d, title);
         tabs.add(t);
         tabs.setCurrentTab(t);
-        System.out.println(title);
         add(createTab(group, t));
-        
-        System.out.println(this.getComponentCount());
+
         revalidate();
         repaint();
     }

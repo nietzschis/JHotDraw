@@ -43,6 +43,17 @@ public class SVGDrawingPanel extends JPanel {
     private ResourceBundleUtil labels;
     private Preferences prefs;
 
+    public UndoRedoManager getUndoManager()
+    {
+        return undoManager;
+    }
+
+    public void setUndoManager(UndoRedoManager undoManager)
+    {
+        this.undoManager = undoManager;
+        actionToolBar.setUndoManager(undoManager);
+    }
+
     private class ItemChangeHandler implements ItemListener {
 
         private JToolBar toolbar;
@@ -94,7 +105,6 @@ public class SVGDrawingPanel extends JPanel {
 
         viewToolBar.setView(view);
 
-        undoManager = new UndoRedoManager();
         setEditor(new DefaultDrawingEditor());
         editor.setHandleAttribute(HandleAttributeKeys.HANDLE_SIZE, new Integer(7));
 
@@ -152,15 +162,7 @@ public class SVGDrawingPanel extends JPanel {
     @FeatureEntryPoint(JHotDrawFeatures.TABS)
     public void setDrawing(Drawing d) {
         
-        //View does not have a Drawing on the first set call 
-        if(view.hasDrawing())
-        {
-            undoManager.discardAllEdits();
-            view.getDrawing().removeUndoableEditListener(undoManager);
-        }
-        
         view.setDrawing(d);
-        d.addUndoableEditListener(undoManager);
     }
 
     public Drawing getDrawing() {

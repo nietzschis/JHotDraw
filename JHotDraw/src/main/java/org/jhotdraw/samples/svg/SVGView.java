@@ -30,7 +30,10 @@ import java.awt.event.ItemListener;
 import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.*;
+import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.app.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
@@ -63,6 +66,7 @@ public class SVGView extends AbstractView implements ExportableView {
      * This allows for undoing and redoing actions per view.
      */
     private UndoRedoManager undo;
+    HashMap<Drawing, Collection<UndoableEdit>> undoHistoryForTabs = new HashMap<>();
 
     private HashMap<javax.swing.filechooser.FileFilter, InputFormat> fileFilterInputFormatMap;
     private HashMap<javax.swing.filechooser.FileFilter, OutputFormat> fileFilterOutputFormatMap;
@@ -80,10 +84,13 @@ public class SVGView extends AbstractView implements ExportableView {
     public void init() {
         super.init();
 
+        undo = new UndoRedoManager();
         initComponents();
+        svgPanel.setUndoManager(undo);
         
         JPanel zoomButtonPanel = new JPanel(new BorderLayout());
-        undo = new UndoRedoManager();
+        
+        
         
         tabs = new TabPanel();
         tabs.setItemHandle( new TabListener()
@@ -108,7 +115,8 @@ public class SVGView extends AbstractView implements ExportableView {
         Drawing d = createDrawing();
         tabs.addTab(d, "untitled");
         
-        svgPanel.setDrawing(tabs.getCurrentDrawing());
+        changeDrawing(tabs.getCurrentDrawing());
+        
         getDrawing().addUndoableEditListener(undo);
         
         initActions();
@@ -264,12 +272,34 @@ public class SVGView extends AbstractView implements ExportableView {
         super.setEnabled(newValue);
     }
     
+    
+    
+
+    
+    
      private void changeDrawing(Drawing d)
     {
-        getDrawing().removeUndoableEditListener(undo);
-        svgPanel.setDrawing(tabs.getCurrentDrawing());
+        
+        
+        if(svgPanel.getDrawing() != null)
+        {
+            svgPanel.getDrawing().removeUndoableEditListener(undo);
+            undoHistoryForTabs.put(svgPanel.getDrawing(), undo.getEdits());
+        }        
+        
+        svgPanel.setDrawing(d);
+        
+        
+        if(undoHistoryForTabs.containsKey(d))
+            undo.setEdits(undoHistoryForTabs.get(d));
+        else
+            undo.setEdits(new ArrayList<>());
+        
+        System.out.println(undo.getEdits().size());
+        
+        System.out.println(undo.getEdits());
         getDrawing().addUndoableEditListener(undo);
-        undo.discardAllEdits();
+        
     }
     
     private void newDrawing(Drawing d, String title)
