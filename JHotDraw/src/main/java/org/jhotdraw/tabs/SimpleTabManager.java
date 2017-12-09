@@ -39,7 +39,7 @@ public class SimpleTabManager implements  Tabs
     @Override
     public Drawing getCurrentDrawing()
     {
-        return currentTab.getDrawing();
+        return currentTab == null ? null : currentTab.getDrawing();
     }
 
     @Override
