@@ -30,7 +30,6 @@ public class LineTool extends AbstractTool {
     protected Figure createdFigure;
     protected DrawingEditorProxy editorProxy;
     HashMap<AttributeKey, Object> attributes;
-    CreationTool creationTool;
     /**
      * If this is set to false, the CreationTool does not fire toolDone
      * after a new Figure has been created. This allows to create multiple
