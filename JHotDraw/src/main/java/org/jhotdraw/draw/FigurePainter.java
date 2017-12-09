@@ -22,11 +22,14 @@ public class FigurePainter {
         switch (event.getButton()) {
             case 1:
                 // LEFT MOUSE
-                figure.setAttribute(STROKE_COLOR, figure.getAttribute(STROKE_COLOR_LEFT_MOUSE));
+                figure.setAttribute(STROKE_COLOR, figure.getAttribute(STROKE_COLOR_RIGHT_MOUSE));
+                figure.setAttribute(AttributeKeys.FILL_COLOR, figure.getAttribute(AttributeKeys.FILL_COLOR_RIGHT_MOUSE));
+                
                 break;
             case 3:
                 // RIGHT MOUSE
-                figure.setAttribute(STROKE_COLOR, figure.getAttribute(STROKE_COLOR_RIGHT_MOUSE));
+                figure.setAttribute(STROKE_COLOR, figure.getAttribute(STROKE_COLOR_LEFT_MOUSE));
+                figure.setAttribute(AttributeKeys.FILL_COLOR, figure.getAttribute(AttributeKeys.FILL_COLOR_LEFT_MOUSE));
         }
     }
 

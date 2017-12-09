@@ -68,6 +68,9 @@ public class DefaultDrawingEditor extends AbstractBean implements DrawingEditor,
     /** Creates a new instance. */
     public DefaultDrawingEditor() {
         setDefaultAttribute(FILL_COLOR, Color.white);
+        setDefaultAttribute(FILL_COLOR_LEFT_MOUSE, Color.red);
+        setDefaultAttribute(FILL_COLOR_RIGHT_MOUSE, Color.green);
+        
         setDefaultAttribute(STROKE_COLOR, Color.black);
         setDefaultAttribute(STROKE_COLOR_LEFT_MOUSE, Color.green);
         setDefaultAttribute(STROKE_COLOR_RIGHT_MOUSE, Color.red);
