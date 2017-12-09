@@ -12,12 +12,6 @@ import org.jhotdraw.draw.PredefinedFunction;
  * @author Joachim
  */
 public interface Graph extends PredefinedFunction {
-    
-    double getStartX();
-    
-    double getEndX();
 
     double calcYCoordinate(double x);
-
-    double calcXCoordinate(double y);
 }

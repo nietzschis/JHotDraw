@@ -105,64 +105,13 @@ public class GraphBezierFigure extends PredefinedBezierFigure {
         super.transform(tx);
     }    
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
 
-    }
 
     @Override
     public void setFunction(PredefinedFunction function) {
         this.graph = (Graph) function;
     }
-
-    private Graph graphChooser() {
-//        JDialog f = new JDialog();
-//        f.setUndecorated(true);
-//        f.setTitle("");
-//        f.setType(javax.swing.JFrame.Type.UTILITY);
-//        f.setModal(true);
-//        f.setSize(400, 300);
-//        f.setLocationRelativeTo(null);
-//        //f.add(jvpc);
-//        f.pack();
-//        f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//        f.addWindowListener(new WindowListener() {
-//            //I skipped unused callbacks for readability
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                f.dispose();
-//            }
-//
-//            @Override
-//            public void windowOpened(WindowEvent we) {
-//                //jvpc.setFocus();
-//            }
-//
-//            @Override
-//            public void windowClosed(WindowEvent we) {
-//            }
-//
-//            @Override
-//            public void windowIconified(WindowEvent we) {
-//            }
-//
-//            @Override
-//            public void windowDeiconified(WindowEvent we) {
-//            }
-//
-//            @Override
-//            public void windowActivated(WindowEvent we) {
-//                f.requestFocusInWindow();
-//            }
-//
-//            @Override
-//            public void windowDeactivated(WindowEvent we) {
-//               
-//            }
-//        });
-//        f.setVisible(true);
-        return null;
-    }
+    
 }
 
    

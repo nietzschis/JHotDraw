@@ -29,6 +29,6 @@ public class GraphMath {
     }
 
     double calcYCoordinate(double x, Graph graph, double y) {
-        return y-graph.calcYCoordinate(x);
+        return y - graph.calcYCoordinate(x);
     }
 }

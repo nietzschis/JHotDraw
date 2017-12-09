@@ -156,7 +156,7 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         double a = Double.parseDouble(jTextField1.getText());
         double b = Double.parseDouble(jTextField2.getText());
-        function = new LinearGraph(a, b, 0,300,300);
+        function = new LinearGraph(a, b,300);
         notDone = false;
         close();
     }//GEN-LAST:event_jButton2ActionPerformed

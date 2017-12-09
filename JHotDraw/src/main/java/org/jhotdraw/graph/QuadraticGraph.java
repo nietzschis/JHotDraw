@@ -27,21 +27,6 @@ public class QuadraticGraph implements Graph {
     }
 
     @Override
-    public double calcXCoordinate(double y) {
-        return 1;
-    }
-
-    @Override
-    public double getStartX() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getEndX() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public double getLength() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
