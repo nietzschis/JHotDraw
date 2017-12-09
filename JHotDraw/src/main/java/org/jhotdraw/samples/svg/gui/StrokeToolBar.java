@@ -180,7 +180,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     colorFieldRight.setUI((PaletteFormattedTextFieldUI) PaletteFormattedTextFieldUI.createUI(colorFieldRight));
                     colorFieldRight.setFormatterFactory(ColorFormatter.createFormatterFactory());
                     colorFieldRight.setHorizontalAlignment(JTextField.LEFT);
-                    new FigureAttributeEditorHandler<Color>(STROKE_COLOR, defaultAttributesRight, colorFieldRight, editor, true);
+                    new FigureAttributeEditorHandler<Color>(STROKE_COLOR_RIGHT_MOUSE, defaultAttributesRight, colorFieldRight, editor, true);
                     gbc = new GridBagConstraints();
                     gbc.gridx = 0;
                      gbc.gridwidth = 3;
@@ -188,7 +188,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                     p.add(colorFieldRight, gbc);
                     btn = ButtonFactory.createSelectionColorButton(editor,
-                            STROKE_COLOR, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            STROKE_COLOR_RIGHT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
                             "attribute.strokeColor", labels, defaultAttributesRight, new Rectangle(3, 3, 10, 10));
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     ((JPopupButton) btn).setAction(null, null);
