@@ -29,7 +29,7 @@ public class GUI_Test {
         Thread.sleep(5000);
         window = new FrameFixture(app.getFrame());
     }
-    
+    @Ignore
     @Test
     public void test() {
         window.show();
