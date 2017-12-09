@@ -176,8 +176,8 @@ public class ToolsToolBar extends AbstractToolBar {
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 3, 0, 0);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
         
                 }
