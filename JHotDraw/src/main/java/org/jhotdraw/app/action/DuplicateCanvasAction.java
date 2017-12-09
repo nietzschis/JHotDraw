@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -25,12 +26,12 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * @author ville
  */
-public class DuplicateCanvas extends AbstractApplicationAction {
+public class DuplicateCanvasAction extends AbstractApplicationAction {
 
     public final static String ID = "window.duplicate";
     
     /** Creates a new instance. */
-    public DuplicateCanvas(Application app) {
+    public DuplicateCanvasAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
@@ -73,11 +74,9 @@ public class DuplicateCanvas extends AbstractApplicationAction {
             
             if (fileChooser.getSelectedFile() != null) {
                 app.show(view);
-                System.out.println("Calling openFile");
                 openFile(fileChooser, view);
             } else {
                 if (removeMe) {
-                    System.out.println("Calling remove(view)");
                     app.remove(view);
                 }
                 app.setEnabled(true);
