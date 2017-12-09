@@ -58,7 +58,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     private transient GeneralPath cachedTextPath;
     
-    
     private boolean editable = true;
     
     /** Creates a new instance. */
@@ -66,11 +65,13 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     public SVGPathFigure() {
         add(new SVGBezierFigure());
         SVGAttributeKeys.setDefaults(this);
+        setText("text");
     }
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure(boolean isEmpty) {
         if (! isEmpty) { add(new SVGBezierFigure()); }
         SVGAttributeKeys.setDefaults(this);
+        setText("text");
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
@@ -254,14 +255,14 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
          */
         double tolerance = Math.max(2f, AttributeKeys.getStrokeTotalWidth(this) / 2d);
         if (isClosed || FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this)!=null) {
-            if (getPath().contains(p)) {
+            if (getFigurePath().contains(p)) {
                 return true;
             }
             double grow = AttributeKeys.getPerpendicularHitGrowth(this) /** 2d*/;
             GrowStroke gs = new GrowStroke((float) grow,
                     (float) (AttributeKeys.getStrokeTotalWidth(this) *
                     STROKE_MITER_LIMIT.get(this)));
-            if (gs.createStrokedShape(getPath()).contains(p)) {
+            if (gs.createStrokedShape(getFigurePath()).contains(p)) {
                 return true;
             } else {
                 if (isClosed) {
@@ -270,9 +271,12 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             }
         }
         if (!isClosed) {
-            if (Shapes.outlineContains(getPath(), p, tolerance)) {
+            if (Shapes.outlineContains(getFigurePath(), p, tolerance)) {
                 return true;
             }
+        }
+        if (textContains(p)){
+            return true;
         }
         return false;
     }
@@ -574,7 +578,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public Color getFillColor() {
-        return FILL_COLOR.get(this) == null || FILL_COLOR.get(this).equals(Color.white) ? Color.black : Color.WHITE;
+        return Color.WHITE;
     }
 
     @Override
@@ -630,7 +634,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     
     @Override
     public Tool getTool(Point2D.Double p) {
-        if (isEditable() && (textContains(p)||contains(p))) {
+        if (isEditable() && textContains(p)) {
             TextEditingTool tool = new TextEditingTool(this);
             return tool;
         }
