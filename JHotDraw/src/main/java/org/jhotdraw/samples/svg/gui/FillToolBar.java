@@ -81,11 +81,26 @@ public class FillToolBar extends AbstractToolBar {
                     AbstractButton btn;
 
                     // Fill color
-                    Map<AttributeKey, Object> defaultAttributes = new HashMap<AttributeKey, Object>();
-                    FILL_GRADIENT.set(defaultAttributes, null);
+                    //Right mouse
+                    Map<AttributeKey, Object> defaultAttributesRight = new HashMap<AttributeKey, Object>();
+                    FILL_GRADIENT.set(defaultAttributesRight, null);
                     btn = ButtonFactory.createSelectionColorButton(editor,
-                            FILL_COLOR, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
-                            "attribute.fillColor", labels, defaultAttributes, new Rectangle(3, 3, 10, 10));
+                            FILL_COLOR_RIGHT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.fillColor", labels, defaultAttributesRight, new Rectangle(3, 3, 10, 10));
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    ((JPopupButton) btn).setAction(null, null);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridwidth = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(btn, gbc);
+                    
+                    //Left mouse
+                    Map<AttributeKey, Object> defaultAttributesLeft = new HashMap<AttributeKey, Object>();
+                    FILL_GRADIENT.set(defaultAttributesLeft, null);
+                    btn = ButtonFactory.createSelectionColorButton(editor,
+                            FILL_COLOR_LEFT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.fillColor", labels, defaultAttributesLeft, new Rectangle(3, 3, 10, 10));
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     ((JPopupButton) btn).setAction(null, null);
                     gbc = new GridBagConstraints();

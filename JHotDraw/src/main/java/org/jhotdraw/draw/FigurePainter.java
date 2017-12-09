@@ -18,7 +18,7 @@ import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR_RIGHT_MOUSE;
 public class FigurePainter {
 
     public void paint(Figure figure, MouseEvent event, DrawingEditor editor) {
-
+        
         switch (event.getButton()) {
             case 1:
                 // LEFT MOUSE
