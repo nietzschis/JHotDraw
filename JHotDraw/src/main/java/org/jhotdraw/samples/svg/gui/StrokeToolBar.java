@@ -82,11 +82,25 @@ public class StrokeToolBar extends AbstractToolBar {
                     AbstractButton btn;
 
                     // Stroke color
-                    Map<AttributeKey, Object> defaultAttributes = new HashMap<AttributeKey, Object>();
-                    STROKE_GRADIENT.set(defaultAttributes, null);
+                    //Right mouse button
+                    Map<AttributeKey, Object> defaultAttributesRight = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesRight, null);
                     btn = ButtonFactory.createSelectionColorButton(editor,
-                            STROKE_COLOR, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
-                            "attribute.strokeColor", labels, defaultAttributes, new Rectangle(3, 3, 10, 10));
+                            STROKE_COLOR_RIGHT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesRight, new Rectangle(3, 3, 10, 10));
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    ((JPopupButton) btn).setAction(null, null);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(btn, gbc);
+                    
+                    //Left Mouse Button
+                    Map<AttributeKey, Object> defaultAttributesLeft = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesLeft, null);
+                    btn = ButtonFactory.createSelectionColorButton(editor,
+                            STROKE_COLOR_LEFT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesLeft, new Rectangle(3, 3, 10, 10));
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     ((JPopupButton) btn).setAction(null, null);
                     gbc = new GridBagConstraints();
