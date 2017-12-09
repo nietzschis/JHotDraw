@@ -122,6 +122,8 @@ public class AttributeKeys {
      * Stroke color. The value of this attribute is a Color object.
      */
     public final static AttributeKey<Color> STROKE_COLOR = new AttributeKey<Color>("strokeColor", Color.class, Color.black, true, labels);
+    public final static AttributeKey<Color> STROKE_COLOR_LEFT_MOUSE = new AttributeKey<Color>("strokeColor", Color.class, Color.blue, true, labels);
+    public final static AttributeKey<Color> STROKE_COLOR_RIGHT_MOUSE = new AttributeKey<Color>("strokeColor", Color.class, Color.red, true, labels);
     /**
      * Stroke width. A double used to construct a BasicStroke or the
      * outline of a DoubleStroke.
