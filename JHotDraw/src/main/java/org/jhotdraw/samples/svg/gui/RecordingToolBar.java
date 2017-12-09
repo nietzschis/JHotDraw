@@ -1,11 +1,17 @@
 package org.jhotdraw.samples.svg.gui;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -13,9 +19,12 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
 import org.jhotdraw.draw.FigureListener;
+import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -26,7 +35,11 @@ public class RecordingToolBar extends AbstractToolBar {
     }
     
     RecordingManager recordingManager = null;
-
+    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+    
+    protected AbstractButton recordButton = null;
+    protected ArrayList<Integer> listOfActiveRecordings = new ArrayList<>();
+    
     @Override
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
@@ -40,38 +53,80 @@ public class RecordingToolBar extends AbstractToolBar {
 
                     Preferences prefs = Preferences.userNodeForPackage(getClass());
 
-                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-
                     GridBagLayout layout = new GridBagLayout();
                     p.setLayout(layout);
 
                     GridBagConstraints gbc;
                     AbstractButton btn;
-
-                    // Start Recording Btn
-                    btn = new JButton(recordingManager.getStartRecordingAction()); 
+                    
+                    // Play Recording Btn
+                    btn = new JButton(recordingManager.getPlayFramesAction()); 
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-                    labels.configureToolBarButton(btn, "recordingTool.start");
+                    labels.configureToolBarButton(btn, "recordingTool.play");
                     gbc = new GridBagConstraints();
                     gbc.gridy = 0;
                     gbc.gridx = 0;
-                    gbc.insets = new Insets(-24, 0, 0, 0);
+                    //gbc.insets = new Insets(-24, 0, 0, 0);
+                    p.add(btn, gbc);
+                    
+                    // Start Recording Btn
+                    btn = new JButton(recordingManager.getStartRecordingAction()); 
+                    recordButton = btn;
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "recordingTool.start");
+                    
+                    btn.addActionListener((ActionEvent e) -> {
+                        listOfActiveRecordings.add(editor.getActiveView().getDrawing().hashCode());
+                        updateRecordButton();
+                    });
+                    
+                    gbc = new GridBagConstraints();
+                    gbc.gridy = 1;
+                    gbc.gridx = 0;
+                    //gbc.insets = new Insets(-24, 0, 0, 0);
                     p.add(btn, gbc);
                     
                     // Stop Recording Btn
                     btn = new JButton(recordingManager.getStopRecordingAction()); 
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     labels.configureToolBarButton(btn, "recordingTool.stop");
+                    
+                    btn.addActionListener((ActionEvent e) -> {
+                        if(listOfActiveRecordings.contains(editor.getActiveView().getDrawing().hashCode())) {
+                            listOfActiveRecordings.remove(
+                                    listOfActiveRecordings.indexOf(editor.getActiveView().getDrawing().hashCode())
+                            );
+                        }
+                        updateRecordButton();
+                    });
+                    
                     gbc = new GridBagConstraints();
-                    gbc.gridy = 1;
+                    gbc.gridy = 2;
                     gbc.gridx = 0;
-                    gbc.insets = new Insets(3, 0, 0, 0);
+                    //gbc.insets = new Insets(3, 0, 0, 0);
                     p.add(btn, gbc);
                 }
                 break;
         }
         
+        editor.getActiveView().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if(evt.getPropertyName() == "drawing") {
+                    updateRecordButton();
+                }
+            }
+        });
+        
         return p;
+    }
+    
+    protected void updateRecordButton() {
+        if(!listOfActiveRecordings.contains(editor.getActiveView().getDrawing().hashCode())) {
+            labels.configureToolBarButton(recordButton, "recordingTool.start");
+        } else {
+            labels.configureToolBarButton(recordButton, "recordingTool.recording");
+        }
     }
 
     @Override
@@ -95,6 +150,16 @@ public class RecordingToolBar extends AbstractToolBar {
     }
     
     private class RecordingManager {
+        /**
+         * Action that initiates playing of the recorded frames.
+         */
+        public class PlayRecordingAction extends AbstractAction {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playFramesFromActiveDrawing();
+            }
+        }
+        
         /** 
          * Action that initiates the recording implemented by extending AbstractAction to not stray from what other toolbars do.
          */
@@ -143,6 +208,7 @@ public class RecordingToolBar extends AbstractToolBar {
         }
         
         private DrawingEditor editor = null;
+        private PlayRecordingAction playFramesAction = null;
         private StartRecordingAction startRecordingAction = null;
         private StopRecordingAction stopRecordingAction = null;
         
@@ -152,11 +218,26 @@ public class RecordingToolBar extends AbstractToolBar {
         // Used for storing FigureListeners created for the purpose of recording. Stored for the purpose of later removing them again.
         private HashMap<Integer, FigureListener> mapOfFigureListeners = new HashMap<>();
         
+        public HashMap<Integer, FigureListener> getMapOfFigureListeners() {
+            return mapOfFigureListeners;
+        }
+        
         /**
          * Can be used for setting the editor if it for some reason changes after the initial setup of the application.
          */
         public void setEditor(DrawingEditor editor) {
             this.editor = editor;
+        }
+        
+        /**
+         * 
+         */
+        public PlayRecordingAction getPlayFramesAction() {
+            if(playFramesAction == null) {
+                playFramesAction = new PlayRecordingAction();
+            }
+            
+            return playFramesAction;
         }
         
         /**
@@ -179,6 +260,41 @@ public class RecordingToolBar extends AbstractToolBar {
             }
             
             return stopRecordingAction;
+        }
+        
+        private void playFramesFromActiveDrawing() {
+            int hashcode = editor.getActiveView().getDrawing().hashCode();
+            
+            System.out.println("Playing");
+            
+            System.out.println("Frames to play : " + mapOfDrawingFrames.get(hashcode).size() );
+            
+            //for(int i = 0; i < mapOfDrawingFrames.get(hashcode).size() - 1; i++) {
+            //    System.out.println("Playing Frame : " + i);
+            //    editor.getActiveView().setDrawing((Drawing) mapOfDrawingFrames.get(hashcode).get(i).drawing);
+            //    
+            //    try {
+            //        Thread.sleep(20);
+            //    } catch (InterruptedException ex) {
+            //        Logger.getLogger(RecordingToolBar.class.getName()).log(Level.SEVERE, null, ex);
+            //    }
+            //}
+            
+            System.out.println("Figures : " + ((Drawing) mapOfDrawingFrames.get(hashcode).get(mapOfDrawingFrames.get(hashcode).size() / 2).drawing).getChildCount());
+            editor.getActiveView().setDrawing((Drawing) mapOfDrawingFrames.get(hashcode).get(mapOfDrawingFrames.get(hashcode).size() / 2).drawing);
+            
+            
+            Figure figure;
+            for(int i = 0; i < editor.getActiveView().getDrawing().getChildCount(); i++) {
+                figure = editor.getActiveView().getDrawing().getChild(i);
+                QuadTreeDrawing qtd = ((QuadTreeDrawing) editor.getActiveView().getDrawing());
+                qtd.repaintFigure(figure);
+            }
+            
+            
+            //((QuadTreeDrawing) editor.getActiveView().getDrawing()).getChild(0).
+            
+            System.out.println("Stopped Playing");
         }
         
         /**
