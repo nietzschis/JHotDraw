@@ -46,9 +46,22 @@
             <version>1.10.19</version>
         </dependency>
         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-swing-junit</artifactId>
+            <version>3.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.tinify</groupId>
             <artifactId>tinify</artifactId>
             <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-junit</artifactId>
+            <version>0.15.1</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>   
 </project>

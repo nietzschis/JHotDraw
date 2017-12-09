@@ -6,7 +6,6 @@
 package org.jhotdraw.draw;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -19,42 +18,86 @@ import static org.jhotdraw.draw.AnimationToolDefinition.*;
 public class AnimationTool extends AbstractAction {
     
     protected AnimationToolDefinition tool;
-    protected Animation animation;
     private boolean stopPlaying;
+    private int framesPlayed;
+    Animation animation;
     
     public AnimationTool(AnimationToolDefinition toolmode) {
         tool = toolmode;
-        animation = new Animation();
         stopPlaying = false;
+        framesPlayed = 0;
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        if(tool == ADD_FRAME_TOOL){
-            animation.addFrame(new JFrame());
-        }
-        if(tool == REMOVE_FRAME_TOOL){
-            animation.removeFrame(new JFrame());
-        }
-        if(tool == PLAY_TOOL){
-            List<JFrame> list = animation.getFrames();
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i);
-                if(i == list.size() && !stopPlaying){
-                    i = 0;
-                }else {
-                    break;
+        switch (tool) {
+            case ADD_FRAME_TOOL:
+                addFrame();
+                break;
+            
+            case REMOVE_FRAME_TOOL:
+                removeFrame((JFrame) e.getSource());
+                break;
+            
+            case PLAY_TOOL: {
+                try {
+                    play();
+                } catch (InterruptedException ex) {
+                    System.out.println("Interrupt Error");
                 }
             }
+            break;
+            
+            case PAUSE_TOOL:
+                pause();
+                break;
         }
-        if(tool == PAUSE_TOOL){
-            System.out.println("Du trykkede på pause");
+    }
+    
+    public void play() throws InterruptedException {
+        stopPlaying = false;
+        List<JFrame> list = getAnimation().getFrames();
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i);
+            if (i == list.size() - 1) {
+                i = 0;
+                framesPlayed++;
+            }
+            if (stopPlaying) {
+                framesPlayed = 0;
+                break;
+            }
+            Thread.sleep(100);
         }
+    }
+    
+    public int getTimesPlayed() {
+        return framesPlayed;
+    }
+    
+    public void pause() {
+        stopPlaying = true;
+    }
+    
+    public void addFrame() {
+        getAnimation().addFrame(new JFrame());
+        animation = getAnimation();
+    }
+    
+    public void removeFrame(JFrame frameToRemove) {
+        getAnimation().getFrames().remove(getAnimation().getFrames().get(framesPlayed));
+        animation = getAnimation();
+    }
+    
+    public Animation getAnimation() {
+        return Animation.getInstance();
+    }
+    
+    public void changeTool(AnimationToolDefinition toolChangingTo) {
+        tool = toolChangingTo;
     }
     
     public AnimationToolDefinition getTool() {
         return tool;
     }
-
 }

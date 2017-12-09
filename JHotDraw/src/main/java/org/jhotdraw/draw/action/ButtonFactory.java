@@ -1352,25 +1352,28 @@ public class ButtonFactory {
     }
 
     public static JPopupButton createStrokeJoinButton(DrawingEditor editor) {
-        String[] labels = {"attribute.strokeJoin.bevel", "attribute.strokeJoin.round", "attribute.strokeJoin.miter"};
-        int[] strokes = {BasicStroke.JOIN_BEVEL, BasicStroke.JOIN_ROUND, BasicStroke.JOIN_MITER};
+        String[] labels = {"attribute.strokeJoin.bevel", 
+            "attribute.strokeJoin.round", "attribute.strokeJoin.miter"};
+        int[] strokeTypes = {BasicStroke.JOIN_BEVEL, BasicStroke.JOIN_ROUND, 
+            BasicStroke.JOIN_MITER};
         
-        JPopupButton popupButton = createPopupWithOptions(editor, labels, strokes, STROKE_JOIN);
+        JPopupButton popupButton = createPopupWithOptions(editor, labels, strokeTypes, STROKE_JOIN);
         SVGlabels.configureToolBarButton(popupButton, "attribute.strokeJoin");
         popupButton.setFocusable(false); 
         
         return popupButton;
     }
 
-    private static JPopupButton createPopupWithOptions(DrawingEditor editor, String[] labels, int[] strokes, AttributeKey<Integer> attributeKey) {
+    private static JPopupButton createPopupWithOptions(DrawingEditor editor, String[] labels, 
+            int[] strokeTypes, AttributeKey<Integer> attributeKey) {
         JPopupButton button = new JPopupButton();
         Map<AttributeKey, Object> attributes;
         
-        for(int i = 0, k = 0; i < labels.length && k < strokes.length; i++, k++) {
+        for(int listIterator = 0; listIterator < labels.length; listIterator++) {
             attributes = new HashMap<>();
-            attributes.put(attributeKey, strokes[k]);
+            attributes.put(attributeKey, strokeTypes[listIterator]);
             button.add(new AttributeAction(editor, attributes,
-                    SVGlabels.getString(labels[i]),
+                    SVGlabels.getString(labels[listIterator]),
                     null));
         }
         return button;

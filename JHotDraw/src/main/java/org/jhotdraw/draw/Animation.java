@@ -47,6 +47,6 @@ public class Animation {
     }
 
     public void removeFrame(JFrame frameToRemove) {
-        frames.remove(frameToRemove);
+        frames.remove(getFrames().indexOf(frameToRemove));
     }
 }

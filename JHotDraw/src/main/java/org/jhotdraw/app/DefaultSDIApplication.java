@@ -445,4 +445,9 @@ public class DefaultSDIApplication extends AbstractApplication {
 
         return m;
     }
+
+    @Override
+    public JFrame getFrame() {
+        return getFrame();
+    }
 }
