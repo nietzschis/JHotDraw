@@ -41,7 +41,6 @@ public class EraserTool extends AbstractTool
 //    private Tool track;
     public AbstractToolBar atb;
     public String name;
-    
     public Erasing erase;
     public String presentationName;
     
@@ -66,13 +65,33 @@ public class EraserTool extends AbstractTool
 //        Image image = toolkit.getImage(eraser.getString("createEraserToolCursor"));
 //        Image image = toolkit.getClass().getResource(eraser.getString("createEraserToolCursor"));
 //        Image image = Toolkit.getDefaultToolkit().getImage("JHotDraw\\src\\main\\resources\\org\\jhotdraw\\samples\\svg\\action\\images\\createEraserToolCursor.png");
-        Image image = new ImageIcon("src\\main\\resources\\org\\jhotdraw\\samples\\svg\\action\\images\\createEraserToolCursor.png").getImage();
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.startsWith("mac os x"))
+            {
+                Image image = new ImageIcon("src/main/resources/org/jhotdraw/samples/svg/action/images/createEraserToolCursorMac.png").getImage();
+                Cursor c = toolkit.createCustomCursor(image, hotspot, "eraser");
+                atb.getEditor().getActiveView().setCursor(c);
+            }
+            else if (osName.startsWith("windows"))
+                {
+                    Image image = new ImageIcon("src\\main\\resources\\org\\jhotdraw\\samples\\svg\\action\\images\\createEraserToolCursorWin.png").getImage();
+                    Cursor c = toolkit.createCustomCursor(image, hotspot, "eraser");
+                    atb.getEditor().getActiveView().setCursor(c);
+            
+                }
+            else 
+            {
+                Image image = new ImageIcon("src/main/resources/org/jhotdraw/samples/svg/action/images/createEraserToolCursor2.png").getImage();
+                Cursor c = toolkit.createCustomCursor(image, hotspot, "eraser");
+                atb.getEditor().getActiveView().setCursor(c);                
+            }
+        
 //        Image image = toolkit.getImage(eraser.getString("createEraserToolCursor.png"));
 //        anchor1 = 
-        Cursor c = toolkit.createCustomCursor(image, hotspot, "eraser");
-        System.out.println(image);
-        System.out.println(eraser.getString("createEraserToolCursor"));
-        atb.getEditor().getActiveView().setCursor(c);
+        
+        
+        
+        
         
         
         
