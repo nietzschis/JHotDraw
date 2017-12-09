@@ -1,24 +1,37 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JToggleButton;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.Figure;
@@ -156,7 +169,7 @@ public class RecordingToolBar extends AbstractToolBar {
         public class PlayRecordingAction extends AbstractAction {
             @Override
             public void actionPerformed(ActionEvent e) {
-                playFramesFromActiveDrawing();
+                startPlaybackActiveDrawing();
             }
         }
         
@@ -262,39 +275,99 @@ public class RecordingToolBar extends AbstractToolBar {
             return stopRecordingAction;
         }
         
-        private void playFramesFromActiveDrawing() {
+        /**
+         * Creates a FigureListener and attaches it to the active Drawing.
+         */
+        private void startPlaybackActiveDrawing() {
+
+            stopRecordingActiveDrawing();
+
             int hashcode = editor.getActiveView().getDrawing().hashCode();
-            
-            System.out.println("Playing");
-            
-            System.out.println("Frames to play : " + mapOfDrawingFrames.get(hashcode).size() );
-            
-            //for(int i = 0; i < mapOfDrawingFrames.get(hashcode).size() - 1; i++) {
-            //    System.out.println("Playing Frame : " + i);
-            //    editor.getActiveView().setDrawing((Drawing) mapOfDrawingFrames.get(hashcode).get(i).drawing);
-            //    
-            //    try {
-            //        Thread.sleep(20);
-            //    } catch (InterruptedException ex) {
-            //        Logger.getLogger(RecordingToolBar.class.getName()).log(Level.SEVERE, null, ex);
-            //    }
-            //}
-            
-            System.out.println("Figures : " + ((Drawing) mapOfDrawingFrames.get(hashcode).get(mapOfDrawingFrames.get(hashcode).size() / 2).drawing).getChildCount());
-            editor.getActiveView().setDrawing((Drawing) mapOfDrawingFrames.get(hashcode).get(mapOfDrawingFrames.get(hashcode).size() / 2).drawing);
-            
-            
-            Figure figure;
-            for(int i = 0; i < editor.getActiveView().getDrawing().getChildCount(); i++) {
-                figure = editor.getActiveView().getDrawing().getChild(i);
-                QuadTreeDrawing qtd = ((QuadTreeDrawing) editor.getActiveView().getDrawing());
-                qtd.repaintFigure(figure);
+
+            if (!mapOfDrawingFrames.containsKey(hashcode)) {
+                JOptionPane.showMessageDialog(null, "No recording found for this tab, press the record button to begin recording.");
+                return;
             }
-            
-            
-            //((QuadTreeDrawing) editor.getActiveView().getDrawing()).getChild(0).
-            
-            System.out.println("Stopped Playing");
+
+            JFrame window = new JFrame("Recording Playback");
+            window.setVisible(true);
+            window.setSize(1100, 600);
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            window.setLocation(dim.width / 2 - window.getSize().width / 2, dim.height / 2 - window.getSize().height / 2);
+
+            ArrayList<Frame> frames = mapOfDrawingFrames.get(hashcode);
+
+            DefaultDrawingView drawingView = new DefaultDrawingView();
+
+            AtomicBoolean looping = new AtomicBoolean(true);
+            AtomicInteger frameIndex = new AtomicInteger();
+
+            JPanel controls = new JPanel();
+            controls.setMaximumSize(new Dimension(999, 32));
+
+            JToggleButton btnPlaying = new JToggleButton("Pause");
+            controls.add(btnPlaying);
+
+            JSlider timeline = new JSlider(0, frames.size());
+            controls.add(timeline);
+
+            JToggleButton btnLooping = new JToggleButton("Loop");
+            controls.add(btnLooping);
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.add(drawingView);
+            panel.add(controls);
+            window.setContentPane(panel);
+
+            Timer timer;
+            timer = new Timer(0, (ae) -> {
+                timeline.setValue(frameIndex.get());
+                if (frameIndex.get() < frames.size()) {
+                    Frame current = frames.get(frameIndex.getAndIncrement());
+                    QuadTreeDrawing drawing = (QuadTreeDrawing) current.drawing;
+
+                    System.out.println(frameIndex + " / " + frames.size() + " - figures: " + drawing.getChildren().size());
+                    drawingView.setDrawing(drawing);
+
+                    for (int i = 0; i < drawing.getChildCount(); i++) {
+                        Figure figure = drawing.getChild(i);
+                        QuadTreeDrawing qtd = ((QuadTreeDrawing) drawing);
+                        qtd.repaintFigure(figure);
+                    }
+
+                } else {
+                    if (looping.get()) {
+                        frameIndex.set(0);
+                    }
+                    System.out.println("Animation done");
+                }
+
+            });
+            timer.start();
+
+            btnPlaying.addActionListener((ActionEvent e) -> {
+                if (timer.isRunning()) {
+                    timer.stop();
+                } else {
+                    timer.start();
+                }
+            });
+
+            btnLooping.addActionListener((ActionEvent e) -> {
+                looping.set(!looping.get());
+            });
+
+            timeline.addChangeListener((ce) -> {
+                frameIndex.set(timeline.getValue());
+            });
+
+            window.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    timer.stop();
+                }
+            });
+
         }
         
         /**
