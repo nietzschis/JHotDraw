@@ -301,9 +301,6 @@ public class SVGView extends AbstractView implements ExportableView {
         else
             undo.setEdits(new ArrayList<>());
         
-        System.out.println(undo.getEdits().size());
-        
-        System.out.println(undo.getEdits());
         getDrawing().addUndoableEditListener(undo);
         
     }
