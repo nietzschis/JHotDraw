@@ -74,5 +74,12 @@ public class RemoteObservableTest {
 
         verify(client, never()).update(argument.capture());
     }
+    
+    @Test
+    public void testNoCollaborator() throws RemoteException {
+        server.notifyAllCollaborators(new ArrayList<>());
+
+        verify(client, never()).update(argument.capture());
+    }
 
 }
