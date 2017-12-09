@@ -325,7 +325,7 @@ public interface Drawing extends CompositeFigure, Serializable, DOMStorable {
      * Gets output formats for the Drawing in order of preferred formats.
      */
     List<OutputFormat> getOutputFormats();
-    
+
     // ATTRIBUTES
     /**
      * Sets an attribute of the Drawing without firing events.
