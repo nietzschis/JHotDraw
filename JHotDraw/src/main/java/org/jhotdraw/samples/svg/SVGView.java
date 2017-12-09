@@ -57,6 +57,9 @@ public class SVGView extends AbstractView implements ExportableView {
 
     protected JFileChooser exportChooser;
     protected TabPanel tabs;
+    
+    //To fix issue with startup
+    private boolean firstTab = true;
 
     public TabPanel getTabs()
     {
@@ -115,7 +118,6 @@ public class SVGView extends AbstractView implements ExportableView {
         layout.setVgap(0);
         layout.setHgap(0);
         tabPanel.setLayout(layout);
-        
         tabPanel.add(tabs);
         
         Drawing d = createDrawing();
@@ -317,13 +319,25 @@ public class SVGView extends AbstractView implements ExportableView {
      */
     @Override
     public void clear() {
+
+        
         final Drawing newDrawing = createDrawing();
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
 
                 @Override
                 public void run() {
-                    newDrawing(newDrawing, "untitled");
+                    //The first Tab is broken due to being created too early
+                    //as a Drawing is required pre startup, could use a proper
+                    //fix
+                    if(firstTab)
+                    {
+                        tabs.CloseTab();
+                        firstTab = false;
+                    }
+                    else
+                        newDrawing(newDrawing, "untitled");
+
                 }
             });
         } catch (InvocationTargetException ex) {
@@ -331,6 +345,8 @@ public class SVGView extends AbstractView implements ExportableView {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+        
+        
     }
 
     @Override

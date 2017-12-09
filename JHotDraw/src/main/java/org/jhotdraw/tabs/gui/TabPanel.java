@@ -125,6 +125,15 @@ public class TabPanel extends JPanel
          
     }
     
+    public void CloseTab()
+    {
+        if(tabs.getAllTabs().contains(tabs.getCurrentTab()))
+        {
+            tabToClose = tabs.getCurrentTab();
+            ClosePressedTab();
+        }
+    }
+    
     public void ClosePressedTab()
     {
         TabElement component = getTabElement(tabToClose);
