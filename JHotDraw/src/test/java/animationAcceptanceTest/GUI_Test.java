@@ -27,6 +27,12 @@ public class GUI_Test {
         app.setModel(model);
         app.launch(null);
         Thread.sleep(5000);
-        //window = new FrameFixture(app.getFrame());
+        window = new FrameFixture(app.getFrame());
+    }
+    
+    @Test
+    public void test() {
+        window.show();
+        window.button("addFrame").click();
     }
 }
