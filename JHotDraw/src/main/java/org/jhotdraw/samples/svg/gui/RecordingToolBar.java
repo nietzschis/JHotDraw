@@ -225,6 +225,8 @@ public class RecordingToolBar extends AbstractToolBar {
         private StartRecordingAction startRecordingAction = null;
         private StopRecordingAction stopRecordingAction = null;
         
+        protected long lastFrameCapturedAt = 0;
+        
         // Used for storing Frame instances associated with a specific Drawing based on that Drawing's hashcode.
         private HashMap<Integer, ArrayList<Frame>> mapOfDrawingFrames = new HashMap<>();
         
@@ -321,7 +323,7 @@ public class RecordingToolBar extends AbstractToolBar {
             window.setContentPane(panel);
 
             Timer timer;
-            timer = new Timer(0, (ae) -> {
+            timer = new Timer(16, (ae) -> {
                 timeline.setValue(frameIndex.get());
                 if (frameIndex.get() < frames.size()) {
                     Frame current = frames.get(frameIndex.getAndIncrement());
@@ -415,10 +417,14 @@ public class RecordingToolBar extends AbstractToolBar {
                  * class of the figure that triggered the event.
                  */
                 private void storeChange(FigureEvent e) {
-                    mapOfDrawingFrames.get(hashcode).add(new Frame(
+                    if(System.currentTimeMillis() - lastFrameCapturedAt > 16) {
+                        lastFrameCapturedAt = System.currentTimeMillis();
+                        
+                        mapOfDrawingFrames.get(hashcode).add(new Frame(
                             editor.getActiveView().getDrawing().clone(),
                             e.getSource().getClass()
-                    ));
+                        ));
+                    }
                 }
                 
                 @Override
