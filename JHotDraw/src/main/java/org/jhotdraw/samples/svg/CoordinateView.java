@@ -48,7 +48,7 @@ public class CoordinateView {
         outerPanel.add(intervalsLabel);
         outerPanel.add(intervalsTextField);
         
-        String[] options = {"Insert without figures","Insert with figures","Cancel"};
+        String[] options = {"Insert","Cancel"};
         String introMessage = "Pick parameters for the coordinate system";
         // Creates the layout for the frame.
         int buttonOptions = JOptionPane.showOptionDialog(outerFrame,outerPanel,introMessage,JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
@@ -99,31 +99,27 @@ public class CoordinateView {
     private void adjustCanvas(Drawing d) {
         boolean widthIsEmpty = widthTextField.getText().isEmpty();
         boolean heightIsEmpty = heightTextField.getText().isEmpty();
-        Double textInWidth, textInHeight;
+        Double widthValue, heightValue;
         
         if (!widthIsEmpty && !heightIsEmpty) {
-            textInWidth = (double) ((int) widthTextField.getValue());
-            textInHeight = (double) ((int) heightTextField.getValue());
-            CANVAS_WIDTH.set(d, textInWidth);
-            CANVAS_HEIGHT.set(d, textInHeight);
+            widthValue = (double) ((int) widthTextField.getValue());
+            heightValue = (double) ((int) heightTextField.getValue());
         }
         else if (widthIsEmpty && !heightIsEmpty) {
-            textInHeight = (double) ((int) heightTextField.getValue());
-            CANVAS_WIDTH.set(d, textInHeight);
-            CANVAS_HEIGHT.set(d, textInHeight);
+            heightValue = (double) ((int) heightTextField.getValue());
+            widthValue = heightValue;
         }
         else if (!widthIsEmpty && heightIsEmpty) {
-            textInWidth = (double) ((int) widthTextField.getValue());
-            CANVAS_WIDTH.set(d, textInWidth);
-            CANVAS_HEIGHT.set(d, textInWidth);
+            widthValue = (double) ((int) widthTextField.getValue());
+            heightValue = widthValue;
         }
         else {
             Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
-            double widthOfScreen = screenResolution.getWidth();
-            double heightOfScreen = screenResolution.getHeight();
-            CANVAS_WIDTH.set(d, widthOfScreen);
-            CANVAS_HEIGHT.set(d, heightOfScreen);
+            widthValue = screenResolution.getWidth();
+            heightValue = screenResolution.getHeight();
         }
+        CANVAS_WIDTH.set(d, widthValue);
+        CANVAS_HEIGHT.set(d, heightValue);
     }
     
     /**
