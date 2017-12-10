@@ -54,14 +54,25 @@ public class AnimationToolTest {
      */
     @Test
     public void testRemoveFrameTool() {
-        JFrame something = new JFrame();
+        JFrame newFrame = new JFrame();
         
         animationTool = new AnimationTool(ADD_FRAME_TOOL);
-        animationTool.actionPerformed(new ActionEvent(something, 0, "test"));
+        animationTool.actionPerformed(new ActionEvent(newFrame, 0, "test"));
         assertFalse(animationTool.getAnimation().getFrames().isEmpty());
         
         animationTool.changeTool(REMOVE_FRAME_TOOL);
-        animationTool.actionPerformed(new ActionEvent(something, 0, "test"));
+        animationTool.actionPerformed(new ActionEvent(newFrame, 0, "test"));
+        assertTrue(animationTool.getAnimation().getFrames().isEmpty());
+    }
+    
+    @Test (expected = NullPointerException.class)
+    public void testRemoveFrameWhenListIsEmpty() {
+        JFrame newFrame = new JFrame();
+        Animation.getInstance().getFrames().clear();
+        assertTrue(animationTool.getAnimation().getFrames().isEmpty());
+        
+        animationTool = new AnimationTool(REMOVE_FRAME_TOOL);
+        animationTool.actionPerformed(new ActionEvent(newFrame, 0, "test"));
         assertTrue(animationTool.getAnimation().getFrames().isEmpty());
     }
     
@@ -87,6 +98,19 @@ public class AnimationToolTest {
         });
         Thread.sleep(300);
         assertTrue(animationTool.getTimesPlayed() > 0);
+    }
+    
+    @Test
+    public void testPlayToolWithoutFrames() {
+        animationTool = new AnimationTool(PLAY_TOOL);
+        Animation.getInstance().getFrames().clear();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
+            }
+        });
+        assertEquals(0, animationTool.getTimesPlayed());
     }
     
     /**

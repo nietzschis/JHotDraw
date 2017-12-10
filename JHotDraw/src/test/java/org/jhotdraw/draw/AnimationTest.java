@@ -7,6 +7,7 @@ package org.jhotdraw.draw;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,15 +31,16 @@ public class AnimationTest {
     }
     
     @Test
-    public void testFrameListIsCorrect() {
-        List<JFrame> testFrames = new ArrayList<>();
-        assertEquals(testFrames.getClass(), Animation.getInstance().getFrames().getClass());
-    }
-    
-    @Test
     public void testFrameIsAdded() {
         Animation.getInstance().addFrame(new JFrame());
         assertFalse(Animation.getInstance().getFrames().isEmpty());
+        Animation.getInstance().getFrames().clear();
+    }
+    
+    @Test
+    public void testAddingNullAsFrame() {
+        Animation.getInstance().addFrame(null);
+        assertTrue(Animation.getInstance().getFrames().isEmpty());
         Animation.getInstance().getFrames().clear();
     }
     

@@ -62,12 +62,12 @@ public class AnimationTool extends AbstractAction {
             list.get(i);
             if (i == list.size() - 1) {
                 i = 0;
-                framesPlayed++;
             }
             if (stopPlaying) {
                 framesPlayed = 0;
                 break;
             }
+            framesPlayed++;
             Thread.sleep(FPS_24);
         }
     }
@@ -86,8 +86,13 @@ public class AnimationTool extends AbstractAction {
     }
     
     public void removeFrame(JFrame frameToRemove) {
-        getAnimation().getFrames().remove(getAnimation().getFrames().get(framesPlayed));
-        animation = getAnimation();
+        try{
+            getAnimation().getFrames().remove(getAnimation().getFrames().get(framesPlayed));
+            animation = getAnimation();
+        }catch(NullPointerException e){
+            System.out.println("Frame not found!");
+        }
+        
     }
     
     public Animation getAnimation() {

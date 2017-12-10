@@ -43,7 +43,11 @@ public class Animation {
     }
 
     public void addFrame(JFrame frame) {
-        frames.add(frame);
+        if(frame == null){
+            System.out.println("Can not add null");
+        }else{
+            frames.add(frame);
+        }
     }
 
     public void removeFrame(JFrame frameToRemove) {
