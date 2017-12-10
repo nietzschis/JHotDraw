@@ -24,6 +24,7 @@ import org.jhotdraw.util.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 /**
  * Redoes the last user action.
@@ -51,12 +52,9 @@ public class RedoAction extends AbstractViewAction implements ActionSPI{
         }
     };
     
-    public RedoAction(){
-    }
-    
     /** Creates a new instance. */
-    public RedoAction(Application app) {
-        super(app);
+    public RedoAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         labels.configureAction(this, ID);
     }
     
@@ -107,10 +105,4 @@ public class RedoAction extends AbstractViewAction implements ActionSPI{
     private Action getRealRedoAction() {
         return (getActiveView() == null) ? null : getActiveView().getAction(ID);
     }
-
-    @Override
-    public String getServiceID() {
-        return this.ID;
-    }
-    
 }

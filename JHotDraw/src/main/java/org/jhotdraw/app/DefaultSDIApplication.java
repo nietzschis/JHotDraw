@@ -27,6 +27,7 @@ import org.jhotdraw.app.action.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.util.prefs.*;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A DefaultSDIApplication can handle the life cycle of a single document window
@@ -50,11 +51,7 @@ import org.openide.util.Lookup;
  * <br>1.0 October 16, 2005 Created.
  */
 public class DefaultSDIApplication extends AbstractApplication {
-    private final Lookup lookup = Lookup.getDefault();
-
     private Preferences prefs;
-    private Lookup.Result<ActionSPI> ActionResult;
-
     /**
      * Creates a new instance.
      */
@@ -114,8 +111,9 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     protected void initApplicationActions() {
         ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        
         ApplicationModel m = getModel();
-        m.putAction(AboutAction.ID, new AboutAction(this));
+        //m.putAction(AboutAction.ID, new AboutAction(this));
         m.putAction(ExitAction.ID, new ExitAction(this));
 
         m.putAction(ClearAction.ID, new ClearAction(this));
@@ -129,7 +127,7 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(PrintAction.ID, new PrintAction(this));
 
         m.putAction(UndoAction.ID, new UndoAction(this));
-        m.putAction(RedoAction.ID, new RedoAction(this));
+        //m.putAction(RedoAction.ID, new RedoAction(this));
         m.putAction(CutAction.ID, new CutAction());
         m.putAction(CopyAction.ID, new CopyAction());
         m.putAction(PasteAction.ID, new PasteAction());
@@ -461,7 +459,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
         m = new JMenu();
         labels.configureMenu(m, "help");
-        m.add(model.getAction(AboutAction.ID));
+        m.add(model.getActionDynamicly(AboutAction.class));
 
         return m;
     }

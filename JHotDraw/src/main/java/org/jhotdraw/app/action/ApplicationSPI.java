@@ -5,12 +5,12 @@
  */
 package org.jhotdraw.app.action;
 
-import javax.swing.Action;
 import org.jhotdraw.app.Application;
 
 /**
  *
  * @author Daniel
  */
-public interface ActionSPI {
+public interface ApplicationSPI {
+    public Application getApplicationInstance();
 }

@@ -23,6 +23,7 @@ import java.text.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
+import org.jhotdraw.app.ApplicationModel;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.action.*;
 import static org.jhotdraw.draw.AttributeKeys.*;

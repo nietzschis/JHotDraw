@@ -11,15 +11,19 @@
  * accordance with the license agreement you entered into with  
  * the copyright holders. For details see accompanying license terms. 
  */
-
 package org.jhotdraw.app;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.beans.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.openide.util.Lookup;
+
 /**
  * DefaultApplicationModel.
  *
@@ -30,57 +34,59 @@ import org.openide.util.Lookup;
 public class DefaultApplicationModel
         extends AbstractBean
         implements ApplicationModel {
-    
-    private HashMap<String,Action> actions;
+
+    private HashMap<String, Action> actions;
     private String name;
     private String version;
     private String copyright;
     private Class viewClass;
     private String viewClassName;
-    
+
     public final static String NAME_PROPERTY = "name";
     public final static String VERSION_PROPERTY = "version";
     public final static String COPYRIGHT_PROPERTY = "copyright";
     public final static String VIEW_CLASS_NAME_PROPERTY = "viewClassName";
     public final static String VIEW_CLASS_PROPERTY = "viewClass";
-    
+
     private final Lookup lookup = Lookup.getDefault();
     private Lookup.Result<ActionSPI> ActionResult;
-    
-    
-    /** Creates a new instance. */
+
+    /**
+     * Creates a new instance.
+     */
     public DefaultApplicationModel() {
     }
-    
+
     public void setName(String newValue) {
         String oldValue = name;
         name = newValue;
         firePropertyChange(NAME_PROPERTY, oldValue, newValue);
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setVersion(String newValue) {
         String oldValue = version;
         version = newValue;
         firePropertyChange(VERSION_PROPERTY, oldValue, newValue);
     }
-    
+
     public String getVersion() {
         return version;
     }
-    
+
     public void setCopyright(String newValue) {
         String oldValue = copyright;
         copyright = newValue;
         firePropertyChange(COPYRIGHT_PROPERTY, oldValue, newValue);
     }
-    
+
     public String getCopyright() {
         return copyright;
     }
+
     /**
      * Use this method for best application startup performance.
      */
@@ -89,7 +95,7 @@ public class DefaultApplicationModel
         viewClassName = newValue;
         firePropertyChange(VIEW_CLASS_NAME_PROPERTY, oldValue, newValue);
     }
-    
+
     /**
      * Use this method only, if setViewClassName() does not suit you.
      */
@@ -98,7 +104,7 @@ public class DefaultApplicationModel
         viewClass = newValue;
         firePropertyChange(VIEW_CLASS_PROPERTY, oldValue, newValue);
     }
-    
+
     public Class getViewClass() {
         if (viewClass == null) {
             if (viewClassName != null) {
@@ -113,7 +119,7 @@ public class DefaultApplicationModel
         }
         return viewClass;
     }
-    
+
     public View createView() {
         try {
             return (View) getViewClass().newInstance();
@@ -123,10 +129,10 @@ public class DefaultApplicationModel
             throw error;
         }
     }
-    
+
     /**
-     * Creates toolbars for the application.
-     * This class creates a standard toolbar with the following buttons in it:
+     * Creates toolbars for the application. This class creates a standard
+     * toolbar with the following buttons in it:
      * <ul>
      * <li>File New</li>
      * <li>File Open</li>
@@ -140,10 +146,10 @@ public class DefaultApplicationModel
      */
     public List<JToolBar> createToolBars(Application app, View p) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
+
         JToolBar tb = new JToolBar();
         tb.setName(labels.getString("standardToolBarTitle"));
-        
+
         JButton b;
         Action a;
         if (null != (a = getAction(NewAction.ID))) {
@@ -162,7 +168,7 @@ public class DefaultApplicationModel
         tb.addSeparator();
         b = tb.add(getAction(UndoAction.ID));
         b.setFocusable(false);
-        b = tb.add(getAction(RedoAction.ID));
+        b = tb.add(getActionDynamicly(RedoAction.class));
         b.setFocusable(false);
         tb.addSeparator();
         b = tb.add(getAction(CutAction.ID));
@@ -171,28 +177,29 @@ public class DefaultApplicationModel
         b.setFocusable(false);
         b = tb.add(getAction(PasteAction.ID));
         b.setFocusable(false);
-        
-        
+
         LinkedList<JToolBar> list = new LinkedList<JToolBar>();
         list.add(tb);
         return list;
     }
+
     public List<JMenu> createMenus(Application a, View p) {
         LinkedList<JMenu> list = new LinkedList<JMenu>();
         list.add(createEditMenu(a, p));
         return list;
     }
+
     protected JMenu createEditMenu(Application a, View p) {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
+
         JMenu m;
         JMenuItem mi;
-        
+
         m = new JMenu();
         labels.configureMenu(m, "edit");
         mi = m.add(getAction(UndoAction.ID));
         mi.setIcon(null);
-        mi = m.add(getAction(RedoAction.ID));
+        mi = m.add(getActionDynamicly(RedoAction.class));
         mi.setIcon(null);
         m.addSeparator();
         mi = m.add(getAction(CutAction.ID));
@@ -214,52 +221,30 @@ public class DefaultApplicationModel
         }
         return m;
     }
-    
+
     public void initView(Application a, View p) {
     }
-    
+
     public void initApplication(Application a) {
+    }
+
+    @Override
+    public Action getActionDynamicly(Class name) {
+            return (Action) lookup.lookup(name);
     }
     /**
      * Returns the action with the specified id.
      */
     public Action getAction(String id) {
-        //RedoAction r = new RedoAction();
-        //System.out.println("cutaction: " + r);
-        
-        ActionResult = lookup.lookupResult(ActionSPI.class);
-        //gamePluginResult.addLookupListener(gamePluginlookupListener);
-        ActionResult.allItems();
-        for (ActionSPI action : ActionResult.allInstances()) {
-
-//            System.out.println("action: " + action.getClass());
-//            String testID = action.getServiceID();
-//            System.out.println(testID);
-//            System.out.println("testname: " + action.getClass());
-
-//        if(id == null ? action.getServiceID() == null : id.equals(action.getServiceID())){
-//            return (Action) action;
-//        }
-            System.out.println(action);
-            if(RedoAction.class.equals(action.getClass())){
-                System.out.println("same class");
-                System.out.println("class: " + action.getClass());
-                
-            }
-        }
-        Action a = (Action) actions.get(id);
-        System.out.println(ActionResult.allInstances().size());
-        System.out.println("actions w. id; " + actions.get(id));
         return (actions == null) ? null : (Action) actions.get(id);
-        //return null;
     }
-    
+
     /**
      * Puts an action with the specified id.
      */
     public void putAction(String id, Action action) {
         if (actions == null) {
-            actions = new HashMap<String,Action>();
+            actions = new HashMap<String, Action>();
         }
         if (action == null) {
             actions.remove(id);

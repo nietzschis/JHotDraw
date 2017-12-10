@@ -15,27 +15,31 @@
 package org.jhotdraw.samples.svg;
 
 import org.jhotdraw.app.*;
+import org.jhotdraw.app.action.ApplicationSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Main.
  *
  * @author Werner Randelshofer.
  * @version 1.0 July 8, 2006 Created.
  */
-public class Main {
+@ServiceProvider(service = ApplicationSPI.class)
+public class Main implements ApplicationSPI{
+    public static Application app;
     
     /** Creates a new instance. */
     public static void main(String[] args) {
         // Debug resource bundle
         ResourceBundleUtil.setVerbose(true);
 
-        Application app;
+        //Application app;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.startsWith("win")) {
           //  app = new DefaultMDIApplication();
-            app = new DefaultSDIApplication();
+            createApplication();
         } else {
-            app = new DefaultSDIApplication();
+            createApplication();
         }
         SVGApplicationModel model = new SVGApplicationModel();
         model.setName("JHotDraw SVG");
@@ -45,6 +49,18 @@ public class Main {
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
         app.launch(args);
+    }
+    
+    private static void createApplication(){
+        if(app == null){
+            app = new DefaultSDIApplication();
+        }
+    }
+
+    @Override
+    public Application getApplicationInstance() {
+        createApplication();
+        return app;
     }
     
 }
