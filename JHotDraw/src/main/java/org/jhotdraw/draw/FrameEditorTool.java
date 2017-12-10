@@ -21,6 +21,7 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
     private Tool selectionTool;
     private DrawingEditor editor;
     private SVGGroupFigure groupFigure = new SVGGroupFigure();
+    private boolean frameEditorCreated = false;
 
     public FrameEditorTool(Tool selectionTool, CreationTool creationTool, DrawingEditor editor) {
         this.selectionTool = selectionTool;
@@ -49,6 +50,7 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
     
     @Override
     public void mousePressed(MouseEvent evt) {
+        frameEditorCreated = false;
         super.mousePressed(evt);
         selectionTool.activate(editor);
         selectionTool.mousePressed(evt);
@@ -70,12 +72,14 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
     @Override
     public void areaInvalidated(ToolEvent event) {
         SelectionTool selectionToolFromEvent = (SelectionTool) event.getTool();
-        if (!event.getView().findFigures(event.getInvalidatedArea()).isEmpty() && !selectionToolFromEvent.isWorking) {
-            //creationTool.createFigure();
-            Collection<Figure> figuresSelected = event.getView().findFigures(event.getInvalidatedArea());
+        final boolean figuresInSelection = !event.getView().findFigures(event.getInvalidatedArea()).isEmpty();
+        final boolean selectionToolFinished = !selectionToolFromEvent.isWorking;
+        if (figuresInSelection && selectionToolFinished && frameEditorCreated == false) {
+            Collection<Figure> figuresSelected = event.getView().getSelectedFigures();
             
-            groupFigure.basicAddAll(0, figuresSelected);
             event.getView().getDrawing().add(groupFigure);
+            groupFigure.addAll(figuresSelected);
+            frameEditorCreated = true;
         }
 
     }
