@@ -44,6 +44,8 @@ import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
  */
 public class SVGPathFigure extends AbstractAttributedCompositeFigure implements SVGFigure {
 
+    private static final long serialVersionUID = 7500584567042233588L;
+    
     /**
      * This cachedPath is used for drawing.
      */

@@ -26,6 +26,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import static org.jhotdraw.draw.AttributeKeys.*;
 
 /**
@@ -251,6 +252,11 @@ public class DefaultDrawingView
 
     public Drawing getDrawing() {
         return drawing;
+    }
+    
+    public boolean  hasDrawing()
+    {
+        return drawing != null;
     }
 
     @Override
@@ -1073,6 +1079,8 @@ public class DefaultDrawingView
 
             }
         });
+        // Hookpoint for collaborate delete
+        CollaborationConnection.getInstance().notifyUpdate("Remove");
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
