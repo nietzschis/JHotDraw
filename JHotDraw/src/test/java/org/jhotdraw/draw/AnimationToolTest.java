@@ -29,6 +29,14 @@ public class AnimationToolTest {
         
     }
     
+    @Test
+    public void testChangingTool() {
+        animationTool = new AnimationTool(ADD_FRAME_TOOL);
+        assertEquals(animationTool.getTool(), ADD_FRAME_TOOL);
+        animationTool.changeTool(PLAY_TOOL);
+        assertEquals(animationTool.getTool(), PLAY_TOOL);
+    }
+    
     /**
      * Test if list is not empty after adding a frame
      */
