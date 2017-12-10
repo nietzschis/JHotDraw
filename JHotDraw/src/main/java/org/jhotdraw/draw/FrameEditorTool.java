@@ -8,9 +8,11 @@ package org.jhotdraw.draw;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import javax.swing.Action;
+import org.jhotdraw.samples.svg.figures.SVGAnimationFrameFigure;
 import org.jhotdraw.samples.svg.figures.SVGGroupFigure;
 
 /**
@@ -22,7 +24,7 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
     private CreationTool creationTool;
     private Tool selectionTool;
     private DrawingEditor editor;
-    private SVGGroupFigure groupFigure = new SVGGroupFigure();
+    private SVGAnimationFrameFigure animationFrameFigure = new SVGAnimationFrameFigure();
     private boolean frameEditorCreated = false;
 
     public FrameEditorTool(Tool selectionTool, CreationTool creationTool, DrawingEditor editor) {
@@ -81,11 +83,18 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
         if (figuresInSelection && selectionToolFinished && frameEditorCreated == false) {
             Collection<Figure> figuresSelected = event.getView().getSelectedFigures();
             
-            Rectangle rectFigure = event.getInvalidatedArea();
-            groupFigure.setBounds(new Rectangle2D.Double(rectFigure.x, rectFigure.y, rectFigure.width, rectFigure.height));
-            event.getView().getDrawing().add(groupFigure);
-            groupFigure.addAll(figuresSelected);
+            Rectangle2D.Double rectFigure = new Rectangle2D.Double();
+            rectFigure.setRect(event.getInvalidatedArea());
+            
+            Point2D.Double anchorPoint = new Point2D.Double(rectFigure.getX(), rectFigure.getY());
+            Point2D.Double leadPoint = new Point2D.Double(rectFigure.getMaxX(), rectFigure.getMaxY());
+            
+            animationFrameFigure.setBounds(anchorPoint, leadPoint);
+            
+            event.getView().getDrawing().add(animationFrameFigure);
+            animationFrameFigure.addAll(figuresSelected);
             frameEditorCreated = true;
+            //event.getView().clearSelection();
             
         }
 
