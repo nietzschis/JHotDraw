@@ -279,61 +279,6 @@ public class DefaultSDIApplication extends AbstractApplication {
         return mb;
     }
 
-    protected JMenu createFileMenu(final View p) {
-        ApplicationModel model = getModel();
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-
-        JMenuBar mb = new JMenuBar();
-        JMenu m;
-        JMenuItem mi;
-        final JMenu openRecentMenu;
-
-        m = new JMenu();
-        labels.configureMenu(m, "file");
-        m.add(model.getAction(ClearAction.ID));
-        m.add(model.getAction(NewAction.ID));
-        m.add(model.getAction(DuplicateCanvasAction.ID));
-        m.add(model.getAction(LoadAction.ID));
-        if (model.getAction(LoadDirectoryAction.ID) != null) {
-            m.add(model.getAction(LoadDirectoryAction.ID));
-        }
-        openRecentMenu = new JMenu();
-        labels.configureMenu(openRecentMenu, "file.openRecent");
-        openRecentMenu.add(model.getAction(ClearRecentFilesAction.ID));
-        updateOpenRecentMenu(openRecentMenu);
-        m.add(openRecentMenu);
-        m.addSeparator();
-        m.add(model.getAction(SaveAction.ID));
-        m.add(model.getAction(SaveAsAction.ID));
-        if (model.getAction(ExportAction.ID) != null) {
-            mi = m.add(model.getAction(ExportAction.ID));
-        }
-        if (model.getAction(PrintAction.ID) != null) {
-            m.addSeparator();
-            m.add(model.getAction(PrintAction.ID));
-        }
-        m.addSeparator();
-        m.add(model.getAction(ExitAction.ID));
-        mb.add(m);
-
-        addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                if (name == "viewCount") {
-                    if (p == null || views().contains(p)) {
-                    } else {
-                        removePropertyChangeListener(this);
-                    }
-                } else if (name == "recentFiles") {
-                    updateOpenRecentMenu(openRecentMenu);
-                }
-            }
-        });
-
-        return m;
-    }
-
     /**
      * Updates the title of a view and displays it in the given frame.
      *
