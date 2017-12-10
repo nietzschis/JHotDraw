@@ -1,6 +1,8 @@
 package org.jhotdraw.draw.action;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import org.jhotdraw.app.action.TinyPngCompressAction;
 import org.junit.After;
@@ -39,11 +41,11 @@ public class TinyPngCompressActionTest {
     /**
      * Test of compressImage method, of class TinyPngCompressAction.
      */
-    @Ignore
     @Test
-    public void testCompressImage() {
+    public void testCompressImage() throws URISyntaxException {
         URL url = TinyPngCompressActionTest.class.getResource("images/tree.png");
-        File f = new File(url.getPath());
+        URI uri = url.toURI();
+        File f = new File(uri.getPath());
         String compressedFileName = f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_compressed.png";
         File fCompressed = new File(compressedFileName);
         boolean compressed = TinyPngCompressAction.compressImage(f);
