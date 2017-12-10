@@ -5,68 +5,56 @@
  */
 package org.jhotdraw.samples.svg;
 
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import org.jhotdraw.draw.BezierFigure;
-import org.jhotdraw.draw.DrawingView;
-import org.junit.After;
-import org.junit.AfterClass;
+import org.jhotdraw.draw.*;
+import org.jhotdraw.draw.action.DrawingEditorProxy;
+import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
+import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Pc
  */
 public class PenToolTest {
-    
-    public PenToolTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+
+    PenTool penTool;
+
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        penTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), null);
+        penTool.setToolDoneAfterCreation(false);
+
     }
 
-    /**
-     * Test of mouseReleased method, of class PenTool.
-     */
-    @org.junit.Test
-    public void testMouseReleased() {
-        System.out.println("mouseReleased");
-        MouseEvent evt = null;
-        PenTool instance = null;
-        instance.mouseReleased(evt);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
-    /**
-     * Test of finishCreation method, of class PenTool.
-     */
-    @org.junit.Test
-    public void testFinishCreation() {
-        System.out.println("finishCreation");
-        BezierFigure createdFigure = null;
-        DrawingView creationView = null;
-        PenTool instance = null;
-        instance.finishCreation(createdFigure, creationView);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    @Test
+    public void mouseReleasedTest() throws AWTException {
+
+        DrawingView view = new DefaultDrawingView();
+        DrawingEditorProxy editor = new DrawingEditorProxy();
+        editor.setTarget(new DefaultDrawingEditor());
+        view.addNotify(editor);
+        editor.add(view);
+        editor.setActiveView(view);
+        Drawing drawing = new DefaultDrawing();
+        view.setDrawing(drawing);
+
+
+        penTool.activate(editor);
+        MouseEvent press = new MouseEvent(view.getComponent(), 0, 0, 0, 50, 50, 1, false);
+        MouseEvent move = new MouseEvent(view.getComponent(), 1, 0, 0, 75, 75, 1, false);
+        MouseEvent release = new MouseEvent(view.getComponent(), 2, 0, 0, 100, 100, 1, false);
+
+        penTool.mousePressed(press);
+        penTool.mouseMoved(move);
+        penTool.mouseReleased(release);
+
+        assertEquals("Failed to create drawing", 1, drawing.getChildren().size());
     }
-    
-    
 }
