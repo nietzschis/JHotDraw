@@ -18,11 +18,11 @@ import org.junit.Test;
  *
  * @author Sadik
  */
-public class DefaultDrawingViewTest {
+public class SimpleDrawingViewTest {
     
-    private DefaultDrawing drawing;
+    private SimpleDrawing drawing;
     private Figure f;
-    public DefaultDrawingViewTest() {
+    public SimpleDrawingViewTest() {
     }
     
     @BeforeClass
@@ -49,7 +49,7 @@ public class DefaultDrawingViewTest {
     public void testFlip() {
         System.out.println("flip");
         DefaultDrawingView instance = new DefaultDrawingView();
-        DefaultDrawing drawing = new DefaultDrawing();
+        SimpleDrawing drawing = new SimpleDrawing();
         
         Dimension2DDouble dimension = new Dimension2DDouble(10, 10);
         drawing.setCanvasSize(dimension);
