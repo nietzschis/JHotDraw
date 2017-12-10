@@ -20,6 +20,7 @@ public class AnimationTool extends AbstractAction {
     protected AnimationToolDefinition tool;
     private boolean stopPlaying;
     private int framesPlayed;
+    private final int FPS_24 = 24;
     Animation animation;
     
     public AnimationTool(AnimationToolDefinition toolmode) {
@@ -67,7 +68,7 @@ public class AnimationTool extends AbstractAction {
                 framesPlayed = 0;
                 break;
             }
-            Thread.sleep(100);
+            Thread.sleep(FPS_24);
         }
     }
     

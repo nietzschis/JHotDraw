@@ -13,10 +13,12 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import javax.swing.border.*;
 import org.jhotdraw.gui.plaf.palette.*;
 import org.jhotdraw.util.*;
-import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import org.jhotdraw.app.action.*;
@@ -33,6 +35,8 @@ import org.jhotdraw.samples.svg.figures.*;
  */
 public class AnimationToolBar extends AbstractToolBar {
 
+    private List<AbstractButton> buttons = new ArrayList<>() ;
+    
     /**
      * Creates new instance.
      */
@@ -68,6 +72,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.gridx = 0;
                 gbc.gridy = 0;
                 gbc.insets = new Insets(0, 0, 0, 0);
+                buttons.add(btn);
                 p.add(btn, gbc);
                 
                 btn = new JButton(new AnimationTool(REMOVE_FRAME_TOOL));
@@ -77,6 +82,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.gridx = 0;
                 gbc.gridy = 1;
                 gbc.insets = new Insets(5, 0, 0, 0);
+                buttons.add(btn);
                 p.add(btn, gbc);
                 
                 btn = new JButton(new AnimationTool(PLAY_TOOL));
@@ -86,6 +92,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.gridx = 1;
                 gbc.gridy = 0;
                 gbc.insets = new Insets(0, 5, 0, 0);
+                buttons.add(btn);
                 p.add(btn, gbc);
                 
                 btn = new JButton(new AnimationTool(PAUSE_TOOL));
@@ -95,6 +102,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 gbc.gridx = 1;
                 gbc.gridy = 1;
                 gbc.insets = new Insets(5, 5, 0, 0);
+                buttons.add(btn);
                 p.add(btn, gbc);
                 
 //                HashMap<AttributeKey, Object> attributes = new HashMap<>();
@@ -114,6 +122,10 @@ public class AnimationToolBar extends AbstractToolBar {
             break;
         }
         return p;
+    }
+
+    public List<AbstractButton> getButtons() {
+        return buttons;
     }
 
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
