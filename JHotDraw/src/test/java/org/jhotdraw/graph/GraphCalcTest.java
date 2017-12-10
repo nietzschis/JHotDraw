@@ -97,14 +97,13 @@ public class GraphCalcTest {
     @Test
     public void testBound() {
         GraphBezierFigure graphBezier = new GraphBezierFigure();
-        LinearGraph gr = new LinearGraph(5, 0,  0);
-        double y1 = 500 - gr.calcYCoordinate(15);
+        LinearGraph gr = new LinearGraph(3, 0,  0);
         graphBezier.setFunction(gr);
         graphBezier.setBounds(new Point2D.Double(15,15), new Point2D.Double(600,600));
         BezierPath path = graphBezier.generatePath();
         
-        double y2 = path.get(3).y[0];
-        assertEquals(y2, y1, 0);
+        int pathLenth = path.size();
+        assertEquals(2, pathLenth);
     }
     
     
