@@ -23,13 +23,14 @@ import org.jhotdraw.util.ResourceBundleUtil;
  */
 public class ComicsCanvasCheck {
     
-    private boolean result;
     private static final ComicsCanvasCheck instance = new ComicsCanvasCheck();
+    private static final String width = "width", height = "height";
+    
+    private boolean result;
     private JLabel widthLabel,heightLabel;
-    private NumberFormat format;
     private NumberFormatter formatter;
     private JFormattedTextField heightField,widthField;
-    private static final String width = "width", height = "height";
+   
     private final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
 
     private ComicsCanvasCheck() {}
@@ -43,7 +44,9 @@ public class ComicsCanvasCheck {
     * can choose to adjust new size of canvas or use the old.
     * @return 
     */
-    public int setCanvas() {
+    public boolean setCanvas(Drawing d) {
+        NumberFormat format;
+   
         format = NumberFormat.getInstance();
         format.setGroupingUsed(false);
         formatter = new NumberFormatter(format);
@@ -73,11 +76,6 @@ public class ComicsCanvasCheck {
         String[] options = {"Cancel", "Use old Canvas", "New Canvas"};
         int option = JOptionPane.showOptionDialog(frame,panel,labels.getString("comics.optionDialog.text"),JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[2]);
         
-        return option;
-    }
-    
-    public boolean getOption(Drawing d){
-        int option = setCanvas();
         switch (option){
            case 2:
                 if (!widthField.getText().isEmpty() && !heightField.getText().isEmpty()) {
@@ -88,7 +86,7 @@ public class ComicsCanvasCheck {
                     result = true;
                 } else if (widthField.getText().isEmpty() && heightField.getText().isEmpty()) {
                     result = false;
-                    setCanvas();
+                    setCanvas(d);
                 } else if (widthField.getText().isEmpty() || heightField.getText().isEmpty()) {
                     if (widthField.getText().isEmpty()){
                         double y = Double.parseDouble(heightField.getText());
@@ -107,10 +105,10 @@ public class ComicsCanvasCheck {
                 break;
             case 1:
                 if((CANVAS_WIDTH.get(d) == null) || (CANVAS_HEIGHT.get(d) == null)) {
-                    setCanvas();
                     result = false;
-                }
-                result = true;
+                    setCanvas(d);
+                    
+                }else result = true;
                 break;
             default:
                 result = false;
@@ -123,7 +121,7 @@ public class ComicsCanvasCheck {
         return result;
     }
     
-    private JLabel createLabel (JLabel newLabel,String s){
+    private JLabel createLabel (JLabel newLabel,String s) {
         newLabel = new JLabel();
         newLabel.setUI((LabelUI) PaletteLabelUI.createUI(newLabel));
         newLabel.setToolTipText(labels.getString("comics."+s+".toolTipText"));
@@ -132,17 +130,17 @@ public class ComicsCanvasCheck {
         return newLabel;
     }
      
-    private JFormattedTextField createField(JFormattedTextField newField,String s){
+    private JFormattedTextField createField(JFormattedTextField newField,String s) {
         newField = new JFormattedTextField(formatter);
         newField.setText("600");
         newField.setToolTipText(labels.getString("comics."+s+".toolTipText"));
         newField.setPreferredSize(new Dimension(80, 24));
-        newField.addFocusListener(new clearFields());
+        newField.addFocusListener(new ClearFields());
         
         return newField;
     }
      
-    class clearFields implements FocusListener{
+    private class ClearFields implements FocusListener {
     @Override
         public void focusGained(FocusEvent e) {
             if(e.getSource().equals(widthField)){
