@@ -85,8 +85,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 0, 0, 0);
-                        btn.setName("Rectangle");
-
+        btn.setName("Rectangle");
         p.add(btn, gbc);
 
         btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGEllipseFigure(), attributes), "createEllipse", labels);
@@ -164,13 +163,13 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
         
-        //The code below adds the eraser button to the toolbar in JHotDraw
+        //This code adds the eraser button to the toolbar in JHotDraw
         btn = ButtonFactory.addToolTo(this, editor, eraserTool = new EraserTool(this), "createEraserTool", labels);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 3, 0, 0);
+        gbc.gridy = 2;
+        gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
                 }
                 break;

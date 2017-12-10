@@ -24,7 +24,8 @@ import org.jhotdraw.samples.svg.EraserTool;
 /**
  *
  * @author Frank Frederiksen-Moeller
- * This class handles the erasing of figures on the canvas
+ * This class handles the erasing of figures on the active Drawing canvas
+ * Press and hold left mouse button. Then drag the eraser over a figure and it will be removed.
  */
 public class Erasing
 {
@@ -34,59 +35,37 @@ public class Erasing
         this.eTool = eTool;
         
     }
-    
+    //This method takes a given figure as input and removes it from the active Drawing canvas
+    //It also updates the labels in the Edit menu for undo and redo Erased activities
     public void Erasing(Figure fig) 
-        {
-//            Point.Double p = new Point.Double(evt.getX(), evt.getY());
-//       System.out.println(p);
-//        eTool.fig = eTool.atb.getEditor().getActiveView().getDrawing().findFigure(p);
-//        System.out.println(eTool.fig);
-        
-                
-//        if (eTool.fig == null)
-//        {
-//            eTool.atb.getEditor().getActiveView().getDrawing().findFigure(p);
-            
-//        }
-//        else if (eTool.fig.contains(p)){
-            
-            final Figure erasedFigure = fig;
-            System.out.println(fig);
-//            eTool.atb.getEditor().getActiveView().getDrawing().;
+        {            
+            final Figure erasedFigure = fig;        
             eTool.atb.getEditor().getActiveView().getDrawing().remove(fig);
             final Drawing erasedDrawing = eTool.atb.getEditor().getActiveView().getDrawing();
-//            final Drawing erasedDrawing = getDrawing();
-//            final Figure erasedFigure = fig;  
-            erasedDrawing.fireUndoableEditHappened(new AbstractUndoableEdit() {
-//            getDrawing().fireUndoableEditHappened(new AbstractUndoableEdit() {
-                   
+            erasedDrawing.fireUndoableEditHappened(new AbstractUndoableEdit() 
+            {
+                @Override
+                public String getPresentationName() 
+                {
+                    return eTool.presentationName;
+                }
 
-            @Override
-            public String getPresentationName() {
-                return eTool.presentationName;
-            }
+                @Override
+                public void undo() throws CannotUndoException 
+                {
+                    super.undo();
+                    erasedDrawing.add(erasedFigure);
+                }
 
-            @Override
-            public void undo() throws CannotUndoException {
-                super.undo();
-//                erasedDrawing.remove(erasedFigure);
-                erasedDrawing.add(erasedFigure);
-            }
-
-            @Override
-            public void redo() throws CannotRedoException {
-                super.redo();
-//                erasedDrawing.add(erasedFigure);
-                erasedDrawing.remove(erasedFigure);
-//                view.clearSelection();
-//                view.getDrawing().add(fig);
-//                view.addToSelection(fig);
-            }
-              });
-            
-            
+                @Override
+                public void redo() throws CannotRedoException 
+                {
+                    super.redo();
+                    erasedDrawing.remove(erasedFigure);
+                }
+                
+            });           
             
         }
         
-    
 }

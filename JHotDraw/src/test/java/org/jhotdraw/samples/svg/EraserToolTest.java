@@ -42,7 +42,7 @@ import org.jhotdraw.app.*;
 
 /**
  *
- * @author f_mol
+ * @author Frank Frederiksen-Moeller
  */
 public class EraserToolTest extends AssertJSwingJUnitTestCase {
     
