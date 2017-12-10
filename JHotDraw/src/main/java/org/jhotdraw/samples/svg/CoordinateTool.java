@@ -62,15 +62,12 @@ public class CoordinateTool extends LineTool {
         // Call upon CoordinateView and make it return buttonOptions
         int buttonOptions = cv.checkBox();
         // buttonOptions will indicate which button that the user clicks on
+        // 0 is first button - 1 is second button
         switch (buttonOptions) {
             case 0:
-                // Insert without figures
+                // Insert coodinate system without figures
                 // Clears the drawing panel
                 getDrawing().removeAllChildren();
-                cv.insertACoordinateSystem(getDrawing());
-                break;
-            case 1:
-                // Insert with figures
                 cv.insertACoordinateSystem(getDrawing());
                 break;
             default: 
