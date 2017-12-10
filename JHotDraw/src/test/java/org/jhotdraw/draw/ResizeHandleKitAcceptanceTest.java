@@ -1,19 +1,21 @@
 package org.jhotdraw.draw;
 
 import com.tngtech.jgiven.annotation.As;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit.SimpleScenarioTest;
 import javafx.util.Pair;
 import org.jhotdraw.draw.action.DrawingEditorProxy;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ErrorCollector;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.jhotdraw.draw.ResizeHandleKit.*;
 import static org.jhotdraw.draw.ResizeHandleKitTest.*;
@@ -33,12 +35,39 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
                 HandleDirections dir = HandleDirections.values()[i];
                 given().figure(50d,50d,50d,50d);
                 when().mouseDragged(dir, lead);
-                then().checkBounds(dir);
+                then().checkBounds();
             }
         }
     }
 
-    public static class Steps {
+    @Test
+    public void keyResizeScenario() {
+        int keys[] = {
+                KeyEvent.VK_UP,
+                KeyEvent.VK_DOWN,
+                KeyEvent.VK_LEFT,
+                KeyEvent.VK_RIGHT
+        };
+
+        Rectangle2D.Double rectangles [] = {
+                new Rectangle2D.Double(1d, 1d, 1d, 1d),
+                new Rectangle2D.Double(50d, 50d, 100d, 100d),
+        };
+
+        for (int i = 0; i < HandleDirections.values().length; i++) {
+            for (int key : keys) {
+                for (Rectangle2D.Double rect : rectangles) {
+                    HandleDirections dir = HandleDirections.values()[i];
+                    given().figure(rect.x, rect.y, rect.width, rect.height);
+                    when().keyPressed(key, dir);
+                    then().checkBounds();
+                    then().checkConsumption();
+                }
+            }
+        }
+    }
+
+    static class Steps {
 
         @ProvidedScenarioState
         SVGRectFigure figure;
@@ -49,12 +78,15 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
         @ProvidedScenarioState
         DrawingView view;
 
-        @ProvidedScenarioState
+        @ExpectedScenarioState
         Pair<Rectangle2D.Double,Rectangle2D.Double> boundsPair;
+
+        @ExpectedScenarioState
+        Map.Entry<KeyEvent,KeyEvent> keyEventPair;
 
 
         @As( "figure with dimensions x: $, y: $, width: $, height: $" )
-        public void figure(double x, double y, double width, double height) {
+        void figure(double x, double y, double width, double height) {
             figure = new SVGRectFigure(x,y,width,height);
             handles.clear();
             ResizeHandleKit.addEdgeResizeHandles(figure,handles);
@@ -73,7 +105,7 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
         }
 
         @As( "mouse dragged from handle $ to $" )
-        public void mouseDragged(HandleDirections dir, Point lead)
+        void mouseDragged(HandleDirections dir, Point lead)
         {
             int i = dir.ordinal();
 
@@ -96,10 +128,14 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
             boundsPair = new Pair<>(figure.getBounds(), bounds);
         }
 
-        @As( "checkBounds" )
-        void checkBounds(HandleDirections dir)
+        void checkBounds()
         {
-            assertEquals("Bounds doesn't match for "+ dir.name(), boundsPair.getKey(),boundsPair.getValue());
+            assertEquals("Bounds doesn't match", boundsPair.getKey(),boundsPair.getValue());
+        }
+
+        void checkConsumption()
+        {
+            assertEquals("Consumption doesn't match", keyEventPair.getKey().isConsumed(), keyEventPair.getValue().isConsumed());
         }
 
         private void trackStepNormalized(Point2D.Double p, int mask, Rectangle2D.Double r) {
@@ -114,6 +150,75 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
                     new Point2D.Double(right, bottom));
         }
 
-    }
+        @As( "key $ is pressed on handle $" )
+        void keyPressed(int key, HandleDirections dir) {
+            int mask = dir.dirMask;
+            int i = dir.ordinal();
+            Handle h = handles.get(i);
+            Rectangle2D.Double rect = figure.getBounds();
 
+            KeyEvent event1 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+            KeyEvent event2 = new KeyEvent(new Button(), 0, 0, 0, key, 'k');
+
+            h.keyPressed(event1);
+            Rectangle2D.Double actualBounds = figure.getBounds();
+            figure.setBounds(rect);
+            keyPressedHelper(event2, mask);
+            Rectangle2D.Double expectedBounds = figure.getBounds();
+
+
+            boundsPair = new Pair<>(actualBounds, expectedBounds);
+            keyEventPair = new AbstractMap.SimpleEntry<>(event1, event2);
+        }
+
+        // ugly java alternative of !!
+        private int nn(int x)
+        {
+            return x > 0 ? 1 : 0;
+        }
+
+        private void keyPressedHelper(KeyEvent evt, int mask) {
+            Rectangle2D.Double r = figure.getBounds();
+
+            int up = 0;
+            int down = 0;
+            int left = 0;
+            int right = 0;
+
+            switch (evt.getKeyCode())
+            {
+                case KeyEvent.VK_UP:
+                    if (r.height <= 1 && (mask & DIR_S) != 0)
+                        break;
+                    down = -nn(mask & DIR_S);
+                    up = -nn(mask & DIR_N);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if (r.height <= 1 && (mask & DIR_N) != 0)
+                        break;
+                    up = nn(mask & DIR_N);
+                    down = nn(mask & DIR_S);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    if (r.width <= 1 && (mask & DIR_E) != 0)
+                        break;
+                    left = -nn(mask & DIR_W);
+                    right = -nn(mask & DIR_E);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if (r.width <= 1 && (mask & DIR_W) != 0)
+                        break;
+                    left = nn(mask & DIR_W);
+                    right = nn(mask & DIR_E);
+                    break;
+
+            }
+
+            figure.setBounds(
+                    new Point2D.Double(r.x + left, r.y + up),
+                    new Point2D.Double(r.x + r.width + right, r.y + r.height + down));
+
+            evt.consume();
+        }
+    }
 }
