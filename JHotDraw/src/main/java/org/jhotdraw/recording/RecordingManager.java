@@ -5,43 +5,18 @@
  */
 package org.jhotdraw.recording;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.AbstractAction;
+import java.util.concurrent.Callable;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureListener;
 import org.jhotdraw.gui.recording.PlaybackPopup;
+import org.jhotdraw.recording.actions.PlayRecordingAction;
+import org.jhotdraw.recording.actions.StartRecordingAction;
+import org.jhotdraw.recording.actions.StopRecordingAction;
 
 public class RecordingManager {
-    public class PlayRecordingAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            startPlaybackActiveDrawing();
-        }
-    }
-
-    public class StartRecordingAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            startRecordingActiveDrawing();
-        }
-    }
-
-    public class StopRecordingAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            stopRecordingActiveDrawing();
-        }
-    }
-
-    public RecordingManager(DrawingEditor editor) {
-        this.editor = editor;
-    }
 
     private DrawingEditor editor = null;
     private PlayRecordingAction playFramesAction = null;
@@ -53,6 +28,10 @@ public class RecordingManager {
 
     private HashMap<Integer, FigureListener> mapOfFigureListeners = new HashMap<>();
 
+    public RecordingManager(DrawingEditor editor) {
+        this.editor = editor;
+    }
+
     public HashMap<Integer, FigureListener> getMapOfFigureListeners() {
         return mapOfFigureListeners;
     }
@@ -63,7 +42,15 @@ public class RecordingManager {
 
     public PlayRecordingAction getPlayFramesAction() {
         if (playFramesAction == null) {
-            playFramesAction = new PlayRecordingAction();
+            playFramesAction = new PlayRecordingAction((Callable) () -> {
+                getStopRecordingAction().fire();
+
+                int hashcode = editor.getActiveView().getDrawing().hashCode();
+
+                PlaybackPopup.Show(FPS, mapOfFigureUpdates.get(hashcode));
+
+                return null;
+            });
         }
 
         return playFramesAction;
@@ -71,7 +58,27 @@ public class RecordingManager {
 
     public StartRecordingAction getStartRecordingAction() {
         if (startRecordingAction == null) {
-            startRecordingAction = new StartRecordingAction();
+            startRecordingAction = new StartRecordingAction((Callable) () -> {
+                if (editor == null) {
+                    System.err.println("Cannot record when there is no active editor!");
+                    return null;
+                }
+
+                int hashcode = editor.getActiveView().getDrawing().hashCode();
+                mapOfFigureUpdates.putIfAbsent(hashcode, new ArrayList<FigureUpdate>());
+
+                for (Figure figure : editor.getActiveView().getDrawing().getChildren()) {
+                    mapOfFigureUpdates.get(hashcode).add(new FigureUpdate(
+                            (Figure) figure.clone(),
+                            figure.hashCode()
+                    ));
+                }
+
+                mapOfFigureListeners.putIfAbsent(hashcode, new RecordingFigureListener(FPS, mapOfFigureUpdates.get(hashcode)));
+                editor.getActiveView().getDrawing().addFigureListener(mapOfFigureListeners.get(hashcode));
+
+                return null;
+            });
         }
 
         return startRecordingAction;
@@ -79,49 +86,14 @@ public class RecordingManager {
 
     public StopRecordingAction getStopRecordingAction() {
         if (stopRecordingAction == null) {
-            stopRecordingAction = new StopRecordingAction();
+            stopRecordingAction = new StopRecordingAction((Callable) () -> {
+                int hashcode = editor.getActiveView().getDrawing().hashCode();
+                editor.getActiveView().getDrawing().removeFigureListener(mapOfFigureListeners.get(hashcode));
+                mapOfFigureListeners.remove(hashcode);
+                return null;
+            });
         }
 
         return stopRecordingAction;
-    }
-
-    private void startPlaybackActiveDrawing() {
-        stopRecordingActiveDrawing();
-
-        int hashcode = editor.getActiveView().getDrawing().hashCode();
-
-        PlaybackPopup.Show(FPS, mapOfFigureUpdates.get(hashcode));
-    }
-
-    private void startRecordingActiveDrawing() {
-        if (editor == null) {
-            System.err.println("Cannot record when there is no active editor!");
-            return;
-        }
-
-        int hashcode = editor.getActiveView().getDrawing().hashCode();
-        mapOfFigureUpdates.putIfAbsent(hashcode, new ArrayList<FigureUpdate>());
-
-        for (Figure figure : editor.getActiveView().getDrawing().getChildren()) {
-            mapOfFigureUpdates.get(hashcode).add(new FigureUpdate(
-                    (Figure) figure.clone(),
-                    figure.hashCode()
-            ));
-        }
-
-        mapOfFigureListeners.putIfAbsent(hashcode, new RecordingFigureListener(FPS, mapOfFigureUpdates.get(hashcode)));
-        editor.getActiveView().getDrawing().addFigureListener(mapOfFigureListeners.get(hashcode));
-    }
-
-    private void stopRecordingActiveDrawing() {
-        int hashcode = editor.getActiveView().getDrawing().hashCode();
-        editor.getActiveView().getDrawing().removeFigureListener(mapOfFigureListeners.get(hashcode));
-        mapOfFigureListeners.remove(hashcode);
-    }
-
-    private void clearFramesOfActiveDrawing() {
-        int hashcode = editor.getActiveView().getDrawing().hashCode();
-        //mapOfDrawingFrames.get(hashcode).clear();
-        mapOfFigureUpdates.get(hashcode).clear();
     }
 }
