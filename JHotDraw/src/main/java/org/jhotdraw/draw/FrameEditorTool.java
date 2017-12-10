@@ -6,7 +6,9 @@
 package org.jhotdraw.draw;
 
 import java.awt.Cursor;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import javax.swing.Action;
 import org.jhotdraw.samples.svg.figures.SVGGroupFigure;
@@ -44,7 +46,9 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
 
     @Override
     public void mouseReleased(MouseEvent evt) {
-        SelectionTool selectionToolFromEvent = (SelectionTool) selectionTool;
+        if (frameEditorCreated == true) {
+            System.out.println("frameEditorCreated");
+        }
     }
     
     
@@ -77,9 +81,12 @@ public class FrameEditorTool extends AbstractTool implements ToolListener {
         if (figuresInSelection && selectionToolFinished && frameEditorCreated == false) {
             Collection<Figure> figuresSelected = event.getView().getSelectedFigures();
             
+            Rectangle rectFigure = event.getInvalidatedArea();
+            groupFigure.setBounds(new Rectangle2D.Double(rectFigure.x, rectFigure.y, rectFigure.width, rectFigure.height));
             event.getView().getDrawing().add(groupFigure);
             groupFigure.addAll(figuresSelected);
             frameEditorCreated = true;
+            
         }
 
     }
