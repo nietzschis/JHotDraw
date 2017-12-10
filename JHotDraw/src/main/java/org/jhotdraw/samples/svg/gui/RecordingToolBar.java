@@ -509,28 +509,4 @@ public class RecordingToolBar extends AbstractToolBar {
             };
         }
     }
-
-    public class FigureState {
-
-        Class klass;
-        Boolean selected;
-
-        public FigureState(Class klass, Boolean selected) {
-            this.klass = klass;
-            this.selected = selected;
-        }
-
-        public Class getKlass() {
-            return this.klass;
-        }
-
-        public Boolean getSelected() {
-            return this.selected;
-        }
-
-        public void setSelected(Boolean select) {
-            selected = select;
-        }
-
-    }
 }
