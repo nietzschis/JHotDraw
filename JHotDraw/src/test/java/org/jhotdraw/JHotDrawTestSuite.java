@@ -2,6 +2,11 @@ package org.jhotdraw;
 
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
+import org.jhotdraw.collaboration.CollaborationAcceptanceTest;
+import org.jhotdraw.collaboration.CollaborationGUITest;
+import org.jhotdraw.collaboration.client.CollaborationDrawingHandlerTest;
+import org.jhotdraw.collaboration.server.CollaborationServerTest;
+import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
@@ -20,7 +25,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class, TinyPngCompressActionTest.class,
-                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, DefaultDrawingViewTest.class})
+                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, DefaultDrawingViewTest.class, 
+                    CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class, 
+                    CollaborationAcceptanceTest.class, CollaborationGUITest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass
