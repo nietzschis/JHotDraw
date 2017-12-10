@@ -86,7 +86,6 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
     public void mouseReleased(MouseEvent evt) {
         selectGroup(evt.isShiftDown());
         clearRubberBand();
-
     }
 
     public void mouseDragged(MouseEvent evt) {
@@ -162,7 +161,7 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
     }
 
     private void selectGroup(boolean toggle) {
-        Collection<Figure> figures = getView().findFiguresWithin(rubberband);
+        Collection<Figure> figures = getView().findFigures(rubberband);
         for (Figure f : figures) {
             if (f.isSelectable()) {
                 getView().addToSelection(f);
