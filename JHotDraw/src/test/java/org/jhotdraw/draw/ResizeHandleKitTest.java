@@ -23,6 +23,9 @@ public class ResizeHandleKitTest {
     @Rule
     public ErrorCollector collector = new ErrorCollector();
 
+    /**
+     * Helper enum with correct values for each resize handle
+     */
     enum HandleDirections
     {
         S(S_RESIZE_CURSOR,RelativeLocator.south(), DIR_S),
@@ -53,6 +56,9 @@ public class ResizeHandleKitTest {
         ResizeHandleKit.addCornerResizeHandles(figure, handles);
     }
 
+    /**
+     * Test if every handle have its correct cursor, both when transformable
+     */
     @Test
     public void cursorTest()
     {
@@ -70,6 +76,9 @@ public class ResizeHandleKitTest {
         }
     }
 
+    /**
+     * Test if every handle have its correct locator
+     */
     @Test
     public void locatorTest()
     {
@@ -80,6 +89,9 @@ public class ResizeHandleKitTest {
         }
     }
 
+    /**
+     * Helper enum for testing applyAspectRatio function with relative resize rectangle for specific directions
+     */
     enum eAspectDir
     {
         S(DIR_S,   new Rectangle2D.Double(0,0,0,20)),
@@ -101,6 +113,9 @@ public class ResizeHandleKitTest {
         final  Rectangle2D.Double rect;
     }
 
+    /**
+     * Function that tests applyAspectRatio function by iterating through two predefined rectangles and every direction changing their size and comparing expected and new aspect ratio
+     */
     @Test
     public void applyAspectRatioTest()
     {

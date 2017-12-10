@@ -23,6 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHandleKitAcceptanceTest.Steps> {
 
+    /**
+     * Acceptance test scenario where we for each point and direction initiate figure, simulate drag to point and check if boundaries are correctly changed.
+     */
     @Test
     public void mouseDragScenario() {
         Point[] points = {
@@ -40,6 +43,9 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
         }
     }
 
+    /**
+     * Acceptance test scenario where we for each rect, key and direction initiate figure, simulate key press and check if boundaries are correctly changed.
+     */
     @Test
     public void keyResizeScenario() {
         int keys[] = {
@@ -84,7 +90,13 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
         @ExpectedScenarioState
         Map.Entry<KeyEvent,KeyEvent> keyEventPair;
 
-
+        /**
+         * Function to initiate our test figure
+         * @param x x of figure
+         * @param y y of figure
+         * @param width width of figure
+         * @param height height of figure
+         */
         @As( "figure with dimensions x: $, y: $, width: $, height: $" )
         void figure(double x, double y, double width, double height) {
             figure = new SVGRectFigure(x,y,width,height);
@@ -94,6 +106,9 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
             setUpView();
         }
 
+        /**
+         * Helper function to setup DrawingView needed for simulation
+         */
         private void setUpView()
         {
             view = new DefaultDrawingView();
@@ -128,16 +143,28 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
             boundsPair = new Pair<>(figure.getBounds(), bounds);
         }
 
+        /**
+         * Function that check if bounds pair created in scenario is correct
+         */
         void checkBounds()
         {
             assertEquals("Bounds doesn't match", boundsPair.getKey(),boundsPair.getValue());
         }
 
+        /**
+         * Function that check if keyEvent pair used in scenario is correctly consumed
+         */
         void checkConsumption()
         {
             assertEquals("Consumption doesn't match", keyEventPair.getKey().isConsumed(), keyEventPair.getValue().isConsumed());
         }
 
+        /**
+         * Function simulation trackStepNormalized for comparision
+         * @param p new point
+         * @param mask direction mask
+         * @param r original bounds rectangle
+         */
         private void trackStepNormalized(Point2D.Double p, int mask, Rectangle2D.Double r) {
 
             double left = (mask & DIR_W) != 0 ? Math.min(r.x + r.width - 1, p.x) : r.x;
@@ -150,6 +177,11 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
                     new Point2D.Double(right, bottom));
         }
 
+        /**
+         * Test of keyPress event
+         * @param key currently tested key
+         * @param dir currently tested direction
+         */
         @As( "key $ is pressed on handle $" )
         void keyPressed(int key, HandleDirections dir) {
             int mask = dir.dirMask;
@@ -177,6 +209,11 @@ public class ResizeHandleKitAcceptanceTest  extends SimpleScenarioTest<ResizeHan
             return x > 0 ? 1 : 0;
         }
 
+        /**
+         * Simulation of keyPress behaviour for comparision
+         * @param evt Key event
+         * @param mask Direction mask
+         */
         private void keyPressedHelper(KeyEvent evt, int mask) {
             Rectangle2D.Double r = figure.getBounds();
 

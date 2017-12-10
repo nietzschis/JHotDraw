@@ -113,7 +113,16 @@ public class ResizeHandleKit {
         return new ResizeHandle(owner, DIR_W);
     }
 
-
+    /**
+     * Adjust rect to specified aspect ratio.
+     * For West or east direction using aspectRatio.y to calculate height from width
+     * For other directions calculates new width from height and aspectRatio.x
+     *
+     * @param direction Direction of handle
+     * @param topLeft Top left point of new rect. Can not be null.
+     * @param bottomRight Bottom right point of new rect. Can not be null.
+     * @param aspectRatio Aspect ratio modificators. Can not be null.
+     */
     static void applyAspectRatio(int direction, @NotNull Point2D.Double topLeft, @NotNull Point2D.Double bottomRight, @NotNull Point2D.Double aspectRatio)
     {
         double height = bottomRight.y -  topLeft.y;
@@ -175,6 +184,11 @@ public class ResizeHandleKit {
             this.shiftPressed = false;
         }
 
+        /**
+         * Select specific locator according to handle direction
+         * @param direction  Direction of handle
+         * @return Relative locator
+         */
         private static Locator chooseLocator(int direction)
         {
             switch (direction)
@@ -190,6 +204,13 @@ public class ResizeHandleKit {
                 default: return null;
             }
         }
+
+        /**
+         * Select specific predefined cursor according to handle direction
+         *
+         * @param direction Direction of handle
+         * @return Predefined cursor
+         */
         private static Cursor chooseCursor(int direction)
         {
             int cur;
@@ -249,6 +270,9 @@ public class ResizeHandleKit {
             saveAspectRatio();
         }
 
+        /**
+         * Updates aspectRatio according to current bounds
+         */
         private void saveAspectRatio()
         {
             Rectangle.Double r = getOwner().getBounds();
@@ -283,6 +307,10 @@ public class ResizeHandleKit {
             shiftPressed = false;
         }
 
+        /**
+         * Normalize new rectangle to prevent its size to go lower thank 1x1 point
+         * @param p New point where current handle was dragged into
+         */
         void trackStepNormalized(Point2D.Double p) {
             Rectangle2D.Double r = getOwner().getBounds();
             double left = (direction & DIR_W) != 0 ? Math.min(r.x + r.width - 1, p.x) : r.x;
