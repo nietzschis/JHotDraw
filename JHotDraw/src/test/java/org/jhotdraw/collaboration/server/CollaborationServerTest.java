@@ -8,6 +8,7 @@ import java.rmi.server.ExportException;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -50,12 +51,17 @@ public class CollaborationServerTest {
     @Test(expected = NotBoundException.class)
     public void testStopServerWhenServerIsRunning() throws RemoteException, NotBoundException, AlreadyBoundException {
         server.startServer();
-        
-        server.stopServer();
+
+        try {
+            server.stopServer();
+        }
+        catch (NotBoundException e) {
+            fail("Server was not running when stopServer() was called.");
+        }
 
         LocateRegistry.getRegistry(CollaborationConfig.PORT).lookup(CollaborationConfig.NAME);
     }
-    
+
     @Test(expected = NotBoundException.class)
     public void testStopServerWhenServerIsNotRunning() throws RemoteException, NotBoundException {
         server.stopServer();

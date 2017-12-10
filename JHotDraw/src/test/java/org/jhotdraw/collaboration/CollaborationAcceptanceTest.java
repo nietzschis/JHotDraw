@@ -23,7 +23,7 @@ public class CollaborationAcceptanceTest extends ScenarioTest<GivenCollaboration
     }
     
     @Test
-    public void add_collaborator_to_server_test() throws RemoteException, AlreadyBoundException, UnknownHostException {
+    public void add_collaborator_to_the_server() throws RemoteException, AlreadyBoundException, UnknownHostException {
         given().the_server()
                 .and()
                 .the_mock_client();
@@ -34,7 +34,7 @@ public class CollaborationAcceptanceTest extends ScenarioTest<GivenCollaboration
     }
     
     @Test
-    public void remove_collaborator_to_server_test() throws RemoteException, AlreadyBoundException, UnknownHostException {
+    public void remove_collaborator_from_the_server() throws RemoteException, AlreadyBoundException, UnknownHostException {
         given().the_server()
                 .and()
                 .the_mock_client();
@@ -46,7 +46,7 @@ public class CollaborationAcceptanceTest extends ScenarioTest<GivenCollaboration
     }
     
     @Test
-    public void send_update_from_server_to_client_test() throws RemoteException, AlreadyBoundException, UnknownHostException {
+    public void send_update_from_server_to_client() throws RemoteException, AlreadyBoundException, UnknownHostException {
         given().the_server()
                 .and()
                 .the_mock_client();

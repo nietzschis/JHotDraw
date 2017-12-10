@@ -12,7 +12,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.ExportException;
+import java.util.concurrent.TimeUnit;
+import javax.swing.JOptionPane;
+import org.assertj.swing.core.GenericTypeMatcher;
+import org.assertj.swing.exception.ComponentLookupException;
+import org.assertj.swing.finder.JOptionPaneFinder;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JOptionPaneFixture;
+import org.assertj.swing.timing.Timeout;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
@@ -37,7 +44,7 @@ public class CollaborationGUITest {
 
     private FrameFixture window;
     private Application app;
-    
+
     @Before
     public void setUp() throws InterruptedException {
         app = new DefaultSDIApplication();
@@ -45,10 +52,12 @@ public class CollaborationGUITest {
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
         app.launch(null);
-        Thread.sleep(5000);
-        window = new FrameFixture(app.getFrame());
+        while (app.getFrame() == null) {
+            Thread.sleep(1000);
+            window = new FrameFixture(app.getFrame());
+        }
     }
-    
+
     @After
     public void tearDown() {
         try {
@@ -63,32 +72,58 @@ public class CollaborationGUITest {
     @Test(expected = ExportException.class)
     public void GUIStartServerTest() throws RemoteException, AlreadyBoundException, InterruptedException, UnsupportedFlavorException, UnknownHostException, IOException {
         assertNotNull(app.getFrame());
-        
+        assertNotNull(window);
+
         window.show();
-        
+
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.start").click();
-        window.optionPane().yesButton().click();
+        window.optionPane().yesButton().click(); //Start server? popup
 
-        Thread.sleep(10000);
-        
-        window.optionPane().yesButton().click();
+        findJOptionPane(); //Copy IP? popup
+
         assertEquals(InetAddress.getLocalHost().getHostAddress(), Toolkit.getDefaultToolkit()
                 .getSystemClipboard().getData(DataFlavor.stringFlavor));
-        
-        LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
+
+        CollaborationServer.getInstance().startServer();
+    }
+    
+    private void findJOptionPane() {
+        try {
+            window.optionPane().yesButton().click();
+        }
+        catch (ComponentLookupException e) {
+            findJOptionPane();
+        }
     }
     
     @Test
-    public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
+    public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
         assertNotNull(app.getFrame());
+        assertNotNull(window);
+
+        window.show();
         
         CollaborationServer.getInstance().startServer();
-        
+
+        window.menuItem("collaboration").click();
+        window.menuItem("collaboration.start").click();
+        window.optionPane().yesButton().click(); //Start server? popup
+
+        //findJOptionPane(); //Error popup
+        window.optionPane().buttonWithText("\\s*OK\\s*").click();
+    }
+
+    @Test
+    public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
+        assertNotNull(app.getFrame());
+
+        CollaborationServer.getInstance().startServer();
+
         window.show();
         assertFalse(CollaborationConnection.getInstance().isConnected());
         assertNull(CollaborationConnection.getInstance().getName());
-        
+
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.connect").click();
         window.optionPane().textBox().enterText(InetAddress.getLocalHost().getHostAddress());
@@ -97,15 +132,15 @@ public class CollaborationGUITest {
         window.optionPane().textBox().enterText("TestUser");
         window.optionPane().okButton().click();
         window.optionPane().okButton().click();
-        
+
         assertTrue(CollaborationConnection.getInstance().isConnected());
         assertEquals("TestUser", CollaborationConnection.getInstance().getName());
-        
+
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.disConnect").click();
-        
+
         assertFalse(CollaborationConnection.getInstance().isConnected());
         assertNull(CollaborationConnection.getInstance().getName());
-        
+
     }
 }

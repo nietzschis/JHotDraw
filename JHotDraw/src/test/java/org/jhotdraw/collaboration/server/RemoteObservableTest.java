@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -46,9 +47,11 @@ public class RemoteObservableTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws RemoteException {
         client = mock(CollaborationConnection.class);
+        when(client.getName()).thenReturn("client1");
         client2 = mock(CollaborationConnection.class);
+        when(client2.getName()).thenReturn("client2");
         argument = new ArrayList<>();
         argumentCaptor = ArgumentCaptor.forClass(List.class);
     }
@@ -57,6 +60,8 @@ public class RemoteObservableTest {
     public void tearDown() {
         ((RemoteObservable) server).clearAllCollaborators();
         client = null;
+        client2 = null;
+        argument = null;
         argumentCaptor = null;
     }
 
@@ -112,6 +117,17 @@ public class RemoteObservableTest {
         
         verify(client2, times(1)).update(argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue(), argument);
+    }
+    
+    @Test
+    public void testGetCollaboratorNames() throws RemoteException {
+        server.addCollaborator(client);
+        server.addCollaborator(client2);
+        
+        String[] names = ((RemoteObservable) server).getCollaboratorNames().split("\n");
+        
+        assertEquals("client1", names[0]);
+        assertEquals("client2", names[1]);
     }
 
 }
