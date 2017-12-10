@@ -58,16 +58,25 @@ public class WatermarkTest {
 
         ImageIO.write(sourceFileImage, "png", finalFile);
         g2d.dispose();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
         assertThat(pixels(finalFile), not(equalTo(pixels(sourceFile))));
-        try {
-            Files.deleteIfExists(finalFile.toPath());
+        Files.deleteIfExists(finalFile.toPath());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+    
+    @Test
+    public void testBMPFileFormat(){
+        BufferedImage watermarkImage = loadWatermark();
+        File testFile = new File("src/test/resources/org/jhotdraw/app/action/images/wrongFormatTestImage.bmp");
+        try {
+            BufferedImage sourceFileImage = ImageIO.read(testFile);
+            assertNull(sourceFileImage.getAlphaRaster());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     
     protected byte[] pixels(File file){
         BufferedImage image = null;
@@ -94,8 +103,6 @@ public class WatermarkTest {
 
     protected File loadTestFile(){
         File testFile = new File("src/test/resources/org/jhotdraw/app/action/images/testImage.png");
-
         return testFile;
-
     }
 }
