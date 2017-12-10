@@ -855,7 +855,7 @@ public class ButtonFactory {
                 labels.configureToolBarButton(load, "load.myColors");                
                 load.addActionListener((ActionEvent e) -> {            
                 MyColorsLoadAction myLoader = new MyColorsLoadAction();
-                myLoader.load(attributeKey,editor, parent);
+                myLoader.load(attributeKey,editor, parent,null);
                 
                 });
       return load;          
@@ -869,7 +869,7 @@ public class ButtonFactory {
                 labels.configureToolBarButton(save, "save.myColors");
                 save.addActionListener((ActionEvent e) -> { 
                     MyColorsSaveAction mySave = new MyColorsSaveAction();
-                    mySave.save(list);
+                    mySave.save(list,null);
                 });
                 return save;
      }

@@ -28,9 +28,9 @@ public class MyColorsSaveAction {
     
     }
     
-    public void save(LinkedList<ColorIcon> myColorList){
+    public void save(LinkedList<ColorIcon> myColorList, String filePath){
     
-    int result = saveMyColors(myColorList);
+    int result = saveMyColors(myColorList,filePath);
     switch(result){
                     case 1:
                         System.out.println("No Colors to save");
@@ -45,9 +45,9 @@ public class MyColorsSaveAction {
                         //JOptionPane.showMessageDialog(frame, "Colors saved");
                 }
     }
-    private int saveMyColors(LinkedList<ColorIcon> myColorList){
+    private int saveMyColors(LinkedList<ColorIcon> myColorList, String filePath){
         if (myColorList.isEmpty()) return 1;
-        
+        if(filePath==null|| filePath.isEmpty()){
         jfc = new JFileChooser();
         jfc.setDialogTitle("Save My Colors");
         jfc.addChoosableFileFilter(txtFilter);
@@ -56,7 +56,9 @@ public class MyColorsSaveAction {
 		System.out.println("You selected the directory: " + jfc.getSelectedFile());
 		boolean compltede = writeFile(myColorList, jfc.getSelectedFile().getPath()+".txt");
                     if (compltede) return 3; 
-		}
+		}}
+        else if(!filePath.isEmpty()){boolean compltede = writeFile(myColorList, filePath+".txt");
+                    if (compltede) return 3;}
     return 2;
     }
     private final static String toHexString(Color colour) throws NullPointerException {

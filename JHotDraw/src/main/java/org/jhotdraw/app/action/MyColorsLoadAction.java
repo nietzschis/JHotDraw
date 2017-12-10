@@ -37,30 +37,45 @@ public class MyColorsLoadAction {
     public MyColorsLoadAction(){
         
     }
-    public void load(AttributeKey<Color> attributeKey,DrawingEditor editor,JPopupButton parent){
+    public List<ColorIcon> loadTester(String filePath){
     MY_COLORS = new LinkedList<ColorIcon>();  
-    MY_COLORS = loadMyColors();
+    MY_COLORS = loadMyColors(filePath);
+    return  MY_COLORS;   
+    }
+    public void load(AttributeKey<Color> attributeKey,DrawingEditor editor,JPopupButton parent,String filePath){
+    MY_COLORS = new LinkedList<ColorIcon>();  
+    MY_COLORS = loadMyColors(filePath);
     if(MY_COLORS!=null)
     addToUI(attributeKey, editor, parent);
     
     }
     
-    private List<ColorIcon> loadMyColors(){
+    private List<ColorIcon> loadMyColors(String filePath){
      String[] hexColorList;
      List<ColorIcon> loadedList;
+     if(filePath==null||filePath.isEmpty()){
      jfc = new JFileChooser();
         jfc.setDialogTitle("Load My Colors");
         jfc.addChoosableFileFilter(txtFilter);
         int returnValue = jfc.showOpenDialog(null);
-	if (returnValue == JFileChooser.APPROVE_OPTION) {
-         try {	
+    if (returnValue == JFileChooser.APPROVE_OPTION) {
+         try {  
              hexColorList = readFile(jfc.getSelectedFile());
              loadedList = createList(hexColorList);
              return loadedList;
          } catch (IOException ex) {
              Logger.getLogger(MyColorsLoadAction.class.getName()).log(Level.SEVERE, null, ex);
          }
-	}         
+    }}
+     else if(filePath!=null|!filePath.isEmpty()){
+       try {    
+             hexColorList = readFile(new File (filePath));
+             loadedList = createList(hexColorList);
+             return loadedList;
+         } catch (IOException ex) {
+             Logger.getLogger(MyColorsLoadAction.class.getName()).log(Level.SEVERE, null, ex);
+         }  
+     }
         loadedList = null;
         return loadedList;
     }
@@ -78,7 +93,7 @@ public class MyColorsLoadAction {
         return null;
     }
     //Loads a My Colors .txt file to myColors List
-	private  String[] readFile(File filepath) throws IOException {
+    private  String[] readFile(File filepath) throws IOException {
         FileReader fileReader;
         BufferedReader bufferedReader;
         List<String> lines =new ArrayList<String>();
