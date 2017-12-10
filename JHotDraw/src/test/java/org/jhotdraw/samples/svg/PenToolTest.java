@@ -5,6 +5,7 @@
  */
 package org.jhotdraw.samples.svg;
 
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import org.jhotdraw.draw.BezierFigure;
 import org.jhotdraw.draw.DrawingView;
@@ -66,5 +67,6 @@ public class PenToolTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+    
     
 }

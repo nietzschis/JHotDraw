@@ -278,14 +278,14 @@ public class BezierTool extends AbstractTool {
         }
 
         // repaint dotted line
-        Rectangle r = new Rectangle(anchor);
+        /*Rectangle r = new Rectangle(anchor);
         r.add(mouseLocation);
         r.add(evt.getPoint());
         r.grow(1, 1);
         fireAreaInvalidated(r);
         anchor.x = evt.getX();
         anchor.y = evt.getY();
-        mouseLocation = evt.getPoint();
+        mouseLocation = evt.getPoint();*/
     }
 
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {

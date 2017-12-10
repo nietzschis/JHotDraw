@@ -39,7 +39,6 @@ public class PenTool extends PathTool {
         createdPath.add(createdFigure);
         creationView.getDrawing().add(createdPath);
         fireUndoEvent(createdPath, creationView);
-        //creationView.addToSelection(createdPath);
         if (isToolDoneAfterCreation()) {
             fireToolDone();
         }
