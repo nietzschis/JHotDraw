@@ -133,7 +133,6 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(DuplicateAction.ID, new DuplicateAction());
         m.putAction(SelectAllAction.ID, new SelectAllAction());
         m.putAction(VerticalFlipAction.ID, new VerticalFlipAction());
-        m.putAction(FlipAction.ID, new FlipAction());
         
         m.putAction(CollaborationStartServerAction.ID, new CollaborationStartServerAction(this));
         m.putAction(CollaborationStopServerAction.ID, new CollaborationStopServerAction(this));
