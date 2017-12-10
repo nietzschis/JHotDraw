@@ -64,10 +64,11 @@ public class SaveAction extends AbstractViewAction {
         labels.configureAction(this, ID);
         this.opener = new OpenListenerImpl();
     }
-    
+
     /**
      * Dependency injection of OpenerListener
-     * @param ol 
+     *
+     * @param ol
      */
     public void setOpenListener(OpenListener ol) {
         this.opener = ol;
@@ -97,6 +98,12 @@ public class SaveAction extends AbstractViewAction {
                                 file = evt.getFileChooser().getSelectedFile();
                             }
                             saveToFile(view, file);
+
+                            //Open the browser 
+                            if (opener != null) {
+                                opener.openBrowser(file);
+                            }
+
                         } else {
                             view.setEnabled(true);
                             if (oldFocusOwner != null) {
@@ -143,10 +150,6 @@ public class SaveAction extends AbstractViewAction {
             }
             getApplication().addRecentFile(file);
             view.setMultipleOpenId(multiOpenId);
-
-            if (opener != null) {
-                opener.openBrowser(file);
-            }
 
         } else {
             String message;
