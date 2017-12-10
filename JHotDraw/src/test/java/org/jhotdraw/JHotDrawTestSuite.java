@@ -1,5 +1,6 @@
 package org.jhotdraw;
 
+import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
@@ -20,7 +21,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class, TinyPngCompressActionTest.class,
-                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, DefaultDrawingViewTest.class})
+                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, DefaultDrawingViewTest.class, MyColorsSaveLoadActionTest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass
