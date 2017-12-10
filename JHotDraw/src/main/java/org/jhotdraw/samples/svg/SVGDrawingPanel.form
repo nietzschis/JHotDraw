@@ -111,6 +111,8 @@
                 <Component class="org.jhotdraw.samples.svg.gui.ArrangeToolBar" name="arrangeToolBar">
                 </Component>
                 <Component class="org.jhotdraw.samples.svg.gui.AlignToolBar" name="alignToolBar">
+               	</Component>
+               	<Component class="org.jhotdraw.samples.svg.gui.TextFillToolBar" name="textFillToolBar">
                 </Component>
                 <Component class="org.jhotdraw.samples.svg.gui.FigureToolBar" name="figureToolBar">
                 </Component>

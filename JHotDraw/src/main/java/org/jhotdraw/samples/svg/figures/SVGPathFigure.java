@@ -121,7 +121,16 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         if (paint != null) {
             g.setPaint(paint);
             drawFill(g);
+
+        }
+        
+        paint = getTextColor();
+        if (paint != null){
+            Composite savedComposite = g.getComposite();
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) Math.max(0d, TEXT_OPACITY.get(this))));
+            g.setPaint(paint);
             drawText(g);
+            g.setComposite(savedComposite);
         }
         
         paint = SVGAttributeKeys.getStrokePaint(this);
@@ -140,7 +149,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
 
     public void drawText(Graphics2D g){
-        g.fill(cachedTextPath);
+        g.fill(getTextPath());
     }
     
     public void drawFill(Graphics2D g) {
@@ -282,8 +291,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
     
     public boolean textContains(Point2D.Double p){
-        if (getTextPath().contains(p)){
-            return true;
+        if (!getPath().contains(p)){
+            if (getTextPath().contains(p)){
+                return true;
+            }
         }
         return false;
     }
@@ -573,7 +584,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public Color getTextColor() {
-        return FILL_COLOR.get(this);
+        return TEXT_COLOR.get(this);
     }
 
     @Override
