@@ -5,23 +5,12 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.util.Arrays;
-import java.util.Collection;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
 import static org.jhotdraw.draw.AnimationToolDefinition.*;
-import org.jhotdraw.draw.DrawingEditor;
-import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
-import org.jhotdraw.util.ResourceBundleUtil;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -63,5 +52,15 @@ public class AnimationToolBarTest {
         JButton createdToolToTest = (JButton) panel.getComponent(0);
         JButton existingToolToTest = (JButton) toolbarPanel.getComponent(0);
         assertEquals(createdToolToTest.getAction().getClass(), existingToolToTest.getAction().getClass());
+    }
+    
+    @Test
+    public void testAddFrameTool() {
+        Animation.getInstance().getFrames().clear();
+        toolbar.createDisclosedComponent(STATE);
+        JButton button = (JButton) toolbar.getButtons().get(0);
+        button.doClick();
+        button.doClick();
+        assertEquals(2, Animation.getInstance().getFrames().size());
     }
 }
