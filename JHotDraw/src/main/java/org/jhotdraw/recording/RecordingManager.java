@@ -35,6 +35,10 @@ public class RecordingManager {
     public HashMap<Integer, FigureListener> getMapOfFigureListeners() {
         return mapOfFigureListeners;
     }
+    
+    public HashMap<Integer, ArrayList<FigureUpdate>> getMapOfFigureUpdates() {
+        return mapOfFigureUpdates;
+    }
 
     public void setEditor(DrawingEditor editor) {
         this.editor = editor;
