@@ -1,0 +1,72 @@
+package org.jhotdraw.draw;
+
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.awt.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+
+public class SelectionTest {
+    private static final Rectangle SELECTION_AREA = new Rectangle(5, 0, 40, 50);
+
+    private static DrawingEditor editor;
+    private static DrawingView view;
+
+    @BeforeClass
+    public static void setUpClass() {
+        editor = new DefaultDrawingEditor();
+
+        view = new DefaultDrawingView();
+        editor.setActiveView(view);
+
+        final Drawing drawing = new QuadTreeDrawing();
+        view.setDrawing(drawing);
+
+        drawing.add(new SVGRectFigure(10.0, 0.0, 10.0, 10.0));
+        drawing.add(new SVGRectFigure(25.0, 0.0, 10.0, 10.0));
+        drawing.add(new SVGRectFigure(40.0, 0.0, 10.0, 10.0));
+        drawing.add(new SVGRectFigure(80.0, 0.0, 10.0, 10.0));
+    }
+
+    @Test
+    public void testFindWithin() {
+        final Collection<Figure> figures = view.findFiguresWithin(SELECTION_AREA);
+        assertThat(figures.size(), is(2));
+    }
+
+    @Test
+    public void testFiguresIntersecting() {
+        final Collection<Figure> figures = view.findFigures(SELECTION_AREA);
+        assertThat(figures.size(), is(3));
+    }
+
+    @Test
+    public void testExpectedSelection() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        final SelectAreaTracker selectAreaTracker = new DefaultSelectAreaTracker();
+        selectAreaTracker.activate(editor);
+
+        assertThat(view.getSelectionCount(), is(0));
+
+        // Reflection might not be the most optimal way, but it's definitely easier than creating widgets and mouse events
+        final Field field = DefaultSelectAreaTracker.class.getDeclaredField("rubberband");
+        field.setAccessible(true);
+
+        final Rectangle bounds = (Rectangle) field.get(selectAreaTracker);
+        bounds.setBounds(SELECTION_AREA);
+
+        final Method method = DefaultSelectAreaTracker.class.getDeclaredMethod("selectGroup", boolean.class);
+        method.setAccessible(true);
+        method.invoke(selectAreaTracker, false);
+
+        assertThat(view.getSelectionCount(), is(3));
+
+        selectAreaTracker.deactivate(editor);
+    }
+}

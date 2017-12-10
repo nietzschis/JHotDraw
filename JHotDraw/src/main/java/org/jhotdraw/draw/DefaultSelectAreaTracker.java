@@ -86,7 +86,6 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
     public void mouseReleased(MouseEvent evt) {
         selectGroup(evt.isShiftDown());
         clearRubberBand();
-
     }
 
     public void mouseDragged(MouseEvent evt) {
