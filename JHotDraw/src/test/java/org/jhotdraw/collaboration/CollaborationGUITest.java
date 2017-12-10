@@ -90,7 +90,7 @@ public class CollaborationGUITest {
     
     private void findJOptionPane() {
         try {
-            window.optionPane().yesButton().click();
+            window.optionPane().yesButton().click(); //Copy IP? popup
         }
         catch (ComponentLookupException e) {
             findJOptionPane();
@@ -109,9 +109,8 @@ public class CollaborationGUITest {
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.start").click();
         window.optionPane().yesButton().click(); //Start server? popup
-
-        //findJOptionPane(); //Error popup
-        window.optionPane().buttonWithText("\\s*OK\\s*").click();
+        
+        window.optionPane().buttonWithText("\\s*OK\\s*").click(); //Error popup
     }
 
     @Test
