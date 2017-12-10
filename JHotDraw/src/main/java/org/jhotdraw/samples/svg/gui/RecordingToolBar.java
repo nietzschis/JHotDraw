@@ -1,13 +1,10 @@
 package org.jhotdraw.samples.svg.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -16,10 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javafx.scene.control.CheckBox;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -33,9 +27,7 @@ import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-import org.jhotdraw.draw.AbstractFigure;
 import org.jhotdraw.draw.DefaultDrawingView;
-import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
@@ -44,8 +36,7 @@ import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.util.ResourceBundleUtil;
 
-public class RecordingToolBar extends AbstractToolBar {
-
+public class RecordingToolBar extends AbstractToolBar {    
     public RecordingToolBar() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString("recording.toolbar"));
@@ -205,28 +196,23 @@ public class RecordingToolBar extends AbstractToolBar {
         }
 
         /**
-         * Class used to store data relevant for later replaying and editing.
-         * The drawing variable should be used for storing the Drawing received
-         * from the DrawingView, and the klass variable should be used for
-         * storing the class of the source that triggered the creation of a new
-         * frame instance.
+         * Class used to store data relevant for later playback.
          */
-        public class Frame {
-
-            private final Object drawing;
-            private final Class klass;
-
-            public Frame(Object drawing, Class klass) {
-                this.drawing = drawing;
-                this.klass = klass;
+        public class FigureUpdate {
+            private final Figure figure;
+            private final int hash;
+            
+            public FigureUpdate(Figure figure, int hash) {
+                this.hash = hash;
+                this.figure = figure;
             }
-
-            public Object getDrawing() {
-                return drawing;
+            
+            public Figure getFigure() {
+                return figure;
             }
-
-            public Class getKlass() {
-                return klass;
+            
+            public int getHash() {
+                return hash;
             }
         }
 
@@ -242,7 +228,8 @@ public class RecordingToolBar extends AbstractToolBar {
         protected long lastFrameCapturedAt = 0;
 
         // Used for storing Frame instances associated with a specific Drawing based on that Drawing's hashcode.
-        private HashMap<Integer, ArrayList<Frame>> mapOfDrawingFrames = new HashMap<>();
+        //private HashMap<Integer, ArrayList<Frame>> mapOfDrawingFrames = new HashMap<>();
+        private HashMap<Integer, ArrayList<FigureUpdate>> mapOfFigureUpdates = new HashMap<>();
 
         // Used for storing FigureListeners created for the purpose of recording. Stored for the purpose of later removing them again.
         private HashMap<Integer, FigureListener> mapOfFigureListeners = new HashMap<>();
@@ -303,7 +290,7 @@ public class RecordingToolBar extends AbstractToolBar {
 
             int hashcode = editor.getActiveView().getDrawing().hashCode();
 
-            if (!mapOfDrawingFrames.containsKey(hashcode)) {
+            if (!mapOfFigureUpdates.containsKey(hashcode)) {
                 JOptionPane.showMessageDialog(null, "No recording found for this tab, press the record button to begin recording.");
                 return;
             }
@@ -314,9 +301,10 @@ public class RecordingToolBar extends AbstractToolBar {
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             window.setLocation(dim.width / 2 - window.getSize().width / 2, dim.height / 2 - window.getSize().height / 2);
 
-            ArrayList<Frame> frames = mapOfDrawingFrames.get(hashcode);
+            ArrayList<FigureUpdate> updates = mapOfFigureUpdates.get(hashcode);
 
             DefaultDrawingView drawingView = new DefaultDrawingView();
+            drawingView.setDrawing(new QuadTreeDrawing());
 
             AtomicBoolean looping = new AtomicBoolean(true);
             AtomicInteger frameIndex = new AtomicInteger();
@@ -327,7 +315,7 @@ public class RecordingToolBar extends AbstractToolBar {
             JToggleButton btnPlaying = new JToggleButton("Pause");
             controls.add(btnPlaying);
 
-            JSlider timeline = new JSlider(0, frames.size());
+            JSlider timeline = new JSlider(0, updates.size());
             controls.add(timeline);
 
             JToggleButton btnLooping = new JToggleButton("Loop");
@@ -346,39 +334,39 @@ public class RecordingToolBar extends AbstractToolBar {
             toolPanel.add(panel);
             window.setContentPane(toolPanel);
 
-            ArrayList<FigureState> classes = new ArrayList<>();
+            HashMap<Class, Boolean> mapOfClassesRecorded = new HashMap<>();
+            updates.forEach((update) -> {
+                mapOfClassesRecorded.putIfAbsent(update.getFigure().getClass(), true);
+            });
+            
+            HashMap<Integer, Figure> mapOfDrawnFigures = new HashMap<>();
 
             Timer timer;
             timer = new Timer(16, (ae) -> {
                 timeline.setValue(frameIndex.get());
-                if (frameIndex.get() < frames.size()) {
-                    Frame current = frames.get(frameIndex.getAndIncrement());
-                    QuadTreeDrawing drawing = (QuadTreeDrawing) current.drawing;
-
-                    drawingView.setDrawing(drawing);
-
-                    for (int i = 0; i < drawing.getChildCount(); i++) {
-                        Figure figure = drawing.getChild(i);
-                        AtomicBoolean visible = new AtomicBoolean(true);
-                        classes.forEach((c) -> {
-                            if (figure.getClass()==(c.getKlass()) && !c.getSelected()) {
-                                visible.set(false);
-                            }
-                        });
-                        if (visible.get()) {
-                            ((AbstractFigure) figure).setVisible(true);
+                if (frameIndex.get() < updates.size()) {
+                    FigureUpdate current = updates.get(frameIndex.getAndIncrement());
+                    
+                    if(mapOfClassesRecorded.get(current.getFigure().getClass())) {
+                        if(mapOfDrawnFigures.containsKey(current.getHash())) {
+                            drawingView.getDrawing().remove(mapOfDrawnFigures.get(current.getHash()));
+                            mapOfDrawnFigures.remove(current.getHash());
                         }
-                        else {
-                            ((AbstractFigure) figure).setVisible(false);
-                        }
-                            QuadTreeDrawing qtd = ((QuadTreeDrawing) drawing);
-                            qtd.repaintFigure(figure);
+                        
+                        drawingView.getDrawing().add(current.getFigure());
+                        mapOfDrawnFigures.put(current.getHash(), current.getFigure());
                     }
+                    
+                    ((QuadTreeDrawing) drawingView.getDrawing()).repaintFigure(current.getFigure()); 
 
                 } else {
+                    mapOfDrawnFigures.clear();
+                    drawingView.getDrawing().removeAllChildren();
+                    
                     if (looping.get()) {
                         frameIndex.set(0);
                     }
+                    
                     System.out.println("Animation done");
                 }
 
@@ -407,30 +395,15 @@ public class RecordingToolBar extends AbstractToolBar {
                 }
             });
 
-            frames.forEach((frame) -> {
-                ((Drawing) frame.getDrawing()).getChildren().forEach((child) -> {
-                    AtomicBoolean exists = new AtomicBoolean(false);
-                    classes.forEach((klass) -> {
-                        if (klass.getKlass().equals(child.getClass())) {
-                            exists.set(true);
-                        }
-
-                    });
-                    if (!exists.get()) {
-                        classes.add(new FigureState(child.getClass(), true));
-                    }
-
-                });
-            });
-
-            classes.forEach((klass) -> {
-                JCheckBox checkBox = new JCheckBox(klass.getKlass().getSimpleName(), klass.getSelected());
+            mapOfClassesRecorded.forEach((klass, bool) -> {
+                JCheckBox checkBox = new JCheckBox(klass.getSimpleName(), bool);
+                
                 checkBox.addActionListener((ae) -> {
-                    klass.setSelected(checkBox.isSelected());
+                    mapOfClassesRecorded.put(klass, checkBox.isSelected());
                 });
+                
                 toolList.add(checkBox);
             });
-
         }
 
         /**
@@ -443,7 +416,8 @@ public class RecordingToolBar extends AbstractToolBar {
             }
 
             int hashcode = editor.getActiveView().getDrawing().hashCode();
-            mapOfDrawingFrames.putIfAbsent(hashcode, new ArrayList<Frame>());
+            //mapOfDrawingFrames.putIfAbsent(hashcode, new ArrayList<Frame>());
+            mapOfFigureUpdates.putIfAbsent(hashcode, new ArrayList<FigureUpdate>());
             mapOfFigureListeners.putIfAbsent(hashcode, createFigureListener(hashcode));
             editor.getActiveView().getDrawing().addFigureListener(mapOfFigureListeners.get(hashcode));
         }
@@ -465,7 +439,8 @@ public class RecordingToolBar extends AbstractToolBar {
          */
         private void clearFramesOfActiveDrawing() {
             int hashcode = editor.getActiveView().getDrawing().hashCode();
-            mapOfDrawingFrames.get(hashcode).clear();
+            //mapOfDrawingFrames.get(hashcode).clear();
+            mapOfFigureUpdates.get(hashcode).clear();
         }
 
         /**
@@ -483,12 +458,16 @@ public class RecordingToolBar extends AbstractToolBar {
                  * event.
                  */
                 private void storeChange(FigureEvent e) {
+                    if(e.getFigure() instanceof QuadTreeDrawing) {
+                        return;
+                    }
+                    
                     if (System.currentTimeMillis() - lastFrameCapturedAt > 16) {
                         lastFrameCapturedAt = System.currentTimeMillis();
 
-                        mapOfDrawingFrames.get(hashcode).add(new Frame(
-                                editor.getActiveView().getDrawing().clone(),
-                                e.getSource().getClass()
+                        mapOfFigureUpdates.get(hashcode).add(
+                                new FigureUpdate((Figure) e.getFigure().clone(), 
+                                e.getFigure().hashCode()
                         ));
                     }
                 }
