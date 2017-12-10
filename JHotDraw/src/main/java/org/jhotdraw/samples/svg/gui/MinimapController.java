@@ -10,7 +10,7 @@ import org.jhotdraw.draw.FigureListener;
 import org.jhotdraw.samples.svg.ViewportModifier;
 
 /**
- * Controller to update, and listen for events on {@link MinimapView}.
+ *
  */
 public class MinimapController {
     
@@ -25,16 +25,11 @@ public class MinimapController {
     
     private final MinimapView minimapView;
 
-    /**
-     * Creates a new controller for {@link MinimapView}.
-     * @param viewportModifier A function to be called whenever the viewport on the canvas should change position.
-     * @param minimapView The view to control.
-     */
     MinimapController(ViewportModifier viewportModifier, MinimapView minimapView) {
         this.minimapView = minimapView;
         
         if(viewportModifier != null){
-            minimapView.addListener(viewportModifier::centerViewportOnPoint);
+            minimapView.addListener(viewportModifier::centerPointOnCanvas);
         }
     }
     
@@ -56,7 +51,6 @@ public class MinimapController {
             activeDrawing.addUndoableEditListener(undoableEditListener);
         }
         
-        minimapView.setDrawing(d);
         minimapView.repaint();
     }
     
