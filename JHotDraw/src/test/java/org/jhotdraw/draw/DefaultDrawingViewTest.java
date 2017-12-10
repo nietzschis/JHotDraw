@@ -65,7 +65,7 @@ public class DefaultDrawingViewTest {
         Assert.assertEquals(1, drawing.getChildCount()); //add first figure
         
         instance.toggleSelection(f); //select the figure
-        instance.flip();//flip the selected figure
+        instance.flip("Vertical");//flip the selected figure
         instance.removeFromSelection(f);
         
         Assert.assertEquals(2, drawing.getChildCount()); //check flipped is within canvas with other figure
@@ -73,7 +73,7 @@ public class DefaultDrawingViewTest {
         //---------------------------
 
         instance.toggleSelection(f);
-        instance.flip();
+        instance.flip("Vertical");
         instance.removeFromSelection(f);
         
         Figure f_flip = drawing.getChild(2);
