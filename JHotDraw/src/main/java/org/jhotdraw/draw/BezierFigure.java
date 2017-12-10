@@ -55,7 +55,9 @@ import org.jhotdraw.xml.DOMOutput;
  * <br>1.0 March 14, 2004.
  * @author Werner Randelshofer
  */
-public abstract class BezierFigure extends AbstractAttributedFigure {
+public class BezierFigure extends AbstractAttributedFigure {
+    
+    private static final long serialVersionUID = -344970781531276717L;
     /**
      * The BezierPath.
      */
