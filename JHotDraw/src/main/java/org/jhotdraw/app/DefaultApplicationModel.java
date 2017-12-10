@@ -26,7 +26,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
  * @version 1.1 2007-01-11 Changed method createToolBars.
  * <br>1.0 June 10, 2006 Created.
  */
-public class DefaultApplicationModel
+public abstract class DefaultApplicationModel
         extends AbstractBean
         implements ApplicationModel {
     
@@ -172,43 +172,6 @@ public class DefaultApplicationModel
         LinkedList<JToolBar> list = new LinkedList<JToolBar>();
         list.add(tb);
         return list;
-    }
-    public List<JMenu> createMenus(Application a, View p) {
-        LinkedList<JMenu> list = new LinkedList<JMenu>();
-        list.add(createEditMenu(a, p));
-        return list;
-    }
-    protected JMenu createEditMenu(Application a, View p) {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
-        JMenu m;
-        JMenuItem mi;
-        
-        m = new JMenu();
-        labels.configureMenu(m, "edit");
-        mi = m.add(getAction(UndoAction.ID));
-        mi.setIcon(null);
-        mi = m.add(getAction(RedoAction.ID));
-        mi.setIcon(null);
-        m.addSeparator();
-        mi = m.add(getAction(CutAction.ID));
-        mi.setIcon(null);
-        mi = m.add(getAction(CopyAction.ID));
-        mi.setIcon(null);
-        mi = m.add(getAction(PasteAction.ID));
-        mi.setIcon(null);
-        mi = m.add(getAction(DuplicateAction.ID));
-        mi.setIcon(null);
-        mi = m.add(getAction(DeleteAction.ID));
-        mi.setIcon(null);
-        m.addSeparator();
-        mi = m.add(getAction(SelectAllAction.ID));
-        mi.setIcon(null);
-        if (getAction(FindAction.ID) != null) {
-            m.addSeparator();
-            m.add(getAction(FindAction.ID));
-        }
-        return m;
     }
     
     public void initView(Application a, View p) {

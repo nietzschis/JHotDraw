@@ -37,6 +37,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /** The variable acv is used for generating the locations of the control
      * points for the rounded rectangle using path.curveTo. */
     private static final double acv;
+    private static final long serialVersionUID = -2585116624698864356L;
 
 
     static {
