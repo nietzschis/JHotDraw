@@ -72,6 +72,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     public SVGRectFigure(double x, double y, double width, double height, double rx, double ry) {
         roundrect = new RoundRectangle2D.Double(x, y, width, height, rx, ry);
         SVGAttributeKeys.setDefaults(this);
+        
     }
 
     // DRAWING
@@ -114,6 +115,45 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
                     (float)(roundrect.x + aw), (float)(roundrect.y));
             p.closePath();
             g.draw(p);
+        }
+        
+        boolean change = false;
+       
+        
+        if(!SHADOWS.equals(1d) && change){
+            double shadowDepth = 5d;
+            double shadowOpacity = 50d;
+            SVGRectFigure shadow1 = new SVGRectFigure(roundrect.x + shadowDepth, 
+                    roundrect.y + roundrect.height, 
+                    roundrect.width, shadowDepth);
+            SVGAttributeKeys.setDefaults(shadow1);
+            shadow1.setAttribute(OPACITY, shadowOpacity);
+            shadow1.setAttribute(STROKE_OPACITY, shadowOpacity);
+            shadow1.drawStroke(g);
+            shadow1.drawFill(g);
+            
+            
+            
+            
+        }
+        
+        if(SHADOWS.equals(1d)){
+            GeneralPath p = new GeneralPath();
+            double shadowWidth = 5d;
+            
+            p.moveTo(roundrect.x + shadowWidth, roundrect.y); //PLACEMENT
+            p.lineTo(roundrect.x + shadowWidth, roundrect.y - shadowWidth); //UP
+            p.lineTo(roundrect.x + roundrect.width + shadowWidth, roundrect.y - shadowWidth); //RIGHT
+            p.lineTo(roundrect.x + roundrect.width + shadowWidth, roundrect.y + roundrect.height - shadowWidth); //DOWN
+            p.lineTo(roundrect.x + roundrect.width, roundrect.y + roundrect.height - shadowWidth); // LEFT
+            p.lineTo(roundrect.x + roundrect.width, roundrect.y ); //UP
+            p.lineTo(roundrect.x, roundrect.y); // LEFT            
+            p.closePath();
+            g.draw(p);
+            
+            
+            
+            
         }
     }
 
