@@ -76,4 +76,5 @@ public class RecordingToolTest {
 
         assertEquals(0, recordingManager.getMapOfFigureListeners().size());
     }
+
 }

@@ -29,7 +29,7 @@ import org.jhotdraw.recording.FigureUpdate;
 
 /**
  *
- * @author Mikkel
+ * @author Mikkel, Holst & Harald
  */
 public class PlaybackPopup {
     public PlaybackPopup() {
@@ -37,7 +37,7 @@ public class PlaybackPopup {
     }
     
     public static void Show(int FPS, ArrayList<FigureUpdate> updates) {
-        if (updates.isEmpty() || updates == null) {
+        if (updates == null || updates.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No recording found for this tab, press the record button to begin recording.");
             return;
         }

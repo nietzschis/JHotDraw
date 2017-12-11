@@ -51,6 +51,7 @@ public class RecordingToolBar extends AbstractToolBar {
                 
                 // Start Recording Btn
                 btn = new JButton(recordingManager.getStartRecordingAction());
+                btn.setName("btnStartRecording");
                 recordButton = btn;
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "recordingTool.start");
@@ -88,6 +89,7 @@ public class RecordingToolBar extends AbstractToolBar {
                 
                 // Play Recording Btn
                 btn = new JButton(recordingManager.getPlayFramesAction());
+                btn.setName("btnPlayRecording");
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "recordingTool.play");
                 gbc = new GridBagConstraints();
