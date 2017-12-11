@@ -120,48 +120,7 @@ public class SVGCreateFromFileTool extends CreationTool {
 
             if (file.getName().toLowerCase().endsWith(".svg") ||
                     file.getName().toLowerCase().endsWith(".svgz")) {
-                prototype = ((Figure) groupPrototype.clone());
-                worker = new Worker() {
-
-                    public Object construct() {
-                        Drawing drawing = new SimpleDrawing();
-                        try {
-                            InputFormat in = (file.getName().toLowerCase().endsWith(".svg")) ? new SVGInputFormat() : new SVGZInputFormat();
-                            in.read(file, drawing);
-                        } catch (Throwable t) {
-                            return t;
-                        }
-                        return drawing;
-                    }
-
-                    public void finished(Object value) {
-                        if (value instanceof Throwable) {
-                            Throwable t = (Throwable) value;
-                            JOptionPane.showMessageDialog(getView().getComponent(),
-                                    t.getMessage(),
-                                    null,
-                                    JOptionPane.ERROR_MESSAGE);
-                            getDrawing().remove(createdFigure);
-                            fireToolDone();
-                        } else {
-                            Drawing drawing = (Drawing) value;
-                            CompositeFigure parent;
-                            if (createdFigure == null) {
-                                parent = (CompositeFigure) prototype;
-                                for (Figure f : drawing.getChildren()) {
-                                    parent.basicAdd(f);
-                                }
-                            } else {
-                                parent = (CompositeFigure) createdFigure;
-                                parent.willChange();
-                                for (Figure f : drawing.getChildren()) {
-                                    parent.add(f);
-                                }
-                                parent.changed();
-                            }
-                        }
-                    }
-                };
+                worker = createSVGWorker(file);
             } else {
                 prototype = imagePrototype;
                 final ImageHolderFigure loaderFigure = ((ImageHolderFigure) prototype.clone());
@@ -210,6 +169,51 @@ public class SVGCreateFromFileTool extends CreationTool {
                 fireToolDone();
             }
         }
+    }
+    
+    private Worker createSVGWorker(File file) {
+        prototype = ((Figure) groupPrototype.clone());
+        return new Worker() {
+
+            public Object construct() {
+                Drawing drawing = new SimpleDrawing();
+                try {
+                    InputFormat in = (file.getName().toLowerCase().endsWith(".svg")) ? new SVGInputFormat() : new SVGZInputFormat();
+                    in.read(file, drawing);
+                } catch (Throwable t) {
+                    return t;
+                }
+                return drawing;
+            }
+
+            public void finished(Object value) {
+                if (value instanceof Throwable) {
+                    Throwable t = (Throwable) value;
+                    JOptionPane.showMessageDialog(getView().getComponent(),
+                            t.getMessage(),
+                            null,
+                            JOptionPane.ERROR_MESSAGE);
+                    getDrawing().remove(createdFigure);
+                    fireToolDone();
+                } else {
+                    Drawing drawing = (Drawing) value;
+                    CompositeFigure parent;
+                    if (createdFigure == null) {
+                        parent = (CompositeFigure) prototype;
+                        for (Figure f : drawing.getChildren()) {
+                            parent.basicAdd(f);
+                        }
+                    } else {
+                        parent = (CompositeFigure) createdFigure;
+                        parent.willChange();
+                        for (Figure f : drawing.getChildren()) {
+                            parent.add(f);
+                        }
+                        parent.changed();
+                    }
+                }
+            }
+        };
     }
 
     protected Figure createFigure() {
