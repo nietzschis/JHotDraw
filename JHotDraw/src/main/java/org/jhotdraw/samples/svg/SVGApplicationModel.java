@@ -19,7 +19,6 @@ import org.jhotdraw.app.DefaultApplicationModel;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.*;
-<<<<<<< HEAD
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
 import org.jhotdraw.util.*;
@@ -33,11 +32,9 @@ import org.jhotdraw.app.menu.HelpMenu;
 import org.jhotdraw.app.menu.OpenRecentMenu;
 import org.jhotdraw.app.menu.ViewMenu;
 import org.jhotdraw.draw.*;
-=======
 import org.jhotdraw.draw.DefaultDrawingEditor;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.GridConstrainer;
->>>>>>> develop
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.samples.svg.action.CombineAction;
 import org.jhotdraw.samples.svg.action.SplitAction;

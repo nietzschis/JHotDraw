@@ -34,15 +34,12 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
-<<<<<<< HEAD
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
-=======
 
->>>>>>> develop
 import static org.jhotdraw.draw.AttributeKeys.*;
 
 /**
@@ -1122,26 +1119,12 @@ public class DefaultDrawingView
         });
     }
     
-<<<<<<< HEAD
      @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
     public void flip(String actionCommand) {
         Collection<Figure> sorted = getDrawing().sort(getSelectedFigures());
         HashMap<Figure, Figure> originalToFlipMap = new HashMap<Figure, Figure>(sorted.size());
         
         clearSelection();
-=======
-    @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
-    public int split() {
-        int splittedFigures = 0;
-        Collection<Figure> figures = getSelectedFigures();
-        
-        for(Figure figure : figures) {
-            splittedFigures += figure.splitFigure(editor.getActiveView());
-        }
-
-        return splittedFigures == 0 ? 0 : -1;
-    }
->>>>>>> develop
 
         final ArrayList<Figure> flips = new ArrayList<Figure>(sorted.size());
         
@@ -1189,6 +1172,18 @@ public class DefaultDrawingView
                 getDrawing().addAll(flips);
             }
         });
+    }
+    
+    @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
+    public int split() {
+        int splittedFigures = 0;
+        Collection<Figure> figures = getSelectedFigures();
+        
+        for(Figure figure : figures) {
+            splittedFigures += figure.splitFigure(editor.getActiveView());
+        }
+
+        return splittedFigures == 0 ? 0 : -1;
     }
     
     
