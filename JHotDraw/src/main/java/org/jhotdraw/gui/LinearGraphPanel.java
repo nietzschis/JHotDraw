@@ -5,7 +5,8 @@
  */
 package org.jhotdraw.gui;
 
-import javax.swing.JDialog;
+import javax.swing.*;
+
 import org.jhotdraw.draw.PredefinedFunction;
 import org.jhotdraw.graph.LinearGraph;
 
@@ -164,12 +165,16 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        double a = Double.parseDouble(jTextField1.getText());
-        double b = Double.parseDouble(jTextField2.getText());
-        int l = Integer.parseInt(jTextField3.getText());
-        function = new LinearGraph(a, b, l);
-        notDone = false;
-        close();
+        try {
+            double a = Double.parseDouble(jTextField1.getText());
+            double b = Double.parseDouble(jTextField2.getText());
+            int l = Integer.parseInt(jTextField3.getText());
+            function = new LinearGraph(a, b, l);
+            notDone = false;
+            close();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid number was entered");
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
