@@ -17,6 +17,7 @@ import java.awt.event.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <code>DefaultSelectAreaTracker</code> implements interactions with the background
@@ -84,7 +85,7 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
 
     @Override
     public void mouseReleased(MouseEvent evt) {
-        selectGroup(evt.isShiftDown());
+        selectGroup(evt.isControlDown());
         clearRubberBand();
     }
 
@@ -160,13 +161,14 @@ public class DefaultSelectAreaTracker extends AbstractTool implements SelectArea
         }
     }
 
-    private void selectGroup(boolean toggle) {
-        Collection<Figure> figures = getView().findFigures(rubberband);
-        for (Figure f : figures) {
-            if (f.isSelectable()) {
-                getView().addToSelection(f);
-            }
-        }
+    private void selectGroup(boolean invert) {
+        final DrawingView view = getView();
+        final Collection<Figure> figures = view.findFigures(rubberband).stream().filter(Figure::isSelectable).collect(Collectors.toList());
+
+        if (invert)
+            view.toggleSelection(figures);
+        else
+            view.addToSelection(figures);
     }
 
     protected void clearHoverHandles() {
