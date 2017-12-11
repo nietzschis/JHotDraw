@@ -17,6 +17,12 @@ import static org.jhotdraw.draw.AttributeKeys.STROKE_COLOR_RIGHT_MOUSE;
  */
 public class FigurePainter {
 
+    /**
+     * Paints a figure the color choosent to left or right mouse button.
+     * @param figure the figure that will be pained.
+     * @param event MouseEvent for getting which mouse button is pressed.
+     * @param editor For getting the color of left or right mouse button.
+     */
     public void paint(Figure figure, MouseEvent event, DrawingEditor editor) {
         
         switch (event.getButton()) {
