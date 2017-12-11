@@ -91,10 +91,10 @@ public class CollaborationGUITest {
     public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
         assertNotNull(app.getFrame());
         assertNotNull(window);
-
-        window.show();
         
         CollaborationServer.getInstance().startServer();
+
+        window.show();
 
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.start").click();
