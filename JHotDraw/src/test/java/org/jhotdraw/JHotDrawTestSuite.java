@@ -11,6 +11,8 @@ import org.jhotdraw.draw.SelectionTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
+import org.jhotdraw.samples.svg.gui.FigureToolBarTestGui_AssertJ_Swing;
+import org.jhotdraw.samples.svg.gui.FigureToolBarTest_JUnit;
 import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactoryTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
@@ -34,7 +36,12 @@ import org.junit.runners.Suite;
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
                     SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
                     RecordingToolTest.class, RecordingToolGUITest.class,
-                    SelectionTest.class})
+                    SelectionTest.class,
+                    FigureToolBarTestGui_AssertJ_Swing.class,
+                    FigureToolBarTest_JUnit.class
+
+})
+
 public class JHotDrawTestSuite {
 
     @BeforeClass
