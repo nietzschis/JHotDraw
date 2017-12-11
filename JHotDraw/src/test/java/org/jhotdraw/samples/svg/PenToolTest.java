@@ -31,30 +31,40 @@ public class PenToolTest {
         penTool.setToolDoneAfterCreation(false);
 
     }
-
+    /**
+     * This Test tests if after premade movement of mouse is mouse really moved
+     */
 
     @Test
     public void mouseReleasedTest() {
-
+        
         DrawingView view = new DefaultDrawingView();
         DrawingEditorProxy editor = new DrawingEditorProxy();
         editor.setTarget(new DefaultDrawingEditor());
         view.addNotify(editor);
         editor.add(view);
         editor.setActiveView(view);
-        Drawing drawing = new DefaultDrawing();
+        Drawing drawing = new SimpleDrawing();
         view.setDrawing(drawing);
 
-
+        
         penTool.activate(editor);
+        
         MouseEvent press = new MouseEvent(view.getComponent(), 0, 0, 0, 50, 50, 1, false);
         MouseEvent move = new MouseEvent(view.getComponent(), 1, 0, 0, 75, 75, 1, false);
         MouseEvent release = new MouseEvent(view.getComponent(), 2, 0, 0, 100, 100, 1, false);
-
+        /**
+         * the size of made drawings have to be 0 
+         */
+        assertEquals("There is not supposed to be any drawing yet", 0, drawing.getChildren().size());
+        
         penTool.mousePressed(press);
         penTool.mouseDragged(move);
         penTool.mouseReleased(release);
-
+        
+        /**
+         * the size of made drawings have to be 1 
+         */
         assertEquals("Failed to create drawing", 1, drawing.getChildren().size());
     }
 }

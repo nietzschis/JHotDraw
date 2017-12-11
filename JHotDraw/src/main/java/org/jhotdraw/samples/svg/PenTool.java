@@ -43,6 +43,10 @@ public class PenTool extends PathTool {
         finishCreation(createdFigure, creationView);
         createdFigure = null;
     }
+    /**
+     * mouseDragged in BezietTool was disabling Finish creation, due to that I had to cut first three line of that 
+     */
+    
     @Override
     public void mouseDragged(MouseEvent evt) {
         int x = evt.getX();
@@ -52,6 +56,7 @@ public class PenTool extends PathTool {
 
     /**
      * finishCreation overrides finishCreation in Pathtool, in this case Path for drawing is not added
+     * and also also sets selecion afterwards off
      */
     @Override
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
