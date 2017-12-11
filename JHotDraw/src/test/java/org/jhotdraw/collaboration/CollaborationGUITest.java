@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,7 +61,7 @@ public class CollaborationGUITest {
         window.cleanUp();
     }
 
-    //@Test(expected = ExportException.class)
+    @Test(expected = ExportException.class)
     public void GUIStartServerTest() throws RemoteException, AlreadyBoundException, InterruptedException, UnsupportedFlavorException, UnknownHostException, IOException {
         assertNotNull(app.getFrame());
         assertNotNull(window);
@@ -84,13 +85,16 @@ public class CollaborationGUITest {
             window.optionPane().yesButton().click(); //Copy IP? popup
         }
         catch (ComponentLookupException e) {
-            if (e.getMessage().contains("Starting server...")) {
+            if (e.getMessage().contains("Starting server")) {
                 findIPJOptionPane();
+            }
+            else {
+                fail();
             }
         }
     }
 
-    @Test(expected = ExportException.class)
+    @Test
     public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
         assertNotNull(app.getFrame());
         assertNotNull(window);
@@ -104,8 +108,6 @@ public class CollaborationGUITest {
         window.optionPane().yesButton().click(); //Start server? popup
 
         findErrorJOptionPane();
-        
-        CollaborationServer.getInstance().startServer();
     }
 
     private void findErrorJOptionPane() {
@@ -113,13 +115,16 @@ public class CollaborationGUITest {
             window.optionPane().button().click(); //Error popup
         }
         catch (ComponentLookupException e) {
-            if (e.getMessage().contains("Starting server...")) {
+            if (e.getMessage().contains("Starting server")) {
                 findErrorJOptionPane();
+            }
+            else {
+                fail();
             }
         }
     }
 
-    //@Test
+    @Test
     public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
         assertNotNull(app.getFrame());
 
