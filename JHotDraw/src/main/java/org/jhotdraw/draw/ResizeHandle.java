@@ -109,6 +109,7 @@ class ResizeHandle extends LocatorHandle {
         }
     }
 
+    @Override
     public void trackStart(Point anchor, int modifiersEx) {
         geometry = getOwner().getTransformRestoreData();
         Point location = getLocation();
@@ -126,6 +127,7 @@ class ResizeHandle extends LocatorHandle {
         aspectRatio = new Point2D.Double(r.width / r.height, r.height / r.width);
     }
 
+    @Override
     public void trackStep(Point anchor, Point lead, int modifiersEx) {
         if (getOwner().isTransformable()) {
             Point2D.Double p = view.viewToDrawing(new Point(lead.x + dx, lead.y + dy));
@@ -145,6 +147,7 @@ class ResizeHandle extends LocatorHandle {
         }
     }
 
+    @Override
     public void trackEnd(Point anchor, Point lead, int modifiersEx) {
         if (getOwner().isTransformable()) {
             fireUndoableEditHappened(
@@ -158,7 +161,7 @@ class ResizeHandle extends LocatorHandle {
      * Normalize new rectangle to prevent its size to go lower thank 1x1 point
      * @param p New point where current handle was dragged into
      */
-    void trackStepNormalized(Point2D.Double p) {
+    private void trackStepNormalized(Point2D.Double p) {
         Rectangle2D.Double r = getOwner().getBounds();
         double left = (direction & ResizeHandleKit.DIR_W) != 0 ? Math.min(r.x + r.width - 1, p.x) : r.x;
         double right = (direction & ResizeHandleKit.DIR_E) != 0 ? Math.max(r.x + 1, p.x) : r.x + r.width;
