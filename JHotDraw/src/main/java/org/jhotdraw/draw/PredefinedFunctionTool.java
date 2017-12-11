@@ -1,16 +1,3 @@
-/*
- * @(#)PredefinedFunctionTool.java  2.5  2008-05-24
- *
- * Copyright (c) 1996-2008 by the original authors of JHotDraw
- * and all its contributors.
- * All rights reserved.
- *
- * The copyright of this software is owned by the authors and  
- * contributors of the JHotDraw project ("the copyright holders").  
- * You may not use, copy or modify this software, except in  
- * accordance with the license agreement you entered into with  
- * the copyright holders. For details see accompanying license terms. 
- */
 package org.jhotdraw.draw;
 
 import org.jhotdraw.graph.Graph;
@@ -37,15 +24,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * UndoableEdit.
      */
     protected String presentationName;
-    /**
-     * Treshold for which we create a larger shape of a minimal size.
-     */
-    protected Dimension minimalSizeTreshold = new Dimension(2, 2);
-    /**
-     * We set the figure to this minimal size, if it is smaller than the
-     * minimal size treshold.
-     */
-    protected Dimension minimalSize = new Dimension(40, 40);
+
     /**
      * The prototype for new figures.
      */
@@ -63,30 +42,7 @@ public class PredefinedFunctionTool extends AbstractTool {
 
     private AbstractFunctionPanel[] jPanel;
     
-    /** Creates a new instance. */
-    public PredefinedFunctionTool(String prototypeClassName) {
-        this(prototypeClassName, null, null);
-    }
-
-    public PredefinedFunctionTool(String prototypeClassName, Map<AttributeKey, Object> attributes) {
-        this(prototypeClassName, attributes, null);
-    }
-
-    public PredefinedFunctionTool(String prototypeClassName, Map<AttributeKey, Object> attributes, String name) {
-        try {
-            this.prototype = (Figure) Class.forName(prototypeClassName).newInstance();
-        } catch (Exception e) {
-            InternalError error = new InternalError("Unable to create Figure from " + prototypeClassName);
-            error.initCause(e);
-            throw error;
-        }
-        this.prototypeAttributes = attributes;
-        if (name == null) {
-            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-            name = labels.getString("edit.createFigure.text");
-        }
-        this.presentationName = name;
-    }
+    private Graph graph;
 
     /** Creates a new instance with the specified prototype but without an
      * attribute set. The PredefinedFunctionTool clones this prototype each time a new
@@ -96,7 +52,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * @param prototype The prototype used to create a new Figure.
      */
     public PredefinedFunctionTool(Figure prototype) {
-        this(prototype, null, null);
+        this(prototype, null, null); //Called
     }
 
     /** Creates a new instance with the specified prototype but without an
@@ -124,18 +80,14 @@ public class PredefinedFunctionTool extends AbstractTool {
      * @deprecated This constructor might go away, because the name parameter
      * is not used.
      */
-    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes, String name) {
-        this.prototype = prototype;
+    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes, String name) { //Called
+        this.prototype = prototype; 
         this.prototypeAttributes = attributes;
         if (name == null) {
             ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
             name = labels.getString("edit.createFigure.text");
         }
         this.presentationName = name;
-    }
-
-    public Figure getPrototype() {
-        return prototype;
     }
 
     private PredefinedFunction createFunction() {
@@ -158,6 +110,7 @@ public class PredefinedFunctionTool extends AbstractTool {
             f.setSize(400, 300);
             f.setLocationRelativeTo(null);
             f.add(panel);
+            f.setBackground(Color.BLACK);
             f.pack();
             f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             f.setVisible(true);
@@ -166,22 +119,18 @@ public class PredefinedFunctionTool extends AbstractTool {
         return panel.getGraph();
     }
 
-    
-    
     @Override
     public void activate(DrawingEditor editor) {
         super.activate(editor);
-        graf = (Graph) createFunction();
-        if (graf == null) {
+        graph = (Graph) createFunction();
+        if (graph == null) {
             fireToolDone();
         }
         getView().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
-    private Graph graf;
-
     @Override
-    public void deactivate(DrawingEditor editor) {
+    public void deactivate(DrawingEditor editor) { //Called
         super.deactivate(editor);
         if (getView() != null) {
             getView().setCursor(Cursor.getDefaultCursor());
@@ -194,23 +143,26 @@ public class PredefinedFunctionTool extends AbstractTool {
         }
     }
 
-    public void mousePressed(MouseEvent evt) {
+    public void mousePressed(MouseEvent evt) { //Called
         super.mousePressed(evt);
         getView().clearSelection();
         createdFigure = createFigure();
-        createdFigure.setFunction(graf);
+        createdFigure.setFunction(graph);
         Point2D.Double p = constrainPoint(viewToDrawing(anchor));
         anchor.x = evt.getX();
         anchor.y = evt.getY();
         createdFigure.setBounds(p, p);
         getDrawing().add(createdFigure);
+        creationFinished(createdFigure);
     }
 
+    @Override
     public void mouseDragged(MouseEvent evt) {
+        
     }
 
     @SuppressWarnings("unchecked")
-    protected PredefinedBezierFigure createFigure() {
+    protected PredefinedBezierFigure createFigure() { //Called
         PredefinedBezierFigure f = (PredefinedBezierFigure) prototype.clone();
         getEditor().applyDefaultAttributesTo(f);
         if (prototypeAttributes != null) {
@@ -243,7 +195,12 @@ public class PredefinedFunctionTool extends AbstractTool {
         }
     }
     
-    public void setList(AbstractFunctionPanel[] jPanel) {
+    /**
+     * Sets the lists of jpanels to be used in the dialog boxes.
+     * The Jpanels has to an AbstractFunctionPanel.
+     * @param jPanel 
+     */
+    public void setList(AbstractFunctionPanel[] jPanel) { //Called
         for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
             abstractFunctionPanel.setList(jPanel);
         }
@@ -256,7 +213,6 @@ public class PredefinedFunctionTool extends AbstractTool {
      * figures consecutively.
      */
     public void setToolDoneAfterCreation(boolean newValue) {
-        boolean oldValue = isToolDoneAfterCreation;
         isToolDoneAfterCreation = newValue;
     }
 
@@ -266,14 +222,5 @@ public class PredefinedFunctionTool extends AbstractTool {
      */
     public boolean isToolDoneAfterCreation() {
         return isToolDoneAfterCreation;
-    }
-
-    @Override
-    public void updateCursor(DrawingView view, Point p) {
-        if (view.isEnabled()) {
-            view.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-        } else {
-            view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        }
     }
 }
