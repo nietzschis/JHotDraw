@@ -34,7 +34,7 @@ public class PenToolTest {
 
 
     @Test
-    public void mouseReleasedTest() throws AWTException {
+    public void mouseReleasedTest() {
 
         DrawingView view = new DefaultDrawingView();
         DrawingEditorProxy editor = new DrawingEditorProxy();
@@ -52,7 +52,7 @@ public class PenToolTest {
         MouseEvent release = new MouseEvent(view.getComponent(), 2, 0, 0, 100, 100, 1, false);
 
         penTool.mousePressed(press);
-        penTool.mouseMoved(move);
+        penTool.mouseDragged(move);
         penTool.mouseReleased(release);
 
         assertEquals("Failed to create drawing", 1, drawing.getChildren().size());
