@@ -16,11 +16,16 @@ package org.jhotdraw.samples.svg.gui;
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.*;
 import java.beans.*;
+import java.util.ArrayList;
 import java.util.prefs.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ButtonUI;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
+import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  * AbstractToolBar.
@@ -35,6 +40,8 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
     private JComponent[] panels;
     protected Preferences prefs;
     protected PropertyChangeListener eventHandler;
+    private ArrayList<JButton> toolButtons = new ArrayList<JButton>();
+    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
 
     /** Creates new form. */
     @FeatureEntryPoint(JHotDrawFeatures.TOOL_PALETTE)
@@ -82,6 +89,17 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
         }
         return eventHandler;
     }
+    
+    
+    
+    protected JButton AddToolButton(Action action, String name, String labelsKey){
+        JButton btn = new JButton(action);
+        btn.setName(name);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        labels.configureToolBarButton(btn, labelsKey);
+        toolButtons.add(btn);
+        return btn;
+    }
 
     public void setEditor(DrawingEditor editor) {
         if (this.editor != null) {
@@ -111,8 +129,19 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
         return panels[state];
     }
 
-    /*abstract*/ protected JComponent createDisclosedComponent(int state) {
-        return null;
+
+    
+    protected JComponent createDisclosedComponent(int state) {
+        GridLayout layout = new GridLayoutSquare(3,
+                toolButtons.size() / 3);
+        layout.setHgap(4);
+        layout.setVgap(4);
+        JPanel panel = new JPanel(layout);
+        panel.setBorder(new EmptyBorder(5, 5, 5, 8));
+        toolButtons.forEach((btn) -> {
+            panel.add(btn);
+        });
+        return panel;
     }
 
     protected int getDefaultDisclosureState() {
