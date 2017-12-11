@@ -95,7 +95,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
 
-        btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathSecondTool(new SVGPathFigure(), new SVGBezierFigure(true), attributes), "createPolygon", labels);
+        btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathTool(new SVGPathFigure(), new SVGBezierFigure(true), attributes), "createPolygon", labels);
         pathTool.setToolDoneAfterCreation(false);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
@@ -116,7 +116,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.insets = new Insets(0, 3, 0, 0);
         p.add(btn, gbc);
 
-        btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathSecondTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes), "createScribble", labels);
+        btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes), "createScribble", labels);
         pathTool.setToolDoneAfterCreation(false);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();

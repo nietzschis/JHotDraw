@@ -75,6 +75,7 @@ public class PathTool extends BezierTool {
         createdPath.add(createdFigure);
         creationView.getDrawing().add(createdPath);
         fireUndoEvent(createdPath, creationView);
+        creationView.addToSelection(createdPath);
         if (isToolDoneAfterCreation()) {
             fireToolDone();
         }

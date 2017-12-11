@@ -31,7 +31,8 @@ public class PenTool extends PathTool {
         finishCreation(createdFigure, creationView);
         createdFigure = null;
     }
-    
+
+    @Override
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
         creationView.getDrawing().remove(createdFigure);
         SVGPathFigure createdPath = createPath();
