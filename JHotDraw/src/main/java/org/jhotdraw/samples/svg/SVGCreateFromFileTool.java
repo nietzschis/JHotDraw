@@ -104,11 +104,7 @@ public class SVGCreateFromFileTool extends CreationTool {
            getFileDialog().setVisible(true);
            file = getFileFromFileDialog();
         } else {
-            if (getFileChooser().showOpenDialog(getView().getComponent()) == JFileChooser.APPROVE_OPTION) {
-                file = getFileChooser().getSelectedFile();
-            } else {
-                file = null;
-            }
+           file = getFileFromFileChooser();
         }
 
         if (file != null) {
@@ -134,6 +130,16 @@ public class SVGCreateFromFileTool extends CreationTool {
         File file;
         if (getFileDialog().getFile() != null) {
             file = new File(getFileDialog().getDirectory(), getFileDialog().getFile());
+        } else {
+            file = null;
+        }
+        return file;
+    }
+    
+    private File getFileFromFileChooser() {
+        File file;
+        if (getFileChooser().showOpenDialog(getView().getComponent()) == JFileChooser.APPROVE_OPTION) {
+            file = getFileChooser().getSelectedFile();
         } else {
             file = null;
         }
