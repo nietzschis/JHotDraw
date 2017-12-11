@@ -38,6 +38,8 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
      * They can only be changed by setAttribute().
      */
     private HashSet<AttributeKey> forbiddenAttributes;
+    
+    private static final long serialVersionUID = 4687793664247334851L;
 
     /** Creates a new instance. */
     public AbstractAttributedCompositeFigure() {

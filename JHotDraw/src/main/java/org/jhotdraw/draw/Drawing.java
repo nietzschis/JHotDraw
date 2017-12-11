@@ -106,7 +106,7 @@ public interface Drawing extends CompositeFigure, Serializable, DOMStorable {
      * @see Figure#removeNotify
      *
      * @param figure that is part of the drawing and should be removed
-     */
+     */    
     boolean remove(Figure figure);
     /**
      * Removes the specified figures from the drawing.

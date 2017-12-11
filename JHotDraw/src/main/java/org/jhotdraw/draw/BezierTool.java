@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 
 /**
@@ -271,12 +272,14 @@ public class BezierTool extends AbstractTool {
                 finishCreation(createdFigure, creationView);
                 createdFigure = null;
                 finishWhenMouseReleased = null;
+                
+                // TODO: Her bliver SVG lavet om til Paths
+                CollaborationConnection.getInstance().notifyUpdate("create");
                 return;
             }
         } else if (finishWhenMouseReleased == null) {
             finishWhenMouseReleased = Boolean.FALSE;
         }
-
         // repaint dotted line
         Rectangle r = new Rectangle(anchor);
         r.add(mouseLocation);
@@ -291,7 +294,7 @@ public class BezierTool extends AbstractTool {
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
         fireUndoEvent(createdFigure, creationView);
         creationView.addToSelection(createdFigure);
-        if (isToolDoneAfterCreation) {
+        if (isToolDoneAfterCreation) {            
             fireToolDone();
         }
     }

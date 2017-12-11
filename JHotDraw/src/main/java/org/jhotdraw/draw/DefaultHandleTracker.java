@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 
 /**
  * DefaultHandleTracker implements interactions with the handles of a Figure.
@@ -193,6 +194,9 @@ public class DefaultHandleTracker extends AbstractTool implements HandleTracker 
         multicaster.trackEnd(anchor, new Point(evt.getX(), evt.getY()),
                 evt.getModifiersEx(), getView());
         fireToolDone();
+        
+        // Change figure
+        CollaborationConnection.getInstance().notifyUpdate("update bounds");
     }
 
     protected void clearHoverHandles() {

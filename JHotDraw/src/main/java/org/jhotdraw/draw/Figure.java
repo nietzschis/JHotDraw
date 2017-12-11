@@ -486,4 +486,10 @@ public interface Figure extends Cloneable, Serializable, DOMStorable {
      * Removes a listener for FigureEvent's.
      */
     public void removeFigureListener(FigureListener l);
+    
+    void setCollaborationId();
+    
+    void setCollaborationId(int id);
+    
+    int getCollaborationId();
 }

@@ -36,6 +36,8 @@ import org.jhotdraw.xml.*;
  */
 public abstract class SVGAttributedFigure extends AbstractAttributedFigure {
     
+    private static final long serialVersionUID = 5253860454092081297L;
+    
     /** Creates a new instance. */
     public SVGAttributedFigure() {
     }

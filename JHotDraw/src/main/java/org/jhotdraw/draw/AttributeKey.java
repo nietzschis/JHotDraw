@@ -48,6 +48,8 @@ import org.jhotdraw.util.*;
  * <br>1.0 7. Juni 2006 Created.
  */
 public class AttributeKey<T> implements Serializable {
+    
+    private static final long serialVersionUID = -5677631479167031909L;
 
     /**
      * Holds a String representation of the attribute key.

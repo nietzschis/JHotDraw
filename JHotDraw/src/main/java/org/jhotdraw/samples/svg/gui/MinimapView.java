@@ -6,9 +6,17 @@
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JPanel;
 import org.jhotdraw.draw.AttributeKeys;
 import static org.jhotdraw.draw.AttributeKeys.CANVAS_FILL_COLOR;
@@ -26,7 +34,8 @@ import org.jhotdraw.draw.Figure;
  */
 public class MinimapView extends JPanel{
     
-    AbstractToolBar toolBar;
+    private final AbstractToolBar toolBar;
+    private final List<MinimapViewListener> listeners = new LinkedList<>();
 
     /**
      * Creates a new view to draw a {@link Drawing} onto the minimap.
@@ -35,6 +44,88 @@ public class MinimapView extends JPanel{
     public MinimapView(AbstractToolBar toolBar) {
         assert toolBar != null;
         this.toolBar = toolBar;
+        
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                handleEvent(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                //ignored
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                //ignored
+            }
+        });
+        
+        this.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                handleEvent(e);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                //ignored
+            }
+        });
+    }
+    
+    private void handleEvent(MouseEvent e){
+        Dimension minimapSize = e.getComponent().getPreferredSize();
+        Rectangle2D.Double canvasSize = getCanvasSize();
+        double largerSide = Math.max(canvasSize.width, canvasSize.height);
+        
+        Point.Double p = new Point.Double(e.getPoint().getX(), e.getPoint().getY());
+        p.setLocation((p.getX()*largerSide)/(minimapSize.width*canvasSize.width), (p.getY()*largerSide)/(minimapSize.height*canvasSize.height)); // Center the point relative.
+        p.setLocation(constrain(p.x, 0, 1), constrain(p.y, 0, 1)); // constrain the values to be within the container.
+        
+        notifyListeners(p);
+    }
+    
+    private double constrain(double value, double min, double max) {
+        return Math.min(Math.max(value, min), max);
+    }
+    
+    /**
+     * Notify listeners that a click occured.
+     * @param p The relative coordinates describing where the click occured.
+     */
+    private void notifyListeners(Point2D.Double p) {
+        for(MinimapViewListener listener: listeners){
+            listener.relativeOnClick(p);
+        }
+    }
+    
+    /**
+     * Add a new listener to be invoked, whenever an event occurs.
+     * @param listener The event listener.
+     */
+    public void addListener(MinimapViewListener listener){
+        listeners.add(listener);
+    }
+    
+    /**
+     * Removes a listener, or noop if the listner is not registered on this instance.
+     * @param listener The event listener.
+     * @return True, if the listener was registered, false otherwise.
+     */
+    public boolean removeListener(MinimapViewListener listener){
+        return listeners.remove(listener);
     }
     
     @Override
@@ -43,12 +134,7 @@ public class MinimapView extends JPanel{
         
         Graphics2D g = (Graphics2D) gr.create();
         
-        Rectangle2D.Double size;
-        if(getCanvasWidth() != null && getCanvasHeight() != null){
-            size = new Rectangle2D.Double(0, 0, getCanvasWidth(), getCanvasHeight());
-        }else{
-            size = getSmallestSize();
-        }
+        Rectangle2D.Double size = getCanvasSize();
         
         if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or it doesn't have a size, paint the minimap white and return.
             g.setColor(Color.white);
@@ -69,6 +155,20 @@ public class MinimapView extends JPanel{
         getDrawing().draw(g);
                 
         g.dispose();
+    }
+    
+    /**
+     * Returns the rectangle of the canvas, wich the minimap should draw.
+     * For fixed size canvas, this is full canvas located at (0,0).
+     * For dynamic this is the smallest possible rectangle located so the left-top figure is just within.
+     * @return the pratical size of the canvas.
+     */
+    private Rectangle2D.Double getCanvasSize(){
+        if(getCanvasWidth() != null && getCanvasHeight() != null){
+            return new Rectangle2D.Double(0, 0, getCanvasWidth(), getCanvasHeight());
+        }else{
+            return getSmallestSize();
+        }
     }
     
     /**
@@ -119,14 +219,14 @@ public class MinimapView extends JPanel{
     private Rectangle2D.Double getSmallestSize(){
         
         if (getDrawing() != null && getDrawing().getChildren().isEmpty()){
-            return new Rectangle2D.Double();
+            return new Rectangle2D.Double(1,1,1,1);
         }
         
         Rectangle2D.Double smallestContainer = new Rectangle2D.Double();
         Double minX = Double.MAX_VALUE;
         Double minY = Double.MAX_VALUE;
         for(Figure f: getDrawing().getChildren()){
-            Rectangle2D.Double r = f.getBounds();
+            Rectangle2D.Double r = f.getBounds();            
             if (AttributeKeys.TRANSFORM.get(f) != null) {
                 Rectangle2D rt = AttributeKeys.TRANSFORM.get(f).createTransformedShape(r).getBounds2D();
                 r = (rt instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rt : new Rectangle2D.Double(rt.getX(), rt.getY(), rt.getWidth(), rt.getHeight());
@@ -157,6 +257,13 @@ public class MinimapView extends JPanel{
         smallestContainer.y = minY;
         smallestContainer.width -= minX;
         smallestContainer.height -= minY;
+        
+        // add 10% to border
+        smallestContainer.x -= smallestContainer.width*0.1;
+        smallestContainer.y -= smallestContainer.height*0.1;
+        smallestContainer.width *= 1.2;
+        smallestContainer.height *= 1.2;
+        
         return smallestContainer;
     }
     
