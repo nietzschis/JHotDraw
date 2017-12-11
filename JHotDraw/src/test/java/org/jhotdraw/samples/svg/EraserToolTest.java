@@ -7,41 +7,15 @@ package org.jhotdraw.samples.svg;
 
 import java.awt.Frame;
 import java.awt.Point;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.assertj.swing.launcher.ApplicationLauncher.*;
 import static org.assertj.swing.finder.WindowFinder.findFrame;
-import org.assertj.swing.finder.FrameFinder;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
-import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.core.AbstractComponentMatcher;
 import org.assertj.swing.core.GenericTypeMatcher;
-import org.assertj.swing.core.Robot;
-import org.assertj.swing.core.ComponentDragAndDrop;
-import org.assertj.swing.core.Settings;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import static org.assertj.swing.core.MouseButton.LEFT_BUTTON;
-import static org.assertj.swing.core.MouseClickInfo.leftButton;
 import org.assertj.swing.fixture.JToggleButtonFixture;
-import static org.assertj.swing.timing.Timeout.timeout;
-import org.jhotdraw.samples.svg.EraserTool;
-import org.jhotdraw.samples.svg.Erasing;
 import org.jhotdraw.samples.svg.Main;
-import org.jhotdraw.gui.*;
-import org.jhotdraw.app.*;
-import org.jhotdraw.draw.DefaultDrawing;
-import org.jhotdraw.draw.DefaultDrawingView;
-import org.jhotdraw.geom.Dimension2DDouble;
 
 
 
@@ -54,6 +28,7 @@ import org.jhotdraw.geom.Dimension2DDouble;
  * It can start JHotDraw GUI and activate the different drawing buttons and also draw a figure. 
  * But it can't remove the figure with the Eraser tool, since the FrameFixture frame
  * can't use the mouse dragged function.
+ * This test class is created and executed on MAC OS. It doesn't work on WIN OS.
  */
 public class EraserToolTest extends AssertJSwingJUnitTestCase {
     

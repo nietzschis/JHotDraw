@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * @(#)CreationTool.java  2.5  2008-05-24
  *
