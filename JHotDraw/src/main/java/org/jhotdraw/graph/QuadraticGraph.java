@@ -29,8 +29,8 @@ public class QuadraticGraph implements Graph {
     }
 
     @Override
-    public double getLength() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getLength() {
+        return length;
     }
     
 }

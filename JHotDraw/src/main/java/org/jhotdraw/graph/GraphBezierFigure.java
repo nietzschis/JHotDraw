@@ -23,8 +23,6 @@ import org.jhotdraw.geom.*;
 public class GraphBezierFigure extends PredefinedBezierFigure {
 
     //private BezierPath path;
-    private double graphLength;
-    private double graphHeight;
     private Graph graph;
     private Point2D.Double graphStartPos;
     
@@ -39,7 +37,7 @@ public class GraphBezierFigure extends PredefinedBezierFigure {
         double y = graphStartPos.getY();
         path.clear();
         GraphMath graphCalc = GraphMath.getInstance();
-        for (double i = 0+x; i < 300+x; i =i+5) {
+        for (double i = 0+x; i < graph.getLength()+x; i =i+5) {
             double yPoint = graphCalc.calcYCoordinate(i-x, graph, y);
             if(yPoint < 0) {
                 return path;

@@ -31,7 +31,7 @@ public class LinearGraph implements Graph {
     }
 
     @Override
-    public double getLength() {
+    public int getLength() {
         return length;
     }
     
