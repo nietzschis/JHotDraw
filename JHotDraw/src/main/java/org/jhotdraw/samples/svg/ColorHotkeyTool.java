@@ -26,7 +26,4 @@ public class ColorHotkeyTool extends AbstractTool {
     public void mouseDragged(MouseEvent me) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-
-    
 }

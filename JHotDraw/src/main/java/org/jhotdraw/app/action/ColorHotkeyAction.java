@@ -6,6 +6,7 @@
 package org.jhotdraw.app.action;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
@@ -36,12 +37,7 @@ public class ColorHotkeyAction extends AbstractAction{
                 getCurrentKeyboardFocusManager().
                 getPermanentFocusOwner();
         if (focusOwner != null && focusOwner instanceof JComponent) {
-            JComponent component = (JComponent) focusOwner;
-            component.getTransferHandler().exportToClipboard(
-                    component,
-                    component.getToolkit().getSystemClipboard(),
-                    TransferHandler.COPY
-                    );
+            //DO STUFF
         }
     }
     

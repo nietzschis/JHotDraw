@@ -266,6 +266,9 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
         m.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), CutAction.ID);
         m.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.META_DOWN_MASK), CutAction.ID);
          
+        // Color Switch Hotkey NUM1 + CTRL
+        // NUM1 + CTRL
+        m.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, InputEvent.CTRL_DOWN_MASK), ColorHotkeyAction.ID);
         
         return m;
     }
@@ -288,7 +291,8 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
         m.put(CutAction.ID, new CutAction());
         m.put(CopyAction.ID, new CopyAction());
         m.put(PasteAction.ID, new PasteAction());
-         
+        
+        m.put(ColorHotkeyAction.ID, new ColorHotkeyAction());
         return m;
     }
     
