@@ -127,6 +127,62 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                 g.setComposite(savedComposite);
             }
         }
+        
+        ///Contrast
+        
+        
+        RescaleOp op; 
+   
+        float contrast = CONTRAST.get(this).floatValue();
+            contrast = Math.min(Math.max(0f, contrast), 1f);
+        if (contrast != 0f) {
+            
+            Composite savedComposite = g.getComposite();
+            if (contrast != 1f) {
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) contrast));
+            }
+
+                BufferedImage image = getBufferedImage();////
+                
+            //  float scaleFactor = (float) (contrast +(1 / 10.0));
+               op= new RescaleOp((contrast/100), 0, null);
+image = op.filter(image, null);
+            if (image != null) {
+                if (TRANSFORM.get(this) != null) {
+                    // FIXME - We should cache the transformed image.
+                         //    Drawing a transformed image appears to be very slow.
+                    Graphics2D gx = (Graphics2D) g.create();
+                    
+                    // Use same rendering hints like parent graphics
+                  //  gx.setRenderingHints(g.getRenderingHints());
+                    
+                    gx.transform(TRANSFORM.get(this));
+                    gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
+                    gx.dispose();
+                } else {
+                    
+                    g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
+                }
+            } else {
+                Shape shape = getTransformedShape();
+                g.setColor(Color.red);
+                g.setStroke(new BasicStroke());
+                g.draw(shape);
+            }
+
+            if (contrast != 1f) {
+                g.setComposite(savedComposite);
+            }
+        }
+        
+        
+        
+        ///Contrast End
+        
+        
+        
+        
+        
     }
 
     protected void drawFill(Graphics2D g) {
