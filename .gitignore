@@ -1,5 +1,6 @@
 JHotDraw/target/
 /JHotDraw/nbactions.xml
+<<<<<<< HEAD
 JHotDraw/FeatureTraces/
 .idea/
 *.iml
@@ -7,3 +8,9 @@ JHotDraw/FeatureTraces/
 /JHotDraw/nbproject/
 JHotDraw/JHotDraw.iml
 JHotDraw/.idea/
+=======
+JHotDraw/.idea/
+JHotDraw/src/main/main.iml
+JHotDraw/JHotDraw.iml
+/JHotDraw/nbproject/
+>>>>>>> develop
