@@ -33,11 +33,11 @@ public class AnimationTool extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         switch (tool) {
             case ADD_FRAME_TOOL:
-                addFrame();
+                addFrame(Animation.getInstance().getCurrentFrame());
                 break;
             
             case REMOVE_FRAME_TOOL:
-                removeFrame((JFrame) e.getSource());
+                removeFrame(Animation.getInstance().getCurrentFrame());
                 break;
             
             case PLAY_TOOL: {
@@ -80,8 +80,8 @@ public class AnimationTool extends AbstractAction {
         stopPlaying = true;
     }
     
-    public void addFrame() {
-        getAnimation().addFrame(new JFrame());
+    public void addFrame(JFrame frameToAdd) {
+        getAnimation().addFrame(frameToAdd);
         animation = getAnimation();
     }
     

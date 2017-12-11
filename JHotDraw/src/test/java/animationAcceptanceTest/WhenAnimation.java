@@ -6,6 +6,13 @@
 package animationAcceptanceTest;
 
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
+import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+import org.jhotdraw.draw.Animation;
+import org.jhotdraw.draw.AnimationTool;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -13,11 +20,19 @@ import com.tngtech.jgiven.Stage;
  */
 public class WhenAnimation extends Stage<WhenAnimation> {
     
-    public WhenAnimation some_action() {
-        return this;
-    }
+    @ExpectedScenarioState
+    @ProvidedScenarioState
+    JFrame animationWindow;
+    
+    @ExpectedScenarioState
+    @ProvidedScenarioState
+    AnimationTool animationTool;
     
     public WhenAnimation i_Add_Three_New_Frames() {
+        Animation.getInstance().setCurrentFrame(animationWindow);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        animationTool.actionPerformed(mock(ActionEvent.class));
         return this;
     }
 

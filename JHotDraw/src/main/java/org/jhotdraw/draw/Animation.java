@@ -37,6 +37,10 @@ public class Animation {
     public JFrame getCurrentFrame() {
         return currentFrame;
     }
+
+    public void setCurrentFrame(JFrame currentFrame) {
+        this.currentFrame = currentFrame;
+    }
     
     public JFrame setFrame(int frame) {
         return frames.get(frame);

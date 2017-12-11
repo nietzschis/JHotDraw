@@ -3,11 +3,11 @@ package animationAcceptanceTest;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import javax.swing.JFrame;
-import org.jhotdraw.app.AbstractApplication;
-import org.jhotdraw.app.DefaultSDIApplication;
+import org.jhotdraw.draw.AnimationTool;
+import org.jhotdraw.draw.AnimationToolDefinition;
+import static org.jhotdraw.draw.AnimationToolDefinition.*;
 import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
-import org.jhotdraw.samples.svg.gui.AnimationToolBar;
 /**
  *
  * @author lasca
@@ -15,13 +15,13 @@ import org.jhotdraw.samples.svg.gui.AnimationToolBar;
 public class GivenAnimation extends Stage<GivenAnimation> {
     
     @ProvidedScenarioState
-    AnimationToolBar toolbar;
+    AnimationTool animationTool;
     
     @ProvidedScenarioState
     JFrame animationWindow;
     
     public GivenAnimation animationWindow() {
-        AbstractApplication app = new DefaultSDIApplication();
+        animationWindow = new JFrame();
         SVGView view = new SVGView();
         view.init();
         view.getDrawing().add(new SVGRectFigure());
@@ -29,9 +29,23 @@ public class GivenAnimation extends Stage<GivenAnimation> {
         return this;
     }
     
-    public GivenAnimation toolbar() {
-        toolbar = new AnimationToolBar();
-        toolbar.createDisclosedComponent(0);
+    public GivenAnimation animationAddFrameTool() {
+        animationTool = new AnimationTool(ADD_FRAME_TOOL);
+        return this;
+    }
+    
+    public GivenAnimation animationRemoveFrameTool() {
+        animationTool = new AnimationTool(REMOVE_FRAME_TOOL);
+        return this;
+    }
+    
+    public GivenAnimation animationPlayTool() {
+        animationTool = new AnimationTool(PLAY_TOOL);
+        return this;
+    }
+    
+    public GivenAnimation animationPauseTool() {
+        animationTool = new AnimationTool(PAUSE_TOOL);
         return this;
     }
 

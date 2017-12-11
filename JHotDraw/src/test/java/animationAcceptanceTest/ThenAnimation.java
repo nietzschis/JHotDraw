@@ -6,6 +6,11 @@
 package animationAcceptanceTest;
 
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import javax.swing.JFrame;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.jhotdraw.draw.Animation;
+import org.jhotdraw.draw.AnimationTool;
 
 /**
  *
@@ -13,23 +18,28 @@ import com.tngtech.jgiven.Stage;
  */
 public class ThenAnimation extends Stage<ThenAnimation> {
     
-    public ThenAnimation some_outcome() {
-        return this;
+    @ExpectedScenarioState
+    JFrame animationWindow;
+    
+    @ExpectedScenarioState
+    AnimationTool animationTool;
+    
+    public void the_Animation_contains_Three_Frames() {
+        assertThat(Animation.getInstance()).isNotNull();
+        assertThat(Animation.getInstance().getFrames()).isNotNull();
+        
+        assertThat(Animation.getInstance().getFrames().size()).isEqualTo(3);
     }
 
-    public ThenAnimation the_Animation_contains_Four_Frames() {
-        return this;
+    public void the_frames_should_be_different() {
+        
     }
 
-    public ThenAnimation the_frames_should_be_different() {
-        return this;
+    public void the_animation_plays() {
+        
     }
 
-    public ThenAnimation the_animation_plays() {
-        return this;
-    }
-
-    public ThenAnimation animation_contains_two_frames() {
-        return this;
+    public void animation_contains_two_frames() {
+        
     }
 }

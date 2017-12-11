@@ -14,16 +14,15 @@ import org.junit.Test;
  */
 public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, ThenAnimation> {
     
-    @Ignore
     @Test
     public void adding_Frames() {
         given().animationWindow()
                 .and()
-                .toolbar();
+                .animationAddFrameTool();
         
         when().i_Add_Three_New_Frames();
         
-        then().the_Animation_contains_Four_Frames();
+        then().the_Animation_contains_Three_Frames();
     }
     
     @Ignore
@@ -31,7 +30,7 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
     public void comparing_Frames() {
         given().animationWindow()
                 .and()
-                .toolbar();
+                .animationPauseTool();
         
         when().adding_new_figure_in_frame();
         
@@ -43,7 +42,7 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
     public void play_Animation() {
         given().animationWindow()
                 .and()
-                .toolbar();
+                .animationPlayTool();
         
         when().i_Add_Three_New_Frames()
                 .and()
@@ -57,7 +56,7 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
     public void remove_Frame() {
         given().animationWindow_with_three_frames()
                 .and()
-                .toolbar();
+                .animationRemoveFrameTool();
         
         when().removing_a_frame();
         

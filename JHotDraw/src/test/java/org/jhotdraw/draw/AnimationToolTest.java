@@ -57,6 +57,7 @@ public class AnimationToolTest {
         JFrame newFrame = new JFrame();
         
         animationTool = new AnimationTool(ADD_FRAME_TOOL);
+        Animation.getInstance().setCurrentFrame(newFrame);
         animationTool.actionPerformed(new ActionEvent(newFrame, 0, "test"));
         assertFalse(animationTool.getAnimation().getFrames().isEmpty());
         
