@@ -45,7 +45,7 @@ public class SearchAction extends AbstractApplicationAction implements ActionSPI
     public void actionPerformed(ActionEvent evt) {
         getAllTools();
         if (evt.getSource() != null) {
-            Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().setComboBox(setList());
+            Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().setSearchMenu(setList());
         }
     }
 

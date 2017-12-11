@@ -19,6 +19,9 @@ import java.beans.*;
 import java.util.*;
 import javax.swing.*;
 import java.io.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 /**
  * An Application handles the lifecycle of {@link View}s and provides windows
  * to present them on screen. Depending on the document interface style 
@@ -219,6 +222,14 @@ public interface Application {
      */
     public void clearRecentFiles();
     
+    public void startServer() throws RemoteException, AlreadyBoundException;
+    
+    public void stopServer() throws RemoteException, NotBoundException;
+    
+    public boolean connectToServer(String IP);
+    
+    public void disconnectFromServer();
+    
     /**
      * Adds a palette window to the application.
      */
@@ -240,7 +251,10 @@ public interface Application {
      */
     public void removeWindow(Window window);
     
-    public void setComboBox(ArrayList<Action> actions);
+    public void setSearchMenu(ArrayList<Action> actions);
     
     public String getSearchText();
+        
+    JFrame getFrame();
+    
 }

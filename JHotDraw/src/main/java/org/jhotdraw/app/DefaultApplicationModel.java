@@ -31,7 +31,7 @@ import org.openide.util.Lookup;
  * @version 1.1 2007-01-11 Changed method createToolBars.
  * <br>1.0 June 10, 2006 Created.
  */
-public class DefaultApplicationModel
+public abstract class DefaultApplicationModel
         extends AbstractBean
         implements ApplicationModel {
 
@@ -153,6 +153,10 @@ public class DefaultApplicationModel
         JButton b;
         Action a;
         if (null != (a = getAction(NewAction.ID))) {
+            b = tb.add(a);
+            b.setFocusable(false);
+        }
+        if (null != (a = getAction(DuplicateCanvasAction.ID))) {
             b = tb.add(a);
             b.setFocusable(false);
         }

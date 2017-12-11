@@ -25,13 +25,21 @@ import org.jhotdraw.samples.svg.io.*;
 import org.jhotdraw.undo.*;
 import org.jhotdraw.util.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.*;
+import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.app.*;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.tabs.gui.TabListener;
+import org.jhotdraw.tabs.gui.TabPanel;
 
 /**
  * A view for SVG drawings.
@@ -48,11 +56,21 @@ public class SVGView extends AbstractView implements ExportableView {
     public final static String GRID_VISIBLE_PROPERTY = "gridVisible";
 
     protected JFileChooser exportChooser;
+    protected TabPanel tabs;
+    
+    //To fix issue with startup
+    private boolean firstTab = true;
+
+    public TabPanel getTabs()
+    {
+        return tabs;
+    }
     /**
      * Each SVGView uses its own undo redo manager.
      * This allows for undoing and redoing actions per view.
      */
     private UndoRedoManager undo;
+    HashMap<Drawing, Collection<UndoableEdit>> undoHistoryForTabs = new HashMap<>();
 
     private HashMap<javax.swing.filechooser.FileFilter, InputFormat> fileFilterInputFormatMap;
     private HashMap<javax.swing.filechooser.FileFilter, OutputFormat> fileFilterOutputFormatMap;
@@ -70,13 +88,45 @@ public class SVGView extends AbstractView implements ExportableView {
     public void init() {
         super.init();
 
-        initComponents();
-
-        JPanel zoomButtonPanel = new JPanel(new BorderLayout());
-
         undo = new UndoRedoManager();
-        svgPanel.setDrawing(createDrawing());
-        svgPanel.getDrawing().addUndoableEditListener(undo);
+        initComponents();
+        svgPanel.setUndoManager(undo);
+        
+        JPanel zoomButtonPanel = new JPanel(new BorderLayout());
+        
+        
+        
+        tabs = new TabPanel();
+        tabs.setSelectedTabChanged( new TabListener()
+        {
+            @Override
+            public void ChangeTab()
+            {
+                if(tabs.tabExist())
+                    changeDrawing(tabs.getCurrentDrawing());
+                else
+                    newDrawing(createDrawing(), "untitled");
+            }
+            @Override
+            public void CloseTab()
+            {
+                new CloseTabAction(getApplication()).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "tabClosing"));
+            }
+        });
+        
+        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+        layout.setVgap(0);
+        layout.setHgap(0);
+        tabPanel.setLayout(layout);
+        tabPanel.add(tabs);
+        
+        Drawing d = createDrawing();
+        tabs.addTab(d, "untitled");
+        
+        changeDrawing(tabs.getCurrentDrawing());
+        
+        getDrawing().addUndoableEditListener(undo);
+        
         initActions();
         undo.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -117,7 +167,7 @@ public class SVGView extends AbstractView implements ExportableView {
      * Creates a Pageable object for printing the View.
      */
     public Pageable createPageable() {
-        return new DrawingPageable(svgPanel.getDrawing());
+        return new DrawingPageable(getDrawing());
 
     }
 
@@ -150,12 +200,14 @@ public class SVGView extends AbstractView implements ExportableView {
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(new FileOutputStream(f));
-            new SVGOutputFormat().write(f, svgPanel.getDrawing());
+            new SVGOutputFormat().write(f, getDrawing());
         } finally {
             if (out != null) {
                 out.close();
             }
         }
+        
+        tabs.setTabName(f.getName());
     }
 
     /**
@@ -203,10 +255,7 @@ public class SVGView extends AbstractView implements ExportableView {
             SwingUtilities.invokeAndWait(new Runnable() {
 
                 public void run() {
-                    svgPanel.getDrawing().removeUndoableEditListener(undo);
-                    svgPanel.setDrawing(drawing);
-                    svgPanel.getDrawing().addUndoableEditListener(undo);
-                    undo.discardAllEdits();
+                    newDrawing(drawing, f.getName());
                 }
             });
         } catch (InterruptedException e) {
@@ -221,27 +270,72 @@ public class SVGView extends AbstractView implements ExportableView {
     }
 
     public Drawing getDrawing() {
-        return svgPanel.getDrawing();
+        return tabs.getCurrentDrawing();
     }
 
     public void setEnabled(boolean newValue) {
         svgPanel.setEnabled(newValue);
         super.setEnabled(newValue);
     }
+    
+    
+    
+
+    
+    
+     private void changeDrawing(Drawing d)
+    {
+        
+        
+        if(svgPanel.getDrawing() != null)
+        {
+            svgPanel.getDrawing().removeUndoableEditListener(undo);
+            undoHistoryForTabs.put(svgPanel.getDrawing(), undo.getEdits());
+        }        
+        
+        svgPanel.setDrawing(d);
+        
+        
+        if(undoHistoryForTabs.containsKey(d))
+            undo.setEdits(undoHistoryForTabs.get(d));
+        else
+            undo.setEdits(new ArrayList<>());
+        
+        getDrawing().addUndoableEditListener(undo);
+        
+    }
+    
+    private void newDrawing(Drawing d, String title)
+    {
+        tabs.addTab(d, title);
+        changeDrawing(d);
+        
+    }
 
     /**
      * Clears the view.
      */
+    @Override
     public void clear() {
+
+        
         final Drawing newDrawing = createDrawing();
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
 
+                @Override
                 public void run() {
-                    svgPanel.getDrawing().removeUndoableEditListener(undo);
-                    svgPanel.setDrawing(newDrawing);
-                    svgPanel.getDrawing().addUndoableEditListener(undo);
-                    undo.discardAllEdits();
+                    //The first Tab is broken due to being created too early
+                    //as a Drawing is required pre startup, could use a proper
+                    //fix
+                    if(firstTab)
+                    {
+                        tabs.CloseTab();
+                        firstTab = false;
+                    }
+                    else
+                        newDrawing(newDrawing, "untitled");
+
                 }
             });
         } catch (InvocationTargetException ex) {
@@ -249,6 +343,8 @@ public class SVGView extends AbstractView implements ExportableView {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+        
+        
     }
 
     @Override
@@ -256,7 +352,7 @@ public class SVGView extends AbstractView implements ExportableView {
         final JFileChooser c = new JFileChooser();
         fileFilterInputFormatMap = new HashMap<javax.swing.filechooser.FileFilter, InputFormat>();
         javax.swing.filechooser.FileFilter firstFF = null;
-        for (InputFormat format : svgPanel.getDrawing().getInputFormats()) {
+        for (InputFormat format : getDrawing().getInputFormats()) {
             javax.swing.filechooser.FileFilter ff = format.getFileFilter();
             if (firstFF == null) {
                 firstFF = ff;
@@ -287,7 +383,7 @@ public class SVGView extends AbstractView implements ExportableView {
 
         fileFilterOutputFormatMap = new HashMap<javax.swing.filechooser.FileFilter, OutputFormat>();
         //  c.addChoosableFileFilter(new ExtensionFileFilter("SVG Drawing","svg"));
-        for (OutputFormat format : svgPanel.getDrawing().getOutputFormats()) {
+        for (OutputFormat format : getDrawing().getOutputFormats()) {
             javax.swing.filechooser.FileFilter ff = format.getFileFilter();
             fileFilterOutputFormatMap.put(ff, format);
             c.addChoosableFileFilter(ff);
@@ -306,7 +402,7 @@ public class SVGView extends AbstractView implements ExportableView {
         fileFilterOutputFormatMap = new HashMap<javax.swing.filechooser.FileFilter, OutputFormat>();
         //  c.addChoosableFileFilter(new ExtensionFileFilter("SVG Drawing","svg"));
         javax.swing.filechooser.FileFilter currentFilter = null;
-        for (OutputFormat format : svgPanel.getDrawing().getOutputFormats()) {
+        for (OutputFormat format : getDrawing().getOutputFormats()) {
             javax.swing.filechooser.FileFilter ff = format.getFileFilter();
             fileFilterOutputFormatMap.put(ff, format);
             c.addChoosableFileFilter(ff);
@@ -335,12 +431,15 @@ public class SVGView extends AbstractView implements ExportableView {
      * always regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         svgPanel = new org.jhotdraw.samples.svg.SVGDrawingPanel();
+        tabPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
         add(svgPanel, java.awt.BorderLayout.CENTER);
+        add(tabPanel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
     public JFileChooser getExportChooser() {
         if (exportChooser == null) {
@@ -357,7 +456,7 @@ public class SVGView extends AbstractView implements ExportableView {
             f = new File(f.getPath() + "." + format.getFileExtension());
         }
         
-        format.write(f, svgPanel.getDrawing());
+        format.write(f, getDrawing());
         
         // If selected format was "compressed PNG", compress an image with a web service tinypng.
         if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
@@ -371,5 +470,6 @@ public class SVGView extends AbstractView implements ExportableView {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jhotdraw.samples.svg.SVGDrawingPanel svgPanel;
+    private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 }

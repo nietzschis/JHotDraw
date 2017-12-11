@@ -39,6 +39,10 @@ public interface SVGFigureFactory {
             double x, double y, double width, double height, double rx, double ry, 
             Map<AttributeKey,Object> attributes);
     
+    public Figure createTriangle(
+            double x, double y, double width, double height,
+            Map<AttributeKey,Object> attributes);
+    
     public Figure createCircle(
             double cx, double cy, double r, 
             Map<AttributeKey,Object> attributes);

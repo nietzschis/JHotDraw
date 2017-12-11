@@ -18,12 +18,14 @@ public class JHotDrawFeatures {
     public static final String GROUPING = "grouping";
     public static final String PATH_EDITING = "path editing";
     public static final String CANVAS = "canvas";
+    public static final String TABS = "tabs";
     public static final String TOOL_PALETTE = "tool palette";
     public static final String SELECTION_TOOL = "selection tool";
     public static final String LINE_TOOL = "line tool";
     public static final String BEZIER_TOOL = "scribble tool";
     public static final String RECTANGLE_TOOL = "rectangle tool";
     public static final String ELLIPSE_TOOL = "ellipse tool";
+    public static final String TRIANGLE_TOOL = "triangle tool";
     public static final String TEXT_TOOL = "text tool";
     public static final String TEXT_AREA_TOOL = "text area tool";
     public static final String IMAGE_TOOL = "image tool";
@@ -35,4 +37,6 @@ public class JHotDrawFeatures {
     public static final String LINK_PALETTE = "link palette";
     public static final String VIEW_PALETTE = "view palette";
     public static final String ALIGN_PALETTE = "align palette";
+    public static final String ADD_FIGURE = "add figure";
+    public static final String BASIC_ADD = "basic add";
 }
