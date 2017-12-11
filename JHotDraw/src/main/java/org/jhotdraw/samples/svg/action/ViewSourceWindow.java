@@ -107,8 +107,4 @@ public class ViewSourceWindow {
     public JTextArea getTextArea() {
         return ta;
     }
-
-    public String getSource() {
-        return originalSource;
-    }
 }
