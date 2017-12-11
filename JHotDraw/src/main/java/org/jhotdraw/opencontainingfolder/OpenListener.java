@@ -15,4 +15,6 @@ public interface OpenListener {
     
     public void openBrowser(File file);
     
+    public Strategy getStrategy();
+    
 }

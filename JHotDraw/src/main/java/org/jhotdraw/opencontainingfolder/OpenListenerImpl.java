@@ -71,5 +71,10 @@ public class OpenListenerImpl implements OpenListener{
 		return (OS.indexOf("sunos") >= 0);
 
 	}
+
+    @Override
+    public Strategy getStrategy() {
+        return this.strategy;
+    }
     
 }
