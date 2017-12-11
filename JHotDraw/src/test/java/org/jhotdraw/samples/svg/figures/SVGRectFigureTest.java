@@ -11,11 +11,10 @@ import java.awt.geom.Rectangle2D;
 
 public class SVGRectFigureTest {
 
-    SVGRectFigure figure;
+    private SVGRectFigure figure;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() {
         figure = new SVGRectFigure(0d,0d,100d,100d);
         figure.setArc(30d, 30d);
     }
