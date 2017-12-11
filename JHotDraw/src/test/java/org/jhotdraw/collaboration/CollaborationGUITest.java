@@ -70,7 +70,7 @@ public class CollaborationGUITest {
         window.menuItem("collaboration.start").click();
         window.optionPane().yesButton().click(); //Start server? popup
 
-        findJOptionPane(); //Copy IP? popup
+        findIPJOptionPane(); //Copy IP? popup
 
         assertEquals(InetAddress.getLocalHost().getHostAddress(), Toolkit.getDefaultToolkit()
                 .getSystemClipboard().getData(DataFlavor.stringFlavor));
@@ -78,12 +78,12 @@ public class CollaborationGUITest {
         CollaborationServer.getInstance().startServer();
     }
     
-    private void findJOptionPane() {
+    private void findIPJOptionPane() {
         try {
             window.optionPane().yesButton().click(); //Copy IP? popup
         }
         catch (ComponentLookupException e) {
-            findJOptionPane();
+            findIPJOptionPane();
         }
     }
     
@@ -100,7 +100,16 @@ public class CollaborationGUITest {
         window.menuItem("collaboration.start").click();
         window.optionPane().yesButton().click(); //Start server? popup
         
-        window.optionPane().button().click(); //Error popup
+        findErrorJOptionPane();
+    }
+    
+    private void findErrorJOptionPane() {
+        try {
+            window.optionPane().button().click(); //Error popup
+        }
+        catch (ComponentLookupException e) {
+            findErrorJOptionPane();
+        }
     }
 
     //@Test
