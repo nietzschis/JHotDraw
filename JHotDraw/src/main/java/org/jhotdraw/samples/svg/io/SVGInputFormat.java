@@ -796,7 +796,7 @@ public class SVGInputFormat implements InputFormat {
     private CompositeFigure svgImageGroup(HashMap<AttributeKey, Object> a, 
                         URL imageUrl, double[] coords) throws IOException {
         SVGInputFormat svgImage = new SVGInputFormat(factory);
-        Drawing svgDrawing = new DefaultDrawing();
+        Drawing svgDrawing = new QuadTreeDrawing();
         svgImage.read(imageUrl, svgDrawing, true);
         CompositeFigure svgGroup = factory.createG(a);
         for (Figure f : svgDrawing.getChildren()) {

@@ -21,6 +21,7 @@ import java.util.*;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -261,6 +262,8 @@ public class TextAreaCreationTool extends CreationTool implements ActionListener
             typingTarget = null;
 
             textArea.endOverlay();
+            
+            CollaborationConnection.getInstance().notifyUpdate("update text");
         }
     //	        view().checkDamage();
     }

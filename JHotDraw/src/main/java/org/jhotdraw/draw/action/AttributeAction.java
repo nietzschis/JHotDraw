@@ -17,6 +17,7 @@ import javax.swing.undo.*;
 import org.jhotdraw.app.action.Actions;
 import javax.swing.*;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -142,6 +143,10 @@ public class AttributeAction extends AbstractSelectedAction {
             }
         };
         getDrawing().fireUndoableEditHappened(edit);
+        
+        // Apply attribute
+        System.out.println("Apply attribute");
+        CollaborationConnection.getInstance().notifyUpdate("update attribute");
     }
 
     protected void updateEnabledState() {

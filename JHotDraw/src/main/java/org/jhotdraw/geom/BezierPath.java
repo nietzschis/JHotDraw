@@ -40,6 +40,8 @@ import java.util.*;
  */
 public class BezierPath extends ArrayList<BezierPath.Node>
         implements Shape, Serializable {
+    
+    private static final long serialVersionUID = -1262681553025231467L;
 
     /** Constant for having only control point C0 in effect. C0 is the point
      * through whitch the curve passes. */
@@ -88,6 +90,7 @@ public class BezierPath extends ArrayList<BezierPath.Node>
      */
     public static class Node implements Cloneable, Serializable {
 
+        private static final long serialVersionUID = -1571492331057822667L;
         /**
          * This mask is used to describe which control points in addition to
          * C0 are in effect.

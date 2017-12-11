@@ -64,7 +64,6 @@ public class ToolsToolBar extends AbstractToolBar {
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
-        CoordinateTool coTool;
 
         HashMap<AttributeKey, Object> attributes;
         btn = ButtonFactory.addSelectionToolTo(this, editor,
@@ -170,16 +169,6 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
-        
-        // Creation of coordinate system button
-        btn = ButtonFactory.addToolTo(this, editor, coTool = new CoordinateTool(), "createCoordinate", labels);
-        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(3, 3, 0, 0);
-        p.add(btn, gbc);
-        
                 }
                 break;
         }
