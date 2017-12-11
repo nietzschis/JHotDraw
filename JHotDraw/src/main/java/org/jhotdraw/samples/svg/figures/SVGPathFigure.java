@@ -256,38 +256,51 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             }
         }
         boolean isClosed = CLOSED.get(getChild(0));
-        if (isClosed && FILL_COLOR.get(this) == null && FILL_GRADIENT.get(this)==null) {
+        if (isClosedUnfilled()) {
             return getHitShape().contains(p);
         }
-        /*
-        return cachedPath.contains(p2);
-         */
+
         double tolerance = Math.max(2f, AttributeKeys.getStrokeTotalWidth(this) / 2d);
-        if (isClosed || FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this)!=null) {
-            if (getFigurePath().contains(p)) {
-                return true;
-            }
-            double grow = AttributeKeys.getPerpendicularHitGrowth(this) /** 2d*/;
-            GrowStroke gs = new GrowStroke((float) grow,
-                    (float) (AttributeKeys.getStrokeTotalWidth(this) *
-                    STROKE_MITER_LIMIT.get(this)));
-            if (gs.createStrokedShape(getFigurePath()).contains(p)) {
-                return true;
-            } else {
-                if (isClosed) {
-                    return false;
-                }
-            }
+        if (isClosedOrHasFill() && closedFigureShape().contains(p)) {
+            return true;
         }
-        if (!isClosed) {
-            if (Shapes.outlineContains(getFigurePath(), p, tolerance)) {
-                return true;
-            }
+        
+        if (!isClosed && Shapes.outlineContains(getPath(), p, tolerance)) {
+            return true;
         }
+        
         if (textContains(p)){
             return true;
         }
         return false;
+    }
+    
+    /*
+    Returns a shape which contains the area inside of the figure's path and the area inside its stroke
+    */
+    private Shape closedFigureShape(){
+        double grow = AttributeKeys.getPerpendicularHitGrowth(this) /** 2d*/;
+            GrowStroke gs = new GrowStroke((float) grow,
+                    (float) (AttributeKeys.getStrokeTotalWidth(this) *
+                    STROKE_MITER_LIMIT.get(this)));
+            GeneralPath gp = (GeneralPath) getPath().clone();
+            gp.append(gs.createStrokedShape(getPath()), false);
+        return gp;
+    }
+    
+    /*
+    returns a boolean corresponding to whether it is closed and has no fill color
+    */
+    private boolean isClosedUnfilled(){
+        return (CLOSED.get(getChild(0))&&FILL_COLOR.get(this) == null && FILL_GRADIENT.get(this)==null);
+    }
+    
+    /*
+    returns a boolean for whether it is closed or has a fill color
+    */
+    
+    private boolean isClosedOrHasFill(){
+        return CLOSED.get(getChild(0)) || FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this)!=null;
     }
     
     public boolean textContains(Point2D.Double p){
@@ -629,7 +642,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public double getBaseline() {
-        return 50;
+        return 5;
     }
 
     @Override
