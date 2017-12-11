@@ -31,7 +31,8 @@ import org.junit.runners.Suite;
                      SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, SimpleDrawingViewTest.class, 
                     CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class, 
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
-                    SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class})
+                    SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
+                    RecordingToolTest.class, RecordingToolGUITest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass
