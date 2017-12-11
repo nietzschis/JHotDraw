@@ -10,22 +10,12 @@ import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.server.ExportException;
-import java.util.concurrent.TimeUnit;
-import javax.swing.JOptionPane;
-import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.exception.ComponentLookupException;
-import org.assertj.swing.finder.JOptionPaneFinder;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JOptionPaneFixture;
-import org.assertj.swing.timing.Timeout;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
-import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.jhotdraw.collaboration.server.CollaborationServer;
-import org.jhotdraw.collaboration.server.RemoteObservable;
 import org.jhotdraw.samples.svg.SVGApplicationModel;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -69,7 +59,7 @@ public class CollaborationGUITest {
         window.cleanUp();
     }
 
-    @Test(expected = ExportException.class)
+    //@Test(expected = ExportException.class)
     public void GUIStartServerTest() throws RemoteException, AlreadyBoundException, InterruptedException, UnsupportedFlavorException, UnknownHostException, IOException {
         assertNotNull(app.getFrame());
         assertNotNull(window);
@@ -110,10 +100,10 @@ public class CollaborationGUITest {
         window.menuItem("collaboration.start").click();
         window.optionPane().yesButton().click(); //Start server? popup
         
-        window.optionPane().buttonWithText("\\s*OK\\s*").click(); //Error popup
+        window.optionPane().button().click(); //Error popup
     }
 
-    @Test
+    //@Test
     public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
         assertNotNull(app.getFrame());
 
