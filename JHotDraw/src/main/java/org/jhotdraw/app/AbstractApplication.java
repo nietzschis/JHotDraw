@@ -22,15 +22,22 @@ import java.util.*;
 import java.util.prefs.*;
 import javax.swing.*;
 import java.io.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
+import org.jhotdraw.collaboration.server.CollaborationServer;
+import org.jhotdraw.collaboration.server.RemoteObservable;
+import org.jhotdraw.draw.Drawing;
+import org.jhotdraw.samples.svg.SVGView;
 
 /**
  * AbstractApplication.
  *
  *
  * @author Werner Randelshofer
- * @version 1.3 2007-12-24 Added support for active view. 
- * <br>1.2 2007-11-25 Method View.clear is now invoked on a worker
- * thread.
+ * @version 1.3 2007-12-24 Added support for active view.
+ * <br>1.2 2007-11-25 Method View.clear is now invoked on a worker thread.
  * <br>1.1 2006-05-01 System.exit(0) explicitly in method stop().
  * <br>1.0 October 4, 2005 Created.
  */
@@ -47,7 +54,9 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     private View activeView;
     public final static String VIEW_COUNT_PROPERTY = "viewCount";
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public AbstractApplication() {
     }
 
@@ -111,9 +120,9 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     }
 
     /**
-     * Sets the active view. Calls deactivate on the previously
-     * active view, and then calls activate on the given view.
-     * 
+     * Sets the active view. Calls deactivate on the previously active view, and
+     * then calls activate on the given view.
+     *
      * @param newValue Active view, can be null.
      */
     public void setActiveView(View newValue) {
@@ -130,7 +139,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
 
     /**
      * Gets the active view.
-     * 
+     *
      * @return The active view, can be null.
      */
     public View getActiveView() {
@@ -221,6 +230,40 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     }
 
     public void configure(String[] args) {
+    }
+
+    public void startServer() throws RemoteException, AlreadyBoundException {
+        CollaborationServer.getInstance().startServer();
+        CollaborationConnection.getInstance().setCollaborationProxy(RemoteObservable.getInstance());
+        CollaborationConnection.getInstance().setDrawing(((SVGView) getActiveView()).getDrawing());
+        RemoteObservable.getInstance().addCollaborator(CollaborationConnection.getInstance());
+        firePropertyChange("startServer", null, null);
+    }
+
+    public void stopServer() throws RemoteException, NotBoundException {
+        CollaborationServer.getInstance().stopServer();
+        firePropertyChange("stopServer", null, null);
+    }
+
+    public boolean connectToServer(String IP) {
+        if (CollaborationConnection.getInstance().connectToServer(IP)) {
+
+            Drawing drawing = ((SVGView) getActiveView()).getDrawing();
+            CollaborationConnection.getInstance().setDrawing(drawing);
+            firePropertyChange("connect", null, null);
+
+            // Clear own canvas
+            if (drawing.getChildCount() > 0) {
+                drawing.removeAllChildren();
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    public void disconnectFromServer() {
+        CollaborationConnection.getInstance().disconnectFromServer();
+        firePropertyChange("disconnect", null, null);
     }
 
     public java.util.List<File> recentFiles() {

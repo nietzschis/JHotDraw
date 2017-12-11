@@ -43,6 +43,17 @@ public class SVGDrawingPanel extends JPanel {
     private ResourceBundleUtil labels;
     private Preferences prefs;
 
+    public UndoRedoManager getUndoManager()
+    {
+        return undoManager;
+    }
+
+    public void setUndoManager(UndoRedoManager undoManager)
+    {
+        this.undoManager = undoManager;
+        actionToolBar.setUndoManager(undoManager);
+    }
+
     private class ItemChangeHandler implements ItemListener {
 
         private JToolBar toolbar;
@@ -95,13 +106,8 @@ public class SVGDrawingPanel extends JPanel {
 
         viewToolBar.setView(view);
 
-        undoManager = new UndoRedoManager();
         setEditor(new DefaultDrawingEditor());
         editor.setHandleAttribute(HandleAttributeKeys.HANDLE_SIZE, new Integer(7));
-
-        DefaultDrawing drawing = new DefaultDrawing();
-        view.setDrawing(drawing);
-        drawing.addUndoableEditListener(undoManager);
 
         /* FIXME - Implement the code for handling constraints!
         toggleGridAction = actionToolBar.getToggleGridAction();
@@ -153,11 +159,10 @@ public class SVGDrawingPanel extends JPanel {
         });
     }
 
+    @FeatureEntryPoint(JHotDrawFeatures.TABS)
     public void setDrawing(Drawing d) {
-        undoManager.discardAllEdits();
-        view.getDrawing().removeUndoableEditListener(undoManager);
+        
         view.setDrawing(d);
-        d.addUndoableEditListener(undoManager);
     }
 
     public Drawing getDrawing() {
@@ -195,6 +200,7 @@ public class SVGDrawingPanel extends JPanel {
         editor.setActiveView(view);
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
+        recordingToolBar1.setEditor(editor);
         editor.setActiveView(temp);
         minimapToolBar.setEditor(editor);
     }
@@ -225,6 +231,7 @@ public class SVGDrawingPanel extends JPanel {
         linkToolBar = new org.jhotdraw.samples.svg.gui.LinkToolBar();
         canvasToolBar = new org.jhotdraw.samples.svg.gui.CanvasToolBar();
         viewToolBar = new org.jhotdraw.samples.svg.gui.ViewToolBar();
+        recordingToolBar1 = new org.jhotdraw.samples.svg.gui.RecordingToolBar();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
@@ -259,6 +266,9 @@ public class SVGDrawingPanel extends JPanel {
         toolsPane.add(canvasToolBar);
         toolsPane.add(viewToolBar);
 
+        recordingToolBar1.setRollover(true);
+        toolsPane.add(recordingToolBar1);
+
         toolsScrollPane.setViewportView(toolsPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -283,6 +293,7 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.samples.svg.gui.FillToolBar fillToolBar;
     private org.jhotdraw.samples.svg.gui.FontToolBar fontToolBar;
     private org.jhotdraw.samples.svg.gui.LinkToolBar linkToolBar;
+    private org.jhotdraw.samples.svg.gui.RecordingToolBar recordingToolBar1;
     private javax.swing.JScrollPane scrollPane;
     private org.jhotdraw.samples.svg.gui.StrokeToolBar strokeToolBar;
     private javax.swing.ButtonGroup toolButtonGroup;

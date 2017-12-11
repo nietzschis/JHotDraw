@@ -40,6 +40,8 @@ import org.jhotdraw.geom.*;
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, ImageHolderFigure {
+    
+    private static final long serialVersionUID = -6200643115553321938L;
 
     /**
      * This rectangle describes the bounds into which we draw the image.
@@ -64,12 +66,14 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      */
     private BufferedImage bufferedImage;
 
+    private transient BufferedImage bufferedImage;
+    
     private boolean edgeDetectorApplied; 
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
      */
-    private BufferedImage originalBufferedImage;
+    private transient BufferedImage originalBufferedImage;
 
     /** Creates a new instance. */
     public SVGImageFigure() {

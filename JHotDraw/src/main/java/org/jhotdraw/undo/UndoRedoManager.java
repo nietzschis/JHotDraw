@@ -276,6 +276,29 @@ public class UndoRedoManager extends UndoManager {//javax.swing.undo.UndoManager
         }
     }
     
+    public Collection<UndoableEdit> getEdits()
+    {
+        ArrayList<UndoableEdit> temp = new ArrayList<>();
+        
+        for (int i = 0; i < edits.size(); i++)
+        {
+            if(edits.get(i).canUndo())
+                temp.add(edits.get(i));
+        }
+        
+        
+        return temp;
+    }
+    
+    public void setEdits(Collection<UndoableEdit> edits)
+    {
+        this.edits = new Vector<>();
+        discardAllEdits();
+        
+        for (UndoableEdit edit : edits)
+            addEdit(edit);
+    }
+    
     /**
      * Undoes or redoes the last edit event.
      * The UndoRedoManager ignores all incoming UndoableEdit events,

@@ -81,7 +81,47 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
     private static Border nonRolloverToggleBorder;
     private boolean rolloverBorders = false;
     private HashMap<AbstractButton,Border> borderTable = new HashMap<AbstractButton,Border>();
-    private Hashtable<AbstractButton,Boolean> rolloverTable = new Hashtable<AbstractButton,Boolean>();   
+    private Hashtable<AbstractButton,Boolean> rolloverTable = new Hashtable<AbstractButton,Boolean>();
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke upKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke downKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke leftKey;
+    /**
+     * As of Java 2 platform v1.3 this previously undocumented field is no
+     * longer used.
+     * Key bindings are now defined by the LookAndFeel, please refer to
+     * the key bindings specification for further details.
+     *
+     * @deprecated As of Java 2 platform v1.3.
+     */
+    @Deprecated
+    protected KeyStroke rightKey;
     private static String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
 
     public static ComponentUI createUI(JComponent c) {
@@ -409,6 +449,42 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
     table.getColor("ToggleButton.highlight")),
     new BasicBorders.RolloverMarginBorder());
      */
+    }
+
+    /**
+     * No longer used, use PaletteToolBarUI.createFloatingWindow(JToolBar)
+     * @see #createFloatingWindow
+     */
+    protected JFrame createFloatingFrame(JToolBar toolbar) {
+        Window window = SwingUtilities.getWindowAncestor(toolbar);
+        JFrame frame = new JFrame(toolbar.getName(),
+                (window != null) ? window.getGraphicsConfiguration() : null) {
+            // Override createRootPane() to automatically resize
+            // the frame when contents change
+
+            protected JRootPane createRootPane() {
+                JRootPane rootPane = new JRootPane() {
+
+                    private boolean packing = false;
+
+                    public void validate() {
+                        super.validate();
+                        if (!packing) {
+                            packing = true;
+                            pack();
+                            packing = false;
+                        }
+                    }
+                };
+                rootPane.setOpaque(true);
+                return rootPane;
+            }
+        };
+        frame.getRootPane().setName("ToolBar.FloatingFrame");
+        frame.setResizable(false);
+        WindowListener wl = createFrameListener();
+        frame.addWindowListener(wl);
+        return frame;
     }
 
     /**
