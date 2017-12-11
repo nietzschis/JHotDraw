@@ -200,7 +200,7 @@ public class CreationTool extends AbstractTool {
         anchor.y = evt.getY();
         createdFigure.setBounds(p, p);
         getDrawing().add(createdFigure);
-        painter.paint(createdFigure, evt, editor);
+        painter.paint(createdFigure, evt.getButton(), editor);
     }
 
     public void mouseDragged(MouseEvent evt) {
