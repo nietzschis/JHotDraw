@@ -27,19 +27,19 @@ import java.io.*;
 import org.jhotdraw.geom.*;
 
 /**
- * AbstractFigure provides the functionality for managing listeners
- * for a Figure.
+ * AbstractFigure provides the functionality for managing listeners for a
+ * Figure.
  *
  *
  * @author Werner Randelshofer
  * @version 7.0 2008-02-13 Huw Jones: Added methods to support
  * Figure.isTransformable().
- * <br>5.1 2007-12-19 Method invalidate only fires an areInvalidated
- * event, when the Figure is part of a Drawing. 
+ * <br>5.1 2007-12-19 Method invalidate only fires an areInvalidated event, when
+ * the Figure is part of a Drawing.
  * <br>5.0 2007-07-17 Extends from AbstractBean.
  * <br>4.0 2007-05-18 Removed addUndoableEditListener and
- * removeUndoableEditListener, isConnectorsVisible, setConnectorsVisible
- * methods due to changes in Figure interface.
+ * removeUndoableEditListener, isConnectorsVisible, setConnectorsVisible methods
+ * due to changes in Figure interface.
  * <br>3.4 2007-02-09 Method fireFigureHandlesChanged added.
  * <br>3.3 Reworked.
  * <br>3.2 2006-01-05 Added method getChangingDepth().
@@ -50,21 +50,41 @@ public abstract class AbstractFigure
         extends AbstractBean
         implements Figure {
 
-    protected EventListenerList listenerList = new EventListenerList();
-    private Drawing drawing;
+    protected transient EventListenerList listenerList = new EventListenerList();
+    private transient Drawing drawing;
     private boolean isSelectable = true;
     private boolean isRemovable = true;
     private boolean isVisible = true;
     private boolean isTransformable = true;
+    private static final long serialVersionUID = 8894174659374389833L;
+
+    private int collaborationId;
     /**
-     * This variable is used to prevent endless change loops.
-     * We increase its value on each invocation of willChange() and
-     * decrease it on each invocation of changed().
+     * This variable is used to prevent endless change loops. We increase its
+     * value on each invocation of willChange() and decrease it on each
+     * invocation of changed().
      */
     protected int changingDepth = 0;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public AbstractFigure() {
+    }
+
+    public void setCollaborationId() {
+        if (collaborationId == 0) {
+            Random r = new Random();
+            collaborationId = r.nextInt();
+        }
+    }
+
+    public void setCollaborationId(int id) {
+        collaborationId = id;
+    }
+
+    public int getCollaborationId() {
+        return collaborationId;
     }
 
     // DRAWING
@@ -102,16 +122,16 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     public void fireAreaInvalidated() {
         fireAreaInvalidated(getDrawingArea());
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireAreaInvalidated(Rectangle2D.Double invalidatedArea) {
         if (listenerList.getListenerCount() > 0) {
@@ -134,8 +154,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireAreaInvalidated(FigureEvent event) {
         // Notify all listeners that have registered interest for
@@ -151,8 +171,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireFigureRequestRemove() {
         if (listenerList.getListenerCount() > 0) {
@@ -175,8 +195,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireFigureAdded() {
         if (listenerList.getListenerCount() > 0) {
@@ -199,8 +219,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireFigureRemoved() {
         if (listenerList.getListenerCount() > 0) {
@@ -227,8 +247,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireFigureChanged(Rectangle2D.Double changedArea) {
         if (listenerList.getListenerCount() > 0) {
@@ -267,12 +287,12 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireAttributeChanged(AttributeKey attribute, Object oldValue, Object newValue) {
-        if (listenerList.getListenerCount() > 0 &&
-                (oldValue == null || newValue == null || !oldValue.equals(newValue))) {
+        if (listenerList.getListenerCount() > 0
+                && (oldValue == null || newValue == null || !oldValue.equals(newValue))) {
             FigureEvent event = null;
             // Notify all listeners that have registered interest for
             // Guaranteed to return a non-null array
@@ -292,8 +312,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     *  Notify all listenerList that have registered interest for
-     * notification on this event type.
+     * Notify all listenerList that have registered interest for notification on
+     * this event type.
      */
     protected void fireFigureHandlesChanged() {
         Rectangle2D.Double changedArea = getDrawingArea();
@@ -326,6 +346,7 @@ public abstract class AbstractFigure
             getDrawing().fireUndoableEditHappened(edit);
         }
     }
+
     /*
     public Set createHandles() {
     return new HashSet();
@@ -352,7 +373,7 @@ public abstract class AbstractFigure
         LinkedList<Handle> handles = new LinkedList<Handle>();
         switch (detailLevel) {
             case -1:
-                handles.add(new BoundsOutlineHandle(this,false,true));
+                handles.add(new BoundsOutlineHandle(this, false, true));
                 break;
             case 0:
                 ResizeHandleKit.addResizeHandles(this, handles);
@@ -385,16 +406,16 @@ public abstract class AbstractFigure
     }
 
     /**
-     * Checks if this figure can be connected. By default
-     * AbstractFigures can be connected.
+     * Checks if this figure can be connected. By default AbstractFigures can be
+     * connected.
      */
     public boolean canConnect() {
         return true;
     }
 
     /**
-     * Invalidates cached data of the Figure.
-     * This method must execute fast, because it can be called very often. 
+     * Invalidates cached data of the Figure. This method must execute fast,
+     * because it can be called very often.
      */
     protected void invalidate() {
     }
@@ -408,8 +429,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     * Informs that a figure is about to change something that
-     * affects the contents of its display box.
+     * Informs that a figure is about to change something that affects the
+     * contents of its display box.
      */
     public void willChange() {
         if (changingDepth == 0) {
@@ -436,8 +457,8 @@ public abstract class AbstractFigure
     }
 
     /**
-     * Returns the Figures connector for the specified location.
-     * By default a ChopBoxConnector is returned.
+     * Returns the Figures connector for the specified location. By default a
+     * ChopBoxConnector is returned.
      *
      *
      * @see ChopRectangleConnector
@@ -459,9 +480,10 @@ public abstract class AbstractFigure
     }
 
     /**
-     * Returns a collection of actions which are presented to the user
-     * in a popup menu.
-     * <p>The collection may contain null entries. These entries are used
+     * Returns a collection of actions which are presented to the user in a
+     * popup menu.
+     * <p>
+     * The collection may contain null entries. These entries are used
      * interpreted as separators in the popup menu.
      */
     public Collection<Action> getActions(Point2D.Double p) {
@@ -470,7 +492,8 @@ public abstract class AbstractFigure
 
     /**
      * Returns a specialized tool for the given coordinate.
-     * <p>Returns null, if no specialized tool is available.
+     * <p>
+     * Returns null, if no specialized tool is available.
      */
     public Tool getTool(Point2D.Double p) {
         return null;
@@ -496,6 +519,7 @@ public abstract class AbstractFigure
         Rectangle2D.Double r = getBounds();
         return new Point2D.Double(r.x, r.y);
     }
+
     /*
     public Rectangle2D.Double getHitBounds() {
     return getBounds();

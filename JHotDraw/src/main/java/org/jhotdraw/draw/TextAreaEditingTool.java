@@ -18,6 +18,7 @@ import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoableEdit;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -152,6 +153,8 @@ public class TextAreaEditingTool extends AbstractTool implements ActionListener 
             typingTarget = null;
 
             textArea.endOverlay();
+            
+            CollaborationConnection.getInstance().notifyUpdate("update text");
         }
     //	        view().checkDamage();
     }
