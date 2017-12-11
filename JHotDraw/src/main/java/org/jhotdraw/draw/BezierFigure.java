@@ -653,7 +653,12 @@ public class BezierFigure extends AbstractAttributedFigure {
         }
         return false;
     }
-    
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     @Override
     public void write(DOMOutput out) throws IOException {
         writePoints(out);

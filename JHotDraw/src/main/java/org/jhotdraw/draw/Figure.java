@@ -13,14 +13,18 @@
  */
 package org.jhotdraw.draw;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import java.io.*;
-import org.jhotdraw.geom.*;
+import org.jhotdraw.geom.Dimension2DDouble;
 import org.jhotdraw.xml.DOMStorable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A Figure knows its bounds and it can draw itself. A figure is an element of a
@@ -477,6 +481,13 @@ public interface Figure extends Cloneable, Serializable, DOMStorable {
      */
     public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view);
 
+    /**
+     * Splits the figure in half.
+     *
+     * @param view
+     * @return Returns 0 if the split was successful, -1 otherwise.
+     */
+    public int splitFigure(DrawingView view);
     /**
      * Adds a listener for FigureEvent's.
      */

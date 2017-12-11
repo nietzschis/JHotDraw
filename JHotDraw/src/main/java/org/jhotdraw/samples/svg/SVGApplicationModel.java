@@ -14,15 +14,25 @@
 package org.jhotdraw.samples.svg;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
+import org.jhotdraw.app.Application;
+import org.jhotdraw.app.DefaultApplicationModel;
+import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.*;
-import org.jhotdraw.samples.svg.action.*;
-import org.jhotdraw.samples.svg.figures.*;
-import org.jhotdraw.util.*;
-import java.util.*;
-import javax.swing.*;
-import org.jhotdraw.app.*;
-import org.jhotdraw.draw.*;
+import org.jhotdraw.draw.DefaultDrawingEditor;
+import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.GridConstrainer;
 import org.jhotdraw.draw.action.*;
+import org.jhotdraw.samples.svg.action.CombineAction;
+import org.jhotdraw.samples.svg.action.SplitAction;
+import org.jhotdraw.samples.svg.action.ViewSourceAction;
+import org.jhotdraw.samples.svg.figures.SVGGroupFigure;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * SVGApplicationModel.
@@ -89,6 +99,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
         LinkedList<Action> a = new LinkedList<Action>();
         a.add(new DuplicateAction());
+        a.add(new SplitSegmentAction(editor));
 
         a.add(null); // separator
         a.add(new GroupAction(editor, new SVGGroupFigure()));

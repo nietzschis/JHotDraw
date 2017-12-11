@@ -14,18 +14,27 @@
 package org.jhotdraw.draw;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import javax.swing.event.*;
-import javax.swing.undo.*;
-import org.jhotdraw.util.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.util.ResourceBundleUtil;
+import org.jhotdraw.util.ReversedList;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.*;
+
 import static org.jhotdraw.draw.AttributeKeys.*;
 
 /**
@@ -1118,6 +1127,18 @@ public class DefaultDrawingView
                 getDrawing().addAll(duplicates);
             }
         });
+    }
+    
+    @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
+    public int split() {
+        int splittedFigures = 0;
+        Collection<Figure> figures = getSelectedFigures();
+        
+        for(Figure figure : figures) {
+            splittedFigures += figure.splitFigure(editor.getActiveView());
+        }
+
+        return splittedFigures == 0 ? 0 : -1;
     }
 
     public void removeNotify(DrawingEditor editor) {

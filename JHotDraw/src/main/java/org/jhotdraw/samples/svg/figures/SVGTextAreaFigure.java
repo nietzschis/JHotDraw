@@ -602,5 +602,10 @@ public class SVGTextAreaFigure extends SVGAttributedFigure
         that.bounds = (Rectangle2D.Double) this.bounds.clone();
         return that;
     }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
 }
 

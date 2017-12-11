@@ -216,7 +216,7 @@ public class ButtonFactory {
     }
 
     public static Collection<Action> createDrawingActions(DrawingEditor editor) {
-        LinkedList<Action> a = new LinkedList<Action>();
+        LinkedList<Action> a = new LinkedList<>();
         a.add(new CutAction());
         a.add(new CopyAction());
         a.add(new PasteAction());
@@ -226,8 +226,9 @@ public class ButtonFactory {
     }
 
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
-        LinkedList<Action> a = new LinkedList<Action>();
+        LinkedList<Action> a = new LinkedList<>();
         a.add(new DuplicateAction());
+        a.add(new SplitSegmentAction(editor));
 
         a.add(null); // separator
 

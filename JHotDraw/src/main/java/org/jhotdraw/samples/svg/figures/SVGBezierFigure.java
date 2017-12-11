@@ -14,15 +14,25 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.BasicStroke;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.util.*;
-import javax.swing.undo.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.geom.*;
+import org.jhotdraw.geom.BezierPath;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.samples.svg.action.Split;
 import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
@@ -39,6 +49,8 @@ public class SVGBezierFigure extends BezierFigure {
 
     private transient Rectangle2D.Double cachedDrawingArea;
 
+    private Split split = new Split();
+
     /** Creates a new instance. */
     public SVGBezierFigure() {
         this(false);
@@ -52,6 +64,7 @@ public class SVGBezierFigure extends BezierFigure {
 
     public Collection<Handle> createHandles(SVGPathFigure pathFigure, int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<Handle>();
+        
         switch (detailLevel % 2) {
             case 0:
                 for (int i = 0, n = path.size(); i < n; i++) {
@@ -114,6 +127,17 @@ public class SVGBezierFigure extends BezierFigure {
             }
         }
         return false;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        if (split.isClosed(this))
+            return -1;
+
+        if (split.isALine(this))
+            return split.line(this, view);
+
+        return split.fromCenter(this, view);
     }
 
     public void transform(AffineTransform tx) {

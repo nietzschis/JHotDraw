@@ -38,6 +38,11 @@ public interface EditableComponent {
 	 */
 	public void duplicate();
 	/**
+	 * Tries to split from the center of the figure.
+         * @return 0 on success and -1 on failure
+	 */
+        public int split();
+	/**
 	 * Selects all.
 	 */
 	public void selectAll();
