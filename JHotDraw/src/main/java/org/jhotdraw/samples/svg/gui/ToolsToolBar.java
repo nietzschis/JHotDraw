@@ -126,7 +126,7 @@ public class ToolsToolBar extends AbstractToolBar {
         p.add(btn, gbc);
 
 
-           btn = ButtonFactory.addToolTo(this, editor, pathTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes), "createScribble", labels);
+           btn = ButtonFactory.addToolTo(this, editor, pathTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes),"createPen", labels);
            pathTool.setToolDoneAfterCreation(false);
            btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
            gbc = new GridBagConstraints();
