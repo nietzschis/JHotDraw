@@ -2,6 +2,7 @@
 package animationAcceptanceTest;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
+import java.awt.Component;
 import javax.swing.JFrame;
 import org.jhotdraw.draw.AnimationTool;
 import org.jhotdraw.draw.AnimationToolDefinition;

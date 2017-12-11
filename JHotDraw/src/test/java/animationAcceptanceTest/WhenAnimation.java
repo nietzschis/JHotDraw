@@ -9,9 +9,16 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
+import org.jhotdraw.samples.svg.SVGView;
+import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -29,6 +36,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     AnimationTool animationTool;
     
     public WhenAnimation i_Add_Three_New_Frames() {
+        Animation.getInstance().getFrames().clear();
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -37,6 +45,22 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     }
 
     public WhenAnimation adding_new_figure_in_frame() {
+        
+        // Add to animation what there's already in the drawing
+        Animation.getInstance().setCurrentFrame(animationWindow);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        
+        // Create new frame with new drawing where 2 figures are added
+        JFrame newFrame = new JFrame();
+        SVGView newView = new SVGView();
+        newView.init();
+        newView.getDrawing().add(new SVGRectFigure());
+        newView.getDrawing().add(new SVGEllipseFigure());
+        newFrame.add(newView);
+        
+        Animation.getInstance().setCurrentFrame(newFrame);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        
         return this;
     }
 

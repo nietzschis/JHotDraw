@@ -25,12 +25,11 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
         then().the_Animation_contains_Three_Frames();
     }
     
-    @Ignore
     @Test
     public void comparing_Frames() {
         given().animationWindow()
                 .and()
-                .animationPauseTool();
+                .animationAddFrameTool();
         
         when().adding_new_figure_in_frame();
         
