@@ -33,6 +33,7 @@ import org.junit.runners.Suite;
                     CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class, 
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
                     SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
+                    RecordingToolTest.class, RecordingToolGUITest.class,
                     SelectionTest.class})
 public class JHotDrawTestSuite {
 
