@@ -338,4 +338,12 @@ public class QuadTreeDrawing extends AbstractDrawing {
     protected void drawStroke(Graphics2D g) {
         // throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    public void repaintFigure(Figure figure) {
+        quadTree.remove(figure);
+        quadTree.add(figure, figure.getDrawingArea());
+        needsSorting = true;
+        invalidate();
+        fireAreaInvalidated();
+    }
 }

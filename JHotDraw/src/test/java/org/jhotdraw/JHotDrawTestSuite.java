@@ -3,6 +3,8 @@ package org.jhotdraw;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
+import org.jhotdraw.draw.action.ButtonFactoryTest;
+import org.jhotdraw.draw.action.MagnifyingGlassAcceptanceTest;
 import org.jhotdraw.collaboration.CollaborationAcceptanceTest;
 import org.jhotdraw.collaboration.CollaborationGUITest;
 import org.jhotdraw.collaboration.client.CollaborationDrawingHandlerTest;
@@ -35,7 +37,9 @@ import org.junit.runners.Suite;
                     CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class,
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
                     SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
-                    SelectionTest.class, ViewSourceActionJGivenTest.class, SVGInputFormatTest.class})
+                    RecordingToolTest.class, RecordingToolGUITest.class,
+                    SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
+                    ViewSourceActionJGivenTest.class, SVGInputFormatTest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass
