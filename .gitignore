@@ -3,6 +3,7 @@ JHotDraw/target/
 JHotDraw/FeatureTraces/
 .idea/
 *.iml
+*.ftf
 /JHotDraw/nbproject/
 JHotDraw/JHotDraw.iml
 JHotDraw/.idea/
