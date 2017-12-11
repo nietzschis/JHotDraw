@@ -61,6 +61,7 @@ public class ToolsToolBar extends AbstractToolBar {
         AbstractButton btn;
         CreationTool creationTool;
         PathTool pathTool;
+        EraserTool eraserTool;
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
@@ -84,6 +85,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 0, 0, 0);
+        btn.setName("Rectangle");
         p.add(btn, gbc);
         
         btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGTriangleFigure(), attributes), "createTriangle", labels);
@@ -102,6 +104,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Ellipse");
         p.add(btn, gbc);
 
         btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathTool(new SVGPathFigure(), new SVGBezierFigure(true), attributes), "createPolygon", labels);
@@ -169,6 +172,16 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 2;
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
+        p.add(btn, gbc);
+        
+        //This code adds the eraser button to the toolbar in JHotDraw
+        btn = ButtonFactory.addToolTo(this, editor, eraserTool = new EraserTool(this), "createEraserTool", labels);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Eraser");
         p.add(btn, gbc);
                 }
                 break;
