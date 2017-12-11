@@ -20,9 +20,7 @@ public class GraphMath {
     public static GraphMath getInstance() {
         if (instance == null) {
             synchronized(GraphMath.class) {
-                if (instance == null) {
                     instance = new GraphMath();
-                }
             }
         }
         return instance;

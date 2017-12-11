@@ -20,10 +20,6 @@ public class LinearGraph implements Graph {
         this.b = b;
         this.length = length;
     }
-
-    LinearGraph() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     @Override
     public double calcYCoordinate(double x) {
