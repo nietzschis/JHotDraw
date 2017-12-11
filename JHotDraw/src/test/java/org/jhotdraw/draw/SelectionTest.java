@@ -15,12 +15,23 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class SelectionTest {
     private static final Rectangle SELECTION_AREA = new Rectangle(5, 0, 40, 50);
+    private static final Rectangle SELECTION_AREA2 = new Rectangle(30, 0, 40, 50);
 
     private static DrawingEditor editor;
     private static DrawingView view;
 
+    private static Field rubberbandField;
+    private static Method selectGroupMethod;
+
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws NoSuchFieldException, NoSuchMethodException {
+        // Reflection might not be the most optimal way, but it's definitely easier than creating widgets and mouse events
+        rubberbandField = DefaultSelectAreaTracker.class.getDeclaredField("rubberband");
+        rubberbandField.setAccessible(true);
+
+        selectGroupMethod = DefaultSelectAreaTracker.class.getDeclaredMethod("selectGroup", boolean.class);
+        selectGroupMethod.setAccessible(true);
+
         editor = new DefaultDrawingEditor();
 
         view = new DefaultDrawingView();
@@ -32,7 +43,7 @@ public class SelectionTest {
         drawing.add(new SVGRectFigure(10.0, 0.0, 10.0, 10.0));
         drawing.add(new SVGRectFigure(25.0, 0.0, 10.0, 10.0));
         drawing.add(new SVGRectFigure(40.0, 0.0, 10.0, 10.0));
-        drawing.add(new SVGRectFigure(80.0, 0.0, 10.0, 10.0));
+        drawing.add(new SVGRectFigure(60.0, 0.0, 10.0, 10.0));
     }
 
     @Test
@@ -48,25 +59,44 @@ public class SelectionTest {
     }
 
     @Test
-    public void testExpectedSelection() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testExpectedSelection() throws IllegalAccessException, InvocationTargetException {
+        assertThat(view.getSelectionCount(), is(0));
+
         final SelectAreaTracker selectAreaTracker = new DefaultSelectAreaTracker();
         selectAreaTracker.activate(editor);
 
-        assertThat(view.getSelectionCount(), is(0));
+        final Rectangle bounds = (Rectangle) rubberbandField.get(selectAreaTracker);
 
-        // Reflection might not be the most optimal way, but it's definitely easier than creating widgets and mouse events
-        final Field field = DefaultSelectAreaTracker.class.getDeclaredField("rubberband");
-        field.setAccessible(true);
-
-        final Rectangle bounds = (Rectangle) field.get(selectAreaTracker);
         bounds.setBounds(SELECTION_AREA);
-
-        final Method method = DefaultSelectAreaTracker.class.getDeclaredMethod("selectGroup", boolean.class);
-        method.setAccessible(true);
-        method.invoke(selectAreaTracker, false);
-
+        selectGroupMethod.invoke(selectAreaTracker, false);
         assertThat(view.getSelectionCount(), is(3));
 
         selectAreaTracker.deactivate(editor);
+
+        view.clearSelection();
+        assertThat(view.getSelectionCount(), is(0));
+    }
+
+    @Test
+    public void testSelectionInversion() throws IllegalAccessException, InvocationTargetException {
+        assertThat(view.getSelectionCount(), is(0));
+
+        final SelectAreaTracker selectAreaTracker = new DefaultSelectAreaTracker();
+        selectAreaTracker.activate(editor);
+
+        final Rectangle bounds = (Rectangle) rubberbandField.get(selectAreaTracker);
+
+        bounds.setBounds(SELECTION_AREA);
+        selectGroupMethod.invoke(selectAreaTracker, false);
+        assertThat(view.getSelectionCount(), is(3));
+
+        bounds.setBounds(SELECTION_AREA2);
+        selectGroupMethod.invoke(selectAreaTracker, true);
+        assertThat(view.getSelectionCount(), is(2));
+
+        selectAreaTracker.deactivate(editor);
+
+        view.clearSelection();
+        assertThat(view.getSelectionCount(), is(0));
     }
 }

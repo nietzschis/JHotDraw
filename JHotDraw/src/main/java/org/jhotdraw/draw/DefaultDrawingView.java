@@ -481,31 +481,9 @@ public class DefaultDrawingView
      * Adds a figure to the current selection.
      */
     public void addToSelection(Figure figure) {
-        if (DEBUG) {
+        if (DEBUG)
             System.out.println("DefaultDrawingView" + ".addToSelection(" + figure + ")");
-        }
-        Set<Figure> oldSelection = new HashSet<Figure>(selectedFigures);
-        if (selectedFigures.add(figure)) {
-            figure.addFigureListener(handleInvalidator);
-            Set<Figure> newSelection = new HashSet<Figure>(selectedFigures);
-            Rectangle invalidatedArea = null;
-            if (handlesAreValid && getEditor() != null) {
-                for (Handle h : figure.createHandles(detailLevel)) {
-                    h.setView(this);
-                    selectionHandles.add(h);
-                    h.addHandleListener(eventHandler);
-                    if (invalidatedArea == null) {
-                        invalidatedArea = h.getDrawingArea();
-                    } else {
-                        invalidatedArea.add(h.getDrawingArea());
-                    }
-                }
-            }
-            fireSelectionChanged(oldSelection, newSelection);
-            if (invalidatedArea != null) {
-                repaint(invalidatedArea);
-            }
-        }
+        addToSelection(Collections.singletonList(figure));
     }
 
     /**
@@ -562,11 +540,10 @@ public class DefaultDrawingView
      * Otherwise it is removed from the selection.
      */
     public void toggleSelection(Figure figure) {
-        if (selectedFigures.contains(figure)) {
+        if (isFigureSelected(figure))
             removeFromSelection(figure);
-        } else {
+        else
             addToSelection(figure);
-        }
     }
 
     @Override
