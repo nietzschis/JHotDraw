@@ -111,8 +111,6 @@ public class PlaybackPopup {
                 if (looping.get()) {
                     frameIndex.set(0);
                 }
-
-                System.out.println("Animation done");
             }
 
         });
