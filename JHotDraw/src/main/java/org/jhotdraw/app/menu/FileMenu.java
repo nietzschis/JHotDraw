@@ -3,6 +3,7 @@ package org.jhotdraw.app.menu;
 import javax.swing.JMenu;
 import org.jhotdraw.app.ApplicationModel;
 import org.jhotdraw.app.action.ClearAction;
+import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.ExitAction;
 import org.jhotdraw.app.action.ExportAction;
 import org.jhotdraw.app.action.LoadAction;
@@ -23,6 +24,7 @@ public class FileMenu extends AbstractMenu {
         
         addAction(ClearAction.ID);
         addAction(NewAction.ID);
+        addAction(DuplicateCanvasAction.ID);
         addAction(LoadAction.ID);
         if (model.getAction(LoadDirectoryAction.ID) != null) {
             addAction(LoadDirectoryAction.ID);

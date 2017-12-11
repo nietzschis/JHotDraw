@@ -82,8 +82,21 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
         Double opacity=0d;
         Color fillColor=null;
         Color strokeColor=null;
+        
         if (editor != null) {
-            DrawingView view = editor.getActiveView();
+            setOpacityAndColors(opacity, fillColor, strokeColor);
+        }
+
+        if (fillColorKey != null && fillShape != null) {
+            setColorForShape(opacity, fillColor, g, x, y);
+        }
+        if (strokeColorKey != null && strokeShape != null) {
+            setStrokeColorAndShape(opacity, strokeColor, g, x, y);
+        }
+    }
+    
+    private void setOpacityAndColors(Double opacity, Color fillColor, Color strokeColor) {
+        DrawingView view = editor.getActiveView();
             if (view != null && view.getDrawing() != null) {
                 opacity = opacityKey.get(view.getDrawing());
                 fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getDrawing());
@@ -93,10 +106,10 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
                 fillColor = (fillColorKey == null) ? null : fillColorKey.get(editor.getDefaultAttributes());
                 strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(editor.getDefaultAttributes());
             }
-        }
-
-        if (fillColorKey != null && fillShape != null) {
-            if (opacity != null) {
+    }
+    
+    private void setColorForShape(Double opacity, Color fillColor, Graphics2D g, int x, int y) {
+        if (opacity != null) {
                 if (fillColor == null) {
                     fillColor = Color.BLACK;
                 }
@@ -105,17 +118,17 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
                 g.fill(fillShape);
                 g.translate(-x, -y);
             }
-        }
-        if (strokeColorKey != null && strokeShape != null) {
-            if (opacity != null) {
-                if (strokeColor == null) {
-                    strokeColor = Color.BLACK;
-                }
-                g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
-                g.translate(x, y);
-                g.draw(strokeShape);
-                g.translate(-x, -y);
+    }
+    
+    private void setStrokeColorAndShape(Double opacity, Color strokeColor, Graphics2D g, int x, int y) {
+        if (opacity != null) {
+            if (strokeColor == null) {
+                strokeColor = Color.BLACK;
             }
+            g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
+            g.translate(x, y);
+            g.draw(strokeShape);
+            g.translate(-x, -y);
         }
     }
 }

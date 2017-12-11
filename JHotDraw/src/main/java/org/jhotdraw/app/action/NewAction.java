@@ -16,9 +16,7 @@ package org.jhotdraw.app.action;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.util.*;
-import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
@@ -42,7 +40,7 @@ public class NewAction extends AbstractApplicationAction {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }
-
+    
     @FeatureEntryPoint(JHotDrawFeatures.MANAGE_DRAWINGS)
     public void actionPerformed(ActionEvent evt) {
         Application app = getApplication();
