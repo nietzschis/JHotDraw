@@ -95,6 +95,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Ellipse");
         p.add(btn, gbc);
 
         btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathTool(new SVGPathFigure(), new SVGBezierFigure(true), attributes), "createPolygon", labels);
@@ -170,6 +171,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 3;
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Eraser");
         p.add(btn, gbc);
                 }
                 break;

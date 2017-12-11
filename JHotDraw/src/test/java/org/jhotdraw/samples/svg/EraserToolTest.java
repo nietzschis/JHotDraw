@@ -27,6 +27,8 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.core.AbstractComponentMatcher;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
+import org.assertj.swing.core.ComponentDragAndDrop;
+import org.assertj.swing.core.Settings;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import static org.assertj.swing.core.MouseButton.LEFT_BUTTON;
 import static org.assertj.swing.core.MouseClickInfo.leftButton;
@@ -37,27 +39,31 @@ import org.jhotdraw.samples.svg.Erasing;
 import org.jhotdraw.samples.svg.Main;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.draw.DefaultDrawing;
+import org.jhotdraw.draw.DefaultDrawingView;
+import org.jhotdraw.geom.Dimension2DDouble;
 
 
 
 /**
  *
  * @author Frank Frederiksen-Moeller
+ * 
+ * This test uses AssertJ for testing the Eraser tool in JHotDraw
+ * Unfortunately it doesn't work properly. 
+ * It can start JHotDraw GUI and activate the different drawing buttons and also draw a figure. 
+ * But it can't remove the figure with the Eraser tool, since the FrameFixture frame
+ * can't use the mouse dragged function.
  */
 public class EraserToolTest extends AssertJSwingJUnitTestCase {
     
     private FrameFixture frame;
-    private JButtonFixture button;
-    private AbstractApplication app;
-    
-       
     
     
    @Override
     protected void onSetUp() {
         
-            //        app = new DefaultSDIApplication();
-//        Main main = GuiActionRunner.execute(() -> new Main());
+    
         application(Main.class).start();
 
         frame = findFrame(new GenericTypeMatcher<Frame>(Frame.class) {
@@ -65,54 +71,45 @@ public class EraserToolTest extends AssertJSwingJUnitTestCase {
         return frame.isShowing();
         }
     }).using(robot());
-                
-       robot().settings().delayBetweenEvents(1000);
-//         frame.button("Rectangle").click(LEFT_BUTTON);
-//         frame.button().requireToolTip("Rectangle").click(LEFT_BUTTON);
-//          SVGApplicationModel model = GuiActionRunner.execute(() -> new SVGApplicationModel());
-//          SVGView model = GuiActionRunner.execute(() -> new SVGView());
-        
-
-
-
-//        EraserToolTest frame = GuiActionRunner.execute(() -> new EraserToolTest());
-//        window = new FrameFixture();
-//        window.show(); 
+        frame.focus();
+                        
+       robot().settings().delayBetweenEvents(1000);    
+     
         
     }
     
        
     @Test
     public void shouldEraseFigureFromCanvasWhenUsingButton() {
-//        robot().settings().delayBetweenEvents(1000);
-//          final JButtonFixture button1 = frame.toolBar("Tools").button();
-//          GuiActionRunner.execute(() -> button1.setText("Name:"));
-//          frame.button().click();
-        JToggleButtonFixture tb = frame.toggleButton("Rectangle");
-            tb.focus();
-           
-                
-            tb.requireToolTip("Rectangle");
-            //tb.requireNotSelected();
-            tb.click(leftButton().times(1));            
-            frame.moveTo(new Point(10,100)).click().moveTo(new Point(100,200));
-//        GenericTypeMatcher<Frame> matcher = new GenericTypeMatcher<Frame>() {
-//        protected boolean isMatching(Frame frame) {
-//        return "JHotDraw - SVG".equals(frame.getTitle());
-//        }
-//    };
-//        FrameFixture window = WindowFinder.findFrame(matcher).using(robot);
-//    window.show();
-//          app.createContainer();
-//        System.out.println(window);
-//        window.textBox("textToCopy").enterText("Some random text");
-//        window.button("eraserButton").click();
-//        window.label("copiedText").requireText("Some random text");
-}
+                        
+        JToggleButtonFixture rect = frame.toggleButton("Rectangle");
+        JToggleButtonFixture erase = frame.toggleButton("Eraser");
+        JToggleButtonFixture circle = frame.toggleButton("Ellipse");
+             
+            circle.focus();                      
+            circle.requireToolTip("Ellipse");
+            circle.click();
+            frame.focus();
+            frame.moveTo(new Point(10,10)).click(LEFT_BUTTON);
+                                    
+            erase.focus();
+            erase.requireToolTip("Eraser");
+            erase.click();
+            frame.focus();
+            frame.moveTo(new Point(10,10)).click(LEFT_BUTTON);
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+            rect.focus();
+            rect.requireToolTip("Rectangle");
+            rect.click();
+            frame.focus();
+            frame.moveTo(new Point(50,100)).click(LEFT_BUTTON);
+            
+            erase.focus();
+            erase.requireToolTip("Eraser");
+            erase.click();
+            frame.focus();
+            frame.moveTo(new Point(50,100)).click(LEFT_BUTTON);
+
+    }
+
 }
