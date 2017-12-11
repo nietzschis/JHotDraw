@@ -9,6 +9,7 @@ import org.jhotdraw.graph.QuadraticGraph;
 
 import javax.swing.*;
 import java.util.Arrays;
+import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  *
@@ -16,9 +17,10 @@ import java.util.Arrays;
  */
 public class QuadraticGraphPanel extends AbstractFunctionPanel {
 
-    /**
-     * Creates a new QuadraticGraphPanel
-     */
+    
+    private ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+    
+    
     public QuadraticGraphPanel() {
         initComponents();
     }
@@ -69,27 +71,28 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
 
         jLabel1.setText("f(x)=");
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(labels.getString("label.cancel"));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        OkButton.setText("OK");
+        OkButton.setText(labels.getString("label.ok"));
         OkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OkButtonActionPerformed(evt);
             }
         });
 
-        changeButton.setText("Change");
+        changeButton.setText(labels.getString("label.graph.change"));
         changeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeButtonActionPerformed(evt);
             }
         });
 
+        aTextField.setText("0");
         aTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aTextFieldActionPerformed(evt);
@@ -98,6 +101,7 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
 
         jLabel2.setText("<html>x<sup>2</sup>+</html>");
 
+        bTextField.setText("0");
         bTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bTextFieldActionPerformed(evt);
@@ -106,14 +110,16 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
 
         jLabel3.setText("x+");
 
+        cTextField.setText("0");
         cTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cTextFieldActionPerformed(evt);
             }
         });
 
-        lengthLabel.setText("Length");
+        lengthLabel.setText(labels.getString("label.graph.length"));
 
+        lengthTextField.setText("0");
         lengthTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lengthTextFieldActionPerformed(evt);
@@ -121,7 +127,7 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
         });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel5.setText("Quadratic Graph");
+        jLabel5.setText(labels.getString("label.graph.quadratic.title"));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -133,18 +139,17 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lengthLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(cancelButton)
                                 .addGap(55, 55, 55)
-                                .addComponent(OkButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(changeButton))))
+                                .addComponent(OkButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lengthLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(changeButton)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1)
@@ -161,7 +166,7 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 106, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
