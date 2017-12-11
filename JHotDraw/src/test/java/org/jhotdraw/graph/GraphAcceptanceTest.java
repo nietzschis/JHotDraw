@@ -34,7 +34,7 @@ public class GraphAcceptanceTest extends ScenarioTest<GivenGraph, WhenGraph, The
         then().graph_is_in_canvas();  
     }
     
-        @Test
+    @Test
     public void drawTwoGraphs() {
         given().an_app().and().a_graph_figure().and().a_quadratic_graph().and().a_linear_graph();
         

@@ -58,7 +58,7 @@ public class GraphCalcTest {
      */
     @Test
     public void quadraticTest() {
-        QuadraticGraph[] quadraticGraph = {new QuadraticGraph(-5, 10,  8), new QuadraticGraph(7, 5,  45), new QuadraticGraph(1.55, -0.84,  33.47), new QuadraticGraph(5, -50,  -0.5), new QuadraticGraph(0, 0,  0)};
+        QuadraticGraph[] quadraticGraph = {new QuadraticGraph(-5, 10,  8, 500), new QuadraticGraph(7, 5,  45, 500), new QuadraticGraph(1.55, -0.84,  33.47, 500), new QuadraticGraph(5, -50,  -0.5, 500), new QuadraticGraph(0, 0,  0, 500)};
         double[] quadraticInputX = {5, 0.45, -8, 100, -645};
         double[] quadraticResults = {-67, 48.6675, 139.39, 44999.5, 0};
         for (int i = 0; i < quadraticGraph.length; i++) {
@@ -74,7 +74,7 @@ public class GraphCalcTest {
     @Test
     public void testQuadraticWithMouseInput() {
         GraphBezierFigure graphBezier = new GraphBezierFigure();
-        QuadraticGraph gr = new QuadraticGraph(-5, 10,  0);
+        QuadraticGraph gr = new QuadraticGraph(-5, 10,  0, 50);
         double y1 = 500 - gr.calcYCoordinate(15);
         graphBezier.setFunction(gr);
         graphBezier.setBounds(new Point2D.Double(500,500), new Point2D.Double(600,600));

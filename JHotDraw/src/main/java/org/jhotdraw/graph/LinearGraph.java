@@ -13,9 +13,9 @@ public class LinearGraph implements Graph {
 
     private double a;
     private double b;
-    private double length;
+    private int length;
     
-    public LinearGraph (double a, double b, double length) {
+    public LinearGraph (double a, double b, int length) {
         this.a = a;
         this.b = b;
         this.length = length;

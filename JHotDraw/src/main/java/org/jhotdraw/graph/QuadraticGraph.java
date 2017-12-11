@@ -14,11 +14,13 @@ public class QuadraticGraph implements Graph {
     private double a;
     private double b;
     private double c;
+    private int length;
     
-    public QuadraticGraph (double a, double b, double c) {
+    public QuadraticGraph (double a, double b, double c, int length) {
         this.a = a;
         this.b = b;
         this.c = c;
+        this.length = length;
     }
     
     @Override

@@ -33,12 +33,12 @@ public class GivenGraph extends Stage<GivenGraph> {
     }
     
     public GivenGraph a_linear_graph() {
-        linearGraph = new LinearGraph(2, 8, 15);
+        linearGraph = new LinearGraph(2, 8, 50);
         return self();
     }
     
     public GivenGraph a_quadratic_graph() {
-        quadraticGraph = new QuadraticGraph(0.5, 2, 5);
+        quadraticGraph = new QuadraticGraph(0.5, 2, 5, 50);
         return self();
     }
     
