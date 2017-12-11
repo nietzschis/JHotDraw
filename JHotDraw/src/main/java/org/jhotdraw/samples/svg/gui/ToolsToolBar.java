@@ -135,6 +135,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 3, 0, 0);
+        btn.setName("btnScribbleTool");
         p.add(btn, gbc);
 
         attributes = new HashMap<AttributeKey, Object>();
@@ -215,6 +216,8 @@ public class ToolsToolBar extends AbstractToolBar {
     protected String getID() {
         return "tools";
     }
+    
+    @Override
     protected int getDefaultDisclosureState() {
         return 1;
     }

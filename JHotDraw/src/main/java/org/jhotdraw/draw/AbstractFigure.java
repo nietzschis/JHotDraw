@@ -102,6 +102,10 @@ public abstract class AbstractFigure
     public void removeFigureListener(FigureListener l) {
         listenerList.remove(FigureListener.class, l);
     }
+    
+    public EventListenerList getFigureListenerList() {
+        return listenerList;
+    }
 
     public void addNotify(Drawing d) {
         this.drawing = d;
