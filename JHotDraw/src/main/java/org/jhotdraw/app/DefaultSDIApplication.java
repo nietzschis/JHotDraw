@@ -147,6 +147,9 @@ public class DefaultSDIApplication extends AbstractApplication {
         // Color hot key action
         m.putAction(ColorHotkeyAction.ID, new ColorHotkeyAction());
         
+            
+    // <3
+    
     }
 
     protected void initViewActions(View p) {

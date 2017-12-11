@@ -270,6 +270,9 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
         // NUM1 + CTRL
         m.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, InputEvent.CTRL_DOWN_MASK), ColorHotkeyAction.ID);
         
+            
+    // <3
+    
         return m;
     }
     protected ActionMap createActionMap() {

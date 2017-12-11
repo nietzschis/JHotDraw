@@ -38,6 +38,10 @@ public class ColorHotkeyAction extends AbstractAction{
                 getPermanentFocusOwner();
         if (focusOwner != null && focusOwner instanceof JComponent) {
             //DO STUFF
+            
+                
+    // <3
+    
         }
     }
     
