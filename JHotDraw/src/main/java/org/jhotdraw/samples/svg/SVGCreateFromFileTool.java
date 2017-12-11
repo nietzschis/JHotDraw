@@ -102,11 +102,7 @@ public class SVGCreateFromFileTool extends CreationTool {
         final File file;
         if (useFileDialog) {
            getFileDialog().setVisible(true);
-           if (getFileDialog().getFile() != null) {
-                file = new File(getFileDialog().getDirectory(), getFileDialog().getFile());
-            } else {
-                file = null;
-            }
+           file = getFileFromFileDialog();
         } else {
             if (getFileChooser().showOpenDialog(getView().getComponent()) == JFileChooser.APPROVE_OPTION) {
                 file = getFileChooser().getSelectedFile();
@@ -132,6 +128,16 @@ public class SVGCreateFromFileTool extends CreationTool {
                 fireToolDone();
             }
         }
+    }
+    
+    private File getFileFromFileDialog() {
+        File file;
+        if (getFileDialog().getFile() != null) {
+            file = new File(getFileDialog().getDirectory(), getFileDialog().getFile());
+        } else {
+            file = null;
+        }
+        return file;
     }
     
     private Worker createSVGWorker(File file) {
