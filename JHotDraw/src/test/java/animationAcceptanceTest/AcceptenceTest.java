@@ -14,16 +14,53 @@ import org.junit.Test;
  */
 public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, ThenAnimation> {
     
+    @Ignore
     @Test
-    public void something_should_happen() {
-        given().some_state();
-        when().some_action();
-        then().some_outcome();
+    public void adding_Frames() {
+        given().animationWindow()
+                .and()
+                .toolbar();
+        
+        when().i_Add_Three_New_Frames();
+        
+        then().the_Animation_contains_Four_Frames();
     }
     
     @Ignore
     @Test
-    public void add_Frames_And_Play() {
-        given().animationWindow();
+    public void comparing_Frames() {
+        given().animationWindow()
+                .and()
+                .toolbar();
+        
+        when().adding_new_figure_in_frame();
+        
+        then().the_frames_should_be_different();
+    }
+    
+    @Ignore
+    @Test
+    public void play_Animation() {
+        given().animationWindow()
+                .and()
+                .toolbar();
+        
+        when().i_Add_Three_New_Frames()
+                .and()
+                .play();
+        
+        then().the_animation_plays();
+    }
+    
+    @Ignore
+    @Test
+    public void remove_Frame() {
+        given().animationWindow_with_three_frames()
+                .and()
+                .toolbar();
+        
+        when().removing_a_frame();
+        
+        then().animation_contains_two_frames();
     }
 }

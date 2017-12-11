@@ -16,4 +16,22 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     public WhenAnimation some_action() {
         return this;
     }
+    
+    public WhenAnimation i_Add_Three_New_Frames() {
+        return this;
+    }
+
+    public WhenAnimation adding_new_figure_in_frame() {
+        return this;
+    }
+
+    void play() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void removing_a_frame() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }
