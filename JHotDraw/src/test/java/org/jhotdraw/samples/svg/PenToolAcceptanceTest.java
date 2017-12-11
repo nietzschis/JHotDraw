@@ -59,7 +59,7 @@ public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceT
             view.addNotify(editor);
             editor.add(view);
             editor.setActiveView(view);
-            drawing = new DefaultDrawing();
+            drawing = new SimpleDrawing();
             view.setDrawing(drawing);
             penTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), null);
             penTool.setToolDoneAfterCreation(false);
