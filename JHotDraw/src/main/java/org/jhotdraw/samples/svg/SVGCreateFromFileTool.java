@@ -122,44 +122,7 @@ public class SVGCreateFromFileTool extends CreationTool {
                     file.getName().toLowerCase().endsWith(".svgz")) {
                 worker = createSVGWorker(file);
             } else {
-                prototype = imagePrototype;
-                final ImageHolderFigure loaderFigure = ((ImageHolderFigure) prototype.clone());
-                worker = new Worker() {
-
-                    public Object construct() {
-                        try {
-                            ((ImageHolderFigure) loaderFigure).loadImage(file);
-                        } catch (Throwable t) {
-                            return t;
-                        }
-                        return null;
-                    }
-
-                    public void finished(Object value) {
-                        if (value instanceof Throwable) {
-                            Throwable t = (Throwable) value;
-                            JOptionPane.showMessageDialog(getView().getComponent(),
-                                    t.getMessage(),
-                                    null,
-                                    JOptionPane.ERROR_MESSAGE);
-                            getDrawing().remove(createdFigure);
-                            fireToolDone();
-                        } else {
-                            try {
-                                if (createdFigure == null) {
-                                    ((ImageHolderFigure) prototype).setImage(loaderFigure.getImageData(), loaderFigure.getBufferedImage());
-                                } else {
-                                    ((ImageHolderFigure) createdFigure).setImage(loaderFigure.getImageData(), loaderFigure.getBufferedImage());
-                                }
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(getView().getComponent(),
-                                        ex.getMessage(),
-                                        null,
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                    }
-                };
+                worker = createImageWorker(file);
             }
             workerThread = new Thread(worker);
             workerThread.start();
@@ -210,6 +173,47 @@ public class SVGCreateFromFileTool extends CreationTool {
                             parent.add(f);
                         }
                         parent.changed();
+                    }
+                }
+            }
+        };
+    }
+    
+    private Worker createImageWorker(File file) {
+        prototype = imagePrototype;
+        final ImageHolderFigure loaderFigure = ((ImageHolderFigure) prototype.clone());
+        return new Worker() {
+
+            public Object construct() {
+                try {
+                    ((ImageHolderFigure) loaderFigure).loadImage(file);
+                } catch (Throwable t) {
+                    return t;
+                }
+                return null;
+            }
+
+            public void finished(Object value) {
+                if (value instanceof Throwable) {
+                    Throwable t = (Throwable) value;
+                    JOptionPane.showMessageDialog(getView().getComponent(),
+                            t.getMessage(),
+                            null,
+                            JOptionPane.ERROR_MESSAGE);
+                    getDrawing().remove(createdFigure);
+                    fireToolDone();
+                } else {
+                    try {
+                        if (createdFigure == null) {
+                            ((ImageHolderFigure) prototype).setImage(loaderFigure.getImageData(), loaderFigure.getBufferedImage());
+                        } else {
+                            ((ImageHolderFigure) createdFigure).setImage(loaderFigure.getImageData(), loaderFigure.getBufferedImage());
+                        }
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(getView().getComponent(),
+                                ex.getMessage(),
+                                null,
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
