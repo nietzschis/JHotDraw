@@ -48,19 +48,22 @@ public class QuadTreeDrawing extends AbstractDrawing {
         return children.indexOf(figure);
     }
 
+    @FeatureEntryPoint(JHotDrawFeatures.BASIC_ADD)
+    //@FeatureEntryPoint(JHotDrawFeatures.ADD_FIGURE)
     @Override
     public void basicAdd(int index, Figure figure) {
         super.basicAdd(index, figure);
         quadTree.add(figure, figure.getDrawingArea());
         needsSorting = true;
     }
-
+    
     @Override
     public Figure basicRemoveChild(int index) {
         Figure figure = getChild(index);
         quadTree.remove(figure);
         needsSorting = true;
         super.basicRemoveChild(index);
+        
         return figure;
     }
 
@@ -334,5 +337,13 @@ public class QuadTreeDrawing extends AbstractDrawing {
     @Override
     protected void drawStroke(Graphics2D g) {
         // throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void repaintFigure(Figure figure) {
+        quadTree.remove(figure);
+        quadTree.add(figure, figure.getDrawingArea());
+        needsSorting = true;
+        invalidate();
+        fireAreaInvalidated();
     }
 }

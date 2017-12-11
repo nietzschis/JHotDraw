@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.jhotdraw.samples.svg.gui;
 
 import java.awt.Color;
@@ -29,14 +34,16 @@ import org.jhotdraw.draw.Figure;
  */
 public class MinimapView extends JPanel{
     
-    private Drawing drawing;
+    private final AbstractToolBar toolBar;
     private final List<MinimapViewListener> listeners = new LinkedList<>();
 
     /**
      * Creates a new view to draw a {@link Drawing} onto the minimap.
+     * @param toolBar The {@link AbstractToolBar} used to disply the drawing. A reference to {@link Drawing} is obatained througt the toolbar.
      */
-    public MinimapView() {
-        setName("minimapView");
+    public MinimapView(AbstractToolBar toolBar) {
+        assert toolBar != null;
+        this.toolBar = toolBar;
         
         this.addMouseListener(new MouseListener() {
             @Override
@@ -78,11 +85,7 @@ public class MinimapView extends JPanel{
         });
     }
     
-    /**
-     * Handels mouse events.
-     * @param e describes the event
-     */
-    private void handleEvent(MouseEvent e){    
+    private void handleEvent(MouseEvent e){
         Dimension minimapSize = e.getComponent().getPreferredSize();
         Rectangle2D.Double canvasSize = getCanvasSize();
         double largerSide = Math.max(canvasSize.width, canvasSize.height);
@@ -133,7 +136,7 @@ public class MinimapView extends JPanel{
         
         Rectangle2D.Double size = getCanvasSize();
         
-        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or have a size of 0, paint the minimap white and return.
+        if(getDrawing() == null || size.width == 0 || size.height == 0){ // if drawing is not available or it doesn't have a size, paint the minimap white and return.
             g.setColor(Color.white);
             g.fillRect(0, 0, getPreferredSize().width, getPreferredSize().height);
             
@@ -157,7 +160,7 @@ public class MinimapView extends JPanel{
     /**
      * Returns the rectangle of the canvas, wich the minimap should draw.
      * For fixed size canvas, this is full canvas located at (0,0).
-     * For dynamic this is the smallest possible rectangle located so the most left-top figure is just within.
+     * For dynamic this is the smallest possible rectangle located so the left-top figure is just within.
      * @return the pratical size of the canvas.
      */
     private Rectangle2D.Double getCanvasSize(){
@@ -173,11 +176,11 @@ public class MinimapView extends JPanel{
      * @return The {@link Drawing}, or null if not available.
      */
     private Drawing getDrawing(){
-        return drawing;
-    }
-    
-    void setDrawing(Drawing drawing){
-        this.drawing = drawing;
+        if(toolBar.getEditor() != null && toolBar.getEditor().getActiveView() != null){
+            return toolBar.getEditor().getActiveView().getDrawing();
+        }
+        
+        return null;
     }
     
     /**
@@ -198,8 +201,6 @@ public class MinimapView extends JPanel{
      * @return The width of {@link Drawing}.
      */
     private Double getCanvasWidth(){
-        if(getDrawing() == null)
-            return null;
         return CANVAS_WIDTH.get(getDrawing());
     }
     
@@ -208,8 +209,6 @@ public class MinimapView extends JPanel{
      * @return The height of {@link Drawing}.
      */
     private Double getCanvasHeight(){
-        if(getDrawing() == null)
-            return null;
         return CANVAS_HEIGHT.get(getDrawing());
     }
     
@@ -219,7 +218,7 @@ public class MinimapView extends JPanel{
      */
     private Rectangle2D.Double getSmallestSize(){
         
-        if (getDrawing() == null || getDrawing().getChildren().isEmpty()){
+        if (getDrawing() != null && getDrawing().getChildren().isEmpty()){
             return new Rectangle2D.Double(1,1,1,1);
         }
         
