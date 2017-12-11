@@ -10,7 +10,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
+/**
+ *
+ * @author Joachim
+ */
 public class GraphCalcTest {
     
     public GraphCalcTest() {
