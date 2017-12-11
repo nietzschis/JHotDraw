@@ -30,6 +30,7 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.jhotdraw.samples.svg.EraserTool;
 
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.CLOSED;
 

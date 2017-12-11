@@ -5,22 +5,42 @@ package org.jhotdraw.samples.svg.action;
 
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
+import javax.swing.Action;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.draw.AttributeKey;
-import org.jhotdraw.draw.DefaultDrawing;
+import org.jhotdraw.draw.CompositeFigureListener;
+import org.jhotdraw.draw.ConnectionFigure;
+import org.jhotdraw.draw.Connector;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
 import org.jhotdraw.draw.Figure;
+import org.jhotdraw.draw.FigureListener;
+import org.jhotdraw.draw.Handle;
+import org.jhotdraw.draw.InputFormat;
+import org.jhotdraw.draw.Layouter;
+import org.jhotdraw.draw.OutputFormat;
 import org.jhotdraw.draw.Tool;
 import org.jhotdraw.geom.BezierPath;
+import org.jhotdraw.geom.Dimension2DDouble;
 import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
+import org.jhotdraw.xml.DOMInput;
+import org.jhotdraw.xml.DOMOutput;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,7 +55,7 @@ import static org.junit.Assert.*;
 public class SplitTest {
    
     DefaultDrawingView view;
-    DefaultDrawing drawing;
+    Drawing drawing;
     SVGBezierFigure lineFigure;
     SVGBezierFigure beizerLineFigure;
     
@@ -53,12 +73,12 @@ public class SplitTest {
     @Before
     public void setUp() {
         view = new DefaultDrawingView();
-        drawing = new DefaultDrawing();
+        
         
         lineFigure = CreateLineFigure(2);
         beizerLineFigure = CreateLineFigure(8);
         
-        view.setDrawing(drawing);
+        //view.setDrawing(drawing);
         view.getDrawing().add(lineFigure);
         view.getDrawing().add(beizerLineFigure);
     }

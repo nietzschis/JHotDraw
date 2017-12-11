@@ -35,20 +35,16 @@
             <version>1.8.6</version>
         </dependency>
         <dependency>
-<<<<<<< HEAD
             <groupId>org.xbib</groupId>
             <artifactId>jsr-305</artifactId>
             <version>1.0.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
-=======
->>>>>>> develop
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-<<<<<<< HEAD
             <type>jar</type>
         </dependency>
         <dependency>
@@ -67,8 +63,6 @@
             <groupId>com.tinify</groupId>
             <artifactId>tinify</artifactId>
             <version>RELEASE</version>
-=======
->>>>>>> develop
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -77,7 +71,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-<<<<<<< HEAD
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-junit</artifactId>
             <version>0.15.1</version>
@@ -89,18 +82,5 @@
             <version>3.8.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>be.cyberelf.nanoxml</groupId>
-            <artifactId>nanoxml</artifactId>
-            <version>2.2.3</version>
-          </dependency>
-=======
-            <groupId>org.jhotdraw</groupId>
-            <artifactId>JHotDraw</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
->>>>>>> develop
     </dependencies>   
 </project>

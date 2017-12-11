@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 public class DefaultDrawingViewTest {
     
     DefaultDrawingView view;
-    DefaultDrawing drawing;
+    //DefaultDrawing drawing;
     DefaultDrawingEditor editor;
     SVGBezierFigure lineFigure;
     SVGBezierFigure bezierLineFigure;
@@ -51,7 +51,7 @@ public class DefaultDrawingViewTest {
     @Before
     public void setUp() {
         view = new DefaultDrawingView();
-        drawing = new DefaultDrawing();
+        //drawing = new DefaultDrawing();
         editor = new DefaultDrawingEditor();
         
         lineFigure = CreateLineFigure(2);
@@ -59,8 +59,9 @@ public class DefaultDrawingViewTest {
         
         editor.setActiveView(view);
         
+        
         view.addNotify(editor);
-        view.setDrawing(drawing);
+        //view.setDrawing(drawing);
         view.getDrawing().add(lineFigure);
         view.getDrawing().add(bezierLineFigure);
         
