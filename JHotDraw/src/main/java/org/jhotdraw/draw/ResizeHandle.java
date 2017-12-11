@@ -1,5 +1,8 @@
 package org.jhotdraw.draw;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import com.sun.istack.internal.Nullable;
 import org.jhotdraw.util.ResourceBundleUtil;
 
@@ -7,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import org.jhotdraw.util.ResourceBundleUtil;
 import java.awt.geom.Rectangle2D;
 
 class ResizeHandle extends LocatorHandle {

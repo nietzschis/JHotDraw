@@ -109,7 +109,7 @@ public class ResizeHandleKit {
         return new ResizeHandle(owner, DIR_W);
     }
 
-    /**
+        /**
      * Adjust rect to specified aspect ratio.
      * For West or east direction using aspectRatio.y to calculate height from width
      * For other directions calculates new width from height and aspectRatio.x
