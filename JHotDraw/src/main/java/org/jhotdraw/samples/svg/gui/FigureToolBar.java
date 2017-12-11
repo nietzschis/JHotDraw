@@ -20,7 +20,9 @@ import org.jhotdraw.gui.*;
 import org.jhotdraw.util.*;
 
 import java.awt.*;
+import java.util.HashMap;
 import javax.swing.*;
+import static javax.swing.SwingConstants.SOUTH_EAST;
 import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.SliderUI;
 import javax.swing.text.DefaultFormatter;
@@ -30,6 +32,7 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.plaf.palette.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 /**
  * FigureToolBar.
@@ -102,7 +105,55 @@ public class FigureToolBar extends AbstractToolBar {
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
-                }
+                
+                    JPopupButton shadowsPopupButton = new JPopupButton();
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 0);
+                    shadowsPopupButton.add(shadowsSlider);
+                    labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
+                    shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
+                    shadowsPopupButton.setIcon(
+                            new SelectionShadowsIcon(editor, SHADOWS, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.addShadow.icon")),
+                            new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
+                    shadowsPopupButton.setPopupAnchor(SOUTH_EAST);
+                    new SelectionComponentRepainter(editor, shadowsPopupButton);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 2;
+                    gbc.gridy = 1;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    gbc.weighty=1;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(shadowsPopupButton, gbc);
+                    shadowsSlider.setUI((SliderUI) PaletteSliderUI.createUI(shadowsSlider));
+                    shadowsSlider.setScaleFactor(100d);
+                    new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsSlider, editor);
+                 
+//                    JButton shadowButton = new JButton();
+//                    labels.configureToolBarButton(shadowButton, "attribute.addShadow");
+//                    shadowButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowButton));
+//                    shadowButton.setIcon(
+//                            new SelectionShadowsIcon(editor, SHADOWS, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.addShadow.icon")),
+//                            new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
+//                    new SelectionComponentRepainter(editor, shadowButton);
+//                    gbc = new GridBagConstraints();
+//                    gbc.gridx = 1;
+//                    gbc.gridy = 1;
+//                    gbc.insets = new Insets(0, 0, 0, 0);
+//                    gbc.weighty=1;
+//                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+//                    p.add(shadowButton, gbc);
+//                    new FigureAttributeEditorHandler<Boolean>(SHADOWS, AttributeEditor.class.cast(gbc), editor);
+                    
+//                    attributes = new HashMap<AttributeKey, Object>();
+//                    btn = ButtonFactory.addToolTo(this, editor, AbstractButton = new SelectionShadowsIcon(new SVGRectFigure(), attributes), "addShadow", labels);
+//                    creationTool.setToolDoneAfterCreation(false);
+//                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+//                    gbc = new GridBagConstraints();
+//                    gbc.gridx = 0;
+//                    gbc.gridy = 1;
+//                    gbc.insets = new Insets(3, 0, 0, 0);
+//                    p.add(btn, gbc);
+                 }
+                 
                 break;
 
             case 2:
@@ -151,6 +202,47 @@ public class FigureToolBar extends AbstractToolBar {
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
+                    
+                    
+                    // Opacity field with slider
+                    JAttributeTextField<Double> shadowsField = new JAttributeTextField<Double>();
+                    shadowsField.setColumns(3);
+                    shadowsField.setToolTipText(labels.getString("attribute.addShadow.toolTipText"));
+                    shadowsField.setHorizontalAlignment(JAttributeTextField.RIGHT);
+                    shadowsField.putClientProperty("Palette.Component.segmentPosition", "first");
+                    shadowsField.setUI((PaletteFormattedTextFieldUI) PaletteFormattedTextFieldUI.createUI(shadowsField));
+                    shadowsField.setFormatterFactory(JavaNumberFormatter.createFormatterFactory(0d, 1d, 100d));
+                    shadowsField.setHorizontalAlignment(JTextField.LEADING);
+                    new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsField, editor);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 1;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.weightx = 1d;
+                    p.add(shadowsField, gbc);
+                    JPopupButton shadowsPopupButton = new JPopupButton();
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 0);
+                    shadowsPopupButton.add(shadowsSlider);
+                    labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
+                    shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
+                    shadowsPopupButton.setIcon(
+                            new SelectionShadowsIcon(editor, SHADOWS, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.addShadow.icon")),
+                            new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
+                    shadowsPopupButton.setPopupAnchor(SOUTH_EAST);
+                    new SelectionComponentRepainter(editor, shadowsPopupButton);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 2;
+                    gbc.gridy = 1;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.weighty=1;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    p.add(shadowsPopupButton, gbc);
+                    shadowsSlider.setUI((SliderUI) PaletteSliderUI.createUI(shadowsSlider));
+                    shadowsSlider.setScaleFactor(100d);
+                    
+                    shadowsSlider.getAttributeValue();
+                    new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsSlider, editor);
                 }
                 break;
         }
