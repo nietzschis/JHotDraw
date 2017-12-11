@@ -372,7 +372,7 @@ public class SVGView extends AbstractView implements ExportableView {
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());
         
-        if (watermarkImage != null && (format.getFileExtension().equals("png") || format.getFileExtension().equals("jpg") || format.getFileExtension().equals("gif"))) {
+        if (watermarkImage != null && (format.getFileExtension().equals("png") || format.getFileExtension().equals("jpg") || format.getFileExtension().equals("gif") || format.getFileExtension().equals("bmp"))) {
             try {
                 addImageWatermark(f, format, watermarkImage, new File(f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_watermarked." + format.getFileExtension()));
             } catch (IOException e) {

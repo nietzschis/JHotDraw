@@ -17,6 +17,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
+import org.apache.commons.io.FilenameUtils;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.ExportableView;
 import org.jhotdraw.app.JHotDrawFeatures;
@@ -58,8 +59,11 @@ public class ImportWatermarkAction extends AbstractViewAction {
                     if (evt.getOption() == JFileChooser.APPROVE_OPTION) {
                         try {
                             File watermarkFile = evt.getFileChooser().getSelectedFile();
-                            BufferedImage watermarkImage = ImageIO.read(watermarkFile);
-                            view.setWatermark(watermarkImage);
+                            String fileUtils = FilenameUtils.getExtension(watermarkFile.getPath());
+                            if(fileUtils.equals("png") || fileUtils.equals("bmp") || fileUtils.equals("jpg") || fileUtils.equals("gif")){
+                               BufferedImage watermarkImage = ImageIO.read(watermarkFile);
+                               view.setWatermark(watermarkImage); 
+                            }                       
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
