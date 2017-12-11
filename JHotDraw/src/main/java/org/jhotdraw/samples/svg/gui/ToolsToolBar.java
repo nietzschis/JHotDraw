@@ -145,6 +145,16 @@ public class ToolsToolBar extends AbstractToolBar {
         btn.setName("btnScribbleTool");
         p.add(btn, gbc);
 
+
+           btn = ButtonFactory.addToolTo(this, editor, pathTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes),"createPen", labels);
+           pathTool.setToolDoneAfterCreation(false);
+           btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+           gbc = new GridBagConstraints();
+           gbc.gridx = 3;
+           gbc.gridy = 1;
+           gbc.insets = new Insets(3, 0, 0, 0);
+           p.add(btn, gbc);
+
         attributes = new HashMap<AttributeKey, Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.black);
         attributes.put(AttributeKeys.STROKE_COLOR, null);

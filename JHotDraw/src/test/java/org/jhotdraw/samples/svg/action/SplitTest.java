@@ -35,6 +35,7 @@ import org.jhotdraw.draw.Handle;
 import org.jhotdraw.draw.InputFormat;
 import org.jhotdraw.draw.Layouter;
 import org.jhotdraw.draw.OutputFormat;
+import org.jhotdraw.draw.QuadTreeDrawing;
 import org.jhotdraw.draw.Tool;
 import org.jhotdraw.geom.BezierPath;
 import org.jhotdraw.geom.Dimension2DDouble;
@@ -73,12 +74,12 @@ public class SplitTest {
     @Before
     public void setUp() {
         view = new DefaultDrawingView();
-        
+        drawing = new QuadTreeDrawing();
         
         lineFigure = CreateLineFigure(2);
         beizerLineFigure = CreateLineFigure(8);
         
-        //view.setDrawing(drawing);
+        view.setDrawing(drawing);
         view.getDrawing().add(lineFigure);
         view.getDrawing().add(beizerLineFigure);
     }
