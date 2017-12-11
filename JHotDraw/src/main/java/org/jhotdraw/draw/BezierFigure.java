@@ -56,6 +56,8 @@ import org.jhotdraw.xml.DOMOutput;
  * @author Werner Randelshofer
  */
 public class BezierFigure extends AbstractAttributedFigure {
+    
+    private static final long serialVersionUID = -344970781531276717L;
     /**
      * The BezierPath.
      */

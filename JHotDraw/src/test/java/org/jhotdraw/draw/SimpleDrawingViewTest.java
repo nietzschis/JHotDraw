@@ -18,11 +18,11 @@ import org.junit.Test;
  *
  * @author Sadik
  */
-public class DefaultDrawingViewTest {
+public class SimpleDrawingViewTest {
     
-    private DefaultDrawing drawing;
+    private SimpleDrawing drawing;
     private Figure f;
-    public DefaultDrawingViewTest() {
+    public SimpleDrawingViewTest() {
     }
     
     @BeforeClass
@@ -49,7 +49,7 @@ public class DefaultDrawingViewTest {
     public void testFlip() {
         System.out.println("flip");
         DefaultDrawingView instance = new DefaultDrawingView();
-        DefaultDrawing drawing = new DefaultDrawing();
+        SimpleDrawing drawing = new SimpleDrawing();
         
         Dimension2DDouble dimension = new Dimension2DDouble(10, 10);
         drawing.setCanvasSize(dimension);
@@ -65,7 +65,7 @@ public class DefaultDrawingViewTest {
         Assert.assertEquals(1, drawing.getChildCount()); //add first figure
         
         instance.toggleSelection(f); //select the figure
-        instance.flip();//flip the selected figure
+        instance.flip("Vertical");//flip the selected figure
         instance.removeFromSelection(f);
         
         Assert.assertEquals(2, drawing.getChildCount()); //check flipped is within canvas with other figure
@@ -73,7 +73,7 @@ public class DefaultDrawingViewTest {
         //---------------------------
 
         instance.toggleSelection(f);
-        instance.flip();
+        instance.flip("Vertical");
         instance.removeFromSelection(f);
         
         Figure f_flip = drawing.getChild(2);

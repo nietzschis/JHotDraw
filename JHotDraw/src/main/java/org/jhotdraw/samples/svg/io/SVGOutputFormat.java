@@ -149,40 +149,47 @@ public class SVGOutputFormat implements OutputFormat {
         } else if (f instanceof SVGImageFigure) {
             writeImageElement(parent, (SVGImageFigure) f);
         } else if (f instanceof SVGPathFigure) {
-            SVGPathFigure path = (SVGPathFigure) f;
-            if (path.getChildCount() == 1) {
-                BezierFigure bezier = (BezierFigure) path.getChild(0);
-                boolean isLinear = true;
-                for (int i = 0, n = bezier.getNodeCount(); i < n; i++) {
-                    if (bezier.getNode(i).getMask() != 0) {
-                        isLinear = false;
-                        break;
-                    }
-                }
-                if (isLinear) {
-                    if (bezier.isClosed()) {
-                        writePolygonElement(parent, path);
-                    } else {
-                        if (bezier.getNodeCount() == 2) {
-                            writeLineElement(parent, path);
-                        } else {
-                            writePolylineElement(parent, path);
-                        }
-                    }
-                } else {
-                    writePathElement(parent, path);
-                }
-            } else {
-                writePathElement(parent, path);
-            }
+            writePath(parent, f);
         } else if (f instanceof SVGRectFigure) {
             writeRectElement(parent, (SVGRectFigure) f);
+        } else if (f instanceof SVGTriangleFigure) {
+            writeTriangleElement(parent, (SVGTriangleFigure) f);
         } else if (f instanceof SVGTextFigure) {
             writeTextElement(parent, (SVGTextFigure) f);
         } else if (f instanceof SVGTextAreaFigure) {
             writeTextAreaElement(parent, (SVGTextAreaFigure) f);
         } else {
             System.out.println("Unable to write: " + f);
+        }
+    }
+    
+    // Refactored out from writeElement
+    protected void writePath(IXMLElement parent, Figure f) throws IOException {
+        SVGPathFigure path = (SVGPathFigure) f;
+        if (path.getChildCount() == 1) {
+            BezierFigure bezier = (BezierFigure) path.getChild(0);
+            boolean isLinear = true;
+            for (int i = 0, n = bezier.getNodeCount(); i < n; i++) {
+                if (bezier.getNode(i).getMask() != 0) {
+                    isLinear = false;
+                    break;
+                }
+            }
+            if (isLinear) {
+                if (bezier.isClosed()) {
+                    writePolygonElement(parent, path);
+                } else {
+                    if (bezier.getNodeCount() == 2) {
+                        writeLineElement(parent, path);
+                    } else {
+                        writePolylineElement(parent, path);
+                    }
+                }
+            } else {
+                writePathElement(parent, path);
+            }
+        } else {
+            writePathElement(parent, path);
         }
     }
 
@@ -427,6 +434,31 @@ public class SVGOutputFormat implements OutputFormat {
         writeAttribute(elem, "y1", y1, 0d);
         writeAttribute(elem, "x2", x2, 0d);
         writeAttribute(elem, "y2", y2, 0d);
+        writeShapeAttributes(elem, attributes);
+        writeOpacityAttribute(elem, attributes);
+        writeTransformAttribute(elem, attributes);
+        return elem;
+    }
+    
+    protected void writeTriangleElement(IXMLElement parent, SVGTriangleFigure f) throws IOException {
+        parent.addChild(
+                createTriangle(
+                document,
+                f.getX(),
+                f.getY(),
+                f.getWidth(),
+                f.getHeight(),
+                f.getAttributes()));
+    }
+    
+    protected IXMLElement createTriangle(IXMLElement doc,
+            double x, double y, double width, double height,
+            Map<AttributeKey, Object> attributes) throws IOException {
+        IXMLElement elem = doc.createElement("triangle");
+        writeAttribute(elem, "x", x, 0d);
+        writeAttribute(elem, "y", y, 0d);
+        writeAttribute(elem, "width", width, 0d);
+        writeAttribute(elem, "height", height, 0d);
         writeShapeAttributes(elem, attributes);
         writeOpacityAttribute(elem, attributes);
         writeTransformAttribute(elem, attributes);
