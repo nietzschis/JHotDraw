@@ -90,6 +90,14 @@ public class SVGAttributeKeys extends AttributeKeys {
      * This is a value between 0 and 1 whereas 0 is translucent and 1 is fully opaque.
      */
     public final static AttributeKey<Double> OPACITY = new AttributeKey<Double>("opacity",Double.class, 1d, false, labels);
+    /**
+     * The width of the selected figure. The value of this attribute is a Double object.
+     */
+    public final static AttributeKey<Double> FIGURE_WIDTH = new AttributeKey<Double>("figureWidth", Double.class, null, true, labels);
+    /**
+     * The height of the selected figure. The value of this attribute is a Double object.
+     */
+    public final static AttributeKey<Double> FIGURE_HEIGHT = new AttributeKey<Double>("figureHeight", Double.class, null, true, labels);
     
     
     /**

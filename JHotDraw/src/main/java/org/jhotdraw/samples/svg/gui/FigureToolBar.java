@@ -23,6 +23,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.SliderUI;
+import javax.swing.plaf.TextUI;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import org.jhotdraw.app.JHotDrawFeatures;
@@ -101,7 +102,72 @@ public class FigureToolBar extends AbstractToolBar {
                     p.add(opacityPopupButton, gbc);
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
-                    new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
+                    new FigureAttributeEditorHandler<>(OPACITY, opacitySlider, editor);
+                    
+                    // Width and height fields
+                    JLabel widthLabel, heightLabel;
+                    JAttributeTextField<Double> widthField, heightField;
+
+                    widthLabel = new javax.swing.JLabel();
+                    heightLabel = new javax.swing.JLabel();
+                    widthField = new JAttributeTextField<Double>();
+                    heightField = new JAttributeTextField<Double>();
+
+                    widthLabel.setUI((LabelUI) PaletteLabelUI.createUI(widthLabel));
+                    widthLabel.setLabelFor(widthField);
+                    widthLabel.setToolTipText(labels.getString("attribute.figureWidth.toolTipText"));
+                    widthLabel.setText(labels.getString("attribute.figureWidth.text")); // NOI18N
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 1;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    p.add(widthLabel, gbc);
+
+                    widthField.setUI((TextUI) PaletteFormattedTextFieldUI.createUI(widthField));
+                    widthField.setColumns(3);
+                    widthField.setToolTipText(labels.getString("attribute.figureWidth.toolTipText"));
+                    widthField.setFormatterFactory(JavaNumberFormatter.createFormatterFactory(1d, 4096d, 1d, true, false));
+                    widthField.setHorizontalAlignment(JTextField.LEADING);
+                    
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 1;
+                    gbc.gridwidth=2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 3, 0, 0);
+                    p.add(widthField, gbc);
+                    new DrawingAttributeEditorHandler<Double>(FIGURE_WIDTH, widthField, editor);
+                    
+                    heightLabel.setUI((LabelUI) PaletteLabelUI.createUI(heightLabel));
+                    heightLabel.setLabelFor(widthField);
+                    heightLabel.setToolTipText(labels.getString("attribute.figureHeight.toolTipText"));
+                    heightLabel.setText(labels.getString("attribute.figureHeight.text")); 
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    p.add(heightLabel, gbc);
+
+                    heightField.setUI((TextUI) PaletteFormattedTextFieldUI.createUI(widthField));
+                    heightField.setColumns(3);
+                    heightField.setToolTipText(labels.getString("attribute.figureHeight.toolTipText"));
+                    heightField.setFormatterFactory(JavaNumberFormatter.createFormatterFactory(1d, 4096d, 1d, true, false));
+                    heightField.setHorizontalAlignment(JTextField.LEADING);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 3, 0, 0);
+                    gbc.gridwidth=2;
+                    p.add(heightField, gbc);
+                    new DrawingAttributeEditorHandler<Double>(FIGURE_HEIGHT, heightField, editor);
+                    
                 }
                 break;
 
@@ -151,6 +217,69 @@ public class FigureToolBar extends AbstractToolBar {
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
+                
+                    // Width and height fields
+                    JLabel widthLabel, heightLabel;
+                    JAttributeTextField<Double> widthField, heightField;
+
+                    widthLabel = new javax.swing.JLabel();
+                    heightLabel = new javax.swing.JLabel();
+                    widthField = new JAttributeTextField<Double>();
+                    heightField = new JAttributeTextField<Double>();
+
+                    widthLabel.setUI((LabelUI) PaletteLabelUI.createUI(widthLabel));
+                    widthLabel.setLabelFor(widthField);
+                    widthLabel.setToolTipText(labels.getString("attribute.figureWidth.toolTipText"));
+                    widthLabel.setText(labels.getString("attribute.figureWidth.text")); // NOI18N
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 1;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    p.add(widthLabel, gbc);
+
+                    widthField.setUI((TextUI) PaletteFormattedTextFieldUI.createUI(widthField));
+                    widthField.setColumns(3);
+                    widthField.setToolTipText(labels.getString("attribute.figureWidth.toolTipText"));
+                    widthField.setFormatterFactory(JavaNumberFormatter.createFormatterFactory(1d, 4096d, 1d, true, false));
+                    widthField.setHorizontalAlignment(JTextField.LEADING);
+                    new DrawingAttributeEditorHandler<Double>(FIGURE_WIDTH, widthField, editor);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 1;
+                    gbc.gridwidth=2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 3, 0, 0);
+                    p.add(widthField, gbc);
+
+                    heightLabel.setUI((LabelUI) PaletteLabelUI.createUI(heightLabel));
+                    heightLabel.setLabelFor(widthField);
+                    heightLabel.setToolTipText(labels.getString("attribute.figureHeight.toolTipText"));
+                    heightLabel.setText(labels.getString("attribute.figureHeight.text")); // NOI18N
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    p.add(heightLabel, gbc);
+
+                    heightField.setUI((TextUI) PaletteFormattedTextFieldUI.createUI(widthField));
+                    heightField.setColumns(3);
+                    heightField.setToolTipText(labels.getString("attribute.figureHeight.toolTipText"));
+                    heightField.setFormatterFactory(JavaNumberFormatter.createFormatterFactory(1d, 4096d, 1d, true, false));
+                    heightField.setHorizontalAlignment(JTextField.LEADING);
+                    new DrawingAttributeEditorHandler<Double>(FIGURE_HEIGHT, heightField, editor);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.BOTH;
+                    gbc.insets = new Insets(3, 3, 0, 0);
+                    gbc.gridwidth=2;
+                    p.add(heightField, gbc);
                 }
                 break;
         }
