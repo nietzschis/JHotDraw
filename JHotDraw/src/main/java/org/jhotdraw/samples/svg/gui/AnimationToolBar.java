@@ -46,7 +46,7 @@ public class AnimationToolBar extends AbstractToolBar {
     }
 
     @Override
-    protected JComponent createDisclosedComponent(int state) {
+    public JComponent createDisclosedComponent(int state) {
         JPanel p = null;
 
         switch (state) {

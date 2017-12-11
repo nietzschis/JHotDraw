@@ -6,6 +6,7 @@
 package animationAcceptanceTest;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  *
@@ -18,5 +19,11 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
         given().some_state();
         when().some_action();
         then().some_outcome();
+    }
+    
+    @Ignore
+    @Test
+    public void add_Frames_And_Play() {
+        given().animationWindow();
     }
 }
