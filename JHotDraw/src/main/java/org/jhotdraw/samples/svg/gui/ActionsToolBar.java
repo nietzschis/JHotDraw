@@ -134,11 +134,19 @@ public class ActionsToolBar extends AbstractToolBar {
                 gbc.insets = new Insets(3, 3, 0, 0);
                 p.add(btn, gbc);
 
+                final JMenu flipMenu;
+                flipMenu = new JMenu();
+                labels.configureMenu(flipMenu, "edit.flip");
+                
                 JPopupButton pb = new JPopupButton();
                 pb.setUI((PaletteButtonUI) PaletteButtonUI.createUI(pb));
                 pb.setItemFont(UIManager.getFont("MenuItem.font"));
                 labels.configureToolBarButton(pb, "actions");
                 pb.add(new DuplicateAction());
+                        flipMenu.add(new VerticalFlipAction());
+                        flipMenu.add(new HorizontalFlipAction());
+
+                        pb.add(flipMenu);
                 pb.addSeparator();
                 pb.add(new GroupAction(editor, new SVGGroupFigure()));
                 pb.add(new UngroupAction(editor, new SVGGroupFigure()));

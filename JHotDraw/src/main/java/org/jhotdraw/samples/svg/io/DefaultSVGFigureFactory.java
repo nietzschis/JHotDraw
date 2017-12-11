@@ -46,6 +46,13 @@ public class DefaultSVGFigureFactory implements SVGFigureFactory {
         return figure;
     }
     
+    public Figure createTriangle(double x, double y, double w, double h, Map<AttributeKey, Object> a) {
+        SVGTriangleFigure figure = new SVGTriangleFigure();
+        figure.setBounds(new Point2D.Double(x,y), new Point2D.Double(x+w,y+h));
+        figure.setAttributes(a);
+        return figure;
+    }
+    
     public Figure createCircle(double cx, double cy, double r, Map<AttributeKey, Object> a) {
         return createEllipse(cx, cy, r, r, a);
     }

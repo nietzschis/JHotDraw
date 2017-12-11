@@ -37,6 +37,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /** The variable acv is used for generating the locations of the control
      * points for the rounded rectangle using path.curveTo. */
     private static final double acv;
+    private static final long serialVersionUID = -2585116624698864356L;
 
 
     static {
@@ -178,10 +179,14 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public void setBounds(Point2D.Double anchor, Point2D.Double lead) {
         invalidateTransformedShape();
+        double arcWidthRatio = roundrect.width > 0d ? roundrect.arcwidth / 2d / roundrect.width : 0d;
+        double arcHeighRatio = roundrect.height > 0d ? roundrect.archeight / 2d / roundrect.height : 0d;
         roundrect.x = Math.min(anchor.x, lead.x);
         roundrect.y = Math.min(anchor.y, lead.y);
         roundrect.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         roundrect.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+
+        setArc(roundrect.width*arcWidthRatio,roundrect.height*arcHeighRatio);
         invalidate();
     }
 

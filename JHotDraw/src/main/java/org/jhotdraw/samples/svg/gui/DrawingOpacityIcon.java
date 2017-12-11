@@ -21,7 +21,7 @@ import org.jhotdraw.draw.*;
  * {@code DrawingOpacityIcon} visualizes an opacity attribute of the
  * {@code Drawing} object which is in the active {@code DrawingView} of a
  * {@code DrawingEditor}.
- *
+ * 
  * @author Werner Randelshofer
  * @version 1.0 2008-06-08 Created.
  */
@@ -34,9 +34,7 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
     private Shape fillShape;
     private Shape strokeShape;
 
-    /**
-     * Creates a new instance.
-     *
+    /** Creates a new instance.
      * @param editor The drawing editor.
      * @param opacityKey The opacityKey of the default attribute
      * @param imageLocation the icon image
@@ -77,52 +75,60 @@ public class DrawingOpacityIcon extends javax.swing.ImageIcon {
         this.strokeShape = strokeShape;
     }
 
-    public DrawingEditor getEditor() {
-        return editor;
-    }
-
-    public AttributeKey<Double> getOpacityKey() {
-        return opacityKey;
-    }
-
-    public AttributeKey<Color> getFillColorKey() {
-        return fillColorKey;
-    }
-
-    public AttributeKey<Color> getStrokeColorKey() {
-        return strokeColorKey;
-    }
-
-    public Shape getFillShape() {
-        return fillShape;
-    }
-
-    public Shape getStrokeShape() {
-        return strokeShape;
-    }
-
-    public boolean editorNotNull() {
-        return this.editor != null;
-    }
-
-    public boolean fillColorKeyNotNull() {
-        return this.fillColorKey != null;
-    }
-
-    public boolean fillShapeNotNull() {
-        return this.fillShape != null;
-    }
-
-    public boolean strokeColorKeyNotNull() {
-        return this.strokeColorKey != null;
-    }
-
-    public boolean strokeShapeNotNull() {
-        return this.strokeShape != null;
-    }
-
     @Override
     public void paintIcon(java.awt.Component c, java.awt.Graphics gr, int x, int y) {
-        new IconPainter(this, c, (Graphics2D) gr, x, y).process();
+        Graphics2D g = (Graphics2D) gr;
+        super.paintIcon(c, g, x, y);
+        Double opacity=0d;
+        Color fillColor=null;
+        Color strokeColor=null;
+        
+        if (editor != null) {
+            setOpacityAndColors(opacity, fillColor, strokeColor);
+        }
+
+        if (fillColorKey != null && fillShape != null) {
+            setColorForShape(opacity, fillColor, g, x, y);
+        }
+        if (strokeColorKey != null && strokeShape != null) {
+            setStrokeColorAndShape(opacity, strokeColor, g, x, y);
+        }
+    }
+    
+    private void setOpacityAndColors(Double opacity, Color fillColor, Color strokeColor) {
+        DrawingView view = editor.getActiveView();
+            if (view != null && view.getDrawing() != null) {
+                opacity = opacityKey.get(view.getDrawing());
+                fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getDrawing());
+                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(view.getDrawing());
+            } else {
+                opacity = opacityKey.get(editor.getDefaultAttributes());
+                fillColor = (fillColorKey == null) ? null : fillColorKey.get(editor.getDefaultAttributes());
+                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(editor.getDefaultAttributes());
+            }
+    }
+    
+    private void setColorForShape(Double opacity, Color fillColor, Graphics2D g, int x, int y) {
+        if (opacity != null) {
+                if (fillColor == null) {
+                    fillColor = Color.BLACK;
+                }
+                g.setColor(new Color((((int) (opacity * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
+                g.translate(x, y);
+                g.fill(fillShape);
+                g.translate(-x, -y);
+            }
+    }
+    
+    private void setStrokeColorAndShape(Double opacity, Color strokeColor, Graphics2D g, int x, int y) {
+        if (opacity != null) {
+            if (strokeColor == null) {
+                strokeColor = Color.BLACK;
+            }
+            g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
+            g.translate(x, y);
+            g.draw(strokeShape);
+            g.translate(-x, -y);
+        }
     }
 }
