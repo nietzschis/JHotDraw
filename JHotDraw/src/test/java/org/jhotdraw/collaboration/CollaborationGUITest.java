@@ -10,6 +10,7 @@ import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.ExportException;
 import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.FrameFixture;
 import org.jhotdraw.app.Application;
@@ -44,8 +45,8 @@ public class CollaborationGUITest {
         app.launch(null);
         while (app.getFrame() == null) {
             Thread.sleep(1000);
-            window = new FrameFixture(app.getFrame());
         }
+        window = new FrameFixture(app.getFrame());
     }
 
     @After
@@ -77,38 +78,44 @@ public class CollaborationGUITest {
 
         CollaborationServer.getInstance().startServer();
     }
-    
+
     private void findIPJOptionPane() {
         try {
             window.optionPane().yesButton().click(); //Copy IP? popup
         }
         catch (ComponentLookupException e) {
-            findIPJOptionPane();
+            if (e.getMessage().contains("Starting server...")) {
+                findIPJOptionPane();
+            }
         }
     }
-    
-    @Test
+
+    @Test(expected = ExportException.class)
     public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
         assertNotNull(app.getFrame());
         assertNotNull(window);
-        
-        CollaborationServer.getInstance().startServer();
 
+        CollaborationServer.getInstance().startServer();
+        
         window.show();
 
         window.menuItem("collaboration").click();
         window.menuItem("collaboration.start").click();
         window.optionPane().yesButton().click(); //Start server? popup
-        
+
         findErrorJOptionPane();
+        
+        CollaborationServer.getInstance().startServer();
     }
-    
+
     private void findErrorJOptionPane() {
         try {
             window.optionPane().button().click(); //Error popup
         }
         catch (ComponentLookupException e) {
-            findErrorJOptionPane();
+            if (e.getMessage().contains("Starting server...")) {
+                findErrorJOptionPane();
+            }
         }
     }
 
