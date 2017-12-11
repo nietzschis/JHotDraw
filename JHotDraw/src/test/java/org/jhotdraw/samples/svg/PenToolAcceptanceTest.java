@@ -23,10 +23,13 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Pc
+ * @author Ľuboš
  */
 public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceTest.Steps> {
-
+    /**
+     *  Scenario for acceptance test
+     *  generates tool (PenTool),inicialiazes points that gonna be used and controls if drawed line is valid
+     */
     @Test
     public void drawingScenario() {
         given().penTool();
@@ -44,7 +47,11 @@ public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceT
 
         @ProvidedScenarioState
         DrawingView view;
-
+        
+        /**
+         * penTool() generates PenTool and propertirs for PenTool
+         * inicializes everything needed for simulation
+         */
         public void penTool() {
             view = new DefaultDrawingView();
             DrawingEditorProxy editor = new DrawingEditorProxy();
@@ -54,7 +61,6 @@ public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceT
             editor.setActiveView(view);
             drawing = new DefaultDrawing();
             view.setDrawing(drawing);
-
             penTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), null);
             penTool.setToolDoneAfterCreation(false);
             penTool.activate(editor);
@@ -67,7 +73,10 @@ public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceT
                 new Point(31,33),
                 new Point(40,40),
         };
-
+        /**
+         *  drawing() inicailizes points that are used for mouseEvents (mousePressed,mouseDragged and mouseReleased)
+         * 
+         */
         public void drawing() {
 
             MouseEvent press = new MouseEvent(view.getComponent(), 0, 0, 0, points[0].x, points[0].y, 1, false);
@@ -81,7 +90,10 @@ public class PenToolAcceptanceTest extends SimpleScenarioTest<PenToolAcceptanceT
             MouseEvent release = new MouseEvent(view.getComponent(), points.length, 0, 0, points[points.length-1].x, points[points.length-1].y, 1, false);
             penTool.mouseReleased(release);
         }
-
+        /**
+         * validateDrawing() validates if drawed points are drawed there where they have to be
+         */
+        
         public void validateDrawing() {
             SVGPathFigure pathFigure = (SVGPathFigure)drawing.getChild(0);
             pathFigure.getChildren();

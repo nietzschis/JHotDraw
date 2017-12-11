@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Pc
+ * @author Ľuboš
  */
 public class PenToolTest {
 
