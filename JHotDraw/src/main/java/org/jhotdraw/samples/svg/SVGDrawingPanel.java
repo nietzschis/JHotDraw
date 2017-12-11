@@ -27,6 +27,7 @@ import org.jhotdraw.gui.ToolBarLayout;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.plaf.palette.PaletteLookAndFeel;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.samples.svg.gui.MinimapToolBar;
 
 /**
  * JSVGDrawingAppletPanel.
@@ -41,6 +42,17 @@ public class SVGDrawingPanel extends JPanel {
     private DrawingEditor editor;
     private ResourceBundleUtil labels;
     private Preferences prefs;
+
+    public UndoRedoManager getUndoManager()
+    {
+        return undoManager;
+    }
+
+    public void setUndoManager(UndoRedoManager undoManager)
+    {
+        this.undoManager = undoManager;
+        actionToolBar.setUndoManager(undoManager);
+    }
 
     private class ItemChangeHandler implements ItemListener {
 
@@ -65,7 +77,7 @@ public class SVGDrawingPanel extends JPanel {
     public SVGDrawingPanel() {
         labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
+        
         try {
             prefs = Preferences.userNodeForPackage(getClass());
         } catch (SecurityException e) {
@@ -73,19 +85,28 @@ public class SVGDrawingPanel extends JPanel {
         }
 
         initComponents();
+        minimapToolBar = new MinimapToolBar((Point.Double p) -> {
+            assert p.getX() >= 0 && p.getX() <= 1;
+            assert p.getY() >= 0 && p.getY() <= 1;
+            Dimension canvasSize = scrollPane.getViewport().getViewSize();
+            Rectangle viewPortSize = scrollPane.getViewport().getViewRect();
+            
+            p.setLocation(p.getX()*canvasSize.width, p.getY()*canvasSize.height); // Center the point relative to the full canvas.
+            p.setLocation(p.getX() - viewPortSize.getWidth()/2, p.getY() - viewPortSize.getHeight()/2); // Point to upperleft corner of the new viewport.
+            
+            scrollPane.getHorizontalScrollBar().setValue((int) p.getX());
+            scrollPane.getVerticalScrollBar().setValue((int) p.getY());
+        });
+        toolsPane.add(minimapToolBar);
+        
         toolsPane.setLayout(new ToolBarLayout());
         toolsPane.setBackground(new Color(0xf0f0f0));
         toolsPane.setOpaque(true);
 
         viewToolBar.setView(view);
 
-        undoManager = new UndoRedoManager();
         setEditor(new DefaultDrawingEditor());
         editor.setHandleAttribute(HandleAttributeKeys.HANDLE_SIZE, new Integer(7));
-
-        DefaultDrawing drawing = new DefaultDrawing();
-        view.setDrawing(drawing);
-        drawing.addUndoableEditListener(undoManager);
 
         /* FIXME - Implement the code for handling constraints!
         toggleGridAction = actionToolBar.getToggleGridAction();
@@ -138,11 +159,10 @@ public class SVGDrawingPanel extends JPanel {
         });
     }
 
+    @FeatureEntryPoint(JHotDrawFeatures.TABS)
     public void setDrawing(Drawing d) {
-        undoManager.discardAllEdits();
-        view.getDrawing().removeUndoableEditListener(undoManager);
+        
         view.setDrawing(d);
-        d.addUndoableEditListener(undoManager);
     }
 
     public Drawing getDrawing() {
@@ -180,6 +200,7 @@ public class SVGDrawingPanel extends JPanel {
         canvasToolBar.setEditor(editor);
         viewToolBar.setEditor(editor);
         editor.setActiveView(temp);
+        minimapToolBar.setEditor(editor);
     }
 
     /** This method is called from within the constructor to
@@ -275,4 +296,5 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.draw.DefaultDrawingView view;
     private org.jhotdraw.samples.svg.gui.ViewToolBar viewToolBar;
     // End of variables declaration//GEN-END:variables
+    private MinimapToolBar minimapToolBar;
 }

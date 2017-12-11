@@ -13,6 +13,8 @@
  */
 package org.jhotdraw.app;
 
+import java.awt.event.ActionEvent;
+
 /**
  * This interface must be implemented by components
  * which are editable.
@@ -37,6 +39,10 @@ public interface EditableComponent {
 	 * Duplicates the selected region.
 	 */
 	public void duplicate();
+        /**
+	 * Flips the selected region. Given which orientation.
+	 */
+	public void flip(String actionCommand);
 	/**
 	 * Selects all.
 	 */

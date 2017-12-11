@@ -1,3 +1,9 @@
 JHotDraw/target/
 /JHotDraw/nbactions.xml
-/JHotDraw/FeatureTraces
+JHotDraw/FeatureTraces/
+.idea/
+*.iml
+*.ftf
+/JHotDraw/nbproject/
+JHotDraw/JHotDraw.iml
+JHotDraw/.idea/
