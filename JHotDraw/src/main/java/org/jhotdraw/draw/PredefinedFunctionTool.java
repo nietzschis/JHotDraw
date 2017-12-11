@@ -1,5 +1,5 @@
 /*
- * @(#)CreationTool.java  2.5  2008-05-24
+ * @(#)PredefinedFunctionTool.java  2.5  2008-05-24
  *
  * Copyright (c) 1996-2008 by the original authors of JHotDraw
  * and all its contributors.
@@ -23,42 +23,7 @@ import java.awt.geom.Point2D;
 import java.util.Map;
 import org.jhotdraw.gui.AbstractFunctionPanel;
 
-/**
- * A tool to create new figures. The figure to be created is specified by a
- * prototype.
- * <p>
- * To create a figure using the CreationTool, the user does the following mouse
- * gestures on a DrawingView:
- * <ol>
- * <li>Press the mouse button over the DrawingView. This defines the
- * start point of the Figure bounds.</li>
- * <li>Drag the mouse while keeping the mouse button pressed, and then release
- * the mouse button. This defines the end point of the Figure bounds.</li>
- * </ol>
- * The CreationTool works well with most figures that fit into a rectangular
- * shape or that concist of a single straight line. For figures that need
- * additional editing after these mouse gestures, the use of a specialized
- * creation tool is recommended. For example the TextTool allows to enter the
- * text into a TextFigure after the user has performed the mouse gestures.
- * <p>
- * Alltough the mouse gestures might be fitting for the creation of a connection,
- * the CreationTool is not suited for the creation of a ConnectionFigure. Use
- * the ConnectionTool for this type of figures instead.
- * <p>
- * Design pattern:<br>
- * Name: Prototype.<br>
- * Role: Client.<br>
- * Partners: {@link Figure} as Prototype.
- *
- * @author Werner Randelshofer
- * @version 2.4 2008-05-24 Made all private variables protected. Use crosshair
- * cursor for creation tool.
- * <br>2.2 2007-08-22 Added property 'toolDoneAfterCreation'.
- * <br>2.1.1 2006-07-20 Minimal size treshold was enforced too eagerly.
- * <br>2.1 2006-07-15 Changed to create prototype creation from class presentationName.
- * <br>2.0 2006-01-14 Changed to support double precision coordinates.
- * <br>1.0 2003-12-01 Derived from JHotDraw 5.4b1.
- */
+
 public class PredefinedFunctionTool extends AbstractTool {
 
     /**
@@ -90,12 +55,14 @@ public class PredefinedFunctionTool extends AbstractTool {
      */
     protected PredefinedBezierFigure createdFigure;
     /**
-     * If this is set to false, the CreationTool does not fire toolDone
+     * If this is set to false, the PredefinedFunctionTool does not fire toolDone
      * after a new Figure has been created. This allows to create multiple
      * figures consecutively.
      */
     private boolean isToolDoneAfterCreation = true;
 
+    private AbstractFunctionPanel[] jPanel;
+    
     /** Creates a new instance. */
     public PredefinedFunctionTool(String prototypeClassName) {
         this(prototypeClassName, null, null);
@@ -122,9 +89,9 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     /** Creates a new instance with the specified prototype but without an
-     * attribute set. The CreationTool clones this prototype each time a new
+     * attribute set. The PredefinedFunctionTool clones this prototype each time a new
      *  Figure needs to be created. When a new Figure is created, the
-     * CreationTool applies the default attributes from the DrawingEditor to it.
+     * PredefinedFunctionTool applies the default attributes from the DrawingEditor to it.
      *
      * @param prototype The prototype used to create a new Figure.
      */
@@ -133,14 +100,14 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     /** Creates a new instance with the specified prototype but without an
-     * attribute set. The CreationTool clones this prototype each time a new
+     * attribute set. The PredefinedFunctionTool clones this prototype each time a new
      * Figure needs to be created. When a new Figure is created, the
-     * CreationTool applies the default attributes from the DrawingEditor to it,
+     * PredefinedFunctionTool applies the default attributes from the DrawingEditor to it,
      * and then it applies the attributes to it, that have been supplied in
      * this constructor.
      *
      * @param prototype The prototype used to create a new Figure.
-     * @param attributes The CreationTool applies these attributes to the
+     * @param attributes The PredefinedFunctionTool applies these attributes to the
      * prototype after having applied the default attributes from the DrawingEditor.
      */
     public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes) {
@@ -151,7 +118,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * Creates a new instance with the specified prototype and attribute set.
      *
      * @param prototype The prototype used to create a new Figure.
-     * @param attributes The CreationTool applies these attributes to the
+     * @param attributes The PredefinedFunctionTool applies these attributes to the
      * prototype after having applied the default attributes from the DrawingEditor.
      * @param name The name parameter is currently not used.
      * @deprecated This constructor might go away, because the name parameter
@@ -199,7 +166,7 @@ public class PredefinedFunctionTool extends AbstractTool {
         return panel.getGraph();
     }
 
-    private AbstractFunctionPanel[] jPanel;
+    
     
     @Override
     public void activate(DrawingEditor editor) {
@@ -240,8 +207,6 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     public void mouseDragged(MouseEvent evt) {
-
-
     }
 
     @SuppressWarnings("unchecked")
@@ -286,7 +251,7 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     /**
-     * If this is set to false, the CreationTool does not fire toolDone
+     * If this is set to false, the PredefinedFunctionTool does not fire toolDone
      * after a new Figure has been created. This allows to create multiple
      * figures consecutively.
      */

@@ -140,7 +140,7 @@ public class ToolsToolBar extends AbstractToolBar {
         p.add(btn, gbc);
         
         btn = ButtonFactory.addToolTo(this, editor, predefinedFunctionTool = new PredefinedFunctionTool(new GraphBezierFigure(), attributes), "createEllipse", labels);
-        predefinedFunctionTool.setToolDoneAfterCreation(false);
+        predefinedFunctionTool.setToolDoneAfterCreation(true);
         AbstractFunctionPanel[] jPanel = {new LinearGraphPanel(), new QuadraticGraphPanel()};
         predefinedFunctionTool.setList(jPanel);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
