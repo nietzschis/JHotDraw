@@ -239,4 +239,8 @@ public interface Application {
      * Removes a (non-palette) window from the application.
      */
     public void removeWindow(Window window);
+    
+    public void setComboBox(ArrayList<Action> actions);
+    
+    public String getSearchText();
 }

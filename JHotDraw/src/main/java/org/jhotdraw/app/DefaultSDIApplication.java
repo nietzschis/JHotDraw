@@ -23,7 +23,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.jhotdraw.app.action.*;
+import org.jhotdraw.gui.JPopupButton;
 import org.jhotdraw.util.*;
 import org.jhotdraw.util.prefs.*;
 import org.openide.util.Lookup;
@@ -50,8 +53,15 @@ import org.openide.util.lookup.ServiceProvider;
  * <br>1.1 2006-02-06 Revised.
  * <br>1.0 October 16, 2005 Created.
  */
+//@ServiceProvider(service = SearchSPI.class)
 public class DefaultSDIApplication extends AbstractApplication {
+
     private Preferences prefs;
+    private JComboBox<Action> combobox = new JComboBox();
+    private JList<Action> list = new JList<>();
+    private JMenu searchMenu = new JMenu("Search results:");
+    JTextField textField = new JTextField();
+
     /**
      * Creates a new instance.
      */
@@ -111,7 +121,7 @@ public class DefaultSDIApplication extends AbstractApplication {
 
     protected void initApplicationActions() {
         ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        
+
         ApplicationModel m = getModel();
         //m.putAction(AboutAction.ID, new AboutAction(this));
         m.putAction(ExitAction.ID, new ExitAction(this));
@@ -263,6 +273,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     protected JMenuBar createMenuBar(final View p, java.util.List<Action> toolBarActions) {
         JMenuBar mb = new JMenuBar();
         mb.add(createFileMenu(p));
+
         JMenu lastMenu = null;
         for (JMenu mm : getModel().createMenus(this, p)) {
             mb.add(mm);
@@ -295,6 +306,21 @@ public class DefaultSDIApplication extends AbstractApplication {
         if (helpMenu != null) {
             mb.add(helpMenu);
         }
+//        for (Component mc : mb.getComponents()) {
+//            JMenu m = (JMenu) mc;
+//            if (m.getText().equals(helpMenu.getText())) {
+//                for (Component c : helpMenu.getMenuComponents()) {
+//                    m.add(c);
+//                }
+//                helpMenu = null;
+//                break;
+//            }
+//        }
+//        if (searchMenu != null) {
+//            mb.add(searchMenu);
+//        }
+        createSearchMenu(mb, p);
+
         return mb;
     }
 
@@ -333,21 +359,8 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.addSeparator();
         m.add(model.getAction(ExitAction.ID));
         mb.add(m);
-        
+
         m.addSeparator();
-//        ActionResult = lookup.lookupResult(ActionSPI.class);
-//        //gamePluginResult.addLookupListener(gamePluginlookupListener);
-//        ActionResult.allItems();
-//        for (ActionSPI action : ActionResult.allInstances()) {
-////            //System.out.println(action);
-//            //System.out.println(ActionResult.allInstances().toString());
-//            String testID = action.getServiceID();
-//            System.out.println(testID);
-//            System.out.println("testname: " + action.getClass());
-//            m.add(model.getAction(action.getServiceID()));
-//            mb.add(m);
-//        }
-//        System.out.println(ActionResult.allInstances().size());
 
         addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -363,7 +376,7 @@ public class DefaultSDIApplication extends AbstractApplication {
                 }
             }
         });
-        
+
         return m;
     }
 
@@ -463,4 +476,34 @@ public class DefaultSDIApplication extends AbstractApplication {
 
         return m;
     }
+
+    protected void createSearchMenu(JMenuBar mb, View p) {
+        
+        JLabel searchLabel = new JLabel("           Press enter to search: ");
+        
+        
+        textField.setPreferredSize(new Dimension(200, textField.getPreferredSize().height));
+        textField.setMaximumSize(textField.getPreferredSize());
+        textField.addActionListener(Lookup.getDefault().lookup(SearchAction.class));
+        textField.setToolTipText("Press enter to search for tool");
+        textField.setText("search for tool");
+
+        mb.add(searchLabel);
+        mb.add(textField);
+        mb.add(searchMenu);
+    }
+
+    @Override
+    public void setComboBox(ArrayList<Action> actions) {
+        searchMenu.removeAll();
+        for (Action action : actions) {
+            searchMenu.add(action);
+        }
+    }
+
+    @Override
+    public String getSearchText() {
+        return textField.getText();
+    }
+
 }

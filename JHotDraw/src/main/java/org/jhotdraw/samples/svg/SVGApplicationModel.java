@@ -113,6 +113,28 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         mb.add(createViewMenu(a, pr));
         return mb;
     }
+    
+    protected JMenu createSearchBar(Application a, View p){
+        JMenu m, m2;
+        JMenuItem mi;
+        JRadioButtonMenuItem rbmi;
+        JCheckBoxMenuItem cbmi;
+        ButtonGroup group;
+        Action action;
+
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        ResourceBundleUtil svgLabels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+
+        m = new JMenu();
+        appLabels.configureMenu(m, "view");
+        m.add(getAction(ViewSourceAction.ID));
+
+//        menuBar.add(new JButton("   Seach ....  "));
+//        menuBar.add(new JTextField("   Seach ....  "));
+        
+        return m;
+    }
 
     protected JMenu createViewMenu(Application a, View p) {
         JMenu m, m2;
