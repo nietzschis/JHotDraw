@@ -67,6 +67,10 @@ public class AttributeKeys {
      * Figure fill color. The value of this attribute is a Color object.
      */
     public final static AttributeKey<Color> FILL_COLOR = new AttributeKey<Color>("fillColor", Color.class, Color.white, true, labels);
+
+    
+    
+    
     /**
      * Close BezierFigure. The value of this attribute is a Boolean object.
      */
