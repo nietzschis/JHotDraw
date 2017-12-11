@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-junit</artifactId>
-            <version>0.15.1</version>
+            <version>0.15.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -86,7 +86,6 @@
             <groupId>be.cyberelf.nanoxml</groupId>
             <artifactId>nanoxml</artifactId>
             <version>2.2.3</version>
-          </dependency>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
