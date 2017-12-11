@@ -7,16 +7,16 @@ package org.jhotdraw.gui;
 
 import org.jhotdraw.graph.QuadraticGraph;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Joachim
  */
 public class QuadraticGraphPanel extends AbstractFunctionPanel {
 
-
-    
     /**
-     * Creates new form AbstractFunctionPanel
+     * Creates a new QuadraticGraphPanel
      */
     public QuadraticGraphPanel() {
         initComponents();
@@ -28,11 +28,7 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
     
     @Override
     public void setList(AbstractFunctionPanel[] list) {
-        for (AbstractFunctionPanel item : list) {
-            if (!item.equals(this)) {
-                jComboBox1.addItem(item);
-            }
-        }
+        Arrays.stream(list).filter(item -> !item.equals(this)).forEach(item -> jComboBox1.addItem(item));
     }
 
     @Override
