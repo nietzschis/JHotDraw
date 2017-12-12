@@ -11,6 +11,7 @@ import org.jhotdraw.collaboration.server.RemoteObservable;
 import org.jhotdraw.draw.Drawing;
 import org.jhotdraw.draw.Figure;
 import static org.junit.Assert.assertEquals;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -25,12 +26,17 @@ public class ThenCollaboration {
     
     @ExpectedScenarioState
     CollaborationConnection client;
+    
+    @ExpectedScenarioState
+    List<Figure> argument;
 
     @ExpectedScenarioState
     Drawing clientsDrawing;
     
     @ExpectedScenarioState
     List<Figure> myUpdatedList;
+    
+    private ArgumentCaptor<List<Figure>> argumentCaptor;
     
     public void the_server_has_a_collaborator() throws RemoteException {
         assertThat(server).isNotNull();
@@ -49,8 +55,10 @@ public class ThenCollaboration {
     public void the_client_receives_the_update() throws RemoteException {
         assertThat(server).isNotNull();
         assertThat(client).isNotNull();
+        argumentCaptor = ArgumentCaptor.forClass(List.class);
         
-        verify(client, times(1)).update(new ArrayList<>());
+        verify(client, times(1)).update(argumentCaptor.capture());
+        assertEquals(argumentCaptor.getValue(), argument);
     }
     
     public void the_figure_has_been_added_to_client() {

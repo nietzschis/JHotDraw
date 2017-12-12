@@ -32,6 +32,9 @@ public class WhenCollaboration extends Stage<WhenCollaboration> {
     @ProvidedScenarioState
     CollaborationConnection client;
     
+    @ProvidedScenarioState
+    List<Figure> argument;
+    
     @ExpectedScenarioState
     List<Figure> myList;
     
@@ -61,7 +64,12 @@ public class WhenCollaboration extends Stage<WhenCollaboration> {
     }
     
     public WhenCollaboration the_server_has_an_update() throws RemoteException {
-        server.notifyAllCollaborators(new ArrayList<>());
+        argument = new ArrayList<>();
+        Figure rectFig = new SVGRectFigure();
+        rectFig.setBounds(new Point2D.Double(2, 2), new Point2D.Double(10, 10));
+        rectFig.setCollaborationId();
+        argument.add(rectFig);
+        server.notifyAllCollaborators(argument);
         
         return this;
     }

@@ -8,7 +8,7 @@ import java.rmi.server.ExportException;
 import org.jhotdraw.collaboration.common.CollaborationConfig;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -27,19 +27,10 @@ public class CollaborationServerTest {
     public static void setUpClass() {
         server = CollaborationServer.getInstance();
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
         server = null;
-    }
-
-    @Before
-    public void setUp() throws RemoteException {
-        try {
-            server.startServer();
-        }
-        catch (AlreadyBoundException e) {
-        }
     }
 
     @After
@@ -53,14 +44,27 @@ public class CollaborationServerTest {
 
     @Test(expected = ExportException.class)
     public void testStartServer() throws RemoteException, AlreadyBoundException {
-        LocateRegistry.createRegistry(CollaborationConfig.PORT).bind(CollaborationConfig.NAME, RemoteObservable.getInstance());
+        server.startServer();
+        server.startServer();
     }
 
     @Test(expected = NotBoundException.class)
-    public void testStopServer() throws RemoteException, NotBoundException {
-        server.stopServer();
+    public void testStopServerWhenServerIsRunning() throws RemoteException, NotBoundException, AlreadyBoundException {
+        server.startServer();
+
+        try {
+            server.stopServer();
+        }
+        catch (NotBoundException e) {
+            fail("Server was not running when stopServer() was called.");
+        }
 
         LocateRegistry.getRegistry(CollaborationConfig.PORT).lookup(CollaborationConfig.NAME);
+    }
+
+    @Test(expected = NotBoundException.class)
+    public void testStopServerWhenServerIsNotRunning() throws RemoteException, NotBoundException {
+        server.stopServer();
     }
 
 }

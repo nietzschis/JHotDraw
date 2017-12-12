@@ -57,8 +57,8 @@ public class RemoteObservable extends UnicastRemoteObject implements IRemoteObse
     }
 
     public String getCollaboratorNames() {
-        StringBuffer names = new StringBuffer();
-        collaborators.parallelStream()
+        StringBuilder names = new StringBuilder();
+        collaborators.stream()
                 .filter(collaborator -> collaborator != CollaborationConnection.getInstance())
                 .forEach(collaborator -> {
                     try {
