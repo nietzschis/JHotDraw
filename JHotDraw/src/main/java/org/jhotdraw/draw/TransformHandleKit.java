@@ -195,7 +195,6 @@ public class TransformHandleKit {
         public void trackStart(Point anchor, int modifiersEx) {
             geometry = getOwner().getTransformRestoreData();
             Point location = getLocation();
-            System.out.println("trackStart location: " + location + "\n");
             dx = -anchor.x + location.x;
             dy = -anchor.y + location.y;
         }
