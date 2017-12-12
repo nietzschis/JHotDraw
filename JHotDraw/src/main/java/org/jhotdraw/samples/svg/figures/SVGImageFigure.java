@@ -32,10 +32,7 @@ import java.awt.image.RescaleOp;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
-
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.OPACITY;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.CONTRAST;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.TRANSFORM;
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
  * SVGImage.
@@ -88,7 +85,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     private String temp = "d";
 
     public enum Strings {
-        CONTRASTER, OPACITY
+        CONTRAST, OPACITY
     }
 
     private BufferedImage image;
@@ -142,8 +139,9 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
 
             image = getBufferedImage();////
             /// System.out.println(Strings.contrast);
-            if (attribute.getKey().equals(Strings.CONTRASTER.toString().toLowerCase())) {
+            if (attribute.getKey().equals(Strings.CONTRAST.toString().toLowerCase())) {
                 image = rescaleImage(image, newContrast);
+             
             }
 
             if (image != null) {
