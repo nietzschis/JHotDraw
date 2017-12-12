@@ -30,7 +30,7 @@ public class SVGPathFigureJGivenTest extends SimpleScenarioTest<SVGPathFigureJGi
         public void test_scanario() {
         given().a_non_empty_SVGPathFigure();
         when().updating_text();
-        then().text_is_in_drawingarea();
+        then().text_is_in_figure_drawingarea();
     }
     
         public static class Stages {
