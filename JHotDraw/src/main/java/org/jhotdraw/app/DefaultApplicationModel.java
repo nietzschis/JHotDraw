@@ -105,6 +105,10 @@ public abstract class DefaultApplicationModel
                     error.initCause(e);
                     throw error;
                 }
+            } else {
+                InternalError error = new InternalError("unable to get view "
+                        + "class as view class name is not set");
+                throw error;
             }
         }
         return viewClass;

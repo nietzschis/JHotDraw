@@ -53,6 +53,8 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
     private Preferences prefs;
     private View activeView;
     public final static String VIEW_COUNT_PROPERTY = "viewCount";
+    protected final static int DEFAULT_BACKUP_INTERVAL = 300;
+    protected final static String DEFAULT_BACKUP_LOCATION = System.getProperty("user.home");
 
     /**
      * Creates a new instance.
@@ -93,7 +95,7 @@ public abstract class AbstractApplication extends AbstractBean implements Applic
             }
         });
     }
-
+    
     @FeatureEntryPoint(JHotDrawFeatures.MANAGE_DRAWINGS)
     public final View createView() {
         View p = basicCreateView();

@@ -2,7 +2,6 @@ package org.jhotdraw.draw;
 
 import org.jhotdraw.graph.Graph;
 import org.jhotdraw.util.ResourceBundleUtil;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -44,50 +43,18 @@ public class PredefinedFunctionTool extends AbstractTool {
     
     private Graph graph;
 
-    /** Creates a new instance with the specified prototype but without an
-     * attribute set. The PredefinedFunctionTool clones this prototype each time a new
-     *  Figure needs to be created. When a new Figure is created, the
-     * PredefinedFunctionTool applies the default attributes from the DrawingEditor to it.
-     *
-     * @param prototype The prototype used to create a new Figure.
-     */
-    public PredefinedFunctionTool(Figure prototype) {
-        this(prototype, null, null); //Called
-    }
-
-    /** Creates a new instance with the specified prototype but without an
-     * attribute set. The PredefinedFunctionTool clones this prototype each time a new
-     * Figure needs to be created. When a new Figure is created, the
-     * PredefinedFunctionTool applies the default attributes from the DrawingEditor to it,
-     * and then it applies the attributes to it, that have been supplied in
-     * this constructor.
-     *
-     * @param prototype The prototype used to create a new Figure.
-     * @param attributes The PredefinedFunctionTool applies these attributes to the
-     * prototype after having applied the default attributes from the DrawingEditor.
-     */
-    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes) {
-        this(prototype, attributes, null);
-    }
-
     /**
      * Creates a new instance with the specified prototype and attribute set.
      *
      * @param prototype The prototype used to create a new Figure.
      * @param attributes The PredefinedFunctionTool applies these attributes to the
      * prototype after having applied the default attributes from the DrawingEditor.
-     * @param name The name parameter is currently not used.
-     * @deprecated This constructor might go away, because the name parameter
-     * is not used.
      */
-    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes, String name) { //Called
+    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes) {
         this.prototype = prototype; 
         this.prototypeAttributes = attributes;
-        if (name == null) {
-            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-            name = labels.getString("edit.createFigure.text");
-        }
-        this.presentationName = name;
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        this.presentationName = labels.getString("edit.createGraph.text");
     }
 
     private PredefinedFunction createFunction() {
@@ -130,7 +97,7 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     @Override
-    public void deactivate(DrawingEditor editor) { //Called
+    public void deactivate(DrawingEditor editor) {
         super.deactivate(editor);
         if (getView() != null) {
             getView().setCursor(Cursor.getDefaultCursor());
@@ -162,7 +129,7 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     @SuppressWarnings("unchecked")
-    protected PredefinedBezierFigure createFigure() { //Called
+    protected PredefinedBezierFigure createFigure() {
         PredefinedBezierFigure f = (PredefinedBezierFigure) prototype.clone();
         getEditor().applyDefaultAttributesTo(f);
         if (prototypeAttributes != null) {
@@ -200,7 +167,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * The Jpanels has to an AbstractFunctionPanel.
      * @param jPanel 
      */
-    public void setList(AbstractFunctionPanel[] jPanel) { //Called
+    public void setList(AbstractFunctionPanel[] jPanel) {
         for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
             abstractFunctionPanel.setList(jPanel);
         }
