@@ -50,7 +50,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * @param attributes The PredefinedFunctionTool applies these attributes to the
      * prototype after having applied the default attributes from the DrawingEditor.
      */
-    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes) { //Called
+    public PredefinedFunctionTool(Figure prototype, Map<AttributeKey, Object> attributes) {
         this.prototype = prototype; 
         this.prototypeAttributes = attributes;
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
@@ -97,7 +97,7 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     @Override
-    public void deactivate(DrawingEditor editor) { //Called
+    public void deactivate(DrawingEditor editor) {
         super.deactivate(editor);
         if (getView() != null) {
             getView().setCursor(Cursor.getDefaultCursor());
@@ -129,7 +129,7 @@ public class PredefinedFunctionTool extends AbstractTool {
     }
 
     @SuppressWarnings("unchecked")
-    protected PredefinedBezierFigure createFigure() { //Called
+    protected PredefinedBezierFigure createFigure() {
         PredefinedBezierFigure f = (PredefinedBezierFigure) prototype.clone();
         getEditor().applyDefaultAttributesTo(f);
         if (prototypeAttributes != null) {
@@ -167,7 +167,7 @@ public class PredefinedFunctionTool extends AbstractTool {
      * The Jpanels has to an AbstractFunctionPanel.
      * @param jPanel 
      */
-    public void setList(AbstractFunctionPanel[] jPanel) { //Called
+    public void setList(AbstractFunctionPanel[] jPanel) {
         for (AbstractFunctionPanel abstractFunctionPanel : jPanel) {
             abstractFunctionPanel.setList(jPanel);
         }
