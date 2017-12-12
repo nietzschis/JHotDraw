@@ -277,12 +277,7 @@ public class DelegationSelectionTool extends SelectionTool {
     protected void handleClick(MouseEvent evt) {
         DrawingView currentView = getView();
         Point currentPosition = new Point(evt.getX(), evt.getY());
-
-        System.out.println("Amount of selected figures: " + currentView.getSelectedFigures().size() + "\n");
-        System.out.println("Current X position: " + currentPosition.getX() + "\n");
-        System.out.println("Current Y position: " + currentPosition.getY() + "\n");
-
-
+        
         Point2D.Double twoDPosition = viewToDrawing(currentPosition);
 
         Figure figureToFind = currentView.findFigure(currentPosition);
