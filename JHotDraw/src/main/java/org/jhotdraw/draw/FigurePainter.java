@@ -21,7 +21,7 @@ public class FigurePainter {
     /**
      * Paints a figure the color choosent to left or right mouse button.
      * @param figure the figure that will be pained.
-     * @param int MouseEvent for getting which mouse button is pressed 1 = left mouse button 3 = right mouse button.
+     * @param MouseButton MouseEvent for getting which mouse button is pressed 1 = left mouse button 3 = right mouse button.
      * @param editor For getting the color of left or right mouse button.
      */
     public void paint(Figure figure, int MouseButton, DrawingEditor editor) {
