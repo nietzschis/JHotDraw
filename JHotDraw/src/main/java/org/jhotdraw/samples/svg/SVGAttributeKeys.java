@@ -75,6 +75,9 @@ public class SVGAttributeKeys extends AttributeKeys {
      * Specifies the text alignment of a SVGText figure.
      */
     public final static AttributeKey<TextAlign> TEXT_ALIGN = new AttributeKey<TextAlign>("textAlign",TextAlign.class,TextAlign.START, false, labels);
+    
+    public final static AttributeKey<Double> TEXT_OPACITY = new AttributeKey<Double>("textOpacity", Double.class, 1d, false, labels);
+    
     /**
      * Specifies the fill gradient of a SVG figure.
      */

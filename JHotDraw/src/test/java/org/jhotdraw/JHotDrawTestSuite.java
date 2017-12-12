@@ -1,11 +1,11 @@
 package org.jhotdraw;
 
+import org.jhotdraw.app.action.SearchActionJGivenTest;
+import org.jhotdraw.app.action.SearchActionTest;
 import animationAcceptanceTest.AcceptenceTest;
 import animationAcceptanceTest.GUI_Test;
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
-import org.jhotdraw.app.action.SearchActionJGivenTest;
-import org.jhotdraw.app.action.SearchActionTest;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
@@ -23,7 +23,10 @@ import org.jhotdraw.draw.AnimationTest;
 import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
+import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
+import org.jhotdraw.samples.svg.figures.SVGPathFigureJGivenTest;
+import org.jhotdraw.samples.svg.figures.SVGPathFigureTest;
 import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
 import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
@@ -86,6 +89,9 @@ import org.junit.runners.Suite;
     AnimationToolTest.class,
     FileBackupSaverTest.class,
     FileBackupSaverAcceptanceTest.class,
+    SVGPathFigureTest.class,
+    StartLineTextStrategyTest.class, 
+    SVGPathFigureJGivenTest.class,
     SearchActionTest.class,
     SearchActionJGivenTest.class})
 
