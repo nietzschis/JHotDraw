@@ -1,5 +1,6 @@
 package org.jhotdraw;
 
+import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.collaboration.CollaborationAcceptanceTest;
@@ -31,7 +32,7 @@ import org.junit.runners.Suite;
                      SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, SimpleDrawingViewTest.class, 
                     CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class, 
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
-                    SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class})
+                    SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class, DuplicateCanvasAction.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass

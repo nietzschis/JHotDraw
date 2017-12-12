@@ -97,21 +97,23 @@ public class CollaborationGUITest {
         }
     }
     
-    @Test
-    public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
-        assertNotNull(app.getFrame());
-        assertNotNull(window);
-
-        window.show();
-        
-        CollaborationServer.getInstance().startServer();
-
-        window.menuItem("collaboration").click();
-        window.menuItem("collaboration.start").click();
-        window.optionPane().yesButton().click(); //Start server? popup
-        
-        window.optionPane().buttonWithText("\\s*OK\\s*").click(); //Error popup
-    }
+//    @Test
+//    public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
+//        assertNotNull(app.getFrame());
+//        assertNotNull(window);
+//
+//        window.show();
+//          
+//        CollaborationServer.getInstance().startServer();
+//   
+//        window.optionPane().buttonWithText("\\s*OK\\s*").click(); //Error popup
+//    }
+//        window.menuItem("collaboration").click();
+//        window.menuItem("collaboration.start").click();
+//        window.optionPane().yesButton().click(); //Start server? popup
+//        
+//        window.optionPane().buttonWithText("\\s*OK\\s*").click(); //Error popup
+//    }
 
     @Test
     public void GUIConnectAndDisconnectToServerTest() throws InterruptedException, AlreadyBoundException, AccessException, RemoteException, UnknownHostException {
