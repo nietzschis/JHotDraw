@@ -43,6 +43,10 @@ public interface View {
      */
     public final static String FILE_PROPERTY = "file";
     /**
+     * The name of the backup file property.
+     */
+    public final static String BACKUP_FILE_PROPERTY = "file.backup";
+    /**
      * The name of the title property.
      */
     public final static String TITLE_PROPERTY = "title";
@@ -90,6 +94,20 @@ public interface View {
      * This is a bound property.
      */
     public void setFile(File newValue);
+    
+    /**
+     * Returns the file which holds backed up changes to current document.
+     */
+    public File getBackupFile();
+    
+    /**
+     * Sets the backup file which the current document will be saved to at
+     * a regular interval.
+     * This is a bound property.
+     * @param file
+     * @return 
+     */
+    public void setBackupFile(File file);
     
     /**
      * Returns the enabled state of the view.

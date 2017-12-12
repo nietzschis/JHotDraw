@@ -29,6 +29,8 @@ import org.jhotdraw.samples.svg.io.SVGInputFormatTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
 import org.jhotdraw.tabs.gui.TabPanelTest;
+import org.jhotdraw.util.FileBackupSaverAcceptanceTest;
+import org.jhotdraw.util.FileBackupSaverTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -71,7 +73,9 @@ import org.junit.runners.Suite;
     DuplicateCanvasAction.class,
     WatermarkTest.class,
     SVGRoundedRectangleJGiven.class,
-    SVGRoundedRectangleTest.class})
+    SVGRoundedRectangleTest.class,
+    FileBackupSaverTest.class,
+    FileBackupSaverAcceptanceTest.class})
 
 public class JHotDrawTestSuite {
 
