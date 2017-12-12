@@ -61,6 +61,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     private JList<Action> list = new JList<>();
     private JMenu searchMenu = new JMenu("Search results:");
     private JTextField textField = new JTextField();
+    private FileBackupSaver autoSaver;
     private JFrame frame;
 
     /**
@@ -83,6 +84,10 @@ public class DefaultSDIApplication extends AbstractApplication {
         prefs = Preferences.userNodeForPackage((getModel() == null) ? getClass() : getModel().getClass());
         initLabels();
         initApplicationActions();
+        
+        int backupInterval = prefs.getInt("backupInterval", DEFAULT_BACKUP_INTERVAL);
+        String backupLocation = prefs.get("backupLocation", DEFAULT_BACKUP_LOCATION);
+        createAutosaver(backupInterval, backupLocation);
     }
 
     @Override
@@ -99,6 +104,25 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("com.apple.macos.useScreenMenuBar", "false");
         System.setProperty("apple.awt.graphics.UseQuartz", "false");
         System.setProperty("swing.aatext", "true");
+    }
+    
+    /**
+     * Stops application after saving each View to a backup file.
+     */
+    @Override
+    public void stop() {
+        autoSaver.saveFiles();
+        autoSaver.stop();
+        super.stop();
+    }
+    
+    protected void createAutosaver(int interval, String backupLocation) {
+        if (autoSaver != null) {
+            autoSaver.stop();
+            autoSaver = null;
+        }
+        autoSaver = new FileBackupSaver(this, interval, backupLocation);
+        autoSaver.start();
     }
 
     protected void initLookAndFeel() {

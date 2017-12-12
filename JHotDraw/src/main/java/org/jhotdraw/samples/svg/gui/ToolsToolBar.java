@@ -231,6 +231,7 @@ public class ToolsToolBar extends AbstractToolBar {
             break;
         }
         return p;
+
     }
 
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
@@ -248,6 +249,10 @@ public class ToolsToolBar extends AbstractToolBar {
 
         a.add(new BringToFrontAction(editor));
         a.add(new SendToBackAction(editor));
+
+        a.add(null); // separator
+
+        a.add(new EdgeDetectionAction(editor));
 
         a.add(null); // separator
 

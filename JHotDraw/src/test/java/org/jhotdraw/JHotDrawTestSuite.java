@@ -1,9 +1,11 @@
 package org.jhotdraw;
 
-import org.jhotdraw.app.action.SearchActionTest;
+import animationAcceptanceTest.AcceptenceTest;
+import animationAcceptanceTest.GUI_Test;
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.SearchActionJGivenTest;
+import org.jhotdraw.app.action.SearchActionTest;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
@@ -17,6 +19,8 @@ import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
 import org.jhotdraw.draw.SelectionTest;
 import org.jhotdraw.app.action.watermark.WatermarkTest;
+import org.jhotdraw.draw.AnimationTest;
+import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
@@ -31,6 +35,8 @@ import org.jhotdraw.samples.svg.io.SVGInputFormatTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
 import org.jhotdraw.tabs.gui.TabPanelTest;
+import org.jhotdraw.util.FileBackupSaverAcceptanceTest;
+import org.jhotdraw.util.FileBackupSaverTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -74,6 +80,12 @@ import org.junit.runners.Suite;
     WatermarkTest.class,
     SVGRoundedRectangleJGiven.class,
     SVGRoundedRectangleTest.class,
+    AcceptenceTest.class,
+    GUI_Test.class,
+    AnimationTest.class,
+    AnimationToolTest.class,
+    FileBackupSaverTest.class,
+    FileBackupSaverAcceptanceTest.class,
     SearchActionTest.class,
     SearchActionJGivenTest.class})
 

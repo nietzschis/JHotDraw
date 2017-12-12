@@ -156,31 +156,35 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     //  gx.setRenderingHints(g.getRenderingHints());
 
                 } else {
-                    clipToShape(g, clipShape);
-                    
+                    //Clip graphics to the shape
+                    clipToShape(g, clipShape);                    
                     g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                 }
-                //draw stroke if stroke attributes are initialized
-                drawStroke(g);
-            } else {
-                
-             drawShape(g);
+                //Stroke image if attributes are initialized
+                drawStroke(g);                
+            } else {                
+                drawShape(g);
             }
-
+            
             if (newContrast != 1d) {
                 g.setComposite(savedComposite);
             }
         }
-
     }
     
-    //clips the image to a given shape
+    //Clips the image to a given shape
     protected void clipToShape(Graphics2D g, Shape clipShape){
         //Outcommented code line below is to force clipping to an ellipse shape for testing purposes.
         //clipShape = new Ellipse2D.Double(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-        
-        //clip g with clipshape
-        g.setClip(clipShape);
+        /*
+        Implement chooser in GUI, to define which shape to clip 
+        to and use GUI input to choose predefined shape.
+        */        
+        //Do nothing if null
+        if(clipShape != null){
+            //Clip graphic with shape
+            g.setClip(clipShape);
+        }        
     }
 
     //Contrast
@@ -206,14 +210,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                 gx.setStroke(new BasicStroke());
                 gx.draw(shape);
     }
-  
-    
-
     //Contrast End
-    
-    
-    
-    
     
     protected void drawFill(Graphics2D g) {
 
