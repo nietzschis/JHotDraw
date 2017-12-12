@@ -193,14 +193,16 @@ public class CreationTool extends AbstractTool {
     public void mousePressed(MouseEvent evt) {
         super.mousePressed(evt);
         FigurePainter painter = new FigurePainter();
+        painter.paint(createdFigure, evt.getButton(), editor);
         getView().clearSelection();
         createdFigure = createFigure();
         Point2D.Double p = constrainPoint(viewToDrawing(anchor));
         anchor.x = evt.getX();
         anchor.y = evt.getY();
         createdFigure.setBounds(p, p);
+
         getDrawing().add(createdFigure);
-        painter.paint(createdFigure, evt.getButton());
+
     }
 
     public void mouseDragged(MouseEvent evt) {
