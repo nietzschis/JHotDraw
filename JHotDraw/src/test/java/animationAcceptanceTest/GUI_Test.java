@@ -26,13 +26,15 @@ public class GUI_Test {
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
         app.launch(null);
-        Thread.sleep(5000);
+        while(app.getFrame() == null) {
+            Thread.sleep(1000);
+        }
         window = new FrameFixture(app.getFrame());
     }
-    @Ignore
+    
     @Test
     public void test() {
         window.show();
-        window.button("addFrame").click();
+        window.button("addFrameButton").click();
     }
 }

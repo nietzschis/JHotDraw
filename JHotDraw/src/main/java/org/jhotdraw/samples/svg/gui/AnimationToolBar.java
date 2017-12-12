@@ -68,6 +68,7 @@ public class AnimationToolBar extends AbstractToolBar {
                 btn = new JButton(new AnimationTool(ADD_FRAME_TOOL));
                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                 labels.configureToolBarButton(btn, "addFrame");
+                btn.setName("addFrameButton");
                 gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.gridy = 0;
