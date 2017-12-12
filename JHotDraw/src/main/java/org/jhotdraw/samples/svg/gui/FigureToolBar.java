@@ -21,6 +21,7 @@ import org.jhotdraw.util.*;
 
 import java.awt.*;
 import javax.swing.*;
+import static javax.swing.SwingConstants.SOUTH_EAST;
 import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.SliderUI;
 import javax.swing.text.DefaultFormatter;
@@ -102,6 +103,34 @@ public class FigureToolBar extends AbstractToolBar {
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
+                    
+                    
+                        // Contrast slider
+                    JPopupButton contrastPopupButton = new JPopupButton();
+                    contrastPopupButton.setName("abc");
+                    JAttributeSlider contrastSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 100);
+                    
+                    contrastPopupButton.add(contrastSlider);
+                    labels.configureToolBarButton(contrastPopupButton, "attribute.figureContrast");
+                    contrastPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(contrastPopupButton));
+                    contrastPopupButton.setIcon(
+                            new SelectionOpacityIcon(editor, CONTRAST, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.figureContrast.icon")),
+                            new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
+                    contrastPopupButton.setPopupAnchor(SOUTH_EAST);
+                  
+                 
+                   // new SelectionComponentRepainter(editor, opacityPopupButton2);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 3;
+                    gbc.gridy = 0;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    
+                    gbc.weighty=1;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(contrastPopupButton, gbc);
+                    contrastSlider.setUI((SliderUI) PaletteSliderUI.createUI(contrastSlider));
+                    contrastSlider.setScaleFactor(100d);
+                    new FigureAttributeEditorHandler<Double>(CONTRAST, contrastSlider, editor);
                 }
                 break;
 
