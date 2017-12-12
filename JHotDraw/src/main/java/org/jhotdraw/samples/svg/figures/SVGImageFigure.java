@@ -80,12 +80,17 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     private String temp = "d";
 
     public enum Strings {
-    CONTRAST, OPACITY
-}
-  
+        CONTRAST, OPACITY
+    }
+
+    private BufferedImage image;
+
+    private Graphics2D gx;
+
+    private Composite savedComposite;
+    private Shape shape;
+
     //Contrast Ende
-  
-    
     /**
      * Creates a new instance.
      */
@@ -115,48 +120,39 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         //sets the contrast
         double contrast = CONTRAST.get(this);
         newContrast(CONTRAST, contrast, g);
- 
+
     }
-    
-    
-    
-    
 
     public void newContrast(AttributeKey attribute, double newContrast, Graphics2D g) {
 
         if (newContrast != 0d) {
 
-            Composite savedComposite = g.getComposite();
+            savedComposite = g.getComposite();
             if (newContrast != 1d) {
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) newContrast));
             }
 
-            BufferedImage image = getBufferedImage();////
-           /// System.out.println(Strings.contrast);
-            if(attribute.getKey().equals(Strings.CONTRAST.toString().toLowerCase())){
+            image = getBufferedImage();////
+            /// System.out.println(Strings.contrast);
+            if (attribute.getKey().equals(Strings.CONTRAST.toString().toLowerCase())) {
                 image = rescaleImage(image, newContrast);
-              
             }
+
             if (image != null) {
                 if (TRANSFORM.get(this) != null) {
                     // FIXME - We should cache the transformed image.
                     //    Drawing a transformed image appears to be very slow.
-                    Graphics2D gx = (Graphics2D) g.create();
-
+                    transform(g);
                     // Use same rendering hints like parent graphics
                     //  gx.setRenderingHints(g.getRenderingHints());
-                    gx.transform(TRANSFORM.get(this));
-                    gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
-                    gx.dispose();
+
                 } else {
 
                     g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                 }
             } else {
-                Shape shape = getTransformedShape();
-                g.setColor(Color.red);
-                g.setStroke(new BasicStroke());
-                g.draw(shape);
+                
+             drawShape(g);
             }
 
             if (newContrast != 1d) {
@@ -166,6 +162,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
 
     }
 
+    //Contrast
     public BufferedImage rescaleImage(BufferedImage image, double contrastValue) {
         op = new RescaleOp(((float) contrastValue / 100), 0, null);
         image = op.filter(image, null);
@@ -173,6 +170,30 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         return image;
     }
 
+    //transform the Graphic component if the image is not null
+    public void transform(Graphics2D g) {
+        gx = (Graphics2D) g.create();
+        gx.transform(TRANSFORM.get(this));
+        gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
+        gx.dispose();
+    }
+    
+    //Draws the shape
+    public void drawShape(Graphics2D gx){
+        shape = getTransformedShape();
+                gx.setColor(Color.red);
+                gx.setStroke(new BasicStroke());
+                gx.draw(shape);
+    }
+  
+    
+
+    //Contrast End
+    
+    
+    
+    
+    
     protected void drawFill(Graphics2D g) {
 
     }

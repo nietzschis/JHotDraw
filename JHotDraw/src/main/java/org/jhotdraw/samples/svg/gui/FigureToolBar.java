@@ -106,16 +106,17 @@ public class FigureToolBar extends AbstractToolBar {
                     
                     
                         // Contrast slider
-                    JPopupButton opacityPopupButton2 = new JPopupButton();
-                  
+                    JPopupButton contrastPopupButton = new JPopupButton();
+                    contrastPopupButton.setName("abc");
                     JAttributeSlider contrastSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 100);
-                    opacityPopupButton2.add(contrastSlider);
-                    labels.configureToolBarButton(opacityPopupButton2, "attribute.figureContrast");
-                    opacityPopupButton2.setUI((PaletteButtonUI) PaletteButtonUI.createUI(opacityPopupButton2));
-                    opacityPopupButton2.setIcon(
+                    
+                    contrastPopupButton.add(contrastSlider);
+                    labels.configureToolBarButton(contrastPopupButton, "attribute.figureContrast");
+                    contrastPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(contrastPopupButton));
+                    contrastPopupButton.setIcon(
                             new SelectionOpacityIcon(editor, CONTRAST, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.figureContrast.icon")),
                             new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
-                    opacityPopupButton2.setPopupAnchor(SOUTH_EAST);
+                    contrastPopupButton.setPopupAnchor(SOUTH_EAST);
                   
                  
                    // new SelectionComponentRepainter(editor, opacityPopupButton2);
@@ -126,7 +127,7 @@ public class FigureToolBar extends AbstractToolBar {
                     
                     gbc.weighty=1;
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-                    p.add(opacityPopupButton2, gbc);
+                    p.add(contrastPopupButton, gbc);
                     contrastSlider.setUI((SliderUI) PaletteSliderUI.createUI(contrastSlider));
                     contrastSlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(CONTRAST, contrastSlider, editor);

@@ -85,7 +85,6 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 0, 0, 0);
-        btn.setName("Rectangle");
         p.add(btn, gbc);
         
         btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGTriangleFigure(), attributes), "createTriangle", labels);

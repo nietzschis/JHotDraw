@@ -1,9 +1,12 @@
 package org.jhotdraw.samples.svg.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
+import org.jhotdraw.gui.JPopupButton;
 import org.jhotdraw.samples.svg.Main;
 import org.jhotdraw.samples.svg.SVGApplicationModel;
 import org.junit.After;
@@ -32,29 +35,44 @@ public class FigureToolBarTestGui_AssertJ_Swing {
                 + "This software is licensed under LGPL or Creative Commons 3.0 BY");
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
 
-        app = new DefaultSDIApplication();
-        app.setModel(model);
+       app = new DefaultSDIApplication();
+        
+       
+       app.setModel(model);
         app.launch(null);
-        app.init();
+          while (app.getFrame() == null) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FigureToolBarTestGui_AssertJ_Swing.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            window = new FrameFixture(app.getFrame());
+        }
 
-        DefaultSDIApplication frame = GuiActionRunner.execute(() -> new DefaultSDIApplication());
-
-        window = new FrameFixture(app.getFrame());
-        window.show(); // shows the frame to test
-
+  
     }
 
     @Test
     public void sliderTest() {
+        window.show();
+        
+       
+            
         assertNotNull(app.getFrame());
         assertNotNull(window);
-        //assertNotNull(window.slider("test111"));
+        
+//           assertNotNull(window.button("abc"));
+//            assertNotNull(window.slider("cde"));
+            assertNotNull(window.button("rec"));
+        //  assertNotNull(window.slider("test111"));
     }
 
     @After
     public void tearDown() {
         app = null;
         window = null;
+        assertNull(app);
+        assertNull(window);
 
     }
 
