@@ -223,7 +223,6 @@ public class SVGDrawingPanel extends JPanel {
         actionToolBar = new org.jhotdraw.samples.svg.gui.ActionsToolBar();
         fillToolBar = new org.jhotdraw.samples.svg.gui.FillToolBar();
         strokeToolBar = new org.jhotdraw.samples.svg.gui.StrokeToolBar();
-        graphToolBar = new org.jhotdraw.samples.svg.gui.GraphToolBar();
         fontToolBar = new org.jhotdraw.samples.svg.gui.FontToolBar();
         arrangeToolBar = new org.jhotdraw.samples.svg.gui.ArrangeToolBar();
         alignToolBar = new org.jhotdraw.samples.svg.gui.AlignToolBar();
@@ -257,11 +256,9 @@ public class SVGDrawingPanel extends JPanel {
         toolsPane.add(fillToolBar);
 
         strokeToolBar.setMargin(new java.awt.Insets(0, 10, 0, 0));
-        graphToolBar.setMargin(new java.awt.Insets(0, 10, 0, 0));
         toolsPane.add(strokeToolBar);
         toolsPane.add(fontToolBar);
         toolsPane.add(arrangeToolBar);
-        toolsPane.add(graphToolBar);
         toolsPane.add(alignToolBar);
         toolsPane.add(figureToolBar);
         toolsPane.add(linkToolBar);
@@ -298,7 +295,6 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.samples.svg.gui.RecordingToolBar recordingToolBar1;
     private javax.swing.JScrollPane scrollPane;
     private org.jhotdraw.samples.svg.gui.StrokeToolBar strokeToolBar;
-    private org.jhotdraw.samples.svg.gui.GraphToolBar graphToolBar;
     private javax.swing.ButtonGroup toolButtonGroup;
     private javax.swing.JPanel toolsPane;
     private javax.swing.JPanel toolsPanel;

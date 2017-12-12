@@ -93,38 +93,18 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
         });
 
         aTextField.setText("0");
-        aTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("<html>x<sup>2</sup>+</html>");
 
         bTextField.setText("0");
-        bTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel3.setText("x+");
 
         cTextField.setText("0");
-        cTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cTextFieldActionPerformed(evt);
-            }
-        });
 
         lengthLabel.setText(labels.getString("label.graph.length"));
 
         lengthTextField.setText("0");
-        lengthTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lengthTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel5.setText(labels.getString("label.graph.quadratic.title"));
@@ -215,27 +195,11 @@ public class QuadraticGraphPanel extends AbstractFunctionPanel {
         }
     }//GEN-LAST:event_OkButtonActionPerformed
 
-    private void aTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_aTextFieldActionPerformed
-
-    private void cTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cTextFieldActionPerformed
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         function = null;
         notDone = false;
         close();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void bTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bTextFieldActionPerformed
-
-    private void lengthTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lengthTextFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

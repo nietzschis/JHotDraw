@@ -92,11 +92,6 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
         });
 
         aTextField.setText("0");
-        aTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("x+");
 
@@ -194,10 +189,6 @@ public class LinearGraphPanel extends AbstractFunctionPanel {
         notDone = false;
         close();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void aTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_aTextFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
