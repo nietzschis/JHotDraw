@@ -241,7 +241,6 @@ public class ButtonFactory {
         a.add(null); // separator
 
         a.add(new EdgeDetectionAction(editor));
-
         return a;
     }
 
@@ -437,9 +436,65 @@ public class ButtonFactory {
         zoomPopupButton.setFocusable(false);
         return zoomPopupButton;
     }
+    
+    public static AbstractButton createWorkspaceBGButton(DrawingView view) {
+        return createWorkspaceBGButton(view, new String[]{
+                "Black", "White", "Gray"
+        });
+    }
 
+    public static AbstractButton createWorkspaceBGButton(final DrawingView view, String[] colors) {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+
+        final JPopupButton BGPopupButton = new JPopupButton();
+
+        labels.configureToolBarButton(BGPopupButton, "view.outerBGColor");
+        BGPopupButton.setFocusable(false);
+        BGPopupButton.setText(view.getWorkspaceBG().toString());
+
+        view.addPropertyChangeListener(new PropertyChangeListener() {
+
+<<<<<<< HEAD
     public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor) {
         addColorButtonsTo(toolbar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
+=======
+            public void propertyChange(PropertyChangeEvent evt) {
+                // String constants are interned
+                if (evt.getPropertyName() == "workspaceBG") {
+                    BGPopupButton.setText(view.getWorkspaceBG().toString());
+                }
+            }
+        });
+        for (int i = 0; i < colors.length; i++) {
+            BGPopupButton.add(new WorkspaceBGAction(view, colors[i], BGPopupButton));
+        }
+        BGPopupButton.setFocusable(false);
+        return BGPopupButton;
+    }
+    
+    /**
+     * Creates toolbar buttons and adds them to the specified JToolBar
+     */
+    public static void addAttributesButtonsTo(JToolBar bar, DrawingEditor editor) {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        JButton b;
+
+        b = bar.add(new PickAttributesAction(editor));
+        b.setFocusable(false);
+        b = bar.add(new ApplyAttributesAction(editor));
+        b.setFocusable(false);
+        bar.addSeparator();
+
+        addColorButtonsTo(bar, editor);
+        bar.addSeparator();
+        addStrokeButtonsTo(bar, editor);
+        bar.addSeparator();
+        addFontButtonsTo(bar, editor);
+    }
+
+    public static void addColorButtonsTo(JToolBar bar, DrawingEditor editor) {
+        addColorButtonsTo(bar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
+>>>>>>> refs/remotes/origin/master
     }
 
     public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor,
