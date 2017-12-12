@@ -1248,79 +1248,79 @@ public class ButtonFactory {
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.center"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.inside"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.CENTER);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.outside"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.centerFilled"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.insideFilled"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.FULL);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.outsideFilled"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.CENTER);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.centerUnfilled"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.INSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.insideUnfilled"),
                         null));
-        attr = new HashMap<AttributeKey, Object>();
-        attr.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
-        attr.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(STROKE_PLACEMENT, AttributeKeys.StrokePlacement.OUTSIDE);
+        attributes.put(FILL_UNDER_STROKE, AttributeKeys.Underfill.NONE);
         strokePlacementPopupButton.add(
                 new AttributeAction(
                         editor,
-                        attr,
+                        attributes,
                         labels.getString("attribute.strokePlacement.outsideUnfilled"),
                         null));
 
