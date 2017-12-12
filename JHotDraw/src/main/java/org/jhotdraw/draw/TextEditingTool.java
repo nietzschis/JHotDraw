@@ -18,6 +18,7 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoableEdit;
+import org.jhotdraw.samples.svg.figures.SVGPathFigure;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -84,7 +85,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
             final String oldText = typingTarget.getText();
             final String newText = textField.getText();
 
-            if (newText.length() > 0) {
+            if ((newText.length() > 0) || typingTarget instanceof SVGPathFigure) {
                 typingTarget.setText(newText);
             }
             UndoableEdit edit = new AbstractUndoableEdit() {
