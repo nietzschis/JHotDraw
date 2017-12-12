@@ -75,8 +75,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     /** Creates a new instance. */
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure() {
-        add(new SVGBezierFigure());
-        SVGAttributeKeys.setDefaults(this);
+        this(false);
     }
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure(boolean isEmpty) {
