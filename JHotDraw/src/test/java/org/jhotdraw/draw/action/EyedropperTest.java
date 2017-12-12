@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import javax.swing.AbstractButton;
 import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.draw.AttributeKeys;
-import org.jhotdraw.draw.DefaultDrawing;
+import org.jhotdraw.draw.SimpleDrawing;
 import org.jhotdraw.draw.DefaultDrawingEditor;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.Drawing;
@@ -44,7 +44,7 @@ public class EyedropperTest {
         editor = new DefaultDrawingEditor();
         drawingView = new DefaultDrawingView();
         popup = new JPopupButton();
-        drawing = new DefaultDrawing();
+        drawing = new SimpleDrawing();
         eyedropper = new EyedropperAction(editor, popup);
         ButtonFactory.eyedropped.clear();
 
