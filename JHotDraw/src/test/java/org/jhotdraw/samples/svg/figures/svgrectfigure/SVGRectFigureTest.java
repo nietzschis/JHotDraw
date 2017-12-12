@@ -1,4 +1,4 @@
-package org.jhotdraw.samples.svg.figures;
+package org.jhotdraw.samples.svg.figures.svgrectfigure;
 
 import org.jhotdraw.geom.Dimension2DDouble;
 import org.junit.Before;
@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import org.jhotdraw.samples.svg.figures.SVGRectFigure;
 
 public class SVGRectFigureTest {
 
