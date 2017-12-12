@@ -168,8 +168,6 @@ public class DelegationSelectionTool extends SelectionTool {
         }
         super.mouseClicked(evt);
 
-        //handleClick(evt);
-
         if (!evt.isConsumed()) {
             if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
                 handleDoubleClick(evt);
@@ -272,20 +270,6 @@ public class DelegationSelectionTool extends SelectionTool {
             }
         }
         menu.show(c, p.x, p.y);
-    }
-
-    protected void handleClick(MouseEvent evt) {
-        DrawingView currentView = getView();
-        Point currentPosition = new Point(evt.getX(), evt.getY());
-        
-        Point2D.Double twoDPosition = viewToDrawing(currentPosition);
-
-        Figure figureToFind = currentView.findFigure(currentPosition);
-
-        if (figureToFind == null)
-            return;
-
-        //figureToFind.handleMouseClick(twoDPosition, evt, currentView);
     }
 
     /**
