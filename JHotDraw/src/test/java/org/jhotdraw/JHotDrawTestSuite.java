@@ -1,5 +1,7 @@
 package org.jhotdraw;
 
+import animationAcceptanceTest.AcceptenceTest;
+import animationAcceptanceTest.GUI_Test;
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
@@ -15,6 +17,8 @@ import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
 import org.jhotdraw.draw.SelectionTest;
 import org.jhotdraw.app.action.watermark.WatermarkTest;
+import org.jhotdraw.draw.AnimationTest;
+import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
@@ -74,6 +78,10 @@ import org.junit.runners.Suite;
     WatermarkTest.class,
     SVGRoundedRectangleJGiven.class,
     SVGRoundedRectangleTest.class,
+    AcceptenceTest.class,
+    GUI_Test.class,
+    AnimationTest.class,
+    AnimationToolTest.class,
     FileBackupSaverTest.class,
     FileBackupSaverAcceptanceTest.class})
 
