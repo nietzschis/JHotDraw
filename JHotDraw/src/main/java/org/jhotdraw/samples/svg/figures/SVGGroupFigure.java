@@ -13,14 +13,20 @@
  */
 package org.jhotdraw.samples.svg.figures;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.xml.*;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+import org.jhotdraw.xml.DOMInput;
+import org.jhotdraw.xml.DOMOutput;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
@@ -178,5 +184,10 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
         SVGGroupFigure that = (SVGGroupFigure) super.clone();
         that.attributes = new HashMap<AttributeKey, Object>(this.attributes);
         return that;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
     }
 }

@@ -14,8 +14,10 @@
 
 package org.jhotdraw.draw;
 
-import java.awt.geom.*;
-import org.jhotdraw.geom.*;
+import org.jhotdraw.geom.Geom;
+
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 /**
  * A Figure that groups a collection of figures.
  *
@@ -31,7 +33,12 @@ public class GroupFigure extends AbstractCompositeFigure {
     public boolean canConnect() {
         return true;
     }
-    
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     /**
      * This is a default implementation that chops the point at the rectangle
      * returned by getBounds() of the figure.

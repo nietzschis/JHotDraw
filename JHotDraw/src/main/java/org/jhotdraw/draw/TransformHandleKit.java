@@ -13,11 +13,15 @@
  */
 package org.jhotdraw.draw;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
 import org.jhotdraw.util.ResourceBundleUtil;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+
 import static org.jhotdraw.draw.HandleAttributeKeys.*;
 
 /**
