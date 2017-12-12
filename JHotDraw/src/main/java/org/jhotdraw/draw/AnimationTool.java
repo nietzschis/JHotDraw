@@ -19,7 +19,7 @@ public class AnimationTool extends AbstractAction {
     
     protected AnimationToolDefinition tool;
     private boolean stopPlaying;
-    private int framesPlayed;
+    private static int framesPlayed;
     private final int FPS_24 = 24;
     Animation animation;
     
@@ -105,5 +105,9 @@ public class AnimationTool extends AbstractAction {
     
     public AnimationToolDefinition getTool() {
         return tool;
+    }
+    
+    public static int getFramesPlayed() {
+        return framesPlayed;
     }
 }
