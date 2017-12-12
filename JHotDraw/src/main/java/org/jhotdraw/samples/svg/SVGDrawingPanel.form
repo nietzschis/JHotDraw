@@ -121,6 +121,7 @@
                 <Component class="org.jhotdraw.samples.svg.gui.ViewToolBar" name="viewToolBar">
                 </Component>
                 <Container class="org.jhotdraw.samples.svg.gui.AnimationToolBar" name="animationToolBar1">
+                <Container class="org.jhotdraw.samples.svg.gui.RecordingToolBar" name="recordingToolBar1">
                   <Properties>
                     <Property name="rollover" type="boolean" value="true"/>
                   </Properties>

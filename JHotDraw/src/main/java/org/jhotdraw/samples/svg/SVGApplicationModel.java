@@ -14,6 +14,10 @@
 package org.jhotdraw.samples.svg;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
+import org.jhotdraw.app.Application;
+import org.jhotdraw.app.DefaultApplicationModel;
+import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.*;
 import org.jhotdraw.samples.svg.action.*;
 import org.jhotdraw.samples.svg.figures.*;
@@ -21,8 +25,27 @@ import org.jhotdraw.util.*;
 import java.util.*;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.app.menu.CollaborationMenu;
+import org.jhotdraw.app.menu.EditMenu;
+import org.jhotdraw.app.menu.FileMenu;
+import org.jhotdraw.app.menu.HelpMenu;
+import org.jhotdraw.app.menu.OpenRecentMenu;
+import org.jhotdraw.app.menu.ViewMenu;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.draw.DefaultDrawingEditor;
+import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.GridConstrainer;
 import org.jhotdraw.draw.action.*;
+import org.jhotdraw.samples.svg.action.CombineAction;
+import org.jhotdraw.samples.svg.action.SplitAction;
+import org.jhotdraw.samples.svg.action.ViewSourceAction;
+import org.jhotdraw.samples.svg.figures.SVGGroupFigure;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * SVGApplicationModel.
@@ -89,6 +112,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
         LinkedList<Action> a = new LinkedList<Action>();
         a.add(new DuplicateAction());
+        a.add(new SplitSegmentAction(editor));
 
         a.add(null); // separator
         a.add(new GroupAction(editor, new SVGGroupFigure()));
@@ -106,53 +130,21 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         return a;
     }
 
+    /**
+     * Where all the menu points are created.
+     * To create a new menu, just add it to the mb list
+     * @return the menus to be drawn
+     */
     @Override
     public java.util.List<JMenu> createMenus(Application a, View pr) {
-        LinkedList<JMenu> mb = new LinkedList<JMenu>();
-        mb.add(createEditMenu(a, pr));
-        mb.add(createViewMenu(a, pr));
+        LinkedList<JMenu> mb = new LinkedList<>();
+        mb.add(new FileMenu(this, new OpenRecentMenu(this, a, pr)));
+        mb.add(new EditMenu(this, pr));
+        mb.add(new CollaborationMenu(this));
+        mb.add(new ViewMenu(this));
+        mb.add(new HelpMenu(this));
+        
         return mb;
-    }
-
-    protected JMenu createViewMenu(Application a, View p) {
-        JMenu m, m2;
-        JMenuItem mi;
-        JRadioButtonMenuItem rbmi;
-        JCheckBoxMenuItem cbmi;
-        ButtonGroup group;
-        Action action;
-
-        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-        ResourceBundleUtil svgLabels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-
-        m = new JMenu();
-        appLabels.configureMenu(m, "view");
-        m.add(getAction(ViewSourceAction.ID));
-
-        return m;
-    }
-
-    @Override
-    protected JMenu createEditMenu(Application a, View p) {
-        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-
-        JMenu m = super.createEditMenu(a, p);
-        JMenuItem mi;
-
-        mi = m.add(getAction(ClearSelectionAction.ID));
-        mi.setIcon(null);
-
-        if (p != null) {
-            mi = m.add(p.getAction(SelectSameAction.ID));
-        } else {
-            mi = new JMenuItem();
-            drawLabels.configureMenu(mi, SelectSameAction.ID);
-            mi.setEnabled(false);
-            m.add(mi);
-        }
-        mi.setIcon(null);
-        return m;
     }
 
     /**

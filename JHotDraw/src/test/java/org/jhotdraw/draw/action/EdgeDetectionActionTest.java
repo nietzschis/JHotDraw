@@ -1,6 +1,5 @@
 package org.jhotdraw.draw.action;
 
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -66,10 +65,10 @@ public class EdgeDetectionActionTest {
         fail("The test case is a prototype.");
     }
     */
-    @Ignore
+
     @Test
     public void testEdgeDetection() {
-        BufferedImage img = loadTestImage();
+        BufferedImage img = loadTestImage(getClass());
         
         Collection figures = new LinkedList<Figure>();
         SVGImageFigure f = new SVGImageFigure();
@@ -90,8 +89,8 @@ public class EdgeDetectionActionTest {
         }
     }
     
-    public BufferedImage loadTestImage() {
-        URL url = getClass().getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");
+    public static BufferedImage loadTestImage(Class c) {
+        URL url = c.getClassLoader().getResource("org/jhotdraw/draw/action/images/tree.png");
         String fileName = url.getPath();
         BufferedImage img = null;
         try {
