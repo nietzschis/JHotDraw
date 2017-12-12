@@ -2,6 +2,7 @@ package org.jhotdraw;
 
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
+import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
 import org.jhotdraw.draw.action.ButtonFactoryTest;
 import org.jhotdraw.draw.action.MagnifyingGlassAcceptanceTest;
@@ -39,7 +40,7 @@ import org.junit.runners.Suite;
                     SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
                     RecordingToolTest.class, RecordingToolGUITest.class,
                     SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
-                    ViewSourceActionJGivenTest.class, SVGInputFormatTest.class})
+                    ViewSourceActionJGivenTest.class, SVGInputFormatTest.class, WatermarkTest.class})
 public class JHotDrawTestSuite {
 
     @BeforeClass

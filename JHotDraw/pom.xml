@@ -87,5 +87,11 @@
             <artifactId>nanoxml</artifactId>
             <version>2.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>org-apache-commons-io</artifactId>
+            <version>RELEASE82</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>   
 </project>

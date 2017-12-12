@@ -33,6 +33,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.app.*;
@@ -465,6 +466,36 @@ public class SVGView extends AbstractView implements ExportableView {
 
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());
+        
+        if (watermarkImage != null && (format.getFileExtension().equals("png") || format.getFileExtension().equals("jpg") || format.getFileExtension().equals("gif"))) {
+            try {
+                addImageWatermark(f, format, watermarkImage, new File(f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_watermarked." + format.getFileExtension()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    protected BufferedImage watermarkImage = null;
+    
+    @FeatureEntryPoint(JHotDrawFeatures.IMPORT_WATERMARK)
+    public void setWatermark(BufferedImage watermark) {
+        this.watermarkImage = watermark;
+    }
+
+    @Override
+    public void addImageWatermark(File sourceFile, OutputFormat format, BufferedImage watermarkImage, final File finalFile) throws IOException {
+
+        BufferedImage viewImage = ImageIO.read(sourceFile);
+
+        Graphics2D g2d = (Graphics2D) viewImage.getGraphics();
+        AlphaComposite alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+        g2d.setComposite(alpha);
+
+        g2d.drawImage(watermarkImage, 0, 0, viewImage.getWidth(), viewImage.getHeight(), null);
+
+        ImageIO.write(viewImage, format.getFileExtension(), finalFile);
+        g2d.dispose();
     }
 
 
