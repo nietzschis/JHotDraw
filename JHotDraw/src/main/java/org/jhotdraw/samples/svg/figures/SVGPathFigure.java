@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import org.jhotdraw.geom.Insets2D;
 
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 import org.jhotdraw.text.StartLineTextStrategy;
