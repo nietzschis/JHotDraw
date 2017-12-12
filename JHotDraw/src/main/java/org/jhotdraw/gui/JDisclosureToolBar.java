@@ -92,11 +92,12 @@ public class JDisclosureToolBar extends JToolBar {
         GridBagConstraints gbc = new GridBagConstraints();
         if (c != null) {
             gbc = new GridBagConstraints();
+            gbc.gridy = 10;
             gbc.gridx = 1;
             gbc.weightx = 1d;
             gbc.weighty = 1d;
             gbc.fill = GridBagConstraints.BOTH;
-            gbc.anchor = GridBagConstraints.WEST;
+            gbc.anchor = GridBagConstraints.NORTHWEST;
             add(c, gbc);
             gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -104,7 +105,7 @@ public class JDisclosureToolBar extends JToolBar {
             gbc.insets = new Insets(0, 1, 0, 1);
             gbc.weighty = 1d;
             gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.SOUTHWEST;
+            gbc.anchor = GridBagConstraints.NORTHWEST;
             add(disclosureButton, gbc);
         } else {
             gbc = new GridBagConstraints();
@@ -112,7 +113,7 @@ public class JDisclosureToolBar extends JToolBar {
             gbc.weightx = 1d;
             gbc.weighty = 1d;
             gbc.fill = GridBagConstraints.NONE;
-            gbc.anchor = GridBagConstraints.SOUTHWEST;
+            gbc.anchor = GridBagConstraints.NORTHWEST;
             gbc.insets = new Insets(0, 1, 0, 1);
             add(disclosureButton, gbc);
         }
