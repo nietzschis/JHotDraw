@@ -29,7 +29,7 @@ import org.jhotdraw.samples.svg.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.xml.*;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
-import org.jhotdraw.text.BezierText;
+import org.jhotdraw.text.StartLineTextStrategy;
 
 /**
  * SVGPath is a composite Figure which contains one or more
@@ -182,8 +182,8 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         for (Figure child : getChildren()) {
             SVGBezierFigure b = (SVGBezierFigure) child;
             cachedPath.append(b.getBezierPath(), false);
-            BezierText t = new BezierText(getText(), getFont());
-            cachedTextPath.append(t.pathText(b.getBezierPath()), false);
+            StartLineTextStrategy t = new StartLineTextStrategy(getText(), getFont());
+            cachedTextPath.append(t.textShape(b.getBezierPath()), false);
             }
     }
     
@@ -206,8 +206,8 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     protected GeneralPath getTextPath(){
         if (cachedTextPath==null){
             cachedTextPath= new GeneralPath();
-            BezierText t = new BezierText(getText(), getFont());
-            cachedTextPath.append(t.pathText(getPath()), false);
+            StartLineTextStrategy t = new StartLineTextStrategy(getText(), getFont());
+            cachedTextPath.append(t.textShape(getPath()), false);
         }
         return cachedTextPath;
     }
