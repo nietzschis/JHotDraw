@@ -54,12 +54,4 @@ public class SearchActionTest {
         assertTrue(app.getModel().getAction(AboutAction.ID).getClass().equals(app.getModel().getActionDynamicly(AboutAction.class).getClass()));
     }
     
-//    @Test
-//    public void testAppSearchMenu(){
-//        actions.add(app.getModel().getActionDynamicly(SearchAction.class));
-//        assertFalse(actions.isEmpty());
-//        assertTrue(actions.size() == 3);
-//        app.
-//    }
-    
 }

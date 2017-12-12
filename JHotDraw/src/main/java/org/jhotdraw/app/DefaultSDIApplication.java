@@ -60,7 +60,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     private JComboBox<Action> combobox = new JComboBox();
     private JList<Action> list = new JList<>();
     private JMenu searchMenu = new JMenu("Search results:");
-    JTextField textField = new JTextField();
+    private JTextField textField = new JTextField();
     private JFrame frame;
 
     /**
@@ -339,5 +339,9 @@ public class DefaultSDIApplication extends AbstractApplication {
     @Override
     public String getSearchText() {
         return textField.getText();
+    }
+    
+    public JTextField getTextField(){
+        return textField;
     }
 }
