@@ -1,16 +1,4 @@
-/*
- * @(#)SVGEllipse.java  2.1  2009-04-17
- *
- * Copyright (c) 1996-2009 by the original authors of JHotDraw
- * and all its contributors.
- * All rights reserved.
- *
- * The copyright of this software is owned by the authors and  
- * contributors of the JHotDraw project ("the copyright holders").  
- * You may not use, copy or modify this software, except in  
- * accordance with the license agreement you entered into with  
- * the copyright holders. For details see accompanying license terms. 
- */
+
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
@@ -24,34 +12,23 @@ import org.jhotdraw.geom.*;
 import org.jhotdraw.samples.svg.*;
 
 /**
- * SVGEllipse represents a SVG roundedRectangle and a SVG circle element.
  *
- * @author Werner Randelshofer
- * @version 2.1 2009-04-17 Method contains() takes now into account
- * whether the figure is filled.
- * <br>2.0.3 Don't draw roundedRectangle if widht or height is 0.
- * <br>2.0.2 2008-03-20 Fixed contains() method.
- * <br>2.0 2007-04-14 Adapted for new AttributeKeys.TRANSFORM support.
- * <br>1.0 July 8, 2006 Created.
+ * @author Jonas
  */
     public class SVGRoundedRectangle extends SVGAttributedFigure implements SVGFigure {
 
     private RoundRectangle2D.Double roundedRectangle;
-    /**
-     * This is used to perform faster drawing and hit testing.
-     */
+
     private transient Shape cachedTransformedShape;
-    /**
-     * This is used to perform faster hit testing.
-     */
+
     private transient Shape cachedHitShape;
 
-    /** Creates a new instance. */
+    // Creates a new instance
     public SVGRoundedRectangle() {
         this(0, 0, 0, 0, 0, 0);
     }
 
-    @FeatureEntryPoint(JHotDrawFeatures.ELLIPSE_TOOL)
+
     public SVGRoundedRectangle(double x, double y, double width, double height, double arcWidth, double arcHeigth) {
         roundedRectangle = new RoundRectangle2D.Double(x, y, width, height, arcWidth, arcHeigth);
         SVGAttributeKeys.setDefaults(this);
@@ -70,7 +47,6 @@ import org.jhotdraw.samples.svg.*;
             g.draw(roundedRectangle);
         }
     }
-    // SHAPE AND BOUNDS
 
     public double getX() {
         return roundedRectangle.x;
@@ -155,11 +131,7 @@ import org.jhotdraw.samples.svg.*;
         invalidate();
     }
 
-    /**
-     * Transforms the figure.
-     *
-     * @param tx the transformation.
-     */
+   
     @Override
     public void transform(AffineTransform tx) {
         if (TRANSFORM.get(this) != null ||
@@ -231,7 +203,6 @@ import org.jhotdraw.samples.svg.*;
         }
         return handles;
     }
-    // CONNECTING
 
     public boolean canConnect() {
         return false; // SVG does not support connecting
@@ -244,8 +215,7 @@ import org.jhotdraw.samples.svg.*;
     public Connector findCompatibleConnector(Connector c, boolean isStartConnector) {
         return null; // SVG does not support connectors
     }
-    // COMPOSITE FIGURES
-    // CLONING
+
 
     public SVGRoundedRectangle clone() {
         SVGRoundedRectangle that = (SVGRoundedRectangle) super.clone();
@@ -254,7 +224,7 @@ import org.jhotdraw.samples.svg.*;
         return that;
     }
 
-    // EVENT HANDLING
+
     public boolean isEmpty() {
         Rectangle2D.Double b = getBounds();
         return b.width <= 0 || b.height <= 0;
