@@ -125,30 +125,34 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
         
         if(SHADOWS.get(this) > 0d){
-            drawShadow(g);
+            //SVGRectFigure roundrect = roundrect;
+            //pathShadow(roundrect.x,roundrect.y,roundrect.width,roundrect.height);
+            drawShadow(g ,pathShadow(roundrect.x,roundrect.y,roundrect.width,roundrect.height));
         }        
     }
     
-    public void drawShadow(Graphics2D g){
+    public GeneralPath pathShadow(double x, double y, double width, double height){
     
         GeneralPath p = new GeneralPath();
         
         double shadowWidth = SHADOWS.get(this);
 
-        p.moveTo(roundrect.x /*+ shadowWidth*/, roundrect.y); //PLACEMENT
-        p.lineTo(roundrect.x + shadowWidth, roundrect.y - shadowWidth); //UP
-        p.lineTo(roundrect.x + roundrect.width + shadowWidth, roundrect.y - shadowWidth); //RIGHT
-        p.lineTo(roundrect.x + roundrect.width + shadowWidth, roundrect.y + roundrect.height - shadowWidth); //DOWN
-        p.lineTo(roundrect.x + roundrect.width, roundrect.y + roundrect.height /* - shadowWidth*/); // LEFT
-        p.lineTo(roundrect.x + roundrect.width, roundrect.y ); //UP
-        p.lineTo(roundrect.x, roundrect.y); // LEFT            
+        p.moveTo(x /*+ shadowWidth*/, y); //PLACEMENT
+        p.lineTo(x + shadowWidth, y - shadowWidth); //UP
+        p.lineTo(x + width + shadowWidth, y - shadowWidth); //RIGHT
+        p.lineTo(x + width + shadowWidth, y + height - shadowWidth); //DOWN
+        p.lineTo(x + width, y + height /* - shadowWidth*/); // LEFT
+        p.lineTo(x + width, y ); //UP
+        p.lineTo(x, y); // LEFT            
         p.closePath();
-
-        g.draw(p);
         
-        g.fill(p);
+        return p;
 
+    }
     
+    public void drawShadow(Graphics2D g, GeneralPath p){
+        g.draw(p);
+        g.fill(p);
     }
 
     // SHAPE AND BOUNDS
