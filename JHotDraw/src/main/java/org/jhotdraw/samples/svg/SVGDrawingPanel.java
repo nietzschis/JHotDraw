@@ -188,7 +188,6 @@ public class SVGDrawingPanel extends JPanel {
         alignToolBar.setEditor(editor);
         arrangeToolBar.setEditor(editor);
         fontToolBar.setEditor(editor);
-        textFillToolBar.setEditor(editor);
         figureToolBar.setEditor(editor);
         linkToolBar.setEditor(editor);
         DrawingView temp = editor.getActiveView();
@@ -219,7 +218,6 @@ public class SVGDrawingPanel extends JPanel {
         fillToolBar = new org.jhotdraw.samples.svg.gui.FillToolBar();
         strokeToolBar = new org.jhotdraw.samples.svg.gui.StrokeToolBar();
         fontToolBar = new org.jhotdraw.samples.svg.gui.FontToolBar();
-        textFillToolBar = new org.jhotdraw.samples.svg.gui.TextFillToolBar();
         arrangeToolBar = new org.jhotdraw.samples.svg.gui.ArrangeToolBar();
         alignToolBar = new org.jhotdraw.samples.svg.gui.AlignToolBar();
         figureToolBar = new org.jhotdraw.samples.svg.gui.FigureToolBar();
@@ -253,10 +251,6 @@ public class SVGDrawingPanel extends JPanel {
         strokeToolBar.setMargin(new java.awt.Insets(0, 10, 0, 0));
         toolsPane.add(strokeToolBar);
         toolsPane.add(fontToolBar);
-
-        textFillToolBar.setMinimumSize(new java.awt.Dimension(18, 14));
-        textFillToolBar.setPreferredSize(new java.awt.Dimension(18, 14));
-        toolsPane.add(textFillToolBar);
         toolsPane.add(arrangeToolBar);
         toolsPane.add(alignToolBar);
         toolsPane.add(figureToolBar);
@@ -290,7 +284,6 @@ public class SVGDrawingPanel extends JPanel {
     private org.jhotdraw.samples.svg.gui.LinkToolBar linkToolBar;
     private javax.swing.JScrollPane scrollPane;
     private org.jhotdraw.samples.svg.gui.StrokeToolBar strokeToolBar;
-    private org.jhotdraw.samples.svg.gui.TextFillToolBar textFillToolBar;
     private javax.swing.ButtonGroup toolButtonGroup;
     private javax.swing.JPanel toolsPane;
     private javax.swing.JPanel toolsPanel;
