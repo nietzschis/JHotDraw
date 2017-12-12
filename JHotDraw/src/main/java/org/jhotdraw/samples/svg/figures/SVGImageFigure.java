@@ -71,6 +71,9 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private transient BufferedImage bufferedImage;
+    
+    //Shape to clip image to
+    private Shape clipShape;
 
     private boolean edgeDetectorApplied;
     /**
@@ -153,9 +156,12 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     //  gx.setRenderingHints(g.getRenderingHints());
 
                 } else {
-
+                    clipToShape(g, clipShape);
+                    
                     g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                 }
+                //draw stroke if stroke attributes are initialized
+                drawStroke(g);
             } else {
                 
              drawShape(g);
@@ -166,6 +172,15 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
             }
         }
 
+    }
+    
+    //clips the image to a given shape
+    protected void clipToShape(Graphics2D g, Shape clipShape){
+        //Outcommented code line below is to force clipping to an ellipse shape for testing purposes.
+        //clipShape = new Ellipse2D.Double(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        
+        //clip g with clipshape
+        g.setClip(clipShape);
     }
 
     //Contrast
@@ -205,7 +220,17 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     protected void drawStroke(Graphics2D g) {
-
+        //since we override the draw method from parent, inherit attributes from drawing here
+        g.setPaint(SVGAttributeKeys.getStrokePaint(this));
+        g.setStroke(SVGAttributeKeys.getStroke(this));
+        
+        //null not allowed
+        if(clipShape != null){
+            //draw the stroke of the shape on top of the image
+            g.draw(clipShape);
+        }else{
+            g.draw(rectangle);
+        }
     }
 
     // SHAPE AND BOUNDS
