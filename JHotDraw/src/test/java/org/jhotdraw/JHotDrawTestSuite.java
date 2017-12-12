@@ -18,6 +18,8 @@ import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
 import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactoryTest;
@@ -46,7 +48,9 @@ import org.junit.runners.Suite;
                     RecordingToolTest.class, RecordingToolGUITest.class,
                     SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
                     ViewSourceActionJGivenTest.class, SVGInputFormatTest.class, DefaultDrawingViewTest.class, SplitTest.class,
-                    DuplicateCanvasAction.class, CorrectStrategyTest.class, WatermarkTest.class})
+                    DuplicateCanvasAction.class, CorrectStrategyTest.class, WatermarkTest.class, SVGRoundedRectangleJGiven.class,
+                    SVGRoundedRectangleTest.class})
+
 
 public class JHotDrawTestSuite {
 
