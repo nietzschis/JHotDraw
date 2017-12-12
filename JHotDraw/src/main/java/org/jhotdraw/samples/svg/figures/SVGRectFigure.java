@@ -125,8 +125,6 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
         
         if(SHADOWS.get(this) > 0d){
-            //SVGRectFigure roundrect = roundrect;
-            //pathShadow(roundrect.x,roundrect.y,roundrect.width,roundrect.height);
             drawShadow(g ,pathShadow(roundrect.x,roundrect.y,roundrect.width,roundrect.height));
         }        
     }

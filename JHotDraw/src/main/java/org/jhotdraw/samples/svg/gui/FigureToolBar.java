@@ -106,6 +106,7 @@ public class FigureToolBar extends AbstractToolBar {
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
                 
+                    //Shadow Slider
                     JPopupButton shadowsPopupButton = new JPopupButton();
                     JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 25, 0);
                     shadowsPopupButton.add(shadowsSlider);
@@ -127,31 +128,6 @@ public class FigureToolBar extends AbstractToolBar {
                     shadowsSlider.setScaleFactor(1d);
                     new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsSlider, editor);
                  
-//                    JButton shadowButton = new JButton();
-//                    labels.configureToolBarButton(shadowButton, "attribute.addShadow");
-//                    shadowButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowButton));
-//                    shadowButton.setIcon(
-//                            new SelectionShadowsIcon(editor, SHADOWS, FILL_COLOR, STROKE_COLOR, getClass().getResource(labels.getString("attribute.addShadow.icon")),
-//                            new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
-//                    new SelectionComponentRepainter(editor, shadowButton);
-//                    gbc = new GridBagConstraints();
-//                    gbc.gridx = 1;
-//                    gbc.gridy = 1;
-//                    gbc.insets = new Insets(0, 0, 0, 0);
-//                    gbc.weighty=1;
-//                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-//                    p.add(shadowButton, gbc);
-//                    new FigureAttributeEditorHandler<Boolean>(SHADOWS, AttributeEditor.class.cast(gbc), editor);
-                    
-//                    attributes = new HashMap<AttributeKey, Object>();
-//                    btn = ButtonFactory.addToolTo(this, editor, AbstractButton = new SelectionShadowsIcon(new SVGRectFigure(), attributes), "addShadow", labels);
-//                    creationTool.setToolDoneAfterCreation(false);
-//                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
-//                    gbc = new GridBagConstraints();
-//                    gbc.gridx = 0;
-//                    gbc.gridy = 1;
-//                    gbc.insets = new Insets(3, 0, 0, 0);
-//                    p.add(btn, gbc);
                  }
                  
                 break;
@@ -204,7 +180,7 @@ public class FigureToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
                     
                     
-                    // Opacity field with slider
+                    // Shadow field with slider
                     JAttributeTextField<Double> shadowsField = new JAttributeTextField<Double>();
                     shadowsField.setColumns(3);
                     shadowsField.setToolTipText(labels.getString("attribute.addShadow.toolTipText"));

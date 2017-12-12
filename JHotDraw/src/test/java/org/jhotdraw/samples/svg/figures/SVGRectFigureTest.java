@@ -1,7 +1,6 @@
 package org.jhotdraw.samples.svg.figures;
 
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
 import org.jhotdraw.geom.Dimension2DDouble;
 import org.junit.Before;
 import org.junit.Test;

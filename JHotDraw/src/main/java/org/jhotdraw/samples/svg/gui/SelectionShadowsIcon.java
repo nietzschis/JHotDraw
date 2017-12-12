@@ -11,12 +11,8 @@ import java.awt.Image;
 import java.awt.Shape;
 import java.net.URL;
 import org.jhotdraw.draw.AttributeKey;
-import org.jhotdraw.draw.AttributeKeys;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
-import org.jhotdraw.draw.Figure;
-import org.jhotdraw.draw.GeometryEdit;
-import org.jhotdraw.draw.action.MoveAction;
 
 /**
  *
@@ -86,8 +82,6 @@ public class SelectionShadowsIcon extends javax.swing.ImageIcon{
             shadow = shadowKey.get(view.getSelectedFigures().iterator().next());
             fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getSelectedFigures().iterator().next());
             strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(view.getSelectedFigures().iterator().next());
-            //AttributeKeys.SHADOWS.set(view.getSelectedFigures().iterator().next(), new Color((((int) 
-                        //(shadow * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
                 
         } else {
             shadow = shadowKey.get(editor.getDefaultAttributes());
@@ -97,63 +91,14 @@ public class SelectionShadowsIcon extends javax.swing.ImageIcon{
         
         
         if(!shadow.equals(0d)){
-                System.out.println("ShadowValue = " + shadow);
-                //Figure afigure = (Figure) view.getSelectedFigures().iterator().next().clone();
-                //g.draw3DRect(c.getX()+2, c.getY()+2, c.getWidth(), c.getHeight(), true);
-                
-                MoveAction move;
-                
+                //System.out.println("ShadowValue = " + shadow);
                 g.translate(x+29, y+29);
                 fillColor = Color.BLACK;
                 g.setColor(Color.BLACK);
                 g.fill(fillShape);
                 g.draw(strokeShape);
                 g.translate(-x, -y);
-                
-                
-                
-                
-               
-                //new GeometryEdit(afigure, geom, geom);
-                //Figure clone = (Figure) view.getSelectedFigures().iterator().next().clone();
-                //Figure bfigure = (Figure) afigure.clone();
-                
-                //g.draw3DRect(c.getX()+2, c.getY()+2, c.getWidth(), c.getHeight(), true);        
         }
-        
-//            if (view != null && view.getSelectedFigures().size() == 1) {
-//                g.draw3DRect(c.getX()+2, c.getY()+2, c.getWidth(), c.getHeight(), true);
-//                shadow = shadowKey.get(view.getSelectedFigures().iterator().next());
-//                fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getSelectedFigures().iterator().next());
-//                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(view.getSelectedFigures().iterator().next());
-//            } else {
-//                shadow = shadowKey.get(editor.getDefaultAttributes());
-//                fillColor = (fillColorKey == null) ? null : fillColorKey.get(editor.getDefaultAttributes());
-//                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(editor.getDefaultAttributes());
-//            }
-//
-//        if (fillColorKey != null && fillShape != null) {
-//            if (shadow != null) {
-//                if (fillColor == null) {
-//                    fillColor = Color.BLACK;
-//                }
-//                g.setColor(new Color((((int) (shadow * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
-//                g.translate(x, y);
-//                g.fill(fillShape);
-//                g.translate(-x, -y);
-//            }
-//            }
-//        if (strokeColorKey != null && strokeShape != null) {
-//            if (shadow != null) {
-//                if (strokeColor == null) {
-//                    strokeColor = Color.BLACK;
-//                }
-//                g.setColor(new Color((((int) (shadow * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
-//                g.translate(x, y);
-//                g.draw(strokeShape);
-//                g.translate(-x, -y);
-//            }
-//        }
     }
     
 }
