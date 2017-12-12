@@ -146,6 +146,10 @@ public abstract class DefaultApplicationModel
             b = tb.add(a);
             b.setFocusable(false);
         }
+        if (null != (a = getAction(DuplicateCanvasAction.ID))) {
+            b = tb.add(a);
+            b.setFocusable(false);
+        }
         if (null != (a = getAction(OpenAction.ID))) {
             b = tb.add(a);
             b.setFocusable(false);

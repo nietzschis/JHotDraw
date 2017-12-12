@@ -14,20 +14,26 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.util.*;
-import org.jhotdraw.geom.*;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.OPACITY;
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.TRANSFORM;
 
 /**
  * SVGImage.
@@ -313,6 +319,11 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         return that;
     }
 
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     public boolean isEmpty() {
         Rectangle2D.Double b = getBounds();
         return b.width <= 0 || b.height <= 0 || imageData == null && bufferedImage == null;
@@ -349,7 +360,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
-    
+
     public void setOriginalBufferedImage(BufferedImage oimage) {
         willChange();
         this.originalBufferedImage = oimage;
@@ -389,7 +400,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         }
         return bufferedImage;
     }
-    
+
     public boolean getEdgeDetectorApplied() {
         return this.edgeDetectorApplied;
     }

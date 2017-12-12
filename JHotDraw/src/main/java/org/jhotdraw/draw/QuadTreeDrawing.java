@@ -14,14 +14,19 @@
 package org.jhotdraw.draw;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import org.jhotdraw.geom.Dimension2DDouble;
-import org.jhotdraw.geom.QuadTree;
-import java.awt.*;
-import java.awt.geom.*;
-import org.jhotdraw.util.*;
-import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.geom.Dimension2DDouble;
 import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.QuadTree;
+import org.jhotdraw.util.ReversedList;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * QuadTreeDrawing uses a QuadTree2DDouble to improve responsiveness of drawings
@@ -310,6 +315,11 @@ public class QuadTreeDrawing extends AbstractDrawing {
         return that;
     }
 
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     protected EventHandler createEventHandler() {
         return new QuadTreeEventHandler();
     }
@@ -337,5 +347,13 @@ public class QuadTreeDrawing extends AbstractDrawing {
     @Override
     protected void drawStroke(Graphics2D g) {
         // throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void repaintFigure(Figure figure) {
+        quadTree.remove(figure);
+        quadTree.add(figure, figure.getDrawingArea());
+        needsSorting = true;
+        invalidate();
+        fireAreaInvalidated();
     }
 }
