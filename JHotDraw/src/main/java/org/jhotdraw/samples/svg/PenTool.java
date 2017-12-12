@@ -37,7 +37,7 @@ public class PenTool extends PathTool {
 
         if (createdFigure == null)
             return;
-
+        
         finishWhenMouseReleased = null;
 
         finishCreation(createdFigure, creationView);
@@ -67,8 +67,12 @@ public class PenTool extends PathTool {
         createdPath.setSelectable(false);
         creationView.getDrawing().add(createdPath);
         fireUndoEvent(createdPath, creationView);
+        isToolDoneAferCreation();
+    }
+    
+    protected void isToolDoneAferCreation(){
         if (isToolDoneAfterCreation()) {
             fireToolDone();
         }
-    }
+    } 
 }
