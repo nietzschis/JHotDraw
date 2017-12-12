@@ -93,11 +93,11 @@ public class SVGAttributeKeys extends AttributeKeys {
     /**
      * The width of the selected figure. The value of this attribute is a Double object.
      */
-    public final static AttributeKey<Double> FIGURE_WIDTH = new AttributeKey<Double>("figureWidth", Double.class, null, true, labels);
+    public final static AttributeKey<Double> FIGURE_WIDTH = new AttributeKey<Double>("figureWidth", Double.class, 1d, true, labels);
     /**
      * The height of the selected figure. The value of this attribute is a Double object.
      */
-    public final static AttributeKey<Double> FIGURE_HEIGHT = new AttributeKey<Double>("figureHeight", Double.class, null, true, labels);
+    public final static AttributeKey<Double> FIGURE_HEIGHT = new AttributeKey<Double>("figureHeight", Double.class, 1d, true, labels);
     
     
     /**
