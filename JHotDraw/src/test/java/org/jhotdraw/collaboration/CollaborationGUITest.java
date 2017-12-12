@@ -93,7 +93,7 @@ public class CollaborationGUITest {
             }
         }
     }
-
+    
     @Test
     public void GUIStartServerWhenServerIsAlreadyRunningTest() throws RemoteException, AlreadyBoundException {
         assertNotNull(app.getFrame());

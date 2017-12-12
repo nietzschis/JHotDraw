@@ -3,7 +3,7 @@ package org.jhotdraw.draw;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import com.sun.istack.internal.Nullable;
+//import com.sun.istack.internal.Nullable;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ class ResizeHandle extends LocatorHandle {
     private final int direction;
     Object geometry;
 
-    @Nullable
+    
     private Point2D.Double aspectRatio;
     private boolean shiftPressed;
 
@@ -174,7 +174,7 @@ class ResizeHandle extends LocatorHandle {
                 shiftPressed ? aspectRatio : null);
     }
 
-    void setBounds(Point2D.Double anchor, Point2D.Double lead, @Nullable Point2D.Double aspectRatio) {
+    void setBounds(Point2D.Double anchor, Point2D.Double lead, Point2D.Double aspectRatio) {
         if (aspectRatio != null)
         {
             ResizeHandleKit.applyAspectRatio(direction, anchor, lead, aspectRatio);

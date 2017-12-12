@@ -14,17 +14,18 @@
 package org.jhotdraw.draw;
 
 import org.jhotdraw.beans.AbstractBean;
-import org.jhotdraw.util.*;
-import javax.swing.event.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.font.*;
-import java.awt.geom.*;
-import java.util.*;
+import org.jhotdraw.geom.Dimension2DDouble;
+
 import javax.swing.*;
-import javax.swing.undo.*;
-import java.io.*;
-import org.jhotdraw.geom.*;
+import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEdit;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
 
 /**
  * AbstractFigure provides the functionality for managing listeners for a
