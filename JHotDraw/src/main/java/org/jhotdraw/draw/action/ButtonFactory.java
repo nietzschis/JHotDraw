@@ -239,7 +239,6 @@ public class ButtonFactory {
         a.add(null); // separator
 
         a.add(new EdgeDetectionAction(editor));
-
         return a;
     }
 
@@ -418,7 +417,38 @@ public class ButtonFactory {
         zoomPopupButton.setFocusable(false);
         return zoomPopupButton;
     }
+    
+    public static AbstractButton createWorkspaceBGButton(DrawingView view) {
+        return createWorkspaceBGButton(view, new String[]{
+                "Black", "White", "Gray"
+        });
+    }
 
+    public static AbstractButton createWorkspaceBGButton(final DrawingView view, String[] colors) {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+
+        final JPopupButton BGPopupButton = new JPopupButton();
+
+        labels.configureToolBarButton(BGPopupButton, "view.outerBGColor");
+        BGPopupButton.setFocusable(false);
+        BGPopupButton.setText(view.getWorkspaceBG().toString());
+
+        view.addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                // String constants are interned
+                if (evt.getPropertyName() == "workspaceBG") {
+                    BGPopupButton.setText(view.getWorkspaceBG().toString());
+                }
+            }
+        });
+        for (int i = 0; i < colors.length; i++) {
+            BGPopupButton.add(new WorkspaceBGAction(view, colors[i], BGPopupButton));
+        }
+        BGPopupButton.setFocusable(false);
+        return BGPopupButton;
+    }
+    
     /**
      * Creates toolbar buttons and adds them to the specified JToolBar
      */

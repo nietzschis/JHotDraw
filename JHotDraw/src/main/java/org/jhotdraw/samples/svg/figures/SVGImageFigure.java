@@ -360,7 +360,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
-    
+
     public void setOriginalBufferedImage(BufferedImage oimage) {
         willChange();
         this.originalBufferedImage = oimage;
@@ -400,7 +400,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         }
         return bufferedImage;
     }
-    
+
     public boolean getEdgeDetectorApplied() {
         return this.edgeDetectorApplied;
     }
