@@ -1,15 +1,10 @@
+
 package org.jhotdraw;
 
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
-import org.jhotdraw.samples.svg.figures.SVGPathFigureJGivenTest;
-import org.jhotdraw.samples.svg.figures.SVGPathFigureTest;
-import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
-import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
-import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactoryTest;
-import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
 import org.jhotdraw.draw.action.ButtonFactoryTest;
 import org.jhotdraw.draw.action.MagnifyingGlassAcceptanceTest;
@@ -35,6 +30,8 @@ import org.jhotdraw.samples.svg.io.SVGInputFormatTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
 import org.jhotdraw.tabs.gui.TabPanelTest;
+import org.jhotdraw.util.FileBackupSaverAcceptanceTest;
+import org.jhotdraw.util.FileBackupSaverTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -48,7 +45,6 @@ import org.junit.runners.Suite;
  * @author corfixen
  */
 @RunWith(Suite.class)
-
 @Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class,
     TinyPngCompressActionTest.class,
     SVGTriangleFigureTest.class, 
@@ -79,10 +75,11 @@ import org.junit.runners.Suite;
     WatermarkTest.class,
     SVGRoundedRectangleJGiven.class,
     SVGRoundedRectangleTest.class,
+    FileBackupSaverTest.class,
+    FileBackupSaverAcceptanceTest.class,
     SVGPathFigureTest.class,
     StartLineTextStrategyTest.class, 
     SVGPathFigureJGivenTest.class})
-
 
 public class JHotDrawTestSuite {
 

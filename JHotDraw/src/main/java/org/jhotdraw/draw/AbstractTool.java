@@ -266,7 +266,15 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
         m.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK), CutAction.ID);
         m.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.META_DOWN_MASK), CutAction.ID);
          
+        // Color Switch Hotkey NUM1 + CTRL
+        // NUM1 + CTRL
+        m.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, InputEvent.CTRL_DOWN_MASK), ColorHotkeyAction.Red.ID);
+        m.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, InputEvent.CTRL_DOWN_MASK), ColorHotkeyAction.Green.ID);
+        m.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD3, InputEvent.CTRL_DOWN_MASK), ColorHotkeyAction.Blue.ID);
         
+            
+    // <3
+    
         return m;
     }
     protected ActionMap createActionMap() {
@@ -288,7 +296,10 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
         m.put(CutAction.ID, new CutAction());
         m.put(CopyAction.ID, new CopyAction());
         m.put(PasteAction.ID, new PasteAction());
-         
+        
+        m.put(ColorHotkeyAction.Red.ID, new ColorHotkeyAction.Red(editorProxy));
+        m.put(ColorHotkeyAction.Green.ID, new ColorHotkeyAction.Green(editorProxy));
+        m.put(ColorHotkeyAction.Blue.ID, new ColorHotkeyAction.Blue(editorProxy));
         return m;
     }
     

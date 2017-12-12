@@ -52,6 +52,10 @@ public abstract class AbstractView extends JPanel implements View {
      */
     protected File file;
     /**
+     * The backed up view file. Has a null value ?? TODO
+     */
+    protected File backupFile;
+    /**
      * The executor used to perform background tasks for the View in a
      * controlled manner. This executor ensures that all background tasks
      * are executed sequentually.
@@ -164,6 +168,19 @@ public abstract class AbstractView extends JPanel implements View {
             preferences.put("projectFile", newValue.getPath());
         }
         firePropertyChange(FILE_PROPERTY, oldValue, newValue);
+    }
+    
+    public File getBackupFile() {
+        return backupFile;
+    }
+    
+    public void setBackupFile(File newValue) {
+        File oldValue = backupFile;
+        backupFile = newValue;
+        if (preferences != null && newValue != null) {
+            preferences.put("backupFile", newValue.getPath());
+        }
+        firePropertyChange(BACKUP_FILE_PROPERTY, oldValue, newValue);
     }
 
     /**
