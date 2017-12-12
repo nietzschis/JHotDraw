@@ -24,7 +24,7 @@ public class FigurePainter {
      * @param MouseButton MouseEvent for getting which mouse button is pressed 1 = left mouse button 3 = right mouse button.
      * @param editor For getting the color of left or right mouse button.
      */
-    public void paint(Figure figure, int MouseButton, DrawingEditor editor) {
+    public void paint( int MouseButton, DrawingEditor editor) {
         
         switch (MouseButton) {
             case 1:
@@ -41,6 +41,7 @@ public class FigurePainter {
                 System.out.println("Button not recognized button nr: " + MouseButton);
         }
     }
+    
     /**
      * Changes the color of a figure 
      * @param figure The figure that will be changed
@@ -53,6 +54,13 @@ public class FigurePainter {
         if (color.getKey() == AttributeKeys.FILL_COLOR_LEFT_MOUSE || color.getKey() == AttributeKeys.FILL_COLOR_RIGHT_MOUSE){
             figure.setAttribute(AttributeKeys.FILL_COLOR, (Color) color.getValue());
         }    
+    }
+    /**
+     * To support color for figures that noget support two mouse buttons.
+     * @param editor The DeafaultDrawingEditor
+     */
+    public void setLeftColorToDefaultColor(DrawingEditor editor){
+        paint(1,editor);
     }
 
 }
