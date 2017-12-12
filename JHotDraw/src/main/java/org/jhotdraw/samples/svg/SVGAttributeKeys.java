@@ -90,6 +90,12 @@ public class SVGAttributeKeys extends AttributeKeys {
      * This is a value between 0 and 1 whereas 0 is translucent and 1 is fully opaque.
      */
     public final static AttributeKey<Double> OPACITY = new AttributeKey<Double>("opacity",Double.class, 1d, false, labels);
+
+    /**
+     * Specifies the viewport-fill-shadow of an SVG viewport.
+     */
+    public final static AttributeKey<Double> SHADOWS = new AttributeKey<Double>("addShadow",Double.class, 0d, false, labels);;
+
     
      /**
      * Specifies the overall contrast of a SVG figure.
@@ -97,6 +103,7 @@ public class SVGAttributeKeys extends AttributeKeys {
      */
      public final static AttributeKey<Double> CONTRAST = new AttributeKey<Double>("contrast",Double.class, 0d, false, labels);
     
+
     /**
      * Specifies the stroke gradient of a SVG figure.
      */

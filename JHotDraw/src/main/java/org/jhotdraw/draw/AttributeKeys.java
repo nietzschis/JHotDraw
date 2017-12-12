@@ -115,6 +115,10 @@ public class AttributeKeys {
         FULL
     }
     /**
+     * Shadow color. The value of this attribute is a Color object.
+     */
+    public final static AttributeKey<Color> SHADOWS = new AttributeKey<Color>("addShadow", Color.class, Color.black, true, labels);
+    /**
      * Fill under stroke. The value of this attribute is a Boolean object.
      */
     public final static AttributeKey<Underfill> FILL_UNDER_STROKE = new AttributeKey<Underfill>("fillUnderStroke", Underfill.class, Underfill.CENTER, false, labels);
