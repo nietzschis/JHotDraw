@@ -15,9 +15,12 @@
 package org.jhotdraw.app;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.HashMap;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.draw.OutputFormat;
 
 /**
  * ExportableView is implemented by View's that support the ExportAction.
@@ -30,6 +33,20 @@ public interface ExportableView extends View {
      * Gets the file chooser for exporting the view.
      */
   public JFileChooser getExportChooser();
+  
+  public void setWatermark(BufferedImage watermark);
+
+  
+  /**
+   * If watermark has been import, place it on the alpha channel of the view image
+   * 
+     * @param sourceFilePath
+     * @param format
+     * @param finalFile
+     * @param watermarkImage
+   * @throws IOException 
+   */
+  public void addImageWatermark(File sourceFilePath, OutputFormat format, BufferedImage watermarkImage, final File finalFile) throws IOException;
  
   /**
    * Exports the view. 
