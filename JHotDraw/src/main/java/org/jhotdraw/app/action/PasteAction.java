@@ -20,7 +20,9 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.*;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Pastes the contents of the system clipboard at the caret position.
  * Acts on the EditableComponent or JTextComponent which had the focus when
@@ -31,7 +33,8 @@ import org.jhotdraw.util.*;
  * interface EditableComponent.
  * <br>1.0 October 9, 2005 Created.
  */
-public class PasteAction extends AbstractAction {
+@ServiceProvider(service = ActionSPI.class)
+public class PasteAction extends AbstractAction implements ActionSPI{
     public final static String ID = "edit.paste";
     
     /** Creates a new instance. */

@@ -15,7 +15,8 @@ import org.jhotdraw.collaboration.server.RemoteObservable;
  *
  * @author Niels
  */
-public class CollaborationListConnectionsAction extends AbstractApplicationAction {
+
+public class CollaborationListConnectionsAction extends AbstractApplicationAction{
 
     public final static String ID = "collaboration.list";
 

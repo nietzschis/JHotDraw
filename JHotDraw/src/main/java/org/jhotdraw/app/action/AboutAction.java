@@ -14,12 +14,16 @@
 
 package org.jhotdraw.app.action;
 
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Displays a dialog showing information about the application.
@@ -27,12 +31,15 @@ import org.jhotdraw.app.*;
  * @author  Werner Randelshofer
  * @version 1.0  04 January 2005  Created.
  */
-public class AboutAction extends AbstractApplicationAction {
+
+@ServiceProvider(service = ActionSPI.class)
+public class AboutAction extends AbstractApplicationAction implements ActionSPI{
     public final static String ID = "application.about";
+
     
     /** Creates a new instance. */
-    public AboutAction(Application app) {
-        super(app);
+    public AboutAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
         }
@@ -40,7 +47,7 @@ public class AboutAction extends AbstractApplicationAction {
     public void actionPerformed(ActionEvent evt) {
         Application app = getApplication();
         JOptionPane.showMessageDialog(app.getComponent(),
-                app.getName()+" "+app.getVersion()+"\n"+app.getCopyright()+
+                app.getName()+ " "+app.getVersion()+"\n"+app.getCopyright()+
                 "\n\nRunning on Java "+System.getProperty("java.vm.version")+
                 ", "+System.getProperty("java.vendor"), 
                 "About", JOptionPane.PLAIN_MESSAGE);

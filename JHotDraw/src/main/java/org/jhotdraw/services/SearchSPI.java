@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jhotdraw.graph;
+package org.jhotdraw.services;
 
-import org.jhotdraw.draw.PredefinedFunction;
+import java.util.ArrayList;
+import javax.swing.Action;
 
 /**
  *
- * @author Joachim
+ * @author Daniel
  */
-public interface Graph extends PredefinedFunction {
-
-    double calcYCoordinate(double x);
+public interface SearchSPI {
+    public void setComboBox(ArrayList<Action> actions);
 }

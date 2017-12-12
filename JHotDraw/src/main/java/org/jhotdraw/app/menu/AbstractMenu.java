@@ -18,6 +18,12 @@ public abstract class AbstractMenu extends JMenu {
         appLabels.configureMenu(this, id);
         this.model = model;
     }
+    
+    public final JMenuItem addActionDynamically(Class name){
+        JMenuItem item = super.add(model.getActionDynamicly(name));
+        item.setName("test");
+        return item;
+    }
 
     public final JMenuItem addAction(String id) {
         JMenuItem item = super.add(model.getAction(id));

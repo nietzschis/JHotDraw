@@ -19,7 +19,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.*;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Cuts the selected region and places its contents into the system clipboard.
  * Acts on the EditableComponent or JTextComponent which had the focus when
@@ -30,7 +32,8 @@ import org.jhotdraw.util.*;
  * interface EditableComponent. 
  * <br>1.0 October 9, 2005 Created.
  */
-public class CutAction extends AbstractAction {
+@ServiceProvider(service = ActionSPI.class)
+public class CutAction extends AbstractAction implements ActionSPI{
     public final static String ID = "edit.cut";
    
     /** Creates a new instance. */

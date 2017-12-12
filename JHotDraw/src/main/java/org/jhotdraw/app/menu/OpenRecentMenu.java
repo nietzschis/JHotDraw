@@ -9,6 +9,8 @@ import org.jhotdraw.app.ApplicationModel;
 import org.jhotdraw.app.View;
 import org.jhotdraw.app.action.ClearRecentFilesAction;
 import org.jhotdraw.app.action.LoadRecentAction;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -19,7 +21,7 @@ public class OpenRecentMenu extends AbstractMenu {
     public OpenRecentMenu(ApplicationModel model, Application a, View p) {
         super("file.openRecent", model);
         
-        addAction(ClearRecentFilesAction.ID);
+        addActionDynamically(ClearRecentFilesAction.class);
         updateOpenRecentMenu(a);
 
         a.addPropertyChangeListener(new PropertyChangeListener() {
@@ -45,7 +47,7 @@ public class OpenRecentMenu extends AbstractMenu {
                     getItemCount() - 1);
             removeAll();
             for (File f : a.recentFiles()) {
-                add(new LoadRecentAction(a, f));
+                add(new LoadRecentAction(a,f));
             }
             if (a.recentFiles().size() > 0) {
                 addSeparator();

@@ -16,26 +16,26 @@ package org.jhotdraw.app.action;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.gui.Worker;
-import org.jhotdraw.util.*;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.gui.event.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.prefs.*;
 import javax.swing.*;
 import java.io.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * LoadRecentAction.
  *
  * @author Werner Randelshofer.
  * @version 1.0 June 15, 2006 Created.
  */
-public class LoadRecentAction extends AbstractSaveBeforeAction {
+public class LoadRecentAction extends AbstractSaveBeforeAction{
     public final static String ID = "file.loadRecent";
     private File file;
     
@@ -48,7 +48,7 @@ public class LoadRecentAction extends AbstractSaveBeforeAction {
 
     @FeatureEntryPoint(JHotDrawFeatures.DRAWING_PERSITENCE)
     public void doIt(final View view) {
-        final Application app = getApplication();
+        final Application app = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         app.setEnabled(true);
         
         // If there is another view with we set the multiple open

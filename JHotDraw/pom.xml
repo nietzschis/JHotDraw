@@ -38,6 +38,11 @@
             <name>corfixen's Git based repo</name>
             <url>https://github.com/sweat-tek/SB5-MAI-Maven/raw/repository/</url>
         </repository>
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -85,6 +90,14 @@
             <artifactId>hamcrest-core</artifactId>
             <version>1.3</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.netbeans.api/org-openide-util -->
+        <!-- https://mvnrepository.com/artifact/org.netbeans.api/org-openide-util-lookup -->
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>RELEASE802</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>

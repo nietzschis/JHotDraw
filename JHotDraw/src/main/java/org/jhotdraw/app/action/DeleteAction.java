@@ -24,6 +24,8 @@ import java.util.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Deletes the region at (or after) the caret position.
  * Acts on the EditableComponent or JTextComponent which had the focus when
@@ -32,7 +34,8 @@ import org.jhotdraw.app.JHotDrawFeatures;
  * @author Werner Randelshofer
  * @version 1.0 October 9, 2005 Created.
  */
-public class DeleteAction extends TextAction {
+@ServiceProvider(service = ActionSPI.class)
+public class DeleteAction extends TextAction implements ActionSPI{
     public final static String ID = "edit.delete";
     
     /** Creates a new instance. */

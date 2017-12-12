@@ -13,6 +13,8 @@
  */
 
 package org.jhotdraw.app.action;
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.*;
 import java.awt.event.*;
@@ -24,6 +26,8 @@ import org.jhotdraw.util.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Redoes the last user action.
  * In order to work, this action requires that the View returns a project
@@ -34,7 +38,8 @@ import org.jhotdraw.app.View;
  * @version 2.0 2006-06-15 Reworked.
  * <br>1.0 October 9, 2005 Created.
  */
-public class RedoAction extends AbstractViewAction {
+@ServiceProvider(service = ActionSPI.class)
+public class RedoAction extends AbstractViewAction implements ActionSPI{
     public final static String ID = "edit.redo";
     private ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
     
@@ -50,8 +55,8 @@ public class RedoAction extends AbstractViewAction {
     };
     
     /** Creates a new instance. */
-    public RedoAction(Application app) {
-        super(app);
+    public RedoAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         labels.configureAction(this, ID);
     }
     
@@ -102,5 +107,4 @@ public class RedoAction extends AbstractViewAction {
     private Action getRealRedoAction() {
         return (getActiveView() == null) ? null : getActiveView().getAction(ID);
     }
-    
 }

@@ -1,6 +1,7 @@
-
 package org.jhotdraw;
 
+import org.jhotdraw.app.action.SearchActionJGivenTest;
+import org.jhotdraw.app.action.SearchActionTest;
 import animationAcceptanceTest.AcceptenceTest;
 import animationAcceptanceTest.GUI_Test;
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
@@ -90,7 +91,9 @@ import org.junit.runners.Suite;
     FileBackupSaverAcceptanceTest.class,
     SVGPathFigureTest.class,
     StartLineTextStrategyTest.class, 
-    SVGPathFigureJGivenTest.class})
+    SVGPathFigureJGivenTest.class,
+    SearchActionTest.class,
+    SearchActionJGivenTest.class})
 
 public class JHotDrawTestSuite {
 
@@ -111,4 +114,3 @@ public class JHotDrawTestSuite {
     }
 
 }
-

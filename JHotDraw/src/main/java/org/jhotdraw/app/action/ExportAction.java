@@ -24,6 +24,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Presents a file chooser to the user and then exports the 
@@ -36,13 +40,14 @@ import org.jhotdraw.app.*;
  * on Reflection. 
  * <br>1.0 2006-04-07 Created.
  */
-public class ExportAction extends AbstractViewAction {
+@ServiceProvider(service = ActionSPI.class)
+public class ExportAction extends AbstractViewAction implements ActionSPI{
     public final static String ID = "file.export";
     private Component oldFocusOwner;
     
     /** Creates a new instance. */
-    public ExportAction(Application app) {
-        super(app);
+    public ExportAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }

@@ -11,8 +11,8 @@ public class HelpMenu extends AbstractMenu {
     
     public HelpMenu(ApplicationModel model) {
         super("help", model);
-        
-        addAction(AboutAction.ID);
+        addActionDynamically(AboutAction.class);
+        //addAction(AboutAction.ID);
     }
     
 }
