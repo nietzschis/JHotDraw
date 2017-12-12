@@ -105,7 +105,7 @@ public class SelectionShadowsIcon extends javax.swing.ImageIcon{
                 
                 g.translate(x+29, y+29);
                 fillColor = Color.BLACK;
-                g.setColor(new Color((((int) (shadow * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
+                g.setColor(Color.BLACK);
                 g.fill(fillShape);
                 g.draw(strokeShape);
                 g.translate(-x, -y);

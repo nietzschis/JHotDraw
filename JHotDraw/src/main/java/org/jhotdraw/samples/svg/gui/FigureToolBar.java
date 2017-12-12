@@ -107,7 +107,7 @@ public class FigureToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(OPACITY, opacitySlider, editor);
                 
                     JPopupButton shadowsPopupButton = new JPopupButton();
-                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 0);
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 25, 0);
                     shadowsPopupButton.add(shadowsSlider);
                     labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
                     shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
@@ -124,7 +124,7 @@ public class FigureToolBar extends AbstractToolBar {
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                     p.add(shadowsPopupButton, gbc);
                     shadowsSlider.setUI((SliderUI) PaletteSliderUI.createUI(shadowsSlider));
-                    shadowsSlider.setScaleFactor(100d);
+                    shadowsSlider.setScaleFactor(1d);
                     new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsSlider, editor);
                  
 //                    JButton shadowButton = new JButton();
@@ -222,7 +222,7 @@ public class FigureToolBar extends AbstractToolBar {
                     gbc.weightx = 1d;
                     p.add(shadowsField, gbc);
                     JPopupButton shadowsPopupButton = new JPopupButton();
-                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 0);
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 25, 0);
                     shadowsPopupButton.add(shadowsSlider);
                     labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
                     shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
@@ -239,7 +239,7 @@ public class FigureToolBar extends AbstractToolBar {
                     gbc.insets = new Insets(0, 0, 0, 0);
                     p.add(shadowsPopupButton, gbc);
                     shadowsSlider.setUI((SliderUI) PaletteSliderUI.createUI(shadowsSlider));
-                    shadowsSlider.setScaleFactor(100d);
+                    shadowsSlider.setScaleFactor(1d);
                     
                     shadowsSlider.getAttributeValue();
                     new FigureAttributeEditorHandler<Double>(SHADOWS, shadowsSlider, editor);
