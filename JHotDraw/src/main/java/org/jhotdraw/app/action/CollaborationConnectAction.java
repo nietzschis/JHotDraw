@@ -47,14 +47,12 @@ public class CollaborationConnectAction extends AbstractApplicationAction{
     }
 
     private String setCollaboratorName() {
-        String input = "";
-        boolean run = true;
-        while (run) {
-            input = JOptionPane.showInputDialog(app.getComponent(), "Write your name");
-            if (!input.equals("")) {
-                run = false;
-            }
+        String input;
+        input = JOptionPane.showInputDialog(app.getComponent(), "Write your name\nNot setting a name, will set the name to Anonymous");
+        if (input == null || input.equals("")) {
+            input = "Anonymous";
         }
+
         return input;
     }
 
@@ -64,11 +62,10 @@ public class CollaborationConnectAction extends AbstractApplicationAction{
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
         if (IP.matches(IPRegExpr)) {
-            if(connectToServer(IP)) {
+            if (connectToServer(IP)) {
                 CollaborationConnection.getInstance().setName(setCollaboratorName());
                 JOptionPane.showMessageDialog(app.getComponent(), "Connected to server! ");
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(app.getComponent(), "Something went wrong during the connection, try again!");
             }
 

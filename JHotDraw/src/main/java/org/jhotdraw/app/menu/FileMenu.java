@@ -6,6 +6,7 @@ import org.jhotdraw.app.action.ClearAction;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.ExitAction;
 import org.jhotdraw.app.action.ExportAction;
+import org.jhotdraw.app.action.ImportWatermarkAction;
 import org.jhotdraw.app.action.LoadAction;
 import org.jhotdraw.app.action.LoadDirectoryAction;
 import org.jhotdraw.app.action.NewAction;
@@ -21,7 +22,7 @@ public class FileMenu extends AbstractMenu {
 
     public FileMenu(ApplicationModel model, JMenu openRecentMenu) {
         super("file", model);
-        
+
         addActionDynamically(ClearAction.class);
         addActionDynamically(NewAction.class);
         addActionDynamically(DuplicateCanvasAction.class);
@@ -33,8 +34,12 @@ public class FileMenu extends AbstractMenu {
         addSeparator();
         addAction(SaveAction.ID);
         addAction(SaveAsAction.ID);
+
         if (model.getActionDynamicly(ExportAction.class) != null) {
             addActionDynamically(ExportAction.class);
+        }
+        if (model.getAction(ImportWatermarkAction.ID) != null) {
+            addAction(ImportWatermarkAction.ID);
         }
         if (model.getActionDynamicly(PrintAction.class) != null) {
             addSeparator();

@@ -6,7 +6,6 @@
  */
 package org.jhotdraw.app.action;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -16,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
 import org.jhotdraw.gui.JSheet;
 import org.jhotdraw.gui.Worker;
