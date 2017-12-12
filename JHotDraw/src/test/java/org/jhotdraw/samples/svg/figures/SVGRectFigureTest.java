@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 import org.jhotdraw.samples.svg.SVGAttributeKeys;
 
 public class SVGRectFigureTest {
@@ -21,7 +20,6 @@ public class SVGRectFigureTest {
     public void setUp() {
         figure = new SVGRectFigure(0d,0d,100d,100d);
         figure.setArc(30d, 30d);
-        RoundRectangle2D.Double shadowfigure = new RoundRectangle2D.Double(150d,150d,50d,50d,0d,0d);
     }
 
     private Dimension2DDouble rectToDim(Rectangle2D.Double rect)
@@ -68,7 +66,6 @@ public class SVGRectFigureTest {
         double shadowWidth = 10d;
         
         SVGAttributeKeys.SHADOWS.set(figure, shadowWidth);
-        
         
         GeneralPath expecResult1 = new GeneralPath();
         expecResult1.moveTo(figure.getX() /*+ shadowWidth*/, figure.getY()); //PLACEMENT
