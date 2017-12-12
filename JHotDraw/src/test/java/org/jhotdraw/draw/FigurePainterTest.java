@@ -22,7 +22,6 @@ public class FigurePainterTest {
     private int rightMouse;
     private int leftMouse;
     private DefaultDrawingEditor editor;
-    private Component source;
     private Figure figure;
     
     @Before
