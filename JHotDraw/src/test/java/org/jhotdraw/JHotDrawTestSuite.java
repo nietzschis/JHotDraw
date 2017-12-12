@@ -18,6 +18,8 @@ import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
 import org.jhotdraw.samples.svg.gui.FigureToolBarTestGui_AssertJ_Swing;
@@ -40,19 +42,36 @@ import org.junit.runners.Suite;
  * @author corfixen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class, TinyPngCompressActionTest.class,
-                     SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, SimpleDrawingViewTest.class, 
-                    CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class,
-                    CollaborationAcceptanceTest.class, CollaborationGUITest.class,
-                    SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
-                    RecordingToolTest.class, RecordingToolGUITest.class,
-                    SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
-                    ViewSourceActionJGivenTest.class, SVGInputFormatTest.class, DefaultDrawingViewTest.class, SplitTest.class,
-                    DuplicateCanvasAction.class, CorrectStrategyTest.class,
-                    SelectionTest.class,
-                    FigureToolBarTestGui_AssertJ_Swing.class,
-                    FigureToolBarTest_JUnit.class,
-                    DuplicateCanvasAction.class, CorrectStrategyTest.class, WatermarkTest.class})
+@Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class,
+    TinyPngCompressActionTest.class,
+    SVGTriangleFigureTest.class, 
+    TriangleJGivenTest.class, 
+    DefaultSVGFigureFactoryTest.class, 
+    SimpleDrawingViewTest.class,
+    CollaborationDrawingHandlerTest.class, 
+    CollaborationServerTest.class, 
+    RemoteObservableTest.class,
+    CollaborationAcceptanceTest.class, 
+    CollaborationGUITest.class,
+    SimpleTabManagerTest.class, 
+    TabPanelTest.class, 
+    SimpleTabManagerTestAcceptance.class,
+    RecordingToolTest.class, 
+    RecordingToolGUITest.class,
+    SelectionTest.class, 
+    ButtonFactoryTest.class, 
+    MagnifyingGlassAcceptanceTest.class,
+    ViewSourceActionJGivenTest.class, 
+    SVGInputFormatTest.class, 
+    DefaultDrawingViewTest.class, 
+    SplitTest.class,
+    CorrectStrategyTest.class,
+    FigureToolBarTestGui_AssertJ_Swing.class,
+    FigureToolBarTest_JUnit.class,
+    DuplicateCanvasAction.class,
+    WatermarkTest.class,
+    SVGRoundedRectangleJGiven.class,
+    SVGRoundedRectangleTest.class})
 
 public class JHotDrawTestSuite {
 
