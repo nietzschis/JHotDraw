@@ -46,9 +46,13 @@ public class FileBackupSaverTest {
      * Tests that FileBackupSaver will save a View's backup file, OR create a
      * new backup file if none exist, and that it does so by using
      * View.execute(..) and View.write(..). The test includes Views with 4
-     * different states: - (no file, no backup) - (file, no backup) - (no file,
-     * backup) - (file, backup) The interaction with View should be different in
-     * each case, which is verified in the test.
+     * different states: 
+     * - (no file, no backup) 
+     * - (file, no backup) 
+     * - (no file, backup) 
+     * - (file, backup) 
+     * The interaction with View should be different in each case, which is 
+     * verified in the test.
      */
     @Test
     public void filesGetAutoSavedTest() throws IOException {
