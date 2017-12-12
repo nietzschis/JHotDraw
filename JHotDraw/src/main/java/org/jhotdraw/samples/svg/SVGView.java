@@ -146,7 +146,15 @@ public class SVGView extends AbstractView implements ExportableView {
      */
     protected Drawing createDrawing() {
         Drawing drawing = new QuadTreeDrawing();
-        LinkedList<InputFormat> inputFormats = new LinkedList<InputFormat>();
+
+        drawing.setInputFormats(inputFormats());     
+        drawing.setOutputFormats(outputFormats());
+
+        return drawing;
+    }
+    
+    protected LinkedList<InputFormat> inputFormats(){
+                LinkedList<InputFormat> inputFormats = new LinkedList<InputFormat>();
         inputFormats.add(new SVGZInputFormat());
         inputFormats.add(new ImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
@@ -154,7 +162,11 @@ public class SVGView extends AbstractView implements ExportableView {
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "PNG", "Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         inputFormats.add(new PictImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new TextInputFormat(new SVGTextFigure()));
-        drawing.setInputFormats(inputFormats);
+        
+        return inputFormats;
+    }
+    
+    protected LinkedList<OutputFormat> outputFormats(){
         LinkedList<OutputFormat> outputFormats = new LinkedList<OutputFormat>();
         outputFormats.add(new SVGOutputFormat());
         outputFormats.add(new SVGZOutputFormat());
@@ -163,9 +175,8 @@ public class SVGView extends AbstractView implements ExportableView {
         outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
         outputFormats.add(new ImageOutputFormat("PNG", "Compressed Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageMapOutputFormat());
-        drawing.setOutputFormats(outputFormats);
-
-        return drawing;
+        
+        return outputFormats;
     }
 
     /**

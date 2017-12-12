@@ -313,5 +313,4 @@ public class DefaultSDIApplication extends AbstractApplication {
     public JFrame getFrame() {
         return frame;
     }
-
 }
