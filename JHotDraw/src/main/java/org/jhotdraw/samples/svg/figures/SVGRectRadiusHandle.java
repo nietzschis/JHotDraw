@@ -22,6 +22,7 @@ import org.jhotdraw.undo.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
@@ -105,6 +106,9 @@ public class SVGRectRadiusHandle extends AbstractHandle {
         final Dimension2DDouble oldValue = originalArc2D;
         final Dimension2DDouble newValue = svgRect.getArc();
         fireUndoableEditHappened(new SVGRectRadiusUndoableEdit(svgRect, oldValue, newValue));
+        
+        // Hook point for arc
+        CollaborationConnection.getInstance().notifyUpdate("update");
    }
     @Override
     public void keyPressed(KeyEvent evt) {

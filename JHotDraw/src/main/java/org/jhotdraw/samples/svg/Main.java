@@ -30,13 +30,9 @@ public class Main {
         ResourceBundleUtil.setVerbose(true);
 
         Application app;
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.startsWith("win")) {
-          //  app = new DefaultMDIApplication();
-            app = new DefaultSDIApplication();
-        } else {
-            app = new DefaultSDIApplication();
-        }
+        
+        app = new DefaultSDIApplication();
+        
         SVGApplicationModel model = new SVGApplicationModel();
         model.setName("JHotDraw SVG");
         model.setVersion(Main.class.getPackage().getImplementationVersion());

@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoableEdit;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
@@ -346,7 +347,7 @@ public abstract class AbstractAttributeEditorHandler<T> {
                     for (Map.Entry<AttributeKey, Object> entry : defaultAttributes.entrySet()) {
                         entry.getKey().basicSet(f, entry.getValue());
                     }
-                    f.changed();
+                    f.changed();                 
                 }
                 if (drawingEditor != null && isUpdateDrawingEditorDefaults) {
                     drawingEditor.setDefaultAttribute(attributeKey, value);
@@ -357,6 +358,8 @@ public abstract class AbstractAttributeEditorHandler<T> {
                 if (!attributeEditor.getValueIsAdjusting()) {
                     attributeRestoreData = null;
                 }
+                // Hookpoint for sliders
+                CollaborationConnection.getInstance().notifyUpdate("update attribute");
             }
         }
         updateDepth--;
