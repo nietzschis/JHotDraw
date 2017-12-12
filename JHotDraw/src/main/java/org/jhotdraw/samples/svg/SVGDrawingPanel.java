@@ -202,7 +202,7 @@ public class SVGDrawingPanel extends JPanel {
         recordingToolBar1.setEditor(editor);
         editor.setActiveView(temp);
         minimapToolBar.setEditor(editor);
-        animationToolBar1.setEditor(editor);
+        animationToolBar2.setEditor(editor);
     }
 
     /** This method is called from within the constructor to
@@ -232,6 +232,7 @@ public class SVGDrawingPanel extends JPanel {
         canvasToolBar = new org.jhotdraw.samples.svg.gui.CanvasToolBar();
         viewToolBar = new org.jhotdraw.samples.svg.gui.ViewToolBar();
         recordingToolBar1 = new org.jhotdraw.samples.svg.gui.RecordingToolBar();
+        animationToolBar2 = new org.jhotdraw.samples.svg.gui.AnimationToolBar();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
@@ -269,6 +270,9 @@ public class SVGDrawingPanel extends JPanel {
         recordingToolBar1.setRollover(true);
         toolsPane.add(recordingToolBar1);
 
+        animationToolBar2.setRollover(true);
+        toolsPane.add(animationToolBar2);
+
         toolsScrollPane.setViewportView(toolsPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -286,7 +290,7 @@ public class SVGDrawingPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jhotdraw.samples.svg.gui.ActionsToolBar actionToolBar;
     private org.jhotdraw.samples.svg.gui.AlignToolBar alignToolBar;
-    private org.jhotdraw.samples.svg.gui.AnimationToolBar animationToolBar1;
+    private org.jhotdraw.samples.svg.gui.AnimationToolBar animationToolBar2;
     private org.jhotdraw.samples.svg.gui.ArrangeToolBar arrangeToolBar;
     private org.jhotdraw.samples.svg.gui.CanvasToolBar canvasToolBar;
     private org.jhotdraw.samples.svg.gui.ToolsToolBar creationToolBar;

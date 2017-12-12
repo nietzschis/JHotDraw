@@ -120,8 +120,14 @@
                 </Component>
                 <Component class="org.jhotdraw.samples.svg.gui.ViewToolBar" name="viewToolBar">
                 </Component>
-                <Container class="org.jhotdraw.samples.svg.gui.AnimationToolBar" name="animationToolBar1">
                 <Container class="org.jhotdraw.samples.svg.gui.RecordingToolBar" name="recordingToolBar1">
+                  <Properties>
+                    <Property name="rollover" type="boolean" value="true"/>
+                  </Properties>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                </Container>
+                <Container class="org.jhotdraw.samples.svg.gui.AnimationToolBar" name="animationToolBar2">
                   <Properties>
                     <Property name="rollover" type="boolean" value="true"/>
                   </Properties>
