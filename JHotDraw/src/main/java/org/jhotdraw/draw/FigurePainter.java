@@ -37,7 +37,8 @@ public class FigurePainter {
                 editor.setDefaultAttribute(STROKE_COLOR, editor.getDefaultAttribute(STROKE_COLOR_LEFT_MOUSE));
                 editor.setDefaultAttribute(AttributeKeys.FILL_COLOR, editor.getDefaultAttribute(AttributeKeys.FILL_COLOR_LEFT_MOUSE));
                 break;
-                
+            default:
+                System.out.println("Mouse Button not recognized Mouse button nr: " + MouseButton);
         }
     }
     /**
