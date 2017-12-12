@@ -40,6 +40,7 @@ import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
  * <br>1.0 May 1, 2007 Created.
  */
 public class FillToolBar extends AbstractToolBar {
+    public static AbstractButton colorPopUpButton;
 
     private SelectionComponentDisplayer displayer;
 
@@ -48,6 +49,8 @@ public class FillToolBar extends AbstractToolBar {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
         setDisclosureStateCount(3);
+                initComponents();
+
     }
 
     @Override
@@ -108,6 +111,8 @@ public class FillToolBar extends AbstractToolBar {
                     gbc.gridwidth = 2;
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                     p.add(btn, gbc);
+                    
+                    
 
                     // Opacity slider
                     JPopupButton opacityPopupButton = new JPopupButton();
@@ -129,6 +134,27 @@ public class FillToolBar extends AbstractToolBar {
                     opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
                     opacitySlider.setScaleFactor(100d);
                     new FigureAttributeEditorHandler<Double>(FILL_OPACITY, opacitySlider, editor);
+                    
+                    
+                                     
+                   // Color pop-up button
+                Map<AttributeKey, Object> defaultAttributes = new HashMap<AttributeKey, Object>();
+                 defaultAttributes = new HashMap<AttributeKey, Object>();
+                 FILL_GRADIENT.set(defaultAttributes, null);        
+                 btn = ButtonFactory.createCustomizedColorButton(editor,
+                         FILL_COLOR, ButtonFactory.eyedropped, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                         "attribute.fillColor", labels, defaultAttributes, new Rectangle(3, 3, 10, 10));
+                 EyedropperAction.popup = btn;
+                 btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                 ((JPopupButton) btn).setAction(null, null);
+ 
+                 gbc = new GridBagConstraints();
+                 gbc.gridx = 1;
+                 gbc.gridy = 3;
+                 gbc.insets = new Insets(0, 3, 0, 0);
+                 p.add(btn, gbc);                
+                 
+                    
                 }
                 break;
 

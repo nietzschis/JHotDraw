@@ -31,6 +31,7 @@ import org.jhotdraw.geom.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.JFontChooser;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
+import java.util.List;
 
 /**
  * ButtonFactory.
@@ -66,7 +67,16 @@ public class ButtonFactory {
     /**
      * Mac OS X 'Apple Color Palette'. This palette has 8 columns.
      */
-    public final static java.util.List<ColorIcon> DEFAULT_COLORS;
+    public final static List<ColorIcon> DEFAULT_COLORS;
+    public final static List<ColorIcon> EYEDROPPED_COLORS;
+    public static LinkedList<ColorIcon>  eyedropped;
+  		  
+     static {
+         eyedropped = new LinkedList<ColorIcon>();
+         EYEDROPPED_COLORS = Collections.unmodifiableList(eyedropped);       
+     }
+    
+        
 
     static {
         LinkedList<ColorIcon> m = new LinkedList<ColorIcon>();
@@ -762,6 +772,65 @@ public class ButtonFactory {
                 new Rectangle(1, 17, 20, 4));
     }
 
+    public static JButton createEyedropperButton(DrawingEditor editor, AbstractButton popup) {
+         JButton btn;
+         btn = new JButton(new EyedropperAction(editor, popup));
+         if (btn.getIcon() != null) {
+             btn.putClientProperty("hideActionText", Boolean.FALSE);
+         }
+         btn.setHorizontalTextPosition(JButton.CENTER);
+         btn.setVerticalTextPosition(JButton.BOTTOM);
+         btn.setText(null);
+         btn.setFocusable(false);
+         btn.setEnabled(true);
+         
+         return btn;
+     }
+
+    public static JPopupButton createCustomizedColorButton(
+             DrawingEditor editor, AttributeKey<Color> attributeKey,
+             java.util.List<ColorIcon> swatches, int columnCount,
+             String labelKey, ResourceBundleUtil labels,
+             Map<AttributeKey, Object> defaultAttributes,
+             Shape colorShape) {
+         final JPopupButton popupButton = new JPopupButton();
+         popupButton.setPopupAlpha(1f);
+         if (defaultAttributes == null) {
+             defaultAttributes = new HashMap<AttributeKey, Object>();
+         }
+ 
+         popupButton.setColumnCount(columnCount, false);
+         boolean hasNullColor = false;
+         for (ColorIcon swatch : swatches) {
+             AttributeAction a;
+             HashMap<AttributeKey, Object> attributes = new HashMap<AttributeKey, Object>(defaultAttributes);
+             attributes.put(attributeKey, swatch.getColor());
+             if (swatch.getColor() == null) {
+                 hasNullColor = true;
+             }
+             popupButton.add(a =
+                     new AttributeAction(
+                     editor,
+                     attributes,
+                     labels.getToolTipTextProperty(labelKey),
+                     swatch));
+             a.putValue(Action.SHORT_DESCRIPTION, swatch.getName());
+         }
+         
+         labels.configureToolBarButton(popupButton, labelKey);
+         Icon icon = new SelectionColorIcon(editor,
+                 attributeKey,
+                 labels.getIconProperty(labelKey, ButtonFactory.class).getImage(),
+                 colorShape);
+         popupButton.setIcon(icon);
+         popupButton.setDisabledIcon(icon);
+         popupButton.setFocusable(false);
+ 
+         new SelectionComponentRepainter(editor, popupButton);
+         return popupButton;
+     }
+
+    
     /**
      * Creates a color button, with an action region and a popup menu. The
      * button works like the color button in Adobe Fireworks:
