@@ -6,7 +6,6 @@
 package animationAcceptanceTest;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  *
@@ -37,6 +36,19 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
     }
     
     @Test
+    public void play_Animation() throws InterruptedException {
+        given().animationWindow()
+                .and()
+                .animationPlayTool();
+        
+        when().i_add_three_new_frames()
+                .and()
+                .play();
+        
+        then().the_animation_plays();
+    }
+    
+    @Test
     public void remove_Frame() {
         given().animationWindow()
                 .and()
@@ -50,7 +62,7 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
     }
     
     @Test
-    public void play_and_pause_Animation() throws InterruptedException {
+    public void pause_Animation() throws InterruptedException {
         given().animationWindow()
                 .and()
                 .animationAddFrameTool();

@@ -19,7 +19,7 @@ public class AnimationTool extends AbstractAction {
     
     protected AnimationToolDefinition tool;
     private boolean stopPlaying;
-    private int framesPlayed;
+    private static int framesPlayed;
     private final int FPS_24 = 24;
     Animation animation;
     
@@ -57,7 +57,6 @@ public class AnimationTool extends AbstractAction {
     
     public void play() throws InterruptedException {
         stopPlaying = false;
-        Animation.getInstance().setTimesPlayed(0);
         List<JFrame> list = getAnimation().getFrames();
         for (int i = 0; i < list.size(); i++) {
             list.get(i);
@@ -65,18 +64,17 @@ public class AnimationTool extends AbstractAction {
                 i = 0;
             }
             if (stopPlaying) {
-                Animation.getInstance().setTimesPlayed(0);
+                framesPlayed = 0;
                 break;
             }
-            Animation.getInstance().incrementTimesPlayed();
+            framesPlayed++;
             Thread.sleep(FPS_24);
         }
     }
     
-    /*
     public int getTimesPlayed() {
         return framesPlayed;
-    }*/
+    }
     
     public void pause() {
         stopPlaying = true;
@@ -107,5 +105,9 @@ public class AnimationTool extends AbstractAction {
     
     public AnimationToolDefinition getTool() {
         return tool;
+    }
+    
+    public static int getFramesPlayed() {
+        return framesPlayed;
     }
 }

@@ -5,8 +5,6 @@
  */
 package animationAcceptanceTest;
 
-import java.awt.event.ActionEvent;
-import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import org.assertj.swing.fixture.FrameFixture;
 import org.jhotdraw.app.Application;
@@ -39,24 +37,25 @@ public class GUI_Test {
     }
     
     @After
-    public void tearDown() throws InterruptedException {
-        Animation.getInstance().getFrames().clear();
-        app = null;
+    public void closeDown() throws InterruptedException {
         window.cleanUp();
     }
     
     @Test
     public void addAndRemoveFrames() throws InterruptedException {
         window.show();
-        Animation.getInstance().getFrames().clear();
+        
         JFrame testFrame = new JFrame();
         Animation.getInstance().setCurrentFrame(testFrame);
-        
         window.button("addFrameButton").click();
+        Thread.sleep(1000);
         window.button("addFrameButton").click();
+        Thread.sleep(1000);
         window.button("addFrameButton").click();
+        Thread.sleep(1000);
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(3);
         
+        Thread.sleep(1000);
         JFrame frameToRemove = Animation.getInstance().getFrames().get(1);
         Animation.getInstance().setCurrentFrame(frameToRemove);
         window.button("removeFrameButton").click();
@@ -64,9 +63,8 @@ public class GUI_Test {
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(2);
     }
     
-    @Ignore
     @Test
-    public void createAnimation_and_play_and_pause() throws InterruptedException {
+    public void createAnimationAndPlay() throws InterruptedException {
         window.show();
         
         JFrame testFrame = new JFrame();
@@ -79,15 +77,14 @@ public class GUI_Test {
         Thread.sleep(1000);
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(3);
         
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                window.button("playButton").click();
-            }
-        });
-        assertThat(Animation.getInstance().getTimesPlayed()).isGreaterThan(0);
-        window.button("pauseButton").click();
+        window.button("playButton").click();
         Thread.sleep(500);
-        assertThat(Animation.getInstance().getTimesPlayed()).isEqualTo(0);
+        assertThat(AnimationTool.getFramesPlayed()).isGreaterThan(0);
+    }
+    
+    @Ignore
+    @Test
+    public void playAndPause() throws InterruptedException {
+        
     }
 }

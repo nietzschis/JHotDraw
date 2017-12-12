@@ -9,11 +9,9 @@ import java.awt.event.ActionEvent;
 import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import static org.jhotdraw.draw.AnimationToolDefinition.*;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -26,10 +24,9 @@ public class AnimationToolTest {
     public AnimationToolTest() {
     }
     
-    @After
-    public void setUpClass() {
-        Animation.getInstance().setTimesPlayed(0);
-        Animation.getInstance().getFrames().clear();
+    @BeforeClass
+    public static void setUpClass() {
+        
     }
     
     @Test
@@ -45,9 +42,6 @@ public class AnimationToolTest {
      */
     @Test
     public void testAddFrameTool() {
-        JFrame frame = new JFrame();
-        Animation.getInstance().setCurrentFrame(frame);
-        
         animationTool = new AnimationTool(ADD_FRAME_TOOL);
         animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
         assertFalse(animationTool.getAnimation().getFrames().isEmpty());
@@ -90,7 +84,23 @@ public class AnimationToolTest {
      * 
      * @throws InterruptedException 
      */
-
+    @Test
+    public void testPlayTool() throws InterruptedException {
+        animationTool = new AnimationTool(ADD_FRAME_TOOL);
+        animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
+        animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
+        
+        animationTool.changeTool(PLAY_TOOL);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
+            }
+        });
+        Thread.sleep(300);
+        assertTrue(animationTool.getTimesPlayed() > 0);
+    }
+    
     @Test
     public void testPlayToolWithoutFrames() {
         animationTool = new AnimationTool(PLAY_TOOL);
@@ -101,7 +111,7 @@ public class AnimationToolTest {
                 animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
             }
         });
-        assertEquals(0, Animation.getInstance().getTimesPlayed());
+        assertEquals(0, animationTool.getTimesPlayed());
     }
     
     /**
@@ -113,9 +123,6 @@ public class AnimationToolTest {
      */
     @Test
     public void testPauseTool() throws InterruptedException {
-        JFrame frame = new JFrame();
-        Animation.getInstance().setCurrentFrame(frame);
-        
         animationTool = new AnimationTool(ADD_FRAME_TOOL);
         animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
         animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
@@ -128,11 +135,11 @@ public class AnimationToolTest {
             }
         });
         Thread.sleep(500);
-        assertTrue(Animation.getInstance().getTimesPlayed() > 0);
+        assertTrue(animationTool.getTimesPlayed() > 0);
         
         animationTool.changeTool(PAUSE_TOOL);
         animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
-        Thread.sleep(1000);
-        assertTrue(Animation.getInstance().getTimesPlayed() == 0);
+        Thread.sleep(500);
+        assertTrue(animationTool.getTimesPlayed() == 0);
     }
 }
