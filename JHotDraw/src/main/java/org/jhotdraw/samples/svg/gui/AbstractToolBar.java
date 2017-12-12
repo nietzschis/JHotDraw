@@ -25,6 +25,7 @@ import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
+import org.jhotdraw.util.GuiSizes;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
@@ -172,9 +173,14 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                     public void run() {
                         try {
                         // long start = System.currentTimeMillis();
-                        
+                        panels[state] = createDisclosedComponent(state);
+                        if(panels[state] != null) {
+                            for(int i = 0; i< panels[state].getComponents().length; i++) {
+                                panels[state].getComponents()[i].setPreferredSize(GuiSizes.getPreferredButtonSizes());
+                            }
+                        }
                         // Print dem der bliver kaldt paint på.
-                        System.out.println(panels[state].getParent().getClass());
+                        //System.out.println(panels[state].getParent().getClass());
                         
                         panels[state] = createDisclosedComponent(state);
                         } catch (Throwable t) {
