@@ -18,11 +18,11 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * @author Sadik
  */
-public class FlipAction extends AbstractAction{
-     public final static String ID = "edit.flip";
+public class HorizontalFlipAction extends AbstractAction{
+    public final static String ID = "edit.horizontalFlip";
     
     /** Creates a new instance. */
-    public FlipAction() {
+    public HorizontalFlipAction() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }
@@ -34,7 +34,7 @@ public class FlipAction extends AbstractAction{
                 getPermanentFocusOwner();
         if (focusOwner != null) {
             if (focusOwner instanceof EditableComponent) {
-                ((EditableComponent) focusOwner).flip();
+                ((EditableComponent) focusOwner).flip(evt.getActionCommand()); //use event to differentiate what kind of flip
             } else {
                 focusOwner.getToolkit().beep();
             }

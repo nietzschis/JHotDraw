@@ -1,5 +1,6 @@
 package org.jhotdraw.samples.svg.figures;
 
+import java.awt.geom.GeneralPath;
 import org.jhotdraw.geom.Dimension2DDouble;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,14 +9,14 @@ import static org.junit.Assert.*;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
 
 public class SVGRectFigureTest {
 
-    SVGRectFigure figure;
+    private SVGRectFigure figure;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() {
         figure = new SVGRectFigure(0d,0d,100d,100d);
         figure.setArc(30d, 30d);
     }
@@ -54,5 +55,27 @@ public class SVGRectFigureTest {
     public void setBounds1() {
         figure.setBounds(new Point2D.Double(0d, 0d), new Point2D.Double(50d, 50d));
         assertEquals("Arc should shrink with bounds!", new Dimension2DDouble(15d,15d), figure.getArc());
+    }
+    
+    
+    
+    
+    @Test
+    public void setShadow(){
+        double shadowWidth = 10d;
+        
+        SVGAttributeKeys.SHADOWS.set(figure, shadowWidth);
+        
+        GeneralPath expecResult1 = new GeneralPath();
+        expecResult1.moveTo(figure.getX() /*+ shadowWidth*/, figure.getY()); //PLACEMENT
+        expecResult1.lineTo(figure.getX() + shadowWidth, figure.getY() - shadowWidth); //UP
+        expecResult1.lineTo(figure.getX() + figure.getX() + shadowWidth, figure.getY() - shadowWidth); //RIGHT
+        expecResult1.lineTo(figure.getX() + figure.getWidth() + shadowWidth, figure.getY() + figure.getHeight() - shadowWidth); //DOWN
+        expecResult1.lineTo(figure.getX() + figure.getWidth(), figure.getY() + figure.getHeight() /* - shadowWidth*/); // LEFT
+        expecResult1.lineTo(figure.getX() + figure.getWidth(), figure.getY() ); //UP
+        expecResult1.lineTo(figure.getX(), figure.getY()); // LEFT            
+        expecResult1.closePath();
+        
+        assertEquals(expecResult1.getBounds2D(), figure.pathShadow(figure.getX(),figure.getY(),figure.getWidth(),figure.getHeight()).getBounds2D());
     }
 }

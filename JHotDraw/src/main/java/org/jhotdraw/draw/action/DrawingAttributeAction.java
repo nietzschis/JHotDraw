@@ -87,7 +87,7 @@ public class DrawingAttributeAction extends AbstractDrawingViewAction {
             entry.getKey().basicSet(drawing, entry.getValue());
         }
         drawing.changed();
-
+        
         UndoableEdit edit = new AbstractUndoableEdit() {
 
             @Override

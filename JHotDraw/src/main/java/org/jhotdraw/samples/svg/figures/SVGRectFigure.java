@@ -14,14 +14,20 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.geom.Dimension2DDouble;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.samples.svg.Gradient;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+
+import java.awt.*;
+import java.awt.geom.*;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.geom.*;
 
 /**
  * SVGRect.
@@ -37,6 +43,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /** The variable acv is used for generating the locations of the control
      * points for the rounded rectangle using path.curveTo. */
     private static final double acv;
+    private static final long serialVersionUID = -2585116624698864356L;
 
 
     static {
@@ -72,6 +79,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     public SVGRectFigure(double x, double y, double width, double height, double rx, double ry) {
         roundrect = new RoundRectangle2D.Double(x, y, width, height, rx, ry);
         SVGAttributeKeys.setDefaults(this);
+        
     }
 
     // DRAWING
@@ -115,6 +123,34 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
             p.closePath();
             g.draw(p);
         }
+        
+        if(SHADOWS.get(this) > 0d){
+            drawShadow(g ,pathShadow(roundrect.x,roundrect.y,roundrect.width,roundrect.height));
+        }        
+    }
+    
+    public GeneralPath pathShadow(double x, double y, double width, double height){
+    
+        GeneralPath p = new GeneralPath();
+        
+        double shadowWidth = SHADOWS.get(this);
+
+        p.moveTo(x /*+ shadowWidth*/, y); //PLACEMENT
+        p.lineTo(x + shadowWidth, y - shadowWidth); //UP
+        p.lineTo(x + width + shadowWidth, y - shadowWidth); //RIGHT
+        p.lineTo(x + width + shadowWidth, y + height - shadowWidth); //DOWN
+        p.lineTo(x + width, y + height /* - shadowWidth*/); // LEFT
+        p.lineTo(x + width, y ); //UP
+        p.lineTo(x, y); // LEFT            
+        p.closePath();
+        
+        return p;
+
+    }
+    
+    public void drawShadow(Graphics2D g, GeneralPath p){
+        g.draw(p);
+        g.fill(p);
     }
 
     // SHAPE AND BOUNDS
@@ -184,7 +220,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         roundrect.y = Math.min(anchor.y, lead.y);
         roundrect.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         roundrect.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
-
+        
         setArc(roundrect.width*arcWidthRatio,roundrect.height*arcHeighRatio);
         invalidate();
     }
@@ -335,6 +371,11 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         that.cachedTransformedShape = null;
         that.cachedHitShape = null;
         return that;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
     }
 
     public boolean isEmpty() {

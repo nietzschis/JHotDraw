@@ -38,6 +38,8 @@ import org.jhotdraw.geom.*;
  */
 public class SVGTextAreaFigure extends SVGAttributedFigure
         implements SVGFigure, TextHolderFigure {
+    
+    private static final long serialVersionUID = 3611368092967354183L;
 
     private Rectangle2D.Double bounds = new Rectangle2D.Double();
     private boolean editable = true;
@@ -601,6 +603,11 @@ public class SVGTextAreaFigure extends SVGAttributedFigure
         SVGTextAreaFigure that = (SVGTextAreaFigure) super.clone();
         that.bounds = (Rectangle2D.Double) this.bounds.clone();
         return that;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
     }
 }
 
