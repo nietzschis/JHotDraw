@@ -212,7 +212,6 @@ public class SVGDrawingPanel extends JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         toolButtonGroup = new javax.swing.ButtonGroup();
         scrollPane = new javax.swing.JScrollPane();
@@ -245,10 +244,9 @@ public class SVGDrawingPanel extends JPanel {
         toolsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         toolsPanel.setOpaque(true);
         toolsPanel.setLayout(new java.awt.GridBagLayout());
+        add(toolsPanel, java.awt.BorderLayout.SOUTH);
 
         toolsScrollPane.setBorder(PaletteLookAndFeel.getInstance().getBorder("Ribbon.border"));
-        toolsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        toolsScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         toolsScrollPane.setMinimumSize(new java.awt.Dimension(0, 0));
 
         toolsPane.setForeground(new java.awt.Color(153, 153, 153));
@@ -271,13 +269,7 @@ public class SVGDrawingPanel extends JPanel {
 
         toolsScrollPane.setViewportView(toolsPane);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        toolsPanel.add(toolsScrollPane, gridBagConstraints);
-
-        add(toolsPanel, java.awt.BorderLayout.SOUTH);
+        add(toolsScrollPane, java.awt.BorderLayout.LINE_START);
     }// </editor-fold>//GEN-END:initComponents
 
     public JComponent getComponent() {

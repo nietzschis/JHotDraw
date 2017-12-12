@@ -66,7 +66,7 @@ public class PaletteToolBarBorder
             JToolBar c = (JToolBar) component;
             if (c.isFloatable()) {
                 int hx = x, hy = y, hw = w, hh = h;
-                if (c.getOrientation() == HORIZONTAL) {
+                if (c.getOrientation() == HORIZONTAL) { // horizontal
                     if (c.getComponentOrientation().isLeftToRight()) {
                         int barW = 18;
                         int barH = h;
@@ -129,12 +129,57 @@ public class PaletteToolBarBorder
                     }
                 } else // vertical
                 {
-                    g.setColor(bright);
-                    g.fillRect(hx + 2, hy + 2, hw - 4, 1);
-                    g.fillRect(hx + 2, hy + 5, hw - 4, 1);
-                    g.setColor(dark);
-                    g.fillRect(hx + 2, hy + 3, hw - 4, 1);
-                    g.fillRect(hx + 2, hy + 6, hw - 4, 1);
+                    if (c.getComponentOrientation().isLeftToRight()) {
+                        int barW = w;
+                        int barH = 17;
+                        int barX = 0;
+                        int barY = 0;
+                        
+                        
+                        int borderColor = 0xffa5a5a5;
+                        float[] stops = enabledStops;
+                        Color[] stopColors = enabledStopColors;
+                        g.setColor(new Color(borderColor, true));
+                        g.drawRect(barX, barY, barW - 1, barH - 1);
+                        LinearGradientPaint lgp = new LinearGradientPaint(
+                                new Point2D.Float(1, 1), new Point2D.Float(1, 19),
+                                stops, stopColors,
+                                MultipleGradientPaint.REPEAT,
+                                MultipleGradientPaint.LINEAR_RGB);
+                        g.setPaint(lgp);
+                        g.fillRect(barX + 1, barX + 1, barW - 2, barH - 2);
+
+                        // paint the icon
+                        Icon icon = (Icon) c.getClientProperty(PaletteToolBarUI.TOOLBAR_ICON_PROPERTY);
+                        if (icon != null) {
+                            icon.paintIcon(component, gr, barY + (barH - icon.getIconHeight()) / 2, 
+                                    barX + barW - 4 - icon.getIconWidth());
+                        }
+                        
+                        int textIconGap = (c.getClientProperty(PaletteToolBarUI.TOOLBAR_ICON_PROPERTY) instanceof Integer) ? 
+                            (Integer) c.getClientProperty(PaletteToolBarUI.TOOLBAR_ICON_PROPERTY) : 2;
+                        
+                        String theTitle = c.getName();
+                        if (theTitle != null) {
+                            Font f = c.getFont();
+                            FontMetrics fm = g.getFontMetrics();
+                            int titleW;
+                            titleW = barH + 3;
+                            
+                            if (icon != null) {
+                                titleW -= icon.getIconHeight() + textIconGap;
+                            }
+
+                            AffineTransform savedTransform = g.getTransform();
+                            AffineTransform t = g.getTransform();
+                            t.rotate(Math.PI * 2d, barX + 6 + fm.getAscent(), titleW + 4);
+                            g.setTransform(t);
+                            g.setColor(Color.black);
+                            g.drawString(theTitle, barX + 6 + fm.getAscent(), titleW + 4);
+                            g.setTransform(savedTransform);
+                            System.out.println(barX + 6 + fm.getAscent() + " " + titleW + 4);
+                        }
+                    }
                 }
             }
         }
@@ -153,6 +198,13 @@ public class PaletteToolBarBorder
      * @return Return drag insets.
      */
     public Insets getDragInsets(Component c) {
+        if ((c instanceof JToolBar) && ((((JToolBar) c).getUI()) instanceof PaletteToolBarUI)) {
+            JToolBar co = (JToolBar) c;
+            if(co.getOrientation() == HORIZONTAL)
+                return new Insets(0,18,0,0);
+            else
+                return new Insets(18,0,0,0);
+        }
         return new Insets(0,18,0,0);
     }
 
