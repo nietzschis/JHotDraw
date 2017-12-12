@@ -18,9 +18,11 @@ public class Animation {
     private static Animation instance;
     private List<JFrame> frames;
     private JFrame currentFrame;
+    private int timesPlayed;
 
     public Animation() {
         frames = new ArrayList<>();
+        timesPlayed = 0;
     }
     
     public static Animation getInstance() {
@@ -38,6 +40,18 @@ public class Animation {
         return currentFrame;
     }
 
+    public int getTimesPlayed() {
+        return timesPlayed;
+    }
+
+    public void incrementTimesPlayed() {
+        timesPlayed++;
+    }
+
+    public void setTimesPlayed(int timesPlayed) {
+        this.timesPlayed = timesPlayed;
+    }
+    
     public void setCurrentFrame(JFrame currentFrame) {
         this.currentFrame = currentFrame;
     }

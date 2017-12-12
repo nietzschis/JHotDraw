@@ -10,6 +10,8 @@ import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
@@ -43,7 +45,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     }
 
     public WhenAnimation adding_new_figure_in_frame() {
-        
+        Animation.getInstance().getFrames().clear();
         // Add to animation what there's already in the drawing
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -62,7 +64,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
         return this;
     }
 
-    public WhenAnimation play() {
+    public WhenAnimation play() throws InterruptedException {
         animationTool.changeTool(ADD_FRAME_TOOL);
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -73,6 +75,13 @@ public class WhenAnimation extends Stage<WhenAnimation> {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
+                animationTool.actionPerformed(mock(ActionEvent.class));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(WhenAnimation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                animationTool.changeTool(PAUSE_TOOL);
                 animationTool.actionPerformed(mock(ActionEvent.class));
             }
         });
