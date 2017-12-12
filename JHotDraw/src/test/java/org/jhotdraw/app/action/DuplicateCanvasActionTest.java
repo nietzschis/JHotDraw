@@ -9,14 +9,17 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import org.jhotdraw.app.AbstractApplication;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 import org.jhotdraw.app.View;
 import org.jhotdraw.samples.svg.SVGApplicationModel;
+import org.jhotdraw.services.ApplicationSPI;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -27,7 +30,7 @@ public class DuplicateCanvasActionTest {
 
     @Before
     public void setUp() throws InterruptedException {
-        app = new DefaultSDIApplication();
+        app = (AbstractApplication) Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         SVGApplicationModel model = new SVGApplicationModel();
         model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
         app.setModel(model);
