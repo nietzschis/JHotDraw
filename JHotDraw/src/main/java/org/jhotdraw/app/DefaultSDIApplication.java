@@ -93,11 +93,14 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("swing.aatext", "true");
     }
     
+    /**
+     * Stops application after saving each View to a backup file.
+     */
     @Override
     public void stop() {
-        super.stop();
         autoSaver.saveFiles();
         autoSaver.stop();
+        super.stop();
     }
     
     protected void createAutosaver(int interval, String backupLocation) {
