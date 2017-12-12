@@ -664,4 +664,16 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         }
         return null;
     }
+    
+    public Rectangle2D.Double getBounds(){
+        if (cachedBounds == null) {
+            if (getChildCount() == 0) {
+                cachedBounds = new Rectangle2D.Double();
+            } else {
+                Rectangle2D r = getFigurePath().getBounds2D();
+                cachedBounds = new Rectangle2D.Double((Double) r.getX(), (Double) r.getY(), (Double) r.getWidth(), (Double) r.getHeight());
+            }
+        }
+        return (Rectangle2D.Double) cachedBounds.clone();
+    }
 }
