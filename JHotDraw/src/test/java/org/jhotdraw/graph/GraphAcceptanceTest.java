@@ -2,7 +2,6 @@ package org.jhotdraw.graph;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
 import org.jhotdraw.graph.steps.*;
-
 import org.junit.After;
 import org.junit.Test;
 
