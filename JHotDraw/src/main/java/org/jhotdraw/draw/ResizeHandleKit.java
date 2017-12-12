@@ -16,7 +16,7 @@ package org.jhotdraw.draw;
 import java.util.*;
 import java.awt.geom.*;
 
-import com.sun.istack.internal.NotNull;
+//import com.sun.istack.internal.NotNull;
 
 /**
  * A set of utility methods to create handles which resize a Figure by
@@ -119,7 +119,7 @@ public class ResizeHandleKit {
      * @param bottomRight Bottom right point of new rect. Can not be null.
      * @param aspectRatio Aspect ratio modificators. Can not be null.
      */
-    static void applyAspectRatio(int direction, @NotNull Point2D.Double topLeft, @NotNull Point2D.Double bottomRight, @NotNull Point2D.Double aspectRatio)
+    static void applyAspectRatio(int direction, Point2D.Double topLeft,  Point2D.Double bottomRight,  Point2D.Double aspectRatio)
     {
         double height = bottomRight.y -  topLeft.y;
         double width = bottomRight.x -  topLeft.x;

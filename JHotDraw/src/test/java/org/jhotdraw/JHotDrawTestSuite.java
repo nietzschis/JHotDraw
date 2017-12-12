@@ -1,5 +1,6 @@
 package org.jhotdraw;
 
+import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;

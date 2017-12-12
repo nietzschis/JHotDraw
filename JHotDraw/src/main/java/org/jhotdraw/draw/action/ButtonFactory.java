@@ -29,6 +29,7 @@ import static org.jhotdraw.draw.AttributeKeys.*;
 import org.jhotdraw.geom.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.gui.JFontChooser;
+import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 
 /**
  * ButtonFactory.
@@ -807,6 +808,64 @@ public class ButtonFactory {
         new SelectionComponentRepainter(editor, popupButton);
         return popupButton;
     }
+
+    
+    private static JPopupButton myColorsAddButton(LinkedList<ColorIcon> list,AttributeKey<Color> attributeKey,DrawingEditor editor, JPopupButton parent){
+     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+     JPopupButton addColors = new JPopupButton();
+     
+                addColors.setUI((PaletteButtonUI) PaletteButtonUI.createUI(addColors));
+                addColors.setItemFont(UIManager.getFont("MenuItem.font"));                
+                labels.configureToolBarButton(addColors, "add.myColors");
+                addColors.addActionListener((ActionEvent e) -> { 
+                    Color color = editor.getDefaultAttribute(attributeKey);            
+                    MyColorsAddAction mc = new MyColorsAddAction();
+                    mc.add(attributeKey, editor,color, parent);
+                    list.add(new ColorIcon(color, color.toString()));
+                });
+                return addColors;              
+    }
+    
+     private static JPopupButton myColorsLoadButton(AttributeKey<Color> attributeKey,DrawingEditor editor, JPopupButton parent){
+     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+     JPopupButton load = new JPopupButton();
+                load.setUI((PaletteButtonUI) PaletteButtonUI.createUI(load));
+                load.setItemFont(UIManager.getFont("MenuItem.font"));
+                labels.configureToolBarButton(load, "load.myColors");                
+                load.addActionListener((ActionEvent e) -> {            
+                MyColorsLoadAction myLoader = new MyColorsLoadAction();
+                myLoader.load(attributeKey,editor, parent,null);
+                
+                });
+      return load;          
+     }
+     
+     private static JPopupButton myColorsSaveButton(LinkedList<ColorIcon> list){
+     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+     JPopupButton save = new JPopupButton();
+                save.setUI((PaletteButtonUI) PaletteButtonUI.createUI(save));
+                save.setItemFont(UIManager.getFont("MenuItem.font"));
+                labels.configureToolBarButton(save, "save.myColors");
+                save.addActionListener((ActionEvent e) -> { 
+                    MyColorsSaveAction mySave = new MyColorsSaveAction();
+                    mySave.save(list,null);
+                });
+                return save;
+     }
+     
+     private static JPopupButton myColorsClearButton(LinkedList<ColorIcon> list){
+     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+     JPopupButton clear = new JPopupButton();
+                clear.setUI((PaletteButtonUI) PaletteButtonUI.createUI(clear));
+                clear.setItemFont(UIManager.getFont("MenuItem.font"));
+                labels.configureToolBarButton(clear, "clear.myColors");
+                clear.addActionListener((ActionEvent e) -> { 
+                    list.clear();
+                    //Clears only list to be saved not UI
+                });
+                return clear;
+     }
+
 
     /**
      * Creates a color button, with an action region and a popup menu. The
