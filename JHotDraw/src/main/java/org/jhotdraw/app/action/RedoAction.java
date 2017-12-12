@@ -13,6 +13,8 @@
  */
 
 package org.jhotdraw.app.action;
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.*;
 import java.awt.event.*;

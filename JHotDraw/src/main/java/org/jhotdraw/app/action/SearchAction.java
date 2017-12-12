@@ -5,6 +5,8 @@
  */
 package org.jhotdraw.app.action;
 
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.*;
 
 import java.awt.*;
@@ -53,13 +55,15 @@ public class SearchAction extends AbstractApplicationAction implements ActionSPI
         tmpList.removeAll(tmpList);
         for (Action action : toolList) {
             String textFieldText = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().getSearchText().toLowerCase();
-            String actionName = action.getClass().getSimpleName().toLowerCase();
-            if (actionName.contains("action")) {
-                actionName = actionName.replace("action", "");
-            }
-            if (actionName.contains(textFieldText)) {
-                if (action.getClass() != SearchAction.class) {
-                    tmpList.add(action);
+            if (!textFieldText.isEmpty()) {
+                String actionName = action.getClass().getSimpleName().toLowerCase();
+                if (actionName.contains("action")) {
+                    actionName = actionName.replace("action", "");
+                }
+                if (actionName.contains(textFieldText)) {
+                    if (action.getClass() != SearchAction.class) {
+                        tmpList.add(action);
+                    }
                 }
             }
         }

@@ -5,6 +5,8 @@
  */
 package org.jhotdraw.app.action;
 
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import java.util.ArrayList;
 import javax.swing.Action;
 import org.jhotdraw.app.AbstractApplication;

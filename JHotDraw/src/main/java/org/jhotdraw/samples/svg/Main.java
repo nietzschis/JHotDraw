@@ -15,7 +15,7 @@
 package org.jhotdraw.samples.svg;
 
 import org.jhotdraw.app.*;
-import org.jhotdraw.app.action.ApplicationSPI;
+import org.jhotdraw.services.ApplicationSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
 import org.openide.util.lookup.ServiceProvider;
 /**

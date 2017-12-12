@@ -14,6 +14,8 @@
 
 package org.jhotdraw.app.action;
 
+import org.jhotdraw.services.ApplicationSPI;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.*;
 
 import java.awt.*;

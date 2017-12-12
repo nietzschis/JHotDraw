@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jhotdraw.app.action;
+package org.jhotdraw.services;
 
 import javax.swing.Action;
 import org.jhotdraw.app.Application;
