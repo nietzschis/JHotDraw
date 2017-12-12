@@ -39,6 +39,7 @@ public class AnimationTest {
     
     @Test
     public void testAddingNullAsFrame() {
+        Animation.getInstance().getFrames().clear();
         Animation.getInstance().addFrame(null);
         assertTrue(Animation.getInstance().getFrames().isEmpty());
         Animation.getInstance().getFrames().clear();

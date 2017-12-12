@@ -36,9 +36,8 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
         then().the_frames_should_be_different();
     }
     
-    @Ignore
     @Test
-    public void play_Animation() {
+    public void play_Animation() throws InterruptedException {
         given().animationWindow()
                 .and()
                 .animationPlayTool();

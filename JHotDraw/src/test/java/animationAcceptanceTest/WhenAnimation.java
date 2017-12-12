@@ -10,12 +10,14 @@ import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
+import static org.jhotdraw.draw.AnimationToolDefinition.*;
 import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
@@ -64,8 +66,21 @@ public class WhenAnimation extends Stage<WhenAnimation> {
         return this;
     }
 
-    void play() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public WhenAnimation play() {
+        animationTool.changeTool(ADD_FRAME_TOOL);
+        Animation.getInstance().setCurrentFrame(animationWindow);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        
+        animationTool.changeTool(PLAY_TOOL);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                animationTool.actionPerformed(mock(ActionEvent.class));
+            }
+        });
+        return this; 
     }
 
     void removing_a_frame() {

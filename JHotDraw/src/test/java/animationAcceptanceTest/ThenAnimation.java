@@ -52,8 +52,11 @@ public class ThenAnimation extends Stage<ThenAnimation> {
         return (SVGView) panel.getComponent(0);
     }
 
-    public void the_animation_plays() {
-        
+    public void the_animation_plays() throws InterruptedException {
+        assertThat(Animation.getInstance()).isNotNull();
+        assertThat(Animation.getInstance().getFrames()).isNotNull();
+        Thread.sleep(500);
+        assertThat(animationTool.getTimesPlayed()).isGreaterThan(0);
     }
 
     public void animation_contains_two_frames() {
