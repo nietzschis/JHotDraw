@@ -52,7 +52,6 @@ public class ToolsToolBar extends AbstractToolBar {
 
     @Override
     protected JComponent createDisclosedComponent(int state) {
-        System.out.println("test");
         JPanel p = null;
 
         switch (state) {
