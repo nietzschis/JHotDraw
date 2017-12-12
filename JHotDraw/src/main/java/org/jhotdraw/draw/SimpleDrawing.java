@@ -14,13 +14,15 @@
 package org.jhotdraw.draw;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import org.jhotdraw.geom.Dimension2DDouble;
-import java.awt.*;
-import java.awt.geom.*;
-import org.jhotdraw.util.*;
-import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.geom.Dimension2DDouble;
 import org.jhotdraw.geom.Geom;
+import org.jhotdraw.util.ReversedList;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
 
 /**
  * DefaultDrawing to be used for drawings that contain only a few children.
@@ -249,6 +251,11 @@ public class SimpleDrawing
         SimpleDrawing that = (SimpleDrawing) super.clone();
         that.canvasSize = (this.canvasSize == null) ? null : (Dimension2DDouble) this.canvasSize.clone();
         return that;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
     }
 
     @Override

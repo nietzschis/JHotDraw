@@ -248,4 +248,9 @@ public class SVGTriangleFigure extends SVGAttributedFigure implements SVGFigure 
         super.invalidate();
         invalidateTransformedShape();
     }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
 }

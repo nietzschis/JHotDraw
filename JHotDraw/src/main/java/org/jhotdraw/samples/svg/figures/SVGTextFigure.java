@@ -15,20 +15,26 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.font.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.geom.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.samples.svg.SVGConstants;
-import org.jhotdraw.util.*;
-import org.jhotdraw.xml.*;
+import org.jhotdraw.geom.Dimension2DDouble;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.Insets2D;
+import org.jhotdraw.samples.svg.Gradient;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+
+import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 /**
  * SVGText.
@@ -429,7 +435,12 @@ public class SVGTextFigure
         that.cachedTextShape = null;
         return that;
     }
-    
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     public boolean isEmpty() {
         return getText() == null || getText().length() == 0;
     }
