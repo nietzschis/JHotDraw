@@ -66,6 +66,7 @@ public class ToolsToolBar extends AbstractToolBar {
         CreationTool creationTool;
         PredefinedFunctionTool predefinedFunctionTool;
         PathTool pathTool;
+        EraserTool eraserTool;
         TextCreationTool textTool;
         TextAreaCreationTool textAreaTool;
         SVGCreateFromFileTool imageTool;
@@ -89,6 +90,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 0, 0, 0);
+        btn.setName("Rectangle");
         p.add(btn, gbc);
         
         btn = ButtonFactory.addToolTo(this, editor, creationTool = new CreationTool(new SVGTriangleFigure(), attributes), "createTriangle", labels);
@@ -107,6 +109,7 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Ellipse");
         p.add(btn, gbc);
 
         btn = ButtonFactory.addToolTo(this, editor, pathTool = new PathTool(new SVGPathFigure(), new SVGBezierFigure(true), attributes), "createPolygon", labels);
@@ -137,7 +140,19 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 3, 0, 0);
+        btn.setName("btnScribbleTool");
         p.add(btn, gbc);
+
+
+           btn = ButtonFactory.addToolTo(this, editor, pathTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes),"createPen", labels);
+           pathTool.setToolDoneAfterCreation(false);
+           btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+           gbc = new GridBagConstraints();
+           gbc.gridx = 3;
+           gbc.gridy = 1;
+           gbc.insets = new Insets(3, 0, 0, 0);
+           p.add(btn, gbc);
+
         
         btn = ButtonFactory.addToolTo(this, editor, predefinedFunctionTool = new PredefinedFunctionTool(new GraphBezierFigure(), attributes), "createGraph", labels);
         predefinedFunctionTool.setToolDoneAfterCreation(true);
@@ -145,8 +160,8 @@ public class ToolsToolBar extends AbstractToolBar {
         predefinedFunctionTool.setList(jPanel);
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 1;
+        gbc.gridx = 4;
+        gbc.gridy = 0;
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
       
@@ -185,6 +200,16 @@ public class ToolsToolBar extends AbstractToolBar {
         gbc.gridy = 2;
         gbc.insets = new Insets(3, 3, 0, 0);
         p.add(btn, gbc);
+        
+        //This code adds the eraser button to the toolbar in JHotDraw
+        btn = ButtonFactory.addToolTo(this, editor, eraserTool = new EraserTool(this), "createEraserTool", labels);
+        btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(3, 3, 0, 0);
+        btn.setName("Eraser");
+        p.add(btn, gbc);
                 }
                 break;
         }
@@ -218,6 +243,8 @@ public class ToolsToolBar extends AbstractToolBar {
     protected String getID() {
         return "tools";
     }
+    
+    @Override
     protected int getDefaultDisclosureState() {
         return 1;
     }

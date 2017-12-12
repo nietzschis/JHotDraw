@@ -117,6 +117,8 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(ClearAction.ID, new ClearAction(this));
         m.putAction(NewAction.ID, new NewAction(this));
         appLabels.configureAction(m.getAction(NewAction.ID), "window.new");
+        m.putAction(DuplicateCanvasAction.ID, new DuplicateCanvasAction(this));
+        appLabels.configureAction(m.getAction(DuplicateCanvasAction.ID), "window.duplicate");
         m.putAction(LoadAction.ID, new LoadAction(this));
         m.putAction(ClearRecentFilesAction.ID, new ClearRecentFilesAction(this));
         m.putAction(SaveAction.ID, new SaveAction(this));

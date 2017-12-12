@@ -35,6 +35,12 @@
             <version>1.8.6</version>
         </dependency>
         <dependency>
+            <groupId>org.xbib</groupId>
+            <artifactId>jsr-305</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -67,7 +73,7 @@
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-junit</artifactId>
-            <version>0.15.1</version>
+            <version>0.15.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -75,6 +81,11 @@
             <artifactId>assertj-swing-junit</artifactId>
             <version>3.8.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.cyberelf.nanoxml</groupId>
+            <artifactId>nanoxml</artifactId>
+            <version>2.2.3</version>
         </dependency>
     </dependencies>   
 </project>
