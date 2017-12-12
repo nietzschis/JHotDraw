@@ -20,7 +20,7 @@ public class GraphCalcTest {
      */
     @Test
     public void linearTest() {
-        LinearGraph[] lineareGraphs = {new LinearGraph(-5, 10,  0), new LinearGraph(7, 5,  0), new LinearGraph(1.55, -0.84,  0), new LinearGraph(50, -50,  0), new LinearGraph(0, 0,  0)};
+        LinearGraph[] lineareGraphs = {new LinearGraph(-5, 10,  300), new LinearGraph(7, 5,  300), new LinearGraph(1.55, -0.84,  300), new LinearGraph(50, -50,  300), new LinearGraph(0, 0,  300)};
         double[] linearInputX = {5, 0.45, -8, 555, -645};
         double[] linearResults = {-15, 8.15, -13.24, 27700, 0};
         for (int i = 0; i < lineareGraphs.length; i++) {
