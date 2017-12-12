@@ -3,9 +3,8 @@ package org.jhotdraw.util;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.junit.SimpleScenarioTest;
 import java.io.File;
-import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
-import org.jhotdraw.app.View;
+import org.jhotdraw.samples.svg.SVGApplicationModel;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -17,6 +16,10 @@ import org.junit.Test;
  */
 public class FileBackupSaverAcceptanceTest extends SimpleScenarioTest<FileBackupSaverAcceptanceTest.Stages> {
     
+    /**
+     * Tests that DefaultSDIApplication will use FileBackupSaver to save files
+     * aften a given interval.
+     */
     @Test
     public void backupFilesShouldBeSavedAfterInterval() {
         given().application();
@@ -24,28 +27,17 @@ public class FileBackupSaverAcceptanceTest extends SimpleScenarioTest<FileBackup
         then().backupFilesHaveBeenSaved();
     }
     
-    @Test
-    public void backupFilesShouldBeSavedOnClose() {
-        given().application();
-        when().applicationStop();
-        then().backupFilesHaveBeenSaved();
-    }
-    
-    public class Stages {
+    public static class Stages {
         @ProvidedScenarioState
         DefaultSDIApplication app;
-        @ProvidedScenarioState
-        View view1;
-        @ProvidedScenarioState
-        View view2;
+        
         
         public void application() {
             app = new LowIntervalBackupApplication();
-            app.init();
-            view1 = app.createView();
-            view2 = app.createView();
-            app.add(view1);
-            app.add(view2);
+            SVGApplicationModel model = new SVGApplicationModel();
+            model.setViewClassName("org.jhotdraw.samples.svg.SVGView");
+            app.setModel(model);
+            app.launch(new String[0]);
         }
         
         public void timeHasElapsed() {
@@ -56,35 +48,28 @@ public class FileBackupSaverAcceptanceTest extends SimpleScenarioTest<FileBackup
             }
         }
         
-        public void applicationStop() {
-            app.stop();
-            try {
-                Thread.sleep(100);
-            } catch (Exception ex) {
-                fail(ex.toString());
+        public void backupFilesHaveBeenSaved() {
+            if (app.views().size() > 0) {
+                app.views().forEach((v) -> {
+                File backup = v.getBackupFile();
+                assertNotNull(backup);
+                assertTrue(backup.exists());
+                }); 
+            } else {
+                fail("No views contained in application (test invalid)");
             }
         }
         
-        public void backupFilesHaveBeenSaved() {
-            File backup = view1.getBackupFile();
-            assertNotNull(backup);
-            assertTrue(backup.exists());
-            backup = view2.getBackupFile();
-            assertNotNull(backup);
-            assertTrue(backup.exists());
-        }
-    }
-    
-    public class LowIntervalBackupApplication extends DefaultSDIApplication {
-        
-        /**
-         * Overriden so that interval is lower, for testing purposes.
-         * @param interval
-         * @param backupLocation 
-         */
-        @Override
-        protected void createAutosaver(int interval, String backupLocation) {
-            super.createAutosaver(1, backupLocation);
+        private class LowIntervalBackupApplication extends DefaultSDIApplication {
+            /**
+             * Overriden so that interval is lower, for testing purposes.
+             * @param interval
+             * @param backupLocation 
+             */
+            @Override
+            protected void createAutosaver(int interval, String backupLocation) {
+                super.createAutosaver(1, backupLocation);
+            }
         }
     }
 }
