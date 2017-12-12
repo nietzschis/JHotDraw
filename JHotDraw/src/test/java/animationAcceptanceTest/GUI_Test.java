@@ -63,7 +63,7 @@ public class GUI_Test {
         
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(2);
     }
-    
+    /*
     @Ignore
     @Test
     public void createAnimation_and_play_and_pause() throws InterruptedException {
@@ -89,5 +89,5 @@ public class GUI_Test {
         window.button("pauseButton").click();
         Thread.sleep(500);
         assertThat(Animation.getInstance().getTimesPlayed()).isEqualTo(0);
-    }
+    }*/
 }

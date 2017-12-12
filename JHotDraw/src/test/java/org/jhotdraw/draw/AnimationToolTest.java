@@ -111,6 +111,7 @@ public class AnimationToolTest {
      * 
      * @throws InterruptedException 
      */
+    /*
     @Test
     public void testPauseTool() throws InterruptedException {
         JFrame frame = new JFrame();
@@ -134,5 +135,5 @@ public class AnimationToolTest {
         animationTool.actionPerformed(new ActionEvent(this, 0, "test"));
         Thread.sleep(1000);
         assertTrue(Animation.getInstance().getTimesPlayed() == 0);
-    }
+    }*/
 }
