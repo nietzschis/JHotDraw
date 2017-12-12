@@ -335,12 +335,18 @@ public class DefaultSDIApplication extends AbstractApplication {
             searchMenu.add(action);
         }
     }
+    
+    @Override
+    public JMenu getSearchMenu(){
+       return searchMenu; 
+    }
 
     @Override
     public String getSearchText() {
         return textField.getText();
     }
     
+    @Override
     public JTextField getTextField(){
         return textField;
     }

@@ -24,12 +24,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ActionSPI.class)
 public class SearchAction extends AbstractApplicationAction implements ActionSPI {
 
-    /**
-     * Displays a dialog showing information about the application.
-     *
-     * @author Werner Randelshofer
-     * @version 1.0 04 January 2005 Created.
-     */
     public final static String ID = "application.search";
     private ArrayList<Action> toolList = new ArrayList<>();
     private ArrayList<Action> tmpList = new ArrayList<>();
@@ -47,14 +41,14 @@ public class SearchAction extends AbstractApplicationAction implements ActionSPI
     public void actionPerformed(ActionEvent evt) {
         getAllTools();
         if (evt.getSource() != null) {
-            Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().setSearchMenu(setList());
+            Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().setSearchMenu(setList(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().getSearchText().toLowerCase()));
         }
     }
 
-    public ArrayList<Action> setList() {
+    public ArrayList<Action> setList(String text) {
         tmpList.removeAll(tmpList);
+        String textFieldText = text; 
         for (Action action : toolList) {
-            String textFieldText = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().getSearchText().toLowerCase();
             //if (!textFieldText.isEmpty()) {
                 String actionName = action.getClass().getSimpleName().toLowerCase();
                 if (actionName.contains("action")) {

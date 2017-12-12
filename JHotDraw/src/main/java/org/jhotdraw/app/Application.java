@@ -253,8 +253,12 @@ public interface Application {
     
     public void setSearchMenu(ArrayList<Action> actions);
     
+    public JMenu getSearchMenu();
+    
     public String getSearchText();
         
     JFrame getFrame();
+    
+    public JTextField getTextField();
     
 }
