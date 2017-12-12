@@ -18,9 +18,6 @@ public class TemplateFactory  {
     
     private static final int pause = 10;
     
-    public TemplateFactory() {
-    }
-    
     public interface TemplateDescriptor {
         void apply(Drawing d);
     }

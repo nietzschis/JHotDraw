@@ -3,7 +3,7 @@ package org.jhotdraw.samples.svg.gui;
 import java.awt.Point;
 
 /**
- * Used to listen for events on the {@link MinimapView}.
+ * Used to listen for events on the minimap.
  */
 public interface MinimapViewListener {
     /**

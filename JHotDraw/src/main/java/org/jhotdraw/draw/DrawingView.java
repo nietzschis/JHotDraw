@@ -147,10 +147,24 @@ public interface DrawingView {
     public void removeFromSelection(Figure figure);
 
     /**
+     * Removes a collection of figures from the current selection.
+     */
+    default void removeFromSelection(Collection<Figure> figures) {
+        figures.forEach(this::removeFromSelection);
+    }
+
+    /**
      * If a figure isn't selected it is added to the selection.
      * Otherwise it is removed from the selection.
      */
     public void toggleSelection(Figure figure);
+
+    /**
+     * Toggles the selection of a collection of figures.
+     */
+    default void toggleSelection(Collection<Figure> figures) {
+        figures.forEach(this::toggleSelection);
+    }
 
     /**
      * Clears the current selection.

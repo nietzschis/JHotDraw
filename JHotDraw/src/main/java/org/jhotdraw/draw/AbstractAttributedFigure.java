@@ -48,6 +48,7 @@ public abstract class AbstractAttributedFigure extends AbstractFigure {
      * They can only be changed by setAttribute().
      */
     private HashSet<AttributeKey> forbiddenAttributes;
+    private static final long serialVersionUID = 8275105943506512003L;
     
     /** Creates a new instance. */
     public AbstractAttributedFigure() {

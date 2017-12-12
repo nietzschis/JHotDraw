@@ -26,7 +26,6 @@ public class ComicsToolBar extends AbstractToolBar {
     /**
     * Creating the panel with JButtons which appears on bottom of screen.
     */
-    @Override
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
         //initialize new panel on bottom of screen
@@ -121,8 +120,7 @@ public class ComicsToolBar extends AbstractToolBar {
         btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
         btn.setPreferredSize(new Dimension(32, 32));
         btn.addActionListener(e ->{
-            //ComicsCanvasCheck.getInstance().setCanvas();
-            ComicsCanvasCheck.getInstance().getOption(d);
+            ComicsCanvasCheck.getInstance().setCanvas(d);
                 if (ComicsCanvasCheck.getInstance().getResult()){
                    TemplateFactory.createTemplate("temp"+templateNumber).apply(d);
                 }

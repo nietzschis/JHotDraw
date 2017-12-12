@@ -28,6 +28,9 @@ import java.io.*;
  * <br>1.0 2001-08-04
  */
 public class AbstractBean extends Object implements java.io.Serializable, Cloneable {
+    
+    private static final long serialVersionUID = 2707165956524541816L;
+    
     protected PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {
