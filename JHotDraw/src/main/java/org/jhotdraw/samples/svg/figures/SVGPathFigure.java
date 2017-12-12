@@ -127,19 +127,24 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             savedTransform = g.getTransform();
             g.transform(TRANSFORM.get(this));
         }
-        Paint paint = SVGAttributeKeys.getFillPaint(this);
+                Paint paint = SVGAttributeKeys.getFillPaint(this);
         if (paint != null) {
             g.setPaint(paint);
             drawFill(g);
         }
-        paint = SVGAttributeKeys.getStrokePaint(this);
-        if (paint != null) {
-            g.setPaint(paint);
+        Paint strokepaint = SVGAttributeKeys.getStrokePaint(this);
+        if (strokepaint != null) {
+            g.setPaint(strokepaint);
             g.setStroke(SVGAttributeKeys.getStroke(this));
             drawStroke(g);
         }
-        if (TRANSFORM.get(this) != null) {
-            g.setTransform(savedTransform);
+        //if gradient color picked a gradient will be created of those two
+        if (strokepaint != null && getFillPaintColor(this) != null) {
+            //Color gradientPaintColor = SVGAttributeKeys.getFillPaintColor(this);
+            Color paintColor = getStrokePaintColor(this);
+            GradientPaint gp = new GradientPaint(75, 75, paintColor, 95, 95, FILL_COLOR.get(this), true);
+            g.setPaint(gp);
+            drawFill(g);  
         }
     }
 
