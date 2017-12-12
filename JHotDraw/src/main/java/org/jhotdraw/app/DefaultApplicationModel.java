@@ -153,19 +153,19 @@ public abstract class DefaultApplicationModel
 
         JButton b;
         Action a;
-        if (null != (a = getAction(NewAction.ID))) {
+        if (null != (a = getActionDynamicly(NewAction.class))) {
             b = tb.add(a);
             b.setFocusable(false);
         }
-        if (null != (a = getAction(DuplicateCanvasAction.ID))) {
+        if (null != (a = getActionDynamicly(DuplicateCanvasAction.class))) {
             b = tb.add(a);
             b.setFocusable(false);
         }
-        if (null != (a = getAction(OpenAction.ID))) {
+        if (null != (a = getActionDynamicly(OpenAction.class))) {
             b = tb.add(a);
             b.setFocusable(false);
         }
-        if (null != (a = getAction(LoadAction.ID))) {
+        if (null != (a = getActionDynamicly(LoadAction.class))) {
             b = tb.add(a);
             b.setFocusable(false);
         }
@@ -176,11 +176,11 @@ public abstract class DefaultApplicationModel
         b = tb.add(getActionDynamicly(RedoAction.class));
         b.setFocusable(false);
         tb.addSeparator();
-        b = tb.add(getAction(CutAction.ID));
+        b = tb.add(getActionDynamicly(CutAction.class));
         b.setFocusable(false);
-        b = tb.add(getAction(CopyAction.ID));
+        b = tb.add(getActionDynamicly(CopyAction.class));
         b.setFocusable(false);
-        b = tb.add(getAction(PasteAction.ID));
+        b = tb.add(getActionDynamicly(PasteAction.class));
         b.setFocusable(false);
 
         LinkedList<JToolBar> list = new LinkedList<JToolBar>();
@@ -207,18 +207,18 @@ public abstract class DefaultApplicationModel
         mi = m.add(getActionDynamicly(RedoAction.class));
         mi.setIcon(null);
         m.addSeparator();
-        mi = m.add(getAction(CutAction.ID));
+        mi = m.add(getActionDynamicly(CutAction.class));
         mi.setIcon(null);
-        mi = m.add(getAction(CopyAction.ID));
+        mi = m.add(getActionDynamicly(CopyAction.class));
         mi.setIcon(null);
-        mi = m.add(getAction(PasteAction.ID));
+        mi = m.add(getActionDynamicly(PasteAction.class));
         mi.setIcon(null);
-        mi = m.add(getAction(DuplicateAction.ID));
+        mi = m.add(getActionDynamicly(DuplicateAction.class));
         mi.setIcon(null);
-        mi = m.add(getAction(DeleteAction.ID));
+        mi = m.add(getActionDynamicly(DeleteAction.class));
         mi.setIcon(null);
         m.addSeparator();
-        mi = m.add(getAction(SelectAllAction.ID));
+        mi = m.add(getActionDynamicly(SelectAllAction.class));
         mi.setIcon(null);
         if (getAction(FindAction.ID) != null) {
             m.addSeparator();
@@ -240,6 +240,7 @@ public abstract class DefaultApplicationModel
     /**
      * Returns the action with the specified id.
      */
+    @Override
     public Action getAction(String id) {
         return (actions == null) ? null : (Action) actions.get(id);
     }

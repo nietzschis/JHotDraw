@@ -24,6 +24,10 @@ import java.io.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Loads a file into the current view.
@@ -32,12 +36,13 @@ import org.jhotdraw.app.View;
  * @version 1.1 2009-03-08 Moved call to getOpenChooser into separate method.
  * <br>1.0  2005-10-16  Created.
  */
-public class LoadAction extends AbstractSaveBeforeAction {
+@ServiceProvider(service = ActionSPI.class)
+public class LoadAction extends AbstractSaveBeforeAction implements ActionSPI{
     public final static String ID = "file.load";
     
     /** Creates a new instance. */
-    public LoadAction(Application app) {
-        super(app);
+    public LoadAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, "file.open");
     }

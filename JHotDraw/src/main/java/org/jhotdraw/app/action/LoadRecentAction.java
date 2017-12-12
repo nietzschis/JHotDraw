@@ -16,14 +16,10 @@ package org.jhotdraw.app.action;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.gui.Worker;
-import org.jhotdraw.util.*;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.gui.event.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.prefs.*;
 import javax.swing.*;
 import java.io.*;
 import org.jhotdraw.app.Application;
@@ -35,12 +31,12 @@ import org.jhotdraw.app.View;
  * @author Werner Randelshofer.
  * @version 1.0 June 15, 2006 Created.
  */
-public class LoadRecentAction extends AbstractSaveBeforeAction {
+public class LoadRecentAction extends AbstractSaveBeforeAction{
     public final static String ID = "file.loadRecent";
     private File file;
     
     /** Creates a new instance. */
-    public LoadRecentAction(Application app, File file) {
+    public LoadRecentAction(Application app) {
         super(app);
         this.file = file;
         putValue(Action.NAME, file.getName());

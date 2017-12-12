@@ -123,44 +123,18 @@ public class DefaultSDIApplication extends AbstractApplication {
     protected void initApplicationActions() {
         ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         ApplicationModel m = getModel();
-        //m.putAction(AboutAction.ID, new AboutAction(this));
-        m.putAction(ExitAction.ID, new ExitAction(this));
-
-        m.putAction(ClearAction.ID, new ClearAction(this));
-        m.putAction(NewAction.ID, new NewAction(this));
-        appLabels.configureAction(m.getAction(NewAction.ID), "window.new");
-        m.putAction(DuplicateCanvasAction.ID, new DuplicateCanvasAction(this));
-        appLabels.configureAction(m.getAction(DuplicateCanvasAction.ID), "window.duplicate");
-        m.putAction(LoadAction.ID, new LoadAction(this));
-        m.putAction(ClearRecentFilesAction.ID, new ClearRecentFilesAction(this));
+        appLabels.configureAction(m.getActionDynamicly(NewAction.class), "window.new");
+        appLabels.configureAction(m.getActionDynamicly(DuplicateCanvasAction.class), "window.duplicate");
         m.putAction(SaveAction.ID, new SaveAction(this));
         m.putAction(SaveAsAction.ID, new SaveAsAction(this));
-        m.putAction(CloseAction.ID, new CloseAction(this));
-        m.putAction(PrintAction.ID, new PrintAction(this));
 
         m.putAction(UndoAction.ID, new UndoAction(this));
-        //m.putAction(RedoAction.ID, new RedoAction(this));
-        m.putAction(CutAction.ID, new CutAction());
-        m.putAction(CopyAction.ID, new CopyAction());
-        m.putAction(PasteAction.ID, new PasteAction());
-        m.putAction(DeleteAction.ID, new DeleteAction());
-        m.putAction(DuplicateAction.ID, new DuplicateAction());
-        m.putAction(SelectAllAction.ID, new SelectAllAction());
         m.putAction(VerticalFlipAction.ID, new VerticalFlipAction());
-        
-        m.putAction(CollaborationStartServerAction.ID, new CollaborationStartServerAction(this));
-        m.putAction(CollaborationStopServerAction.ID, new CollaborationStopServerAction(this));
-        m.putAction(CollaborationListConnectionsAction.ID, new CollaborationListConnectionsAction(this));
-        
-        //TODO: Put menu action here
-        m.putAction(CollaborationConnectAction.ID, new CollaborationConnectAction(this));
-        m.putAction(CollaborationDisconnectAction.ID, new CollaborationDisconnectAction(this));
-        
     }
 
     protected void initViewActions(View p) {
         ApplicationModel m = getModel();
-        p.putAction(LoadAction.ID, m.getAction(LoadAction.ID));
+        p.putAction(LoadAction.ID, m.getActionDynamicly(LoadAction.class));
     }
 
     @SuppressWarnings("unchecked")
@@ -201,7 +175,7 @@ public class DefaultSDIApplication extends AbstractApplication {
             frame.addWindowListener(new WindowAdapter() {
 
                 public void windowClosing(final WindowEvent evt) {
-                    getModel().getAction(CloseAction.ID).actionPerformed(
+                    getModel().getActionDynamicly(CloseAction.class).actionPerformed(
                             new ActionEvent(frame, ActionEvent.ACTION_PERFORMED,
                                     "windowClosing"));
                 }

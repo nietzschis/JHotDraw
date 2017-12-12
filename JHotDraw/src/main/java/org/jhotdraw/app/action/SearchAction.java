@@ -55,7 +55,7 @@ public class SearchAction extends AbstractApplicationAction implements ActionSPI
         tmpList.removeAll(tmpList);
         for (Action action : toolList) {
             String textFieldText = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance().getSearchText().toLowerCase();
-            if (!textFieldText.isEmpty()) {
+            //if (!textFieldText.isEmpty()) {
                 String actionName = action.getClass().getSimpleName().toLowerCase();
                 if (actionName.contains("action")) {
                     actionName = actionName.replace("action", "");
@@ -65,7 +65,7 @@ public class SearchAction extends AbstractApplicationAction implements ActionSPI
                         tmpList.add(action);
                     }
                 }
-            }
+            //}
         }
         return tmpList;
     }

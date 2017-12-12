@@ -26,17 +26,17 @@ public class FileMenu extends AbstractMenu {
         addAction(NewAction.ID);
         addAction(DuplicateCanvasAction.ID);
         addAction(LoadAction.ID);
-        if (model.getAction(LoadDirectoryAction.ID) != null) {
+        if (model.getActionDynamicly(LoadDirectoryAction.class) != null) {
             addAction(LoadDirectoryAction.ID);
         }
         add(openRecentMenu);
         addSeparator();
         addAction(SaveAction.ID);
         addAction(SaveAsAction.ID);
-        if (model.getAction(ExportAction.ID) != null) {
+        if (model.getActionDynamicly(ExportAction.class) != null) {
             addAction(ExportAction.ID);
         }
-        if (model.getAction(PrintAction.ID) != null) {
+        if (model.getActionDynamicly(PrintAction.class) != null) {
             addSeparator();
             addAction(PrintAction.ID);
         }

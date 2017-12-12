@@ -27,20 +27,25 @@ import java.io.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * Exits the application after letting the user review all unsaved views.
  *
  * @author  Werner Randelshofer
  * @version 1.0  04 January 2005  Created.
  */
-public class ExitAction extends AbstractApplicationAction {
+@ServiceProvider(service = ActionSPI.class)
+public class ExitAction extends AbstractApplicationAction implements ActionSPI{
     public final static String ID = "application.exit";
     private Component oldFocusOwner;
     private View unsavedView;
     
     /** Creates a new instance. */
-    public ExitAction(Application app) {
-        super(app);
+    public ExitAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }

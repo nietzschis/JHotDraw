@@ -12,7 +12,11 @@ import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
 import static org.jhotdraw.app.action.CloseAction.ID;
 import org.jhotdraw.samples.svg.SVGView;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *

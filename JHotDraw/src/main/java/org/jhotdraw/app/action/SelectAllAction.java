@@ -24,6 +24,8 @@ import java.util.*;
 import org.jhotdraw.util.*;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * SelectAllAction.
@@ -31,7 +33,8 @@ import org.jhotdraw.app.JHotDrawFeatures;
  * @author Werner Randelshofer.
  * @version 1.0 February 27, 2006 Created.
  */
-public class SelectAllAction extends AbstractAction {
+@ServiceProvider(service = ActionSPI.class)
+public class SelectAllAction extends AbstractAction implements ActionSPI{
     public final static String ID = "edit.selectAll";
     
     /** Creates a new instance. */

@@ -13,7 +13,7 @@ import org.jhotdraw.app.Application;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 
-public class CollaborationConnectAction extends AbstractApplicationAction {
+public class CollaborationConnectAction extends AbstractApplicationAction{
 
     public final static String ID = "collaboration.connect";
     private Application app;

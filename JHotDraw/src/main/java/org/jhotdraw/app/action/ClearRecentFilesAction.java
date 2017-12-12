@@ -20,20 +20,25 @@ import java.awt.event.ActionEvent;
 import java.beans.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * ClearRecentFilesAction.
  *
  * @author Werner Randelshofer.
  * @version 1.0 June 15, 2006 Created.
  */
-public class ClearRecentFilesAction extends AbstractApplicationAction {
+@ServiceProvider(service = ActionSPI.class)
+public class ClearRecentFilesAction extends AbstractApplicationAction implements ActionSPI{
     public final static String ID = "file.clearRecentFiles";
     
     private PropertyChangeListener applicationListener;
     
     /** Creates a new instance. */
-    public ClearRecentFilesAction(Application app) {
-        super(app);
+    public ClearRecentFilesAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
         updateEnabled();

@@ -12,13 +12,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Sadik
  */
-public class HorizontalFlipAction extends AbstractAction{
+@ServiceProvider(service = ActionSPI.class)
+public class HorizontalFlipAction extends AbstractAction implements ActionSPI{
     public final static String ID = "edit.horizontalFlip";
     
     /** Creates a new instance. */
