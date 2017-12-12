@@ -40,7 +40,11 @@ public class FigurePainter {
                 
         }
     }
-    
+    /**
+     * Changes the color of a figure 
+     * @param figure The figure that will be changed
+     * @param color An entry that is an attribute.
+     */
     public void changeColor(Figure figure, Entry color){
         if (color.getKey() == STROKE_COLOR_LEFT_MOUSE ||color.getKey() == STROKE_COLOR_RIGHT_MOUSE){
             figure.setAttribute(STROKE_COLOR, (Color) color.getValue());
