@@ -64,6 +64,7 @@ public class GUI_Test {
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(2);
     }
     
+    /*
     @Ignore
     @Test
     public void createAnimation_and_play_and_pause() throws InterruptedException {
@@ -71,12 +72,10 @@ public class GUI_Test {
         
         JFrame testFrame = new JFrame();
         Animation.getInstance().setCurrentFrame(testFrame);
+        
         window.button("addFrameButton").click();
-        Thread.sleep(1000);
         window.button("addFrameButton").click();
-        Thread.sleep(1000);
         window.button("addFrameButton").click();
-        Thread.sleep(1000);
         assertThat(Animation.getInstance().getFrames().size()).isEqualTo(3);
         
         Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -89,5 +88,5 @@ public class GUI_Test {
         window.button("pauseButton").click();
         Thread.sleep(500);
         assertThat(Animation.getInstance().getTimesPlayed()).isEqualTo(0);
-    }
+    }*/
 }
