@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.jhotdraw.samples.svg.EraserTool;
+import org.jhotdraw.samples.svg.PenTool;
 
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.CLOSED;
 
@@ -51,6 +52,7 @@ public class ToolsToolBar extends AbstractToolBar {
 
     @Override
     protected JComponent createDisclosedComponent(int state) {
+        System.out.println("test");
         JPanel p = null;
 
         switch (state) {
