@@ -47,12 +47,10 @@ import org.junit.runners.Suite;
                     RecordingToolTest.class, RecordingToolGUITest.class,
                     SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
                     ViewSourceActionJGivenTest.class, SVGInputFormatTest.class, DefaultDrawingViewTest.class, SplitTest.class,
-                    DuplicateCanvasAction.class, CorrectStrategyTest.class})
+                    DuplicateCanvasAction.class, CorrectStrategyTest.class,
                     SelectionTest.class,
                     FigureToolBarTestGui_AssertJ_Swing.class,
-                    FigureToolBarTest_JUnit.class
-
-})
+                    FigureToolBarTest_JUnit.class})
 
 public class JHotDrawTestSuite {
 
