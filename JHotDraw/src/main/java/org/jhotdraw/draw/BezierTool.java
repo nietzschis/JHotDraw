@@ -253,7 +253,6 @@ public class BezierTool extends AbstractTool {
         if (createdFigure.getNodeCount() > nodeCountBeforeDrag + 1) {
             figureChange();
         }
-
         if (finishWhenMouseReleased == Boolean.TRUE) {
             if (createdFigure.getNodeCount() > 1) {
                 finishCreation(createdFigure, creationView);
@@ -264,10 +263,9 @@ public class BezierTool extends AbstractTool {
         } else if (finishWhenMouseReleased == null) {
             finishWhenMouseReleased = Boolean.FALSE;
         }
-
-        repaintDottedLine(evt);
-        
+        repaintDottedLine(evt);  
     }
+        
     public void figureChange(){
         createdFigure.willChange();
             BezierPath figurePath = createdFigure.getBezierPath();

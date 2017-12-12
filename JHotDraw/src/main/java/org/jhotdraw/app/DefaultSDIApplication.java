@@ -49,7 +49,8 @@ import org.jhotdraw.util.prefs.*;
 public class DefaultSDIApplication extends AbstractApplication {
 
     private Preferences prefs;
-
+    
+    private JFrame frame;
     /**
      * Creates a new instance.
      */
@@ -445,5 +446,10 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.add(model.getAction(AboutAction.ID));
 
         return m;
+    }
+
+    @Override
+    public JFrame getFrame() {
+        return frame;
     }
 }
