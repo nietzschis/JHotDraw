@@ -6,7 +6,6 @@
 package animationAcceptanceTest;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  *
@@ -20,7 +19,7 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
                 .and()
                 .animationAddFrameTool();
         
-        when().i_Add_Three_New_Frames();
+        when().i_add_three_new_frames();
         
         then().the_Animation_contains_Three_Frames();
     }
@@ -42,22 +41,38 @@ public class AcceptenceTest extends ScenarioTest<GivenAnimation, WhenAnimation, 
                 .and()
                 .animationPlayTool();
         
-        when().i_Add_Three_New_Frames()
+        when().i_add_three_new_frames()
                 .and()
                 .play();
         
         then().the_animation_plays();
     }
     
-    @Ignore
     @Test
     public void remove_Frame() {
-        given().animationWindow_with_three_frames()
+        given().animationWindow()
                 .and()
-                .animationRemoveFrameTool();
+                .animationAddFrameTool();
         
-        when().removing_a_frame();
+        when().i_add_three_new_frames()
+                .and()
+                .removing_a_frame();
         
         then().animation_contains_two_frames();
+    }
+    
+    @Test
+    public void pause_Animation() throws InterruptedException {
+        given().animationWindow()
+                .and()
+                .animationAddFrameTool();
+        
+        when().i_add_three_new_frames()
+                .and()
+                .play()
+                .and()
+                .thenPause();
+        
+        then().the_animation_should_stop();
     }
 }

@@ -9,12 +9,8 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
 import static org.jhotdraw.draw.AnimationToolDefinition.*;
@@ -37,7 +33,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     @ProvidedScenarioState
     AnimationTool animationTool;
     
-    public WhenAnimation i_Add_Three_New_Frames() {
+    public WhenAnimation i_add_three_new_frames() {
         Animation.getInstance().getFrames().clear();
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -83,8 +79,17 @@ public class WhenAnimation extends Stage<WhenAnimation> {
         return this; 
     }
 
-    void removing_a_frame() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public WhenAnimation removing_a_frame() {
+        animationTool.changeTool(REMOVE_FRAME_TOOL);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        return this;
+    }
+
+    public WhenAnimation thenPause() throws InterruptedException {
+        Thread.sleep(500);
+        animationTool.changeTool(PAUSE_TOOL);
+        animationTool.actionPerformed(mock(ActionEvent.class));
+        return this;
     }
     
     

@@ -2,13 +2,14 @@
 package animationAcceptanceTest;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
-import java.awt.Component;
+import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
+import org.jhotdraw.draw.Animation;
 import org.jhotdraw.draw.AnimationTool;
-import org.jhotdraw.draw.AnimationToolDefinition;
 import static org.jhotdraw.draw.AnimationToolDefinition.*;
 import org.jhotdraw.samples.svg.SVGView;
 import org.jhotdraw.samples.svg.figures.SVGRectFigure;
+import static org.mockito.Mockito.mock;
 /**
  *
  * @author lasca
@@ -51,6 +52,9 @@ public class GivenAnimation extends Stage<GivenAnimation> {
     }
 
     public GivenAnimation animationWindow_with_three_frames() {
+        Animation.getInstance().getFrames().clear();
+        animationTool = new AnimationTool(ADD_FRAME_TOOL);
+        
         return this;
     }
 }

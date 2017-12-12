@@ -55,11 +55,25 @@ public class ThenAnimation extends Stage<ThenAnimation> {
     public void the_animation_plays() throws InterruptedException {
         assertThat(Animation.getInstance()).isNotNull();
         assertThat(Animation.getInstance().getFrames()).isNotNull();
+        assertThat(animationTool).isNotNull();
+        
         Thread.sleep(500);
         assertThat(animationTool.getTimesPlayed()).isGreaterThan(0);
     }
 
     public void animation_contains_two_frames() {
+        assertThat(Animation.getInstance()).isNotNull();
+        assertThat(Animation.getInstance().getFrames()).isNotNull();
+        assertThat(animationTool).isNotNull();
         
+        assertThat(Animation.getInstance().getFrames().size()).isEqualTo(2);
+    }
+
+    void the_animation_should_stop() throws InterruptedException {
+        assertThat(Animation.getInstance()).isNotNull();
+        assertThat(Animation.getInstance().getFrames()).isNotNull();
+        assertThat(animationTool).isNotNull();
+        Thread.sleep(100);
+        assertThat(animationTool.getTimesPlayed()).isEqualTo(0);
     }
 }

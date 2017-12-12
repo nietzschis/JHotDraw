@@ -87,7 +87,7 @@ public class AnimationTool extends AbstractAction {
     
     public void removeFrame(JFrame frameToRemove) {
         try{
-            getAnimation().getFrames().remove(getAnimation().getFrames().get(framesPlayed));
+            getAnimation().getFrames().remove(frameToRemove);
             animation = getAnimation();
         }catch(NullPointerException e){
             System.out.println("Frame not found!");
