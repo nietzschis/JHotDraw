@@ -109,7 +109,7 @@ public class FigureToolBar extends AbstractToolBar {
                 
                     //Shadow Slider
                     JPopupButton shadowsPopupButton = new JPopupButton();
-                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 25, 0);
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.HORIZONTAL, 0, 25, 0);
                     shadowsPopupButton.add(shadowsSlider);
                     labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
                     shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
@@ -230,7 +230,7 @@ public class FigureToolBar extends AbstractToolBar {
                     gbc.weightx = 1d;
                     p.add(shadowsField, gbc);
                     JPopupButton shadowsPopupButton = new JPopupButton();
-                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.VERTICAL, 0, 25, 0);
+                    JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.HORIZONTAL, 0, 25, 0);
                     shadowsPopupButton.add(shadowsSlider);
                     labels.configureToolBarButton(shadowsPopupButton, "attribute.addShadow");
                     shadowsPopupButton.setUI((PaletteButtonUI) PaletteButtonUI.createUI(shadowsPopupButton));
