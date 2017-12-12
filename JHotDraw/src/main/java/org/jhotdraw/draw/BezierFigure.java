@@ -102,7 +102,7 @@ public class BezierFigure extends AbstractAttributedFigure {
     /**
      * Returns the Figures connector for the specified location.
      * By default a ChopDiamondConnector is returned.
-     * @see ChopDiamondConnector
+     * @see ChopBezierConnector
      */
     public Connector findConnector(Point2D.Double p, ConnectionFigure prototype) {
         return new ChopBezierConnector(this);
@@ -655,7 +655,12 @@ public class BezierFigure extends AbstractAttributedFigure {
         }
         return false;
     }
-    
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     @Override
     public void write(DOMOutput out) throws IOException {
         writePoints(out);

@@ -14,12 +14,24 @@
 package org.jhotdraw.draw;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import javax.swing.event.*;
-import javax.swing.undo.*;
-import org.jhotdraw.util.*;
+import org.jhotdraw.app.EditableComponent;
+import org.jhotdraw.app.JHotDrawFeatures;
+import org.jhotdraw.util.ResourceBundleUtil;
+import org.jhotdraw.util.ReversedList;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.*;
@@ -27,6 +39,7 @@ import javax.swing.border.EmptyBorder;
 import org.jhotdraw.app.EditableComponent;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.collaboration.client.CollaborationConnection;
+
 import static org.jhotdraw.draw.AttributeKeys.*;
 
 /**
@@ -328,6 +341,14 @@ public class DefaultDrawingView
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, (Options.isTextAntialiased()) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         drawDrawing(g);
     }
+    
+    private Color workspaceBG = Color.GRAY;
+    
+    @Override
+    public Color getWorkspaceBG() { return workspaceBG; }
+    
+    @Override
+    public void setWorkspaceBG(Color color) { workspaceBG = color; }
 
     protected void drawBackground(Graphics2D g) {
         // Position of the zero coordinate point on the view
@@ -356,9 +377,9 @@ public class DefaultDrawingView
             g.fillRect(x, y, w - x, h - y);
         }
 
-        // Draw a gray canvasColor for the area which is at
+        // Draw a Color for the area which is at
         // negative view coordinates.
-        Color outerBackground = new Color(0xf0f0f0);
+        Color outerBackground = workspaceBG;
         if (y > 0) {
             g.setColor(outerBackground);
             g.fillRect(0, 0, w, y);
@@ -1159,6 +1180,18 @@ public class DefaultDrawingView
                 getDrawing().addAll(flips);
             }
         });
+    }
+    
+    @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
+    public int split() {
+        int splittedFigures = 0;
+        Collection<Figure> figures = getSelectedFigures();
+        
+        for(Figure figure : figures) {
+            splittedFigures += figure.splitFigure(editor.getActiveView());
+        }
+
+        return splittedFigures == 0 ? 0 : -1;
     }
     
     
