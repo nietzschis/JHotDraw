@@ -33,7 +33,6 @@ import org.jhotdraw.samples.svg.Erasing;
 
 public class EraserTool extends AbstractTool
 {
-    protected DrawingEditor drawEdit;
     protected Point hotspot = new Point(0,0);
     public Figure fig;
     public AbstractToolBar atb;
@@ -52,7 +51,8 @@ public class EraserTool extends AbstractTool
     @Override
     public void activate(DrawingEditor editor) 
     {
-        this.drawEdit = editor;
+        super.activate(editor);
+        this.editor = editor;
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         String osName = System.getProperty("os.name").toLowerCase();
         
