@@ -43,7 +43,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
     }
 
     public WhenAnimation adding_new_figure_in_frame() {
-        
+        Animation.getInstance().getFrames().clear();
         // Add to animation what there's already in the drawing
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -62,7 +62,7 @@ public class WhenAnimation extends Stage<WhenAnimation> {
         return this;
     }
 
-    public WhenAnimation play() {
+    public WhenAnimation play() throws InterruptedException {
         animationTool.changeTool(ADD_FRAME_TOOL);
         Animation.getInstance().setCurrentFrame(animationWindow);
         animationTool.actionPerformed(mock(ActionEvent.class));
@@ -76,6 +76,9 @@ public class WhenAnimation extends Stage<WhenAnimation> {
                 animationTool.actionPerformed(mock(ActionEvent.class));
             }
         });
+        Thread.sleep(500);
+        animationTool.changeTool(PAUSE_TOOL);
+        animationTool.actionPerformed(mock(ActionEvent.class));
         return this; 
     }
 

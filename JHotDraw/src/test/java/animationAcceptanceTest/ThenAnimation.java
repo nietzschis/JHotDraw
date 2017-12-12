@@ -58,7 +58,7 @@ public class ThenAnimation extends Stage<ThenAnimation> {
         assertThat(animationTool).isNotNull();
         
         Thread.sleep(500);
-        assertThat(animationTool.getTimesPlayed()).isGreaterThan(0);
+        assertThat(Animation.getInstance().getTimesPlayed()).isGreaterThan(0);
     }
 
     public void animation_contains_two_frames() {
@@ -73,7 +73,7 @@ public class ThenAnimation extends Stage<ThenAnimation> {
         assertThat(Animation.getInstance()).isNotNull();
         assertThat(Animation.getInstance().getFrames()).isNotNull();
         assertThat(animationTool).isNotNull();
-        Thread.sleep(100);
-        assertThat(animationTool.getTimesPlayed()).isEqualTo(0);
+        Thread.sleep(500);
+        assertThat(Animation.getInstance().getTimesPlayed()).isEqualTo(0);
     }
 }
