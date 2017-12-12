@@ -454,10 +454,6 @@ public class ButtonFactory {
 
         view.addPropertyChangeListener(new PropertyChangeListener() {
 
-<<<<<<< HEAD
-    public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor) {
-        addColorButtonsTo(toolbar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
-=======
             public void propertyChange(PropertyChangeEvent evt) {
                 // String constants are interned
                 if (evt.getPropertyName() == "workspaceBG") {
@@ -494,7 +490,6 @@ public class ButtonFactory {
 
     public static void addColorButtonsTo(JToolBar bar, DrawingEditor editor) {
         addColorButtonsTo(bar, editor, DEFAULT_COLORS, DEFAULT_COLORS_COLUMN_COUNT);
->>>>>>> refs/remotes/origin/master
     }
 
     public static void addColorButtonsTo(JToolBar toolbar, DrawingEditor editor,
@@ -1090,6 +1085,16 @@ public class ButtonFactory {
 
         return popupButton;
     }
+    
+    public static void addStrokeButtonsTo(JToolBar bar, DrawingEditor editor) {
+        bar.add(createStrokeDecorationButton(editor));
+        bar.add(createStrokeWidthButton(editor));
+        bar.add(createStrokeDashesButton(editor));
+        bar.add(createStrokeTypeButton(editor));
+        bar.add(createStrokePlacementButton(editor));
+        bar.add(createStrokeCapButton(editor));
+        bar.add(createStrokeJoinButton(editor));
+    }
 
     public static JPopupButton createStrokeWidthButton(DrawingEditor editor) {
         return createStrokeWidthButton(
@@ -1380,6 +1385,13 @@ public class ButtonFactory {
                         null));
 
         return strokePlacementPopupButton;
+    }
+    
+    public static void addFontButtonsTo(JToolBar bar, DrawingEditor editor) {
+        bar.add(createFontButton(editor));
+        bar.add(createFontStyleBoldButton(editor, ""));
+        bar.add(createFontStyleItalicButton(editor, ""));
+        bar.add(createFontStyleUnderlineButton(editor, ""));
     }
 
     public static JPopupButton createFontButton(DrawingEditor editor) {
