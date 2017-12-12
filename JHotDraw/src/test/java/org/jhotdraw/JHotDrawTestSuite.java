@@ -1,6 +1,8 @@
 
 package org.jhotdraw;
 
+import animationAcceptanceTest.AcceptenceTest;
+import animationAcceptanceTest.GUI_Test;
 import org.jhotdraw.app.action.MyColorsSaveLoadActionTest;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
@@ -16,13 +18,16 @@ import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
 import org.jhotdraw.draw.SelectionTest;
 import org.jhotdraw.app.action.watermark.WatermarkTest;
+import org.jhotdraw.draw.AnimationTest;
+import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
+import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
-import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
-import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.SVGPathFigureJGivenTest;
 import org.jhotdraw.samples.svg.figures.SVGPathFigureTest;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
+import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
 import org.jhotdraw.samples.svg.gui.FigureToolBarTestGui_AssertJ_Swing;
@@ -32,7 +37,6 @@ import org.jhotdraw.samples.svg.io.SVGInputFormatTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
 import org.jhotdraw.tabs.gui.TabPanelTest;
-import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.util.FileBackupSaverAcceptanceTest;
 import org.jhotdraw.util.FileBackupSaverTest;
 import org.junit.After;
@@ -78,6 +82,10 @@ import org.junit.runners.Suite;
     WatermarkTest.class,
     SVGRoundedRectangleJGiven.class,
     SVGRoundedRectangleTest.class,
+    AcceptenceTest.class,
+    GUI_Test.class,
+    AnimationTest.class,
+    AnimationToolTest.class,
     FileBackupSaverTest.class,
     FileBackupSaverAcceptanceTest.class,
     SVGPathFigureTest.class,
@@ -103,3 +111,4 @@ public class JHotDrawTestSuite {
     }
 
 }
+
