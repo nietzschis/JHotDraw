@@ -36,8 +36,6 @@ public class FigurePainter {
                 figure.setAttribute(STROKE_COLOR, figure.getAttribute(STROKE_COLOR_LEFT_MOUSE));
                 figure.setAttribute(AttributeKeys.FILL_COLOR, figure.getAttribute(AttributeKeys.FILL_COLOR_LEFT_MOUSE));
                 break;
-            default:
-                   System.out.println("Mouse button not reconized, mouse button number: " + MouseButton);
                 
         }
     }
