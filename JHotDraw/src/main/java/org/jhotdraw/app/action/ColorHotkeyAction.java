@@ -21,29 +21,58 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * @author mutten
  */
-public class ColorHotkeyAction extends AbstractAction{
-    
+public class ColorHotkeyAction extends AbstractAction {
+
     public final static String ID = "edit.colorHotkey";
-    
-    /** Creates a new instance. */
+
+    /**
+     * Creates a new instance.
+     */
     public ColorHotkeyAction() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }
-    
+
     @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
-   public void actionPerformed(ActionEvent evt) {
+    public void actionPerformed(ActionEvent evt) {
         Component focusOwner = KeyboardFocusManager.
                 getCurrentKeyboardFocusManager().
                 getPermanentFocusOwner();
         if (focusOwner != null && focusOwner instanceof JComponent) {
             //DO STUFF
-            
-                
-    // <3
-    
+
+            // <3
+        }
+    }
+
+    public static class Red extends ColorHotkeyAction {
+
+        public final static String ID = "edit.colorHotkey.red";
+
+        public Red() {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+            labels.configureAction(this, ID);
+        }
+    }
+
+    public static class Green extends ColorHotkeyAction {
+
+        public final static String ID = "edit.colorHotkey.green";
+
+        public Green() {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+            labels.configureAction(this, ID);
         }
     }
     
-    
+        public static class Blue extends ColorHotkeyAction {
+
+        public final static String ID = "edit.colorHotkey.blue";
+
+        public Blue() {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+            labels.configureAction(this, ID);
+        }
+    }
+
 }
