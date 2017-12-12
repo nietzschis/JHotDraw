@@ -158,6 +158,32 @@ public class SVGAttributeKeys extends AttributeKeys {
         }
         return color;
     }
+     // Method to get color object for stroke paint color
+    public static Color getStrokePaintColor(Figure f) {
+        double opacity = STROKE_OPACITY.get(f);
+        Color color = STROKE_COLOR.get(f);
+        if (color != null) {
+            if (opacity != 1) {
+                color = new Color(
+                        (color.getRGB() & 0xffffff) | (int) (opacity * 255) << 24,
+                        true);
+            }
+        }
+        return color;
+    }
+
+    public static Color getFillPaintColor(Figure f) {
+        double opacity = FILL_OPACITY.get(f);
+        Color color = FILL_COLOR.get(f);
+        if (color != null) {
+            if (opacity != 1) {
+                color = new Color(
+                        (color.getRGB() & 0xffffff) | (int) (opacity * 255) << 24,
+                        true);
+            }
+        }
+        return color;
+    }
     
     
     /** Sets SVG default values. */
