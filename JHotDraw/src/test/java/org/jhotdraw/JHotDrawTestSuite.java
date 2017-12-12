@@ -51,7 +51,7 @@ import org.junit.runners.Suite;
                     DuplicateCanvasAction.class, CorrectStrategyTest.class,
                     SelectionTest.class,
                     FigureToolBarTestGui_AssertJ_Swing.class,
-                    FigureToolBarTest_JUnit.class})
+                    FigureToolBarTest_JUnit.class,
                     DuplicateCanvasAction.class, CorrectStrategyTest.class, WatermarkTest.class})
 
 public class JHotDrawTestSuite {
