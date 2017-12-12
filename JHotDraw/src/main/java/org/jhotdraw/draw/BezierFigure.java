@@ -56,6 +56,8 @@ import org.jhotdraw.xml.DOMOutput;
  * @author Werner Randelshofer
  */
 public class BezierFigure extends AbstractAttributedFigure {
+    
+    private static final long serialVersionUID = -344970781531276717L;
     /**
      * The BezierPath.
      */
@@ -653,7 +655,12 @@ public class BezierFigure extends AbstractAttributedFigure {
         }
         return false;
     }
-    
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     @Override
     public void write(DOMOutput out) throws IOException {
         writePoints(out);

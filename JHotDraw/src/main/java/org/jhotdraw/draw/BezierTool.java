@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 
 /**
@@ -42,7 +43,7 @@ public class BezierTool extends AbstractTool {
      * Set this to true to turn on debugging output on System.out.
      */
     private final static boolean DEBUG = false;
-    private Boolean finishWhenMouseReleased;
+    protected Boolean finishWhenMouseReleased;
     protected Map<AttributeKey, Object> attributes;
     private boolean isToolDoneAfterCreation;
     /**
@@ -61,7 +62,7 @@ public class BezierTool extends AbstractTool {
     private String presentationName;
     private Point mouseLocation;
     /** Holds the view on which we are currently creating a figure. */
-    private DrawingView creationView;
+    protected DrawingView creationView;
 
     /** Creates a new instance. */
     public BezierTool(BezierFigure prototype) {
@@ -191,7 +192,23 @@ public class BezierTool extends AbstractTool {
         }
         createdFigure.changed();
     }
-
+    
+    @Override
+    public void draw(Graphics2D g) {
+        if (createdFigure != null && //
+                anchor != null && //
+                mouseLocation != null &&//
+                getView() == creationView) {
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0f, new float[]{1f, 5f}, 0f));
+            g.drawLine(anchor.x, anchor.y, mouseLocation.x, mouseLocation.y);
+            if (!isWorking && createdFigure.isClosed() && createdFigure.getNodeCount() > 1) {
+                Point p = creationView.drawingToView(createdFigure.getStartPoint());
+                g.drawLine(mouseLocation.x, mouseLocation.y, p.x, p.y);
+            }
+        }
+    }
+    
     @Override
     public void mouseClicked(MouseEvent evt) {
         if (createdFigure != null) {
@@ -259,8 +276,8 @@ public class BezierTool extends AbstractTool {
                 figurePath.remove(nodeCountBeforeDrag - 1);
             }
             BezierPath fittedPath = calculateFittedCurve(digitizedPath);
-            //figurePath.addAll(digitizedPath);
-            figurePath.addAll(fittedPath);
+            figurePath.addAll(digitizedPath);
+            //figurePath.addAll(fittedPath);
             createdFigure.setBezierPath(figurePath);
             createdFigure.changed();
             nodeCountBeforeDrag = createdFigure.getNodeCount();
@@ -271,12 +288,14 @@ public class BezierTool extends AbstractTool {
                 finishCreation(createdFigure, creationView);
                 createdFigure = null;
                 finishWhenMouseReleased = null;
+                
+                // TODO: Her bliver SVG lavet om til Paths
+                CollaborationConnection.getInstance().notifyUpdate("create");
                 return;
             }
         } else if (finishWhenMouseReleased == null) {
             finishWhenMouseReleased = Boolean.FALSE;
         }
-
         // repaint dotted line
         Rectangle r = new Rectangle(anchor);
         r.add(mouseLocation);
@@ -291,7 +310,7 @@ public class BezierTool extends AbstractTool {
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
         fireUndoEvent(createdFigure, creationView);
         creationView.addToSelection(createdFigure);
-        if (isToolDoneAfterCreation) {
+        if (isToolDoneAfterCreation) {            
             fireToolDone();
         }
     }
@@ -303,22 +322,6 @@ public class BezierTool extends AbstractTool {
         int x = evt.getX();
         int y = evt.getY();
         addPointToFigure(getView().viewToDrawing(new Point(x, y)));
-    }
-
-    @Override
-    public void draw(Graphics2D g) {
-        if (createdFigure != null && //
-                anchor != null && //
-                mouseLocation != null &&//
-                getView() == creationView) {
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0f, new float[]{1f, 5f}, 0f));
-            g.drawLine(anchor.x, anchor.y, mouseLocation.x, mouseLocation.y);
-            if (!isWorking && createdFigure.isClosed() && createdFigure.getNodeCount() > 1) {
-                Point p = creationView.drawingToView(createdFigure.getStartPoint());
-                g.drawLine(mouseLocation.x, mouseLocation.y, p.x, p.y);
-            }
-        }
     }
 
     @Override

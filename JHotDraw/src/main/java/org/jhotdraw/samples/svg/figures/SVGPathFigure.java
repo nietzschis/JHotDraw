@@ -14,20 +14,33 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.undo.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.geom.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.util.*;
-import org.jhotdraw.xml.*;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.geom.Shapes;
+import org.jhotdraw.samples.svg.Gradient;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+import org.jhotdraw.samples.svg.action.Split;
+import org.jhotdraw.util.ResourceBundleUtil;
+import org.jhotdraw.xml.DOMInput;
+import org.jhotdraw.xml.DOMOutput;
+
+import javax.swing.*;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoableEdit;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
@@ -44,6 +57,8 @@ import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
  */
 public class SVGPathFigure extends AbstractAttributedCompositeFigure implements SVGFigure {
 
+    private static final long serialVersionUID = 7500584567042233588L;
+    
     /**
      * This cachedPath is used for drawing.
      */
@@ -54,6 +69,8 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      */
     private transient Shape cachedHitShape;
     private final static boolean DEBUG = false;
+
+    private Split split = new Split();
 
     /** Creates a new instance. */
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
@@ -480,6 +497,16 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             }
         }
         return false;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        SVGBezierFigure svgBezierFigure = getChild(0);
+
+        if (split.isALine(svgBezierFigure))
+            return split.line(svgBezierFigure, view);
+
+        return split.fromCenter(svgBezierFigure, view);
     }
 
     @Override

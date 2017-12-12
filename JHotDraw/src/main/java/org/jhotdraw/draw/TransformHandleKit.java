@@ -13,11 +13,15 @@
  */
 package org.jhotdraw.draw;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
 import org.jhotdraw.util.ResourceBundleUtil;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+
 import static org.jhotdraw.draw.HandleAttributeKeys.*;
 
 /**
@@ -212,6 +216,7 @@ public class TransformHandleKit {
         }
 
         protected void transform(Point2D.Double anchor, Point2D.Double lead) {
+            //System.out.println("transform test");
             Figure f = getOwner();
             f.willChange();
             Rectangle2D.Double oldBounds = getTransformedBounds();

@@ -14,13 +14,18 @@
 package org.jhotdraw.draw;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.action.Actions;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * A SelectionTool, which recognizes double clicks and popup menu triggers.
@@ -162,6 +167,7 @@ public class DelegationSelectionTool extends SelectionTool {
             System.out.println("DelegationSelectionTool.mouseClicked " + evt);
         }
         super.mouseClicked(evt);
+
         if (!evt.isConsumed()) {
             if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
                 handleDoubleClick(evt);
@@ -201,25 +207,25 @@ public class DelegationSelectionTool extends SelectionTool {
         popupMenu = menu;
         JMenu submenu = null;
         String submenuName = null;
-        LinkedList<Action> popupActions = new LinkedList<Action>();
+        LinkedList<Action> popupActions = new LinkedList<>();
         if (figure != null) {
-            LinkedList<Action> figureActions = new LinkedList<Action>(
+            LinkedList<Action> figureActions = new LinkedList<>(
                     figure.getActions(viewToDrawing(p)));
-            if (popupActions.size() != 0 && figureActions.size() != 0) {
+            if (!popupActions.isEmpty() && !figureActions.isEmpty()) {
                 popupActions.add(null);
             }
             popupActions.addAll(figureActions);
-            if (popupActions.size() != 0 && selectionActions.size() != 0) {
+            if (!popupActions.isEmpty() && !selectionActions.isEmpty()) {
                 popupActions.add(null);
             }
             popupActions.addAll(selectionActions);
         }
-        if (popupActions.size() != 0 && drawingActions.size() != 0) {
+        if (!popupActions.isEmpty() && !drawingActions.isEmpty()) {
             popupActions.add(null);
         }
         popupActions.addAll(drawingActions);
 
-        HashMap<Object, ButtonGroup> buttonGroups = new HashMap<Object, ButtonGroup>();
+        HashMap<Object, ButtonGroup> buttonGroups = new HashMap<>();
         for (Action a : popupActions) {
             if (a != null && a.getValue(Actions.SUBMENU_KEY) != null) {
                 if (submenuName == null || !submenuName.equals(a.getValue(Actions.SUBMENU_KEY))) {
