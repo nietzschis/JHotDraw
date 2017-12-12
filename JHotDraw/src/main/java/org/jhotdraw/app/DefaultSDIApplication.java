@@ -145,11 +145,8 @@ public class DefaultSDIApplication extends AbstractApplication {
         m.putAction(CollaborationDisconnectAction.ID, new CollaborationDisconnectAction(this));
         
         // Color hot key action
-        m.putAction(ColorHotkeyAction.ID, new ColorHotkeyAction());
-        
-            
-    // <3
-    
+        //m.putAction(ColorHotkeyAction.ID, new ColorHotkeyAction());
+
     }
 
     protected void initViewActions(View p) {

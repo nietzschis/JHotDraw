@@ -15,63 +15,65 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import org.jhotdraw.app.JHotDrawFeatures;
 import static org.jhotdraw.app.action.CopyAction.ID;
+import org.jhotdraw.draw.AttributeKeys;
+import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.Figure;
+import org.jhotdraw.draw.action.AbstractSelectedAction;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  *
  * @author mutten
  */
-public class ColorHotkeyAction extends AbstractAction {
+public class ColorHotkeyAction extends AbstractSelectedAction {
 
     public final static String ID = "edit.colorHotkey";
-
+    public Color currentColor = null;
+    
     /**
      * Creates a new instance.
      */
-    public ColorHotkeyAction() {
-        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-        labels.configureAction(this, ID);
+    
+    public ColorHotkeyAction(DrawingEditor editor) {
+        super(editor);
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.BASIC_EDITING)
     public void actionPerformed(ActionEvent evt) {
-        Component focusOwner = KeyboardFocusManager.
-                getCurrentKeyboardFocusManager().
-                getPermanentFocusOwner();
-        if (focusOwner != null && focusOwner instanceof JComponent) {
-            //DO STUFF
-
-            // <3
+        for (Figure f : getView().getSelectedFigures()) {
+            f.willChange();
+            f.setAttribute(AttributeKeys.STROKE_COLOR, currentColor);
+            f.changed();
         }
     }
 
     public static class Red extends ColorHotkeyAction {
-
-        public final static String ID = "edit.colorHotkey.red";
-
-        public Red() {
-            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        public final static String ID = "edit.red";
+        public Red(DrawingEditor editor) {
+            super(editor);
             labels.configureAction(this, ID);
+            System.out.println("1");
+            super.currentColor = Color.red;
         }
     }
 
     public static class Green extends ColorHotkeyAction {
-
-        public final static String ID = "edit.colorHotkey.green";
-
-        public Green() {
-            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        public final static String ID = "edit.green";
+        public Green(DrawingEditor editor) {
+            super(editor);
             labels.configureAction(this, ID);
+            System.out.println("2");
+            super.currentColor = Color.green;
         }
     }
     
-        public static class Blue extends ColorHotkeyAction {
-
-        public final static String ID = "edit.colorHotkey.blue";
-
-        public Blue() {
-            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+    public static class Blue extends ColorHotkeyAction {
+        public final static String ID = "edit.blue";
+        public Blue(DrawingEditor editor) {
+            super(editor);
             labels.configureAction(this, ID);
+            System.out.println("3");
+            super.currentColor = Color.blue;
         }
     }
 

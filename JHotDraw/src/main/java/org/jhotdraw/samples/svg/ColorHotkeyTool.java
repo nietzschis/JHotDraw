@@ -22,9 +22,6 @@ public class ColorHotkeyTool extends AbstractTool {
     LineTool lt;
     DefaultDrawingEditor dde;
 
-    
-    // <3
-    
     @Override
     public void mouseDragged(MouseEvent me) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
