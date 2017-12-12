@@ -49,6 +49,7 @@ import org.jhotdraw.util.prefs.*;
 public class DefaultSDIApplication extends AbstractApplication {
 
     private Preferences prefs;
+    private FileBackupSaver autoSaver;
 
     /**
      * Creates a new instance.
@@ -70,6 +71,10 @@ public class DefaultSDIApplication extends AbstractApplication {
         prefs = Preferences.userNodeForPackage((getModel() == null) ? getClass() : getModel().getClass());
         initLabels();
         initApplicationActions();
+        
+        int backupInterval = prefs.getInt("backupInterval", DEFAULT_BACKUP_INTERVAL);
+        String backupLocation = prefs.get("backupLocation", DEFAULT_BACKUP_LOCATION);
+        createAutosaver(backupInterval, backupLocation);
     }
 
     @Override
@@ -86,6 +91,22 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("com.apple.macos.useScreenMenuBar", "false");
         System.setProperty("apple.awt.graphics.UseQuartz", "false");
         System.setProperty("swing.aatext", "true");
+    }
+    
+    @Override
+    public void stop() {
+        super.stop();
+        autoSaver.saveFiles();
+        autoSaver.stop();
+    }
+    
+    protected void createAutosaver(int interval, String backupLocation) {
+        if (autoSaver != null) {
+            autoSaver.stop();
+            autoSaver = null;
+        }
+        autoSaver = new FileBackupSaver(this, interval, backupLocation);
+        autoSaver.start();
     }
 
     protected void initLookAndFeel() {
