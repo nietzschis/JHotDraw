@@ -81,8 +81,8 @@ public class SVGApplicationModel extends DefaultApplicationModel {
 
         putAction(ClearSelectionAction.ID, new ClearSelectionAction());
         putAction(ViewSourceAction.ID, new ViewSourceAction(a));
-        putAction(ExportAction.ID, new ExportAction(a));
         putAction(ImportWatermarkAction.ID, new ImportWatermarkAction(a));
+        putAction(ExportAction.ID, new ExportAction(a));
     }
 
     public Collection<Action> createDrawingActions(Application app, DrawingEditor editor) {
