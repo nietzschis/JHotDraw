@@ -26,7 +26,6 @@ public class ComicsToolBar extends AbstractToolBar {
     /**
     * Creating the panel with JButtons which appears on bottom of screen.
     */
-    @Override
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
         //initialize new panel on bottom of screen

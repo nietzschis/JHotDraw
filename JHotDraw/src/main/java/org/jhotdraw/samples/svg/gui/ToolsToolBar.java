@@ -13,19 +13,27 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import javax.swing.border.*;
-import org.jhotdraw.gui.plaf.palette.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.util.*;
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import org.jhotdraw.app.action.*;
+import org.jhotdraw.app.action.DuplicateAction;
+import org.jhotdraw.app.action.SplitSegmentAction;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
-import org.jhotdraw.samples.svg.action.*;
+import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
+import org.jhotdraw.samples.svg.PathTool;
+import org.jhotdraw.samples.svg.SVGCreateFromFileTool;
+import org.jhotdraw.samples.svg.action.CombineAction;
 import org.jhotdraw.samples.svg.figures.*;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import org.jhotdraw.samples.svg.EraserTool;
+import org.jhotdraw.samples.svg.PenTool;
+
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.CLOSED;
 
 /**
  * DrawToolsPane.
@@ -137,6 +145,16 @@ public class ToolsToolBar extends AbstractToolBar {
         btn.setName("btnScribbleTool");
         p.add(btn, gbc);
 
+
+           btn = ButtonFactory.addToolTo(this, editor, pathTool = new PenTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes),"createPen", labels);
+           pathTool.setToolDoneAfterCreation(false);
+           btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+           gbc = new GridBagConstraints();
+           gbc.gridx = 3;
+           gbc.gridy = 1;
+           gbc.insets = new Insets(3, 0, 0, 0);
+           p.add(btn, gbc);
+
         attributes = new HashMap<AttributeKey, Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.black);
         attributes.put(AttributeKeys.STROKE_COLOR, null);
@@ -189,15 +207,15 @@ public class ToolsToolBar extends AbstractToolBar {
     }
 
     public static Collection<Action> createSelectionActions(DrawingEditor editor) {
-        LinkedList<Action> a = new LinkedList<Action>();
+        LinkedList<Action> a = new LinkedList<>();
         a.add(new DuplicateAction());
+        a.add(new SplitSegmentAction(editor));
 
         a.add(null); // separator
 
         a.add(new GroupAction(editor, new SVGGroupFigure()));
         a.add(new UngroupAction(editor, new SVGGroupFigure()));
         a.add(new CombineAction(editor));
-        a.add(new SplitAction(editor));
 
         a.add(null); // separator
 
