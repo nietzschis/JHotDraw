@@ -34,14 +34,14 @@ public class FileMenu extends AbstractMenu {
         addAction(SaveAction.ID);
         addAction(SaveAsAction.ID);
         if (model.getActionDynamicly(ExportAction.class) != null) {
-            addAction(ExportAction.ID);
+            addActionDynamically(ExportAction.class);
         }
         if (model.getActionDynamicly(PrintAction.class) != null) {
             addSeparator();
-            addAction(PrintAction.ID);
+            addActionDynamically(PrintAction.class);
         }
         addSeparator();
-        addAction(ExitAction.ID);
+        addActionDynamically(ExitAction.class);
     }
 
 }

@@ -21,7 +21,7 @@ public class OpenRecentMenu extends AbstractMenu {
     public OpenRecentMenu(ApplicationModel model, Application a, View p) {
         super("file.openRecent", model);
         
-        addAction(ClearRecentFilesAction.ID);
+        addActionDynamically(ClearRecentFilesAction.class);
         updateOpenRecentMenu(a);
 
         a.addPropertyChangeListener(new PropertyChangeListener() {

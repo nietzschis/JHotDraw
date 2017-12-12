@@ -42,12 +42,10 @@ public class AboutAction extends AbstractApplicationAction implements ActionSPI{
         super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
-        System.out.println("this: " + this);
         }
     
     public void actionPerformed(ActionEvent evt) {
         Application app = getApplication();
-        System.out.println(app);
         JOptionPane.showMessageDialog(app.getComponent(),
                 app.getName()+ " "+app.getVersion()+"\n"+app.getCopyright()+
                 "\n\nRunning on Java "+System.getProperty("java.vm.version")+

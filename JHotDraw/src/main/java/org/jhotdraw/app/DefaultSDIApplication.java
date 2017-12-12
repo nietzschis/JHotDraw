@@ -268,7 +268,6 @@ public class DefaultSDIApplication extends AbstractApplication {
     protected JMenuBar createMenuBar(final View p) {
         JMenuBar mb = new JMenuBar();
         for (JMenu mm : getModel().createMenus(this, p)) {
-            System.out.println("test: " + mm);
             mb.add(mm);
         }
         mb.add(createSearchLabel(mb, p));

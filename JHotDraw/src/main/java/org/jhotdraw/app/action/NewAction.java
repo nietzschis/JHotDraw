@@ -48,7 +48,7 @@ public class NewAction extends AbstractApplicationAction implements ActionSPI{
     
     @FeatureEntryPoint(JHotDrawFeatures.MANAGE_DRAWINGS)
     public void actionPerformed(ActionEvent evt) {
-        Application app = getApplication();
+        Application app = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         final View newP = app.createView();
         int multiOpenId = 1;
         for (View existingP : app.views()) {
