@@ -31,8 +31,10 @@ import java.awt.event.ItemListener;
 import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
+import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.app.*;
@@ -45,17 +47,20 @@ import org.jhotdraw.tabs.gui.TabPanel;
  * A view for SVG drawings.
  *
  * @author Werner Randelshofer
- * @version 2.0 2009-04-10 Moved all drawing related toolbars into SVGDrawingPanel.
+ * @version 2.0 2009-04-10 Moved all drawing related toolbars into
+ * SVGDrawingPanel.
  * <br>1.3.1 2008-03-19 Method read() tries out now all supported files format.
- * <br>1.3 2007-11-25 Method clear is now invoked on a worker thread. 
+ * <br>1.3 2007-11-25 Method clear is now invoked on a worker thread.
  * <br>1.2 2006-12-10 Used SVGStorage for reading SVG drawing (experimental).
  * <br>1.1 2006-06-10 Extended to support DefaultDrawApplicationModel.
  * <br>1.0 2006-02-07 Created.
  */
 public class SVGView extends AbstractView implements ExportableView {
+
     public final static String GRID_VISIBLE_PROPERTY = "gridVisible";
 
     protected JFileChooser exportChooser;
+    protected BufferedImage watermarkImage = null;
     protected TabPanel tabs;
     
     //To fix issue with startup
@@ -66,8 +71,8 @@ public class SVGView extends AbstractView implements ExportableView {
         return tabs;
     }
     /**
-     * Each SVGView uses its own undo redo manager.
-     * This allows for undoing and redoing actions per view.
+     * Each SVGView uses its own undo redo manager. This allows for undoing and
+     * redoing actions per view.
      */
     private UndoRedoManager undo;
     HashMap<Drawing, Collection<UndoableEdit>> undoHistoryForTabs = new HashMap<>();
@@ -141,7 +146,15 @@ public class SVGView extends AbstractView implements ExportableView {
      */
     protected Drawing createDrawing() {
         Drawing drawing = new QuadTreeDrawing();
-        LinkedList<InputFormat> inputFormats = new LinkedList<InputFormat>();
+
+        drawing.setInputFormats(inputFormats());     
+        drawing.setOutputFormats(outputFormats());
+
+        return drawing;
+    }
+    
+    protected LinkedList<InputFormat> inputFormats(){
+                LinkedList<InputFormat> inputFormats = new LinkedList<InputFormat>();
         inputFormats.add(new SVGZInputFormat());
         inputFormats.add(new ImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
@@ -149,7 +162,11 @@ public class SVGView extends AbstractView implements ExportableView {
         inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "PNG", "Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         inputFormats.add(new PictImageInputFormat(new SVGImageFigure()));
         inputFormats.add(new TextInputFormat(new SVGTextFigure()));
-        drawing.setInputFormats(inputFormats);
+        
+        return inputFormats;
+    }
+    
+    protected LinkedList<OutputFormat> outputFormats(){
         LinkedList<OutputFormat> outputFormats = new LinkedList<OutputFormat>();
         outputFormats.add(new SVGOutputFormat());
         outputFormats.add(new SVGZOutputFormat());
@@ -158,9 +175,8 @@ public class SVGView extends AbstractView implements ExportableView {
         outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
         outputFormats.add(new ImageOutputFormat("PNG", "Compressed Portable Network Graphics (PNG)", "png", BufferedImage.TYPE_INT_ARGB));
         outputFormats.add(new ImageMapOutputFormat());
-        drawing.setOutputFormats(outputFormats);
-
-        return drawing;
+        
+        return outputFormats;
     }
 
     /**
@@ -219,7 +235,7 @@ public class SVGView extends AbstractView implements ExportableView {
             JFileChooser fc = getOpenChooser();
 
             final Drawing drawing = createDrawing();
-            
+
             // We start with the selected file format in the file chooser,
             // and then try out all formats we can import.
             // We need to try out all formats, because the user may have
@@ -232,7 +248,7 @@ public class SVGView extends AbstractView implements ExportableView {
                     success = true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                        // try with the next input format
+                    // try with the next input format
                 }
             }
             if (!success) {
@@ -243,7 +259,7 @@ public class SVGView extends AbstractView implements ExportableView {
                             success = true;
                             break;
                         } catch (Exception e) {
-                        // try with the next input format
+                            // try with the next input format
                         }
                     }
                 }
@@ -420,15 +436,14 @@ public class SVGView extends AbstractView implements ExportableView {
 
     @Override
     public boolean canSaveTo(File file) {
-        return file.getName().endsWith(".svg") || 
-                file.getName().endsWith(".svgz");
+        return file.getName().endsWith(".svg")
+                || file.getName().endsWith(".svgz");
     }
-    
- 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
@@ -455,16 +470,48 @@ public class SVGView extends AbstractView implements ExportableView {
         if (!f.getName().endsWith("." + format.getFileExtension())) {
             f = new File(f.getPath() + "." + format.getFileExtension());
         }
+
+        format.write(f, svgPanel.getDrawing());
+
         
         format.write(f, getDrawing());
         
         // If selected format was "compressed PNG", compress an image with a web service tinypng.
-        if(filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
+        if (filter.getDescription().equals("Compressed Portable Network Graphics (PNG)")) {
             TinyPngCompressAction.compressImage(f);
         }
 
         preferences.put("viewExportFile", f.getPath());
         preferences.put("viewExportFormat", filter.getDescription());
+        
+        if (watermarkImage != null && (format.getFileExtension().equals("png") || format.getFileExtension().equals("jpg") || format.getFileExtension().equals("gif"))) {
+            try {
+                addImageWatermark(f, format, watermarkImage, new File(f.getPath().substring(0, f.getPath().lastIndexOf('.')) + "_watermarked." + format.getFileExtension()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+
+    @Override
+    public void addImageWatermark(File sourceFile, OutputFormat format, BufferedImage watermarkImage, final File finalFile) throws IOException {
+
+        BufferedImage viewImage = ImageIO.read(sourceFile);
+
+        Graphics2D g2d = (Graphics2D) viewImage.getGraphics();
+        AlphaComposite alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+        g2d.setComposite(alpha);
+
+        g2d.drawImage(watermarkImage, 0, 0, viewImage.getWidth(), viewImage.getHeight(), null);
+
+        ImageIO.write(viewImage, format.getFileExtension(), finalFile);
+        g2d.dispose();
+    }
+
+    @FeatureEntryPoint(JHotDrawFeatures.IMPORT_WATERMARK)
+    public void setWatermark(BufferedImage watermark) {
+        this.watermarkImage = watermark;
     }
 
 

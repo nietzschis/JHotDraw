@@ -14,6 +14,7 @@ import org.jhotdraw.collaboration.server.CollaborationServerTest;
 import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.DefaultDrawingViewTest;
 import org.jhotdraw.draw.SelectionTest;
+import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
@@ -51,6 +52,7 @@ import org.junit.runners.Suite;
                     SelectionTest.class,
                     FigureToolBarTestGui_AssertJ_Swing.class,
                     FigureToolBarTest_JUnit.class})
+                    DuplicateCanvasAction.class, CorrectStrategyTest.class, WatermarkTest.class})
 
 public class JHotDrawTestSuite {
 
