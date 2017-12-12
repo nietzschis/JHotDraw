@@ -48,7 +48,6 @@ public class CollaborationConnection extends UnicastRemoteObject implements IRem
             return true;
         }
         catch (RemoteException | NotBoundException e) {
-            e.printStackTrace();
             return false;
         }
 

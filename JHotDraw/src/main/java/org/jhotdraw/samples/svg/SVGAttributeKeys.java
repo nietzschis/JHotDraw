@@ -90,8 +90,20 @@ public class SVGAttributeKeys extends AttributeKeys {
      * This is a value between 0 and 1 whereas 0 is translucent and 1 is fully opaque.
      */
     public final static AttributeKey<Double> OPACITY = new AttributeKey<Double>("opacity",Double.class, 1d, false, labels);
+
+    /**
+     * Specifies the viewport-fill-shadow of an SVG viewport.
+     */
+    public final static AttributeKey<Double> SHADOWS = new AttributeKey<Double>("addShadow",Double.class, 0d, false, labels);;
+
     
+     /**
+     * Specifies the overall contrast of a SVG figure.
+     * This is a value between 0 and 1 whereas 0 is translucent and 1 is fully opaque. 0d is set as the default value
+     */
+     public final static AttributeKey<Double> CONTRAST = new AttributeKey<Double>("contrast",Double.class, 0d, false, labels);
     
+
     /**
      * Specifies the stroke gradient of a SVG figure.
      */
@@ -149,6 +161,32 @@ public class SVGAttributeKeys extends AttributeKeys {
             return STROKE_GRADIENT.get(f).getPaint(f, opacity);
         }
         Color color = STROKE_COLOR.get(f);
+        if (color != null) {
+            if (opacity != 1) {
+                color = new Color(
+                        (color.getRGB() & 0xffffff) | (int) (opacity * 255) << 24,
+                        true);
+            }
+        }
+        return color;
+    }
+     // Method to get color object for stroke paint color
+    public static Color getStrokePaintColor(Figure f) {
+        double opacity = STROKE_OPACITY.get(f);
+        Color color = STROKE_COLOR.get(f);
+        if (color != null) {
+            if (opacity != 1) {
+                color = new Color(
+                        (color.getRGB() & 0xffffff) | (int) (opacity * 255) << 24,
+                        true);
+            }
+        }
+        return color;
+    }
+
+    public static Color getFillPaintColor(Figure f) {
+        double opacity = FILL_OPACITY.get(f);
+        Color color = FILL_COLOR.get(f);
         if (color != null) {
             if (opacity != 1) {
                 color = new Color(

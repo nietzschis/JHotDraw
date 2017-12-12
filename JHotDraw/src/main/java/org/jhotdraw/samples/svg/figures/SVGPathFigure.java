@@ -14,20 +14,33 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.undo.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import org.jhotdraw.geom.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.util.*;
-import org.jhotdraw.xml.*;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.geom.Shapes;
+import org.jhotdraw.samples.svg.Gradient;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+import org.jhotdraw.samples.svg.action.Split;
+import org.jhotdraw.util.ResourceBundleUtil;
+import org.jhotdraw.xml.DOMInput;
+import org.jhotdraw.xml.DOMOutput;
+
+import javax.swing.*;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoableEdit;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
@@ -56,6 +69,8 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      */
     private transient Shape cachedHitShape;
     private final static boolean DEBUG = false;
+
+    private Split split = new Split();
 
     /** Creates a new instance. */
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
@@ -112,19 +127,24 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             savedTransform = g.getTransform();
             g.transform(TRANSFORM.get(this));
         }
-        Paint paint = SVGAttributeKeys.getFillPaint(this);
+                Paint paint = SVGAttributeKeys.getFillPaint(this);
         if (paint != null) {
             g.setPaint(paint);
             drawFill(g);
         }
-        paint = SVGAttributeKeys.getStrokePaint(this);
-        if (paint != null) {
-            g.setPaint(paint);
+        Paint strokepaint = SVGAttributeKeys.getStrokePaint(this);
+        if (strokepaint != null) {
+            g.setPaint(strokepaint);
             g.setStroke(SVGAttributeKeys.getStroke(this));
             drawStroke(g);
         }
-        if (TRANSFORM.get(this) != null) {
-            g.setTransform(savedTransform);
+        //if gradient color picked a gradient will be created of those two
+        if (strokepaint != null && getFillPaintColor(this) != null) {
+            //Color gradientPaintColor = SVGAttributeKeys.getFillPaintColor(this);
+            Color paintColor = getStrokePaintColor(this);
+            GradientPaint gp = new GradientPaint(75, 75, paintColor, 95, 95, FILL_COLOR.get(this), true);
+            g.setPaint(gp);
+            drawFill(g);  
         }
     }
 
@@ -482,6 +502,16 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             }
         }
         return false;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        SVGBezierFigure svgBezierFigure = getChild(0);
+
+        if (split.isALine(svgBezierFigure))
+            return split.line(svgBezierFigure, view);
+
+        return split.fromCenter(svgBezierFigure, view);
     }
 
     @Override

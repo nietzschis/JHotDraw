@@ -19,7 +19,6 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.geom.*;
 
 /**
@@ -43,7 +42,7 @@ public class BezierTool extends AbstractTool {
      * Set this to true to turn on debugging output on System.out.
      */
     private final static boolean DEBUG = false;
-    private Boolean finishWhenMouseReleased;
+    public Boolean finishWhenMouseReleased;
     protected Map<AttributeKey, Object> attributes;
     private boolean isToolDoneAfterCreation;
     /**
@@ -62,7 +61,7 @@ public class BezierTool extends AbstractTool {
     private String presentationName;
     private Point mouseLocation;
     /** Holds the view on which we are currently creating a figure. */
-    private DrawingView creationView;
+    public DrawingView creationView;
 
     /** Creates a new instance. */
     public BezierTool(BezierFigure prototype) {
@@ -252,7 +251,23 @@ public class BezierTool extends AbstractTool {
         }
         isWorking = false;
         if (createdFigure.getNodeCount() > nodeCountBeforeDrag + 1) {
-            createdFigure.willChange();
+            figureChange();
+        }
+        if (finishWhenMouseReleased == Boolean.TRUE) {
+            if (createdFigure.getNodeCount() > 1) {
+                finishCreation(createdFigure, creationView);
+                createdFigure = null;
+                finishWhenMouseReleased = null;
+                return;
+            }
+        } else if (finishWhenMouseReleased == null) {
+            finishWhenMouseReleased = Boolean.FALSE;
+        }
+        repaintDottedLine(evt);  
+    }
+        
+    public void figureChange(){
+        createdFigure.willChange();
             BezierPath figurePath = createdFigure.getBezierPath();
             BezierPath digitizedPath = new BezierPath();
             for (int i = nodeCountBeforeDrag - 1, n = figurePath.size(); i < n; i++) {
@@ -265,36 +280,25 @@ public class BezierTool extends AbstractTool {
             createdFigure.setBezierPath(figurePath);
             createdFigure.changed();
             nodeCountBeforeDrag = createdFigure.getNodeCount();
-        }
-
-        if (finishWhenMouseReleased == Boolean.TRUE) {
-            if (createdFigure.getNodeCount() > 1) {
-                finishCreation(createdFigure, creationView);
-                createdFigure = null;
-                finishWhenMouseReleased = null;
-                
-                // TODO: Her bliver SVG lavet om til Paths
-                CollaborationConnection.getInstance().notifyUpdate("create");
-                return;
-            }
-        } else if (finishWhenMouseReleased == null) {
-            finishWhenMouseReleased = Boolean.FALSE;
-        }
-        // repaint dotted line
+    }
+    
+    public Rectangle repaintDottedLine(MouseEvent e){
         Rectangle r = new Rectangle(anchor);
         r.add(mouseLocation);
-        r.add(evt.getPoint());
+        r.add(e.getPoint());
         r.grow(1, 1);
         fireAreaInvalidated(r);
-        anchor.x = evt.getX();
-        anchor.y = evt.getY();
-        mouseLocation = evt.getPoint();
+        anchor.x = e.getX();
+        anchor.y = e.getY();
+        mouseLocation = e.getPoint();
+        return r;
+        
     }
 
     protected void finishCreation(BezierFigure createdFigure, DrawingView creationView) {
         fireUndoEvent(createdFigure, creationView);
         creationView.addToSelection(createdFigure);
-        if (isToolDoneAfterCreation) {            
+        if (isToolDoneAfterCreation) {
             fireToolDone();
         }
     }
