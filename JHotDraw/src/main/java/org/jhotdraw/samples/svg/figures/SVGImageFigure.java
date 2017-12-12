@@ -1,4 +1,4 @@
- /*
+/*
  * @(#)SVGImage.java  2.1  2008-05-17
  *
  * Copyright (c) 1996-2008 by the original authors of JHotDraw
@@ -33,14 +33,15 @@ import org.jhotdraw.geom.*;
  * SVGImage.
  *
  * @author Werner Randelshofer
- * @version 2.1 2008-05-17 Rendering hints must be copied, when creating
- * a local Graphics2D object. Remove transformation action was not undoable. 
- * <br>2.0.1 2008-04-13 We must catch all throwables when calling ImageIO.read(). 
+ * @version 2.1 2008-05-17 Rendering hints must be copied, when creating a local
+ * Graphics2D object. Remove transformation action was not undoable.
+ * <br>2.0.1 2008-04-13 We must catch all throwables when calling
+ * ImageIO.read().
  * <br>2.0 2007-04-14 Adapted for new AttributeKeys.TRANSFORM support.
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, ImageHolderFigure {
-    
+
     private static final long serialVersionUID = -6200643115553321938L;
 
     /**
@@ -65,15 +66,17 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private transient BufferedImage bufferedImage;
-    
-    private boolean edgeDetectorApplied; 
+
+    private boolean edgeDetectorApplied;
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
      */
     private transient BufferedImage originalBufferedImage;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public SVGImageFigure() {
         this(0, 0, 0, 0);
         edgeDetectorApplied = false;
@@ -106,10 +109,10 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     // FIXME - We should cache the transformed image.
                     //         Drawing a transformed image appears to be very slow.
                     Graphics2D gx = (Graphics2D) g.create();
-                    
+
                     // Use same rendering hints like parent graphics
                     gx.setRenderingHints(g.getRenderingHints());
-                    
+
                     gx.transform(TRANSFORM.get(this));
                     gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                     gx.dispose();
@@ -178,6 +181,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         rectangle.y = Math.min(anchor.y, lead.y);
         rectangle.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         rectangle.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        SVGAttributeKeys.FIGURE_WIDTH.set(this, rectangle.width);
+        SVGAttributeKeys.FIGURE_HEIGHT.set(this, rectangle.height);
     }
 
     private void invalidateTransformedShape() {
@@ -206,12 +211,13 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
 
     /**
      * Transforms the figure.
+     *
      * @param tx The transformation.
      */
     public void transform(AffineTransform tx) {
         invalidateTransformedShape();
-        if (TRANSFORM.get(this) != null ||
-                (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
+        if (TRANSFORM.get(this) != null
+                || (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
             if (TRANSFORM.get(this) == null) {
                 TRANSFORM.basicSet(this, (AffineTransform) tx.clone());
             } else {
@@ -227,6 +233,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     (Point2D.Double) tx.transform(lead, lead));
         }
     }
+
     // ATTRIBUTES
     public void restoreTransformTo(Object geometry) {
         invalidateTransformedShape();
@@ -246,14 +253,36 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         };
     }
 
+    public <T> void setAttribute(AttributeKey<T> key, T newValue) {
+        if (key.equals(SVGAttributeKeys.TRANSFORM)
+                || key.equals(SVGAttributeKeys.FIGURE_HEIGHT)
+                || key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            invalidate();
+
+        }
+        super.setAttribute(key, newValue);
+        setNewBounds(key);
+    }
+
+    private <T> void setNewBounds(AttributeKey<T> key) {
+        if (SVGAttributeKeys.FIGURE_HEIGHT.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_HEIGHT)) {
+            rectangle.height = SVGAttributeKeys.FIGURE_HEIGHT.get(this);
+        }
+        if (SVGAttributeKeys.FIGURE_WIDTH.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            rectangle.width = SVGAttributeKeys.FIGURE_WIDTH.get(this);
+        }
+    }
+
     // EDITING
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<Handle>();
 
         switch (detailLevel % 2) {
-            case -1 : // Mouse hover handles
-                handles.add(new BoundsOutlineHandle(this,false,true));
+            case -1: // Mouse hover handles
+                handles.add(new BoundsOutlineHandle(this, false, true));
                 break;
             case 0:
                 ResizeHandleKit.addResizeHandles(this, handles);
@@ -279,13 +308,14 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     willChange();
                     fireUndoableEditHappened(
                             TRANSFORM.setUndoable(SVGImageFigure.this, null)
-                            );
+                    );
                     changed();
                 }
             });
         }
         return actions;
     }
+
     // CONNECTING
     @Override
     public boolean canConnect() {
@@ -329,8 +359,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      *
      * @param imageData The image data. If this is null, a buffered image must
      * be provided.
-     * @param bufferedImage An image constructed from the imageData. If this
-     * is null, imageData must be provided.
+     * @param bufferedImage An image constructed from the imageData. If this is
+     * null, imageData must be provided.
      */
     public void setImage(byte[] imageData, BufferedImage bufferedImage) {
         willChange();
@@ -340,8 +370,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Sets the image data.
-     * This clears the buffered image.
+     * Sets the image data. This clears the buffered image.
      */
     public void setImageData(byte[] imageData) {
         willChange();
@@ -349,7 +378,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
-    
+
     public void setOriginalBufferedImage(BufferedImage oimage) {
         willChange();
         this.originalBufferedImage = oimage;
@@ -358,8 +387,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Sets the buffered image.
-     * This clears the image data.
+     * Sets the buffered image. This clears the image data.
      */
     public void setBufferedImage(BufferedImage image) {
         willChange();
@@ -389,14 +417,15 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         }
         return bufferedImage;
     }
-    
+
     public boolean getEdgeDetectorApplied() {
         return this.edgeDetectorApplied;
     }
+
     public void setEdgeDetectorApplied(boolean applied) {
         this.edgeDetectorApplied = applied;
     }
-    
+
     /**
      * Gets the original buffered image.
      */
@@ -405,8 +434,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Gets the image data. If necessary, this method creates the image
-     * data from the buffered image.
+     * Gets the image data. If necessary, this method creates the image data
+     * from the buffered image.
      */
     public byte[] getImageData() {
         if (bufferedImage != null && imageData == null) {

@@ -146,6 +146,8 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         ellipse.y = Math.min(anchor.y, lead.y);
         ellipse.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         ellipse.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        SVGAttributeKeys.FIGURE_WIDTH.set(this, ellipse.width);
+        SVGAttributeKeys.FIGURE_HEIGHT.set(this, ellipse.height);
         invalidate();
     }
 
@@ -204,6 +206,29 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
     // ATTRIBUTES
+    
+        public <T> void setAttribute(AttributeKey<T> key, T newValue) {
+        if (key.equals(SVGAttributeKeys.TRANSFORM)
+                || key.equals(SVGAttributeKeys.FIGURE_HEIGHT)
+                || key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            invalidate();
+
+        }
+        super.setAttribute(key, newValue);
+        setNewBounds(key);
+    }
+
+    private <T> void setNewBounds(AttributeKey<T> key) {
+        if (SVGAttributeKeys.FIGURE_HEIGHT.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_HEIGHT)) {
+            ellipse.height = SVGAttributeKeys.FIGURE_HEIGHT.get(this);
+        }
+        if (SVGAttributeKeys.FIGURE_WIDTH.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            ellipse.width = SVGAttributeKeys.FIGURE_WIDTH.get(this);
+        }
+    }
+    
     // EDITING
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
