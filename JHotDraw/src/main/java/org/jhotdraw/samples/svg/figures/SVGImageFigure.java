@@ -1,4 +1,4 @@
- /*
+/*
  * @(#)SVGImage.java  2.1  2008-05-17
  *
  * Copyright (c) 1996-2008 by the original authors of JHotDraw
@@ -28,25 +28,25 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
-
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.OPACITY;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.TRANSFORM;
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
 
 /**
  * SVGImage.
  *
  * @author Werner Randelshofer
- * @version 2.1 2008-05-17 Rendering hints must be copied, when creating
- * a local Graphics2D object. Remove transformation action was not undoable. 
- * <br>2.0.1 2008-04-13 We must catch all throwables when calling ImageIO.read(). 
+ * @version 2.1 2008-05-17 Rendering hints must be copied, when creating a local
+ * Graphics2D object. Remove transformation action was not undoable.
+ * <br>2.0.1 2008-04-13 We must catch all throwables when calling
+ * ImageIO.read().
  * <br>2.0 2007-04-14 Adapted for new AttributeKeys.TRANSFORM support.
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, ImageHolderFigure {
-    
+
     private static final long serialVersionUID = -6200643115553321938L;
 
     /**
@@ -71,15 +71,34 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private transient BufferedImage bufferedImage;
-    
-    private boolean edgeDetectorApplied; 
+
+    private boolean edgeDetectorApplied;
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
      */
     private transient BufferedImage originalBufferedImage;
 
-    /** Creates a new instance. */
+    //Contrast
+    private RescaleOp op;
+
+    private String temp = "d";
+
+    public enum Strings {
+        CONTRAST, OPACITY
+    }
+
+    private BufferedImage image;
+
+    private Graphics2D gx;
+
+    private Composite savedComposite;
+    private Shape shape;
+
+    //Contrast Ende
+    /**
+     * Creates a new instance.
+     */
     public SVGImageFigure() {
         this(0, 0, 0, 0);
         edgeDetectorApplied = false;
@@ -98,43 +117,89 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     public void draw(Graphics2D g) {
         //super.draw(g);
 
+        //sets the opacity
         double opacity = OPACITY.get(this);
         opacity = Math.min(Math.max(0d, opacity), 1d);
-        if (opacity != 0d) {
-            Composite savedComposite = g.getComposite();
-            if (opacity != 1d) {
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity));
+        newContrast(OPACITY, opacity, g);
+
+        //sets the contrast
+        double contrast = CONTRAST.get(this);
+        newContrast(CONTRAST, contrast, g);
+
+    }
+
+    public void newContrast(AttributeKey attribute, double newContrast, Graphics2D g) {
+
+        if (newContrast != 0d) {
+
+            savedComposite = g.getComposite();
+            if (newContrast != 1d) {
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) newContrast));
             }
 
-            BufferedImage image = getBufferedImage();
+            image = getBufferedImage();////
+            /// System.out.println(Strings.contrast);
+            if (attribute.getKey().equals(Strings.CONTRAST.toString().toLowerCase())) {
+                image = rescaleImage(image, newContrast);
+             
+            }
+
             if (image != null) {
                 if (TRANSFORM.get(this) != null) {
                     // FIXME - We should cache the transformed image.
-                    //         Drawing a transformed image appears to be very slow.
-                    Graphics2D gx = (Graphics2D) g.create();
-                    
+                    //    Drawing a transformed image appears to be very slow.
+                    transform(g);
                     // Use same rendering hints like parent graphics
-                    gx.setRenderingHints(g.getRenderingHints());
-                    
-                    gx.transform(TRANSFORM.get(this));
-                    gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
-                    gx.dispose();
+                    //  gx.setRenderingHints(g.getRenderingHints());
+
                 } else {
+
                     g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                 }
             } else {
-                Shape shape = getTransformedShape();
-                g.setColor(Color.red);
-                g.setStroke(new BasicStroke());
-                g.draw(shape);
+                
+             drawShape(g);
             }
 
-            if (opacity != 1d) {
+            if (newContrast != 1d) {
                 g.setComposite(savedComposite);
             }
         }
+
     }
 
+    //Contrast
+    public BufferedImage rescaleImage(BufferedImage image, double contrastValue) {
+        op = new RescaleOp(((float) contrastValue / 100), 0, null);
+        image = op.filter(image, null);
+
+        return image;
+    }
+
+    //transform the Graphic component if the image is not null
+    public void transform(Graphics2D g) {
+        gx = (Graphics2D) g.create();
+        gx.transform(TRANSFORM.get(this));
+        gx.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
+        gx.dispose();
+    }
+    
+    //Draws the shape
+    public void drawShape(Graphics2D gx){
+        shape = getTransformedShape();
+                gx.setColor(Color.red);
+                gx.setStroke(new BasicStroke());
+                gx.draw(shape);
+    }
+  
+    
+
+    //Contrast End
+    
+    
+    
+    
+    
     protected void drawFill(Graphics2D g) {
 
     }
@@ -212,12 +277,13 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
 
     /**
      * Transforms the figure.
+     *
      * @param tx The transformation.
      */
     public void transform(AffineTransform tx) {
         invalidateTransformedShape();
-        if (TRANSFORM.get(this) != null ||
-                (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
+        if (TRANSFORM.get(this) != null
+                || (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
             if (TRANSFORM.get(this) == null) {
                 TRANSFORM.basicSet(this, (AffineTransform) tx.clone());
             } else {
@@ -233,6 +299,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     (Point2D.Double) tx.transform(lead, lead));
         }
     }
+
     // ATTRIBUTES
     public void restoreTransformTo(Object geometry) {
         invalidateTransformedShape();
@@ -258,8 +325,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         LinkedList<Handle> handles = new LinkedList<Handle>();
 
         switch (detailLevel % 2) {
-            case -1 : // Mouse hover handles
-                handles.add(new BoundsOutlineHandle(this,false,true));
+            case -1: // Mouse hover handles
+                handles.add(new BoundsOutlineHandle(this, false, true));
                 break;
             case 0:
                 ResizeHandleKit.addResizeHandles(this, handles);
@@ -285,13 +352,14 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     willChange();
                     fireUndoableEditHappened(
                             TRANSFORM.setUndoable(SVGImageFigure.this, null)
-                            );
+                    );
                     changed();
                 }
             });
         }
         return actions;
     }
+
     // CONNECTING
     @Override
     public boolean canConnect() {
@@ -340,8 +408,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      *
      * @param imageData The image data. If this is null, a buffered image must
      * be provided.
-     * @param bufferedImage An image constructed from the imageData. If this
-     * is null, imageData must be provided.
+     * @param bufferedImage An image constructed from the imageData. If this is
+     * null, imageData must be provided.
      */
     public void setImage(byte[] imageData, BufferedImage bufferedImage) {
         willChange();
@@ -351,8 +419,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Sets the image data.
-     * This clears the buffered image.
+     * Sets the image data. This clears the buffered image.
      */
     public void setImageData(byte[] imageData) {
         willChange();
@@ -369,8 +436,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Sets the buffered image.
-     * This clears the image data.
+     * Sets the buffered image. This clears the image data.
      */
     public void setBufferedImage(BufferedImage image) {
         willChange();
@@ -404,10 +470,11 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     public boolean getEdgeDetectorApplied() {
         return this.edgeDetectorApplied;
     }
+
     public void setEdgeDetectorApplied(boolean applied) {
         this.edgeDetectorApplied = applied;
     }
-    
+
     /**
      * Gets the original buffered image.
      */
@@ -416,8 +483,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
     }
 
     /**
-     * Gets the image data. If necessary, this method creates the image
-     * data from the buffered image.
+     * Gets the image data. If necessary, this method creates the image data
+     * from the buffered image.
      */
     public byte[] getImageData() {
         if (bufferedImage != null && imageData == null) {
