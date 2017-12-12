@@ -1,3 +1,4 @@
+
 package org.jhotdraw;
 
 import animationAcceptanceTest.AcceptenceTest;
@@ -21,7 +22,10 @@ import org.jhotdraw.draw.AnimationTest;
 import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
+import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
+import org.jhotdraw.samples.svg.figures.SVGPathFigureJGivenTest;
+import org.jhotdraw.samples.svg.figures.SVGPathFigureTest;
 import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleJGiven;
 import org.jhotdraw.samples.svg.figures.RoundRectangle.SVGRoundedRectangleTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
@@ -83,7 +87,10 @@ import org.junit.runners.Suite;
     AnimationTest.class,
     AnimationToolTest.class,
     FileBackupSaverTest.class,
-    FileBackupSaverAcceptanceTest.class})
+    FileBackupSaverAcceptanceTest.class,
+    SVGPathFigureTest.class,
+    StartLineTextStrategyTest.class, 
+    SVGPathFigureJGivenTest.class})
 
 public class JHotDrawTestSuite {
 
@@ -104,3 +111,4 @@ public class JHotDrawTestSuite {
     }
 
 }
+
