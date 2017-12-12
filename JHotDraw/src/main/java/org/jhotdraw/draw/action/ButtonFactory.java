@@ -741,6 +741,9 @@ public class ButtonFactory {
      * @param colorShape This shape is superimposed on the icon of the button.
      * The shape is drawn with the default color of the DrawingEditor.
      */
+    
+    private static LinkedList<ColorIcon> myColorList;
+    
     public static JPopupButton createSelectionColorButton(
             DrawingEditor editor, AttributeKey<Color> attributeKey,
             java.util.List<ColorIcon> swatches, int columnCount,
@@ -801,6 +804,19 @@ public class ButtonFactory {
                 attributeKey,
                 labels.getIconProperty(labelKey, ButtonFactory.class).getImage(),
                 colorShape);
+        
+        //My Colors Begins 
+        for (int i = 0; i < 7; i++) {
+            popupButton.addSeparator();
+        }
+        myColorList = new LinkedList<>();
+        popupButton.add(myColorsAddButton(myColorList,attributeKey,editor,popupButton));
+        popupButton.add(myColorsLoadButton(attributeKey,editor,popupButton));
+        popupButton.add(myColorsSaveButton(myColorList));
+        popupButton.add(myColorsClearButton(myColorList));
+        //My Colors ends
+        
+        
         popupButton.setIcon(icon);
         popupButton.setDisabledIcon(icon);
         popupButton.setFocusable(false);
