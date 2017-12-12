@@ -14,14 +14,22 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.geom.Geom;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.samples.svg.Gradient;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
-import org.jhotdraw.geom.*;
-import org.jhotdraw.samples.svg.*;
 
 /**
  * SVGEllipse represents a SVG ellipse and a SVG circle element.
@@ -245,6 +253,11 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         that.ellipse = (Ellipse2D.Double) this.ellipse.clone();
         that.cachedTransformedShape = null;
         return that;
+    }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
     }
 
     // EVENT HANDLING
