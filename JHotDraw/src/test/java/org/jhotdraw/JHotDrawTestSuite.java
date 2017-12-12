@@ -3,6 +3,7 @@ package org.jhotdraw;
 import org.jhotdraw.app.action.TinyPngCompressActionJGivenTest;
 import org.jhotdraw.app.action.TinyPngCompressActionTest;
 import org.jhotdraw.app.action.watermark.WatermarkTest;
+import org.jhotdraw.samples.svg.action.ViewSourceActionJGivenTest;
 import org.jhotdraw.draw.action.ButtonFactoryTest;
 import org.jhotdraw.draw.action.MagnifyingGlassAcceptanceTest;
 import org.jhotdraw.collaboration.CollaborationAcceptanceTest;
@@ -16,6 +17,7 @@ import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
 import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactoryTest;
+import org.jhotdraw.samples.svg.io.SVGInputFormatTest;
 import org.jhotdraw.tabs.SimpleTabManagerTest;
 import org.jhotdraw.tabs.gui.SimpleTabManagerTestAcceptance;
 import org.jhotdraw.tabs.gui.TabPanelTest;
@@ -34,12 +36,12 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TinyPngCompressActionJGivenTest.class, TinyPngCompressActionTest.class,
                      SVGTriangleFigureTest.class, TriangleJGivenTest.class, DefaultSVGFigureFactoryTest.class, SimpleDrawingViewTest.class, 
-                    CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class, 
+                    CollaborationDrawingHandlerTest.class, CollaborationServerTest.class, RemoteObservableTest.class,
                     CollaborationAcceptanceTest.class, CollaborationGUITest.class,
                     SimpleTabManagerTest.class, TabPanelTest.class, SimpleTabManagerTestAcceptance.class,
                     RecordingToolTest.class, RecordingToolGUITest.class,
                     SelectionTest.class, SelectionTest.class, ButtonFactoryTest.class, MagnifyingGlassAcceptanceTest.class,
-                    WatermarkTest.class})
+                    WatermarkTest.class, ViewSourceActionJGivenTest.class, SVGInputFormatTest.class})
   
 public class JHotDrawTestSuite {
 
