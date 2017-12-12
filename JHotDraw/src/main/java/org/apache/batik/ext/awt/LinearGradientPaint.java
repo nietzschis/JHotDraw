@@ -15,8 +15,6 @@
    limitations under the License.
 
  */
-
-
 package org.apache.batik.ext.awt;
 
 import java.awt.Color;

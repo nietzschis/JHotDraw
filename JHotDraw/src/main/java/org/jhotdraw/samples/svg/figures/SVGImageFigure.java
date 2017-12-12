@@ -14,20 +14,26 @@
 package org.jhotdraw.samples.svg.figures;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.draw.*;
-import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
-import org.jhotdraw.samples.svg.*;
-import org.jhotdraw.util.*;
-import org.jhotdraw.geom.*;
+import org.jhotdraw.geom.GrowStroke;
+import org.jhotdraw.samples.svg.SVGAttributeKeys;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.OPACITY;
+import static org.jhotdraw.samples.svg.SVGAttributeKeys.TRANSFORM;
 
 /**
  * SVGImage.
@@ -40,6 +46,8 @@ import org.jhotdraw.geom.*;
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, ImageHolderFigure {
+    
+    private static final long serialVersionUID = -6200643115553321938L;
 
     /**
      * This rectangle describes the bounds into which we draw the image.
@@ -62,14 +70,14 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * The buffered image. This can be null, if we haven't yet parsed the
      * imageData.
      */
-    private BufferedImage bufferedImage;
+    private transient BufferedImage bufferedImage;
     
     private boolean edgeDetectorApplied; 
     /**
      * The original buffered image. This can be null, if we haven't yet applied
      * the edge detector to an image.
      */
-    private BufferedImage originalBufferedImage;
+    private transient BufferedImage originalBufferedImage;
 
     /** Creates a new instance. */
     public SVGImageFigure() {
@@ -311,6 +319,11 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         return that;
     }
 
+    @Override
+    public int splitFigure(DrawingView view) {
+        return -1;
+    }
+
     public boolean isEmpty() {
         Rectangle2D.Double b = getBounds();
         return b.width <= 0 || b.height <= 0 || imageData == null && bufferedImage == null;
@@ -347,7 +360,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         this.bufferedImage = null;
         changed();
     }
-    
+
     public void setOriginalBufferedImage(BufferedImage oimage) {
         willChange();
         this.originalBufferedImage = oimage;
@@ -387,7 +400,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         }
         return bufferedImage;
     }
-    
+
     public boolean getEdgeDetectorApplied() {
         return this.edgeDetectorApplied;
     }

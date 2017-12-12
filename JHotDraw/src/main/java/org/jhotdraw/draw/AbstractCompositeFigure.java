@@ -37,6 +37,8 @@ public abstract class AbstractCompositeFigure
         extends AbstractFigure
         implements CompositeFigure {
 
+    private static final long serialVersionUID = -5328533915004039844L;
+    
     /**
      * A Layouter determines how the children of the CompositeFigure
      * are laid out graphically.
@@ -64,6 +66,8 @@ public abstract class AbstractCompositeFigure
 
     protected class EventHandler extends FigureAdapter implements UndoableEditListener, Serializable {
 
+        private static final long serialVersionUID = -2379252028260378610L;
+        
         @Override
         public void figureRequestRemove(FigureEvent e) {
             remove(e.getFigure());
@@ -525,6 +529,7 @@ public abstract class AbstractCompositeFigure
     public void basicAdd(int index, Figure figure) {
         children.add(index, figure);
         figure.addFigureListener(eventHandler);
+        figure.setCollaborationId();
     }
 
     public Figure basicRemoveChild(int index) {

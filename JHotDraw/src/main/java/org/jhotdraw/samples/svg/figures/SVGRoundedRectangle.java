@@ -266,4 +266,9 @@ import org.jhotdraw.samples.svg.*;
         cachedTransformedShape = null;
         cachedHitShape = null;
     }
+
+    @Override
+    public int splitFigure(DrawingView view) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

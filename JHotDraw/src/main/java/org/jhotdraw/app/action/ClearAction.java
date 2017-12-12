@@ -29,7 +29,7 @@ import org.jhotdraw.app.View;
  * @version 1.1 2007-11-25 Call method clear on a worker thread.
  * <br>1.0  2005-10-16 Created.
  */
-public class ClearAction extends AbstractSaveBeforeAction {
+public class ClearAction extends AbstractViewAction {
     public final static String ID = "file.clear";
     
     /** Creates a new instance. */
@@ -39,7 +39,10 @@ public class ClearAction extends AbstractSaveBeforeAction {
         labels.configureAction(this, "file.new");
     }
     
-    @Override public void doIt(final View view) {
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        final View view = getActiveView();
         view.setEnabled(false);
         view.execute(new Worker() {
             public Object construct() {

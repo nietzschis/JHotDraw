@@ -105,6 +105,36 @@ public class ViewToolBar extends AbstractToolBar {
                     gbc.weightx = 1;
                     btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, toggleGridButton.getPreferredSize().height));
                     p.add(btn, gbc);
+                    
+                    //Magnifying button
+                    AbstractButton magnifyButton;
+                    magnifyButton = btn = ButtonFactory.createMagnifyButton(view);
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "view.magnifyGlass");
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.NONE;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    p.add(btn, gbc);
+                    
+                    // BG button
+                    btn = ButtonFactory.createWorkspaceBGButton(view);
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "view.workspaceBGColor");
+                    btn.setText("Gray");
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 3;
+                    gbc.gridwidth = GridBagConstraints.REMAINDER;
+                    gbc.fill = GridBagConstraints.HORIZONTAL;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    gbc.weighty = 1;
+                    gbc.weightx = 1;
+                    btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, toggleGridButton.getPreferredSize().height));
+                    p.add(btn, gbc);
                 }
                 break;
             case 2:
@@ -211,6 +241,36 @@ public class ViewToolBar extends AbstractToolBar {
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                     gbc.insets = new Insets(3, 0, 0, 0);
                     gbc.weighty = 1;
+                    btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, scaleFactorField.getPreferredSize().height));
+                    p.add(btn, gbc);
+                    
+                    //Magnify button
+                    AbstractButton magnifyButton;
+                    magnifyButton = btn = ButtonFactory.createMagnifyButton(view);
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "view.magnifyGlass");
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 2;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.fill = GridBagConstraints.NONE;
+                    gbc.insets = new Insets(0, 0, 0, 0);
+                    p.add(btn, gbc);
+                    
+                    // BG button
+                    btn = ButtonFactory.createWorkspaceBGButton(view);
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    labels.configureToolBarButton(btn, "view.workspaceBGColor");
+                    btn.setText("Gray");
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 1;
+                    gbc.gridy = 3;
+                    gbc.gridwidth = GridBagConstraints.REMAINDER;
+                    gbc.fill = GridBagConstraints.HORIZONTAL;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.insets = new Insets(3, 0, 0, 0);
+                    gbc.weighty = 1;
+                    gbc.weightx = 1;
                     btn.setPreferredSize(new Dimension(btn.getPreferredSize().width, scaleFactorField.getPreferredSize().height));
                     p.add(btn, gbc);
                 }
