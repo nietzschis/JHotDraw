@@ -86,14 +86,14 @@ public class FigureToolBar extends AbstractToolBar {
                 p.setBorder(new EmptyBorder(5, 5, 5, 8));
 
                 // Opacity slider
-                createOpacitySlider();
+                createOpacitySlider(state);
 
                 //Shadow slider
-                createShadowSlider();
-                
+                createShadowSlider(state);
+
                 //contrast slider
                 createContrastSlider();
-                
+
                 // Width and height fields
                 createWidthField(state);
                 createHeightField(state);
@@ -108,12 +108,12 @@ public class FigureToolBar extends AbstractToolBar {
 
                 // Opacity field with slider
                 createOpacityField();
-                createOpacitySlider();
+                createOpacitySlider(state);
 
                 //Shadow field with slider
                 createShadowField();
-                createShadowSlider();
-                
+                createShadowSlider(state);
+
                 // Width and height fields
                 createWidthField(state);
                 createHeightField(state);
@@ -124,7 +124,7 @@ public class FigureToolBar extends AbstractToolBar {
         return p;
     }
 
-    private void createShadowSlider() {
+    private void createShadowSlider(int state) {
         JPopupButton shadowsPopupButton = new JPopupButton();
         JAttributeSlider shadowsSlider = new JAttributeSlider(JSlider.HORIZONTAL, 0, 25, 0);
         shadowsPopupButton.add(shadowsSlider);
@@ -136,11 +136,12 @@ public class FigureToolBar extends AbstractToolBar {
         shadowsPopupButton.setPopupAnchor(SOUTH_EAST);
         new SelectionComponentRepainter(editor, shadowsPopupButton);
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        gbc.weighty = 1;
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        if(state == 1){
+                    gbc.gridx = 2;
+                    gbc.gridy = 0;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    gbc.insets = new Insets(0, 3, 0, 0);
+        } 
         p.add(shadowsPopupButton, gbc);
         shadowsSlider.setUI((SliderUI) PaletteSliderUI.createUI(shadowsSlider));
         shadowsSlider.setScaleFactor(1d);
@@ -180,7 +181,7 @@ public class FigureToolBar extends AbstractToolBar {
         contrastPopupButton.setPopupAnchor(SOUTH_EAST);
     }
 
-    private void createOpacitySlider() {
+    private void createOpacitySlider(int state) {
         JPopupButton opacityPopupButton = new JPopupButton();
         JAttributeSlider opacitySlider = new JAttributeSlider(JSlider.VERTICAL, 0, 100, 100);
         opacityPopupButton.add(opacitySlider);
@@ -191,12 +192,14 @@ public class FigureToolBar extends AbstractToolBar {
                         new Rectangle(5, 5, 6, 6), new Rectangle(4, 4, 7, 7)));
         opacityPopupButton.setPopupAnchor(SOUTH_EAST);
         new SelectionComponentRepainter(editor, opacityPopupButton);
+
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.weighty = 1;
-        gbc.insets = new Insets(0, 0, 0, 0);
+        if (state == 1) {
+            gbc.gridy = 0;
+            gbc.gridwidth = 2;
+            gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        } 
+
         p.add(opacityPopupButton, gbc);
         opacitySlider.setUI((SliderUI) PaletteSliderUI.createUI(opacitySlider));
         opacitySlider.setScaleFactor(100d);
@@ -241,7 +244,7 @@ public class FigureToolBar extends AbstractToolBar {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(3, 0, 0, 0);
+        gbc.insets = new Insets(0, 0, 0, 0);
         p.add(widthLabel, gbc);
 
         widthField.setUI((TextUI) PaletteFormattedTextFieldUI.createUI(widthField));
@@ -255,7 +258,7 @@ public class FigureToolBar extends AbstractToolBar {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(3, 3, 0, 0);
+        gbc.insets = new Insets(0, 0, 0, 0);
         p.add(widthField, gbc);
         new FigureAttributeEditorHandler<Double>(FIGURE_WIDTH, widthField, editor);
     }
@@ -291,7 +294,7 @@ public class FigureToolBar extends AbstractToolBar {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(3, 3, 0, 0);
+        gbc.insets = new Insets(0, 0, 0, 0);
         gbc.gridwidth = 2;
         p.add(heightField, gbc);
         new FigureAttributeEditorHandler<Double>(FIGURE_HEIGHT, heightField, editor);
