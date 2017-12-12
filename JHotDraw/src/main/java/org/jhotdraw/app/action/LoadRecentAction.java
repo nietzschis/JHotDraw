@@ -25,6 +25,10 @@ import java.io.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 /**
  * LoadRecentAction.
  *
@@ -36,7 +40,7 @@ public class LoadRecentAction extends AbstractSaveBeforeAction{
     private File file;
     
     /** Creates a new instance. */
-    public LoadRecentAction(Application app) {
+    public LoadRecentAction(Application app, File file) {
         super(app);
         this.file = file;
         putValue(Action.NAME, file.getName());
@@ -44,7 +48,7 @@ public class LoadRecentAction extends AbstractSaveBeforeAction{
 
     @FeatureEntryPoint(JHotDrawFeatures.DRAWING_PERSITENCE)
     public void doIt(final View view) {
-        final Application app = getApplication();
+        final Application app = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         app.setEnabled(true);
         
         // If there is another view with we set the multiple open

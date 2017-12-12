@@ -204,6 +204,7 @@ public abstract class DefaultApplicationModel
         labels.configureMenu(m, "edit");
         mi = m.add(getAction(UndoAction.ID));
         mi.setIcon(null);
+        System.out.println("REDO ACTION: " + getActionDynamicly(RedoAction.class));
         mi = m.add(getActionDynamicly(RedoAction.class));
         mi.setIcon(null);
         m.addSeparator();

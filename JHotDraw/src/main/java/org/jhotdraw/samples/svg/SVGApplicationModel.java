@@ -82,11 +82,11 @@ public class SVGApplicationModel extends DefaultApplicationModel {
 
     public Collection<Action> createDrawingActions(Application app, DrawingEditor editor) {
         LinkedList<Action> a = new LinkedList<Action>();
-        a.add(new CutAction());
-        a.add(new CopyAction());
-        a.add(new PasteAction());
-        a.add(new SelectAllAction());
-        a.add(new ClearSelectionAction());
+        a.add(getActionDynamicly(CutAction.class));
+        a.add(getActionDynamicly(CopyAction.class));
+        a.add(getActionDynamicly(PasteAction.class));
+        a.add(getActionDynamicly(SelectAllAction.class));
+        a.add(getActionDynamicly(ClearSelectionAction.class));
         a.add(new SelectSameAction(editor));
         return a;
     }
@@ -119,6 +119,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     @Override
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<>();
+        System.out.println("edit menu: " + new EditMenu(this, pr));
         mb.add(new FileMenu(this, new OpenRecentMenu(this, a, pr)));
         mb.add(new EditMenu(this, pr));
         mb.add(new CollaborationMenu(this));

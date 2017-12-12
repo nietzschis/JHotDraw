@@ -47,7 +47,7 @@ public class OpenRecentMenu extends AbstractMenu {
                     getItemCount() - 1);
             removeAll();
             for (File f : a.recentFiles()) {
-                add(new LoadRecentAction(a));
+                add(new LoadRecentAction(a,f));
             }
             if (a.recentFiles().size() > 0) {
                 addSeparator();

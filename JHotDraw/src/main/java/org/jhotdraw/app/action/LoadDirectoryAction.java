@@ -16,9 +16,7 @@ package org.jhotdraw.app.action;
 
 import javax.swing.JFileChooser;
 import org.jhotdraw.app.*;
-import org.jhotdraw.services.ActionSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * LoadDirectoryAction.
@@ -26,13 +24,12 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Werner Randelshofer, Staldenmattweg 2, CH-6405 Immensee
  * @version 1.0 2009-02-08 Created.
  */
-@ServiceProvider(service = ActionSPI.class)
-public class LoadDirectoryAction extends LoadAction implements ActionSPI{
+public class LoadDirectoryAction extends LoadAction{
     public final static String ID = "file.loadDirectory";
 
     /** Creates a new instance. */
-    public LoadDirectoryAction() {
-        super();
+    public LoadDirectoryAction(Application app) {
+        super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, "file.openDirectory");
     }

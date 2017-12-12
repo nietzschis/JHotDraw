@@ -127,14 +127,23 @@ public class DefaultSDIApplication extends AbstractApplication {
         appLabels.configureAction(m.getActionDynamicly(DuplicateCanvasAction.class), "window.duplicate");
         m.putAction(SaveAction.ID, new SaveAction(this));
         m.putAction(SaveAsAction.ID, new SaveAsAction(this));
+        m.putAction(LoadAction.ID, new LoadAction(this));
 
         m.putAction(UndoAction.ID, new UndoAction(this));
         m.putAction(VerticalFlipAction.ID, new VerticalFlipAction());
+        
+        m.putAction(CollaborationStartServerAction.ID, new CollaborationStartServerAction(this));
+        m.putAction(CollaborationStopServerAction.ID, new CollaborationStopServerAction(this));
+        m.putAction(CollaborationListConnectionsAction.ID, new CollaborationListConnectionsAction(this));
+        
+        //TODO: Put menu action here
+        m.putAction(CollaborationConnectAction.ID, new CollaborationConnectAction(this));
+        m.putAction(CollaborationDisconnectAction.ID, new CollaborationDisconnectAction(this));
     }
 
     protected void initViewActions(View p) {
         ApplicationModel m = getModel();
-        p.putAction(LoadAction.ID, m.getActionDynamicly(LoadAction.class));
+        p.putAction(LoadAction.ID, m.getAction(LoadAction.ID));
     }
 
     @SuppressWarnings("unchecked")
@@ -259,6 +268,7 @@ public class DefaultSDIApplication extends AbstractApplication {
     protected JMenuBar createMenuBar(final View p) {
         JMenuBar mb = new JMenuBar();
         for (JMenu mm : getModel().createMenus(this, p)) {
+            System.out.println("test: " + mm);
             mb.add(mm);
         }
         mb.add(createSearchLabel(mb, p));

@@ -22,11 +22,11 @@ public class FileMenu extends AbstractMenu {
     public FileMenu(ApplicationModel model, JMenu openRecentMenu) {
         super("file", model);
         
-        addAction(ClearAction.ID);
-        addAction(NewAction.ID);
-        addAction(DuplicateCanvasAction.ID);
+        addActionDynamically(ClearAction.class);
+        addActionDynamically(NewAction.class);
+        addActionDynamically(DuplicateCanvasAction.class);
         addAction(LoadAction.ID);
-        if (model.getActionDynamicly(LoadDirectoryAction.class) != null) {
+        if (model.getAction(LoadDirectoryAction.ID) != null) {
             addAction(LoadDirectoryAction.ID);
         }
         add(openRecentMenu);
