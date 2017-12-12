@@ -81,38 +81,48 @@ public class SelectionOpacityIcon extends javax.swing.ImageIcon {
         Double opacity;
         Color fillColor;
         Color strokeColor;
-            DrawingView view = editor.getActiveView();
-            if (view != null && view.getSelectedFigures().size() == 1) {
-                opacity = opacityKey.get(view.getSelectedFigures().iterator().next());
-                fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getSelectedFigures().iterator().next());
-                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(view.getSelectedFigures().iterator().next());
-            } else {
-                opacity = opacityKey.get(editor.getDefaultAttributes());
-                fillColor = (fillColorKey == null) ? null : fillColorKey.get(editor.getDefaultAttributes());
-                strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(editor.getDefaultAttributes());
-            }
+        DrawingView view = editor.getActiveView();
+        if (view != null && view.getSelectedFigures().size() == 1) {
+            opacity = opacityKey.get(view.getSelectedFigures().iterator().next());
+            fillColor = (fillColorKey == null) ? null : fillColorKey.get(view.getSelectedFigures().iterator().next());
+            strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(view.getSelectedFigures().iterator().next());
+        } else {
+            opacity = opacityKey.get(editor.getDefaultAttributes());
+            fillColor = (fillColorKey == null) ? null : fillColorKey.get(editor.getDefaultAttributes());
+            strokeColor = (strokeColorKey == null) ? null : strokeColorKey.get(editor.getDefaultAttributes());
+        }
 
         if (fillColorKey != null && fillShape != null) {
-            if (opacity != null) {
+            drawFillColorKey( gr,  x,  y, opacity, fillColor);
+            }
+        if (strokeColorKey != null && strokeShape != null) {
+            drawStrokeColorKey( gr,  x,  y, opacity, strokeColor);
+        }
+    }
+    
+    public void drawFillColorKey(java.awt.Graphics gr, int x, int y, Double opacity, Color fillColor){
+        if (opacity != null) {
                 if (fillColor == null) {
                     fillColor = Color.BLACK;
                 }
+                Graphics2D g = (Graphics2D) gr;
                 g.setColor(new Color((((int) (opacity * 255)) << 24) | (fillColor.getRGB() & 0xffffff), true));
                 g.translate(x, y);
                 g.fill(fillShape);
                 g.translate(-x, -y);
             }
-            }
-        if (strokeColorKey != null && strokeShape != null) {
-            if (opacity != null) {
+    }
+    public void drawStrokeColorKey(java.awt.Graphics gr, int x, int y, Double opacity, Color strokeColor){
+        if (opacity != null) {
                 if (strokeColor == null) {
                     strokeColor = Color.BLACK;
                 }
+                Graphics2D g = (Graphics2D) gr;
                 g.setColor(new Color((((int) (opacity * 255)) << 24) | (strokeColor.getRGB() & 0xffffff), true));
                 g.translate(x, y);
                 g.draw(strokeShape);
                 g.translate(-x, -y);
             }
-        }
     }
+    
 }
