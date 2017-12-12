@@ -37,14 +37,14 @@ public class FigurePainterTest {
     @Test
     public void paintTestLeftMouse() {
         editor.applyDefaultAttributesTo(figure);
-        painter.paint(figure, leftMouse, editor);
+        painter.paint(figure, leftMouse);
         Assert.assertEquals(figure.getAttribute(AttributeKeys.STROKE_COLOR), figure.getAttribute(AttributeKeys.STROKE_COLOR_LEFT_MOUSE));
     }
     
     @Test
     public void paintTestRightMouse() {
         editor.applyDefaultAttributesTo(figure);
-        painter.paint(figure, rightMouse, editor);
+        painter.paint(figure, rightMouse);
         Assert.assertEquals(figure.getAttribute(AttributeKeys.STROKE_COLOR), figure.getAttribute(AttributeKeys.STROKE_COLOR_RIGHT_MOUSE));
     }
     
