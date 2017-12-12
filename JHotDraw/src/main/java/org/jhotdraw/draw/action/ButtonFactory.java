@@ -237,7 +237,6 @@ public class ButtonFactory {
         a.add(null); // separator
 
         a.add(new EdgeDetectionAction(editor));
-
         return a;
     }
 

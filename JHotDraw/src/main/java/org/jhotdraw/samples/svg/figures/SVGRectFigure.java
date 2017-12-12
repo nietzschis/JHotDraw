@@ -185,7 +185,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         roundrect.y = Math.min(anchor.y, lead.y);
         roundrect.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         roundrect.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
-
+        
         setArc(roundrect.width*arcWidthRatio,roundrect.height*arcHeighRatio);
         invalidate();
     }

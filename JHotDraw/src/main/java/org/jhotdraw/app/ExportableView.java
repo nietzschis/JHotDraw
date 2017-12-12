@@ -17,6 +17,7 @@ package org.jhotdraw.app;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.HashMap;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 import org.jhotdraw.draw.OutputFormat;

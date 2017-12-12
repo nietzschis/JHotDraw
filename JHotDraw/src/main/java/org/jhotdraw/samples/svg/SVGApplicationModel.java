@@ -34,7 +34,8 @@ import org.jhotdraw.draw.action.*;
  * SVGApplicationModel.
  *
  * @author Werner Randelshofer.
- * @version 2.0 2009-04-10 Moved all drawing related toolbars into SVGDrawingPanel.
+ * @version 2.0 2009-04-10 Moved all drawing related toolbars into
+ * SVGDrawingPanel.
  * <br>1.0 June 10, 2006 Created.
  */
 public class SVGApplicationModel extends DefaultApplicationModel {
@@ -46,7 +47,9 @@ public class SVGApplicationModel extends DefaultApplicationModel {
      */
     private DefaultDrawingEditor sharedEditor;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     @FeatureEntryPoint(JHotDrawFeatures.APPLICATION_STARTUP)
     public SVGApplicationModel() {
     }
@@ -79,7 +82,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         putAction(ClearSelectionAction.ID, new ClearSelectionAction());
         putAction(ViewSourceAction.ID, new ViewSourceAction(a));
         putAction(ExportAction.ID, new ExportAction(a));
-        putAction(ExportAction.ID, new ImportWatermarkAction(a));
+        putAction(ImportWatermarkAction.ID, new ImportWatermarkAction(a));
     }
 
     public Collection<Action> createDrawingActions(Application app, DrawingEditor editor) {
@@ -132,7 +135,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
 
     /**
      * Overriden to create no toolbars.
-     * 
+     *
      * @param app
      * @param p
      * @return An empty list.

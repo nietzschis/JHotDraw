@@ -12,6 +12,7 @@ import org.jhotdraw.collaboration.client.CollaborationDrawingHandlerTest;
 import org.jhotdraw.collaboration.server.CollaborationServerTest;
 import org.jhotdraw.collaboration.server.RemoteObservableTest;
 import org.jhotdraw.draw.SelectionTest;
+import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.SVGTriangleFigureTest;
 import org.jhotdraw.samples.svg.figures.svgtrianglefigure.TriangleJGivenTest;
