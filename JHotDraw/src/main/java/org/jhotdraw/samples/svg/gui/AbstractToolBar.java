@@ -174,11 +174,7 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                         try {
                         // long start = System.currentTimeMillis();
                         panels[state] = createDisclosedComponent(state);
-                        if(panels[state] != null) {
-                            for(int i = 0; i< panels[state].getComponents().length; i++) {
-                                panels[state].getComponents()[i].setPreferredSize(GuiSizes.getPreferredButtonSizes());
-                            }
-                        }
+                        
                         // Print dem der bliver kaldt paint på.
                         //System.out.println(panels[state].getParent().getClass());
                         
@@ -207,6 +203,11 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                             parent.revalidate();
                             ((JComponent) parent.getRootPane().getContentPane()).revalidate();
 
+                        }
+                        if(panels[state] != null) {
+                            for(int i = 0; i< panels[state].getComponents().length; i++) {
+                                   panels[state].getComponents()[i].setPreferredSize(GuiSizes.getPreferredButtonSizes());
+                            }
                         }
                     }
                 };

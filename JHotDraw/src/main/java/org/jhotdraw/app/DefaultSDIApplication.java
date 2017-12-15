@@ -56,6 +56,7 @@ public class DefaultSDIApplication extends AbstractApplication {
      */
     @FeatureEntryPoint(JHotDrawFeatures.APPLICATION_STARTUP)
     public DefaultSDIApplication() {
+        GuiSizes.getResolution();
     }
 
     @Override
