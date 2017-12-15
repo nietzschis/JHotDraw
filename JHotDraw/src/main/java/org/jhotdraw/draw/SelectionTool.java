@@ -168,6 +168,7 @@ public class SelectionTool extends AbstractTool
     @Override
     public void mouseReleased(MouseEvent evt) {
         if (getView() != null && getView().isEnabled()) {
+            super.mouseReleased(evt);
             tracker.mouseReleased(evt);
         }
     }

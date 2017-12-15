@@ -32,7 +32,7 @@ import org.jhotdraw.app.View;
  * @version 1.1 2009-03-08 Moved call to getOpenChooser into separate method.
  * <br>1.0  2005-10-16  Created.
  */
-public class LoadAction extends AbstractSaveBeforeAction {
+public class LoadAction extends AbstractSaveBeforeAction{
     public final static String ID = "file.load";
     
     /** Creates a new instance. */

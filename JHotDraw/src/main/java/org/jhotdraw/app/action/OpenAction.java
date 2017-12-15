@@ -21,6 +21,10 @@ import javax.swing.*;
 import java.io.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Opens a file in new view, or in the current view, if it is empty.
@@ -35,13 +39,14 @@ import org.jhotdraw.app.View;
  * <br>1.0.1 2005-07-14 Make view explicitly visible after creating it.
  * <br>1.0  04 January 2005  Created.
  */
-public class OpenAction extends AbstractApplicationAction {
+@ServiceProvider(service = ActionSPI.class)
+public class OpenAction extends AbstractApplicationAction implements ActionSPI{
 
     public final static String ID = "file.open";
 
     /** Creates a new instance. */
-    public OpenAction(Application app) {
-        super(app);
+    public OpenAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }

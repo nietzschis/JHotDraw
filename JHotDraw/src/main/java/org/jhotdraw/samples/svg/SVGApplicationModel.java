@@ -51,7 +51,8 @@ import java.util.List;
  * SVGApplicationModel.
  *
  * @author Werner Randelshofer.
- * @version 2.0 2009-04-10 Moved all drawing related toolbars into SVGDrawingPanel.
+ * @version 2.0 2009-04-10 Moved all drawing related toolbars into
+ * SVGDrawingPanel.
  * <br>1.0 June 10, 2006 Created.
  */
 public class SVGApplicationModel extends DefaultApplicationModel {
@@ -63,7 +64,9 @@ public class SVGApplicationModel extends DefaultApplicationModel {
      */
     private DefaultDrawingEditor sharedEditor;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     @FeatureEntryPoint(JHotDrawFeatures.APPLICATION_STARTUP)
     public SVGApplicationModel() {
     }
@@ -95,16 +98,19 @@ public class SVGApplicationModel extends DefaultApplicationModel {
 
         putAction(ClearSelectionAction.ID, new ClearSelectionAction());
         putAction(ViewSourceAction.ID, new ViewSourceAction(a));
-        putAction(ExportAction.ID, new ExportAction(a));
+
+        putAction(ImportWatermarkAction.ID, new ImportWatermarkAction(a));
+        putAction(ExportAction.ID, getActionDynamicly(ExportAction.class));
+
     }
 
     public Collection<Action> createDrawingActions(Application app, DrawingEditor editor) {
         LinkedList<Action> a = new LinkedList<Action>();
-        a.add(new CutAction());
-        a.add(new CopyAction());
-        a.add(new PasteAction());
-        a.add(new SelectAllAction());
-        a.add(new ClearSelectionAction());
+        a.add(getActionDynamicly(CutAction.class));
+        a.add(getActionDynamicly(CopyAction.class));
+        a.add(getActionDynamicly(PasteAction.class));
+        a.add(getActionDynamicly(SelectAllAction.class));
+        a.add(getActionDynamicly(ClearSelectionAction.class));
         a.add(new SelectSameAction(editor));
         return a;
     }
@@ -138,6 +144,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     @Override
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<>();
+        System.out.println("edit menu: " + new EditMenu(this, pr));
         mb.add(new FileMenu(this, new OpenRecentMenu(this, a, pr)));
         mb.add(new EditMenu(this, pr));
         mb.add(new CollaborationMenu(this));
@@ -146,10 +153,29 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         
         return mb;
     }
+    
+    protected JMenu createSearchBar(Application a, View p){
+        JMenu m, m2;
+        JMenuItem mi;
+        JRadioButtonMenuItem rbmi;
+        JCheckBoxMenuItem cbmi;
+        ButtonGroup group;
+        Action action;
+
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        ResourceBundleUtil svgLabels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+
+        m = new JMenu();
+        appLabels.configureMenu(m, "view");
+        m.add(getAction(ViewSourceAction.ID));
+        
+        return m;
+    }
 
     /**
      * Overriden to create no toolbars.
-     * 
+     *
      * @param app
      * @param p
      * @return An empty list.

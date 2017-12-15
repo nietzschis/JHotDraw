@@ -9,14 +9,13 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  *
  * @author niclasmolby
  */
-public class CollaborationDisconnectAction extends AbstractApplicationAction {
+public class CollaborationDisconnectAction extends AbstractApplicationAction{
 
     public final static String ID = "collaboration.disConnect";
     private Application app;

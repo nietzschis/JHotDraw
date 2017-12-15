@@ -22,6 +22,10 @@ import javax.swing.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Closes a view.
@@ -29,12 +33,13 @@ import org.jhotdraw.app.View;
  * @author  Werner Randelshofer
  * @version 1.0  04 January 2005  Created.
  */
-public class CloseAction extends AbstractSaveBeforeAction {
+@ServiceProvider(service = ActionSPI.class)
+public class CloseAction extends AbstractSaveBeforeAction implements ActionSPI{
     public final static String ID = "file.close";
     
     /** Creates a new instance. */
-    public CloseAction(Application app) {
-        super(app);
+    public CloseAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }

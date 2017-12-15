@@ -45,6 +45,8 @@ public class ActionsToolBar extends AbstractToolBar {
 
     private ToggleGridAction toggleGridAction;
     private UndoRedoManager undoManager;
+    AbstractButton btn;
+    Map<AttributeKey, Object> defaultAttributes;
 
     /** Creates new instance. */
     public ActionsToolBar() {
@@ -133,6 +135,18 @@ public class ActionsToolBar extends AbstractToolBar {
                 gbc.gridy = 1;
                 gbc.insets = new Insets(3, 3, 0, 0);
                 p.add(btn, gbc);
+                
+                
+                AbstractButton popupButton = btn;
+                btn = ButtonFactory.createEyedropperButton(editor, popupButton);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                labels.configureToolBarButton(btn, "eyedropper");
+                gbc = new GridBagConstraints();
+                gbc.gridx = 3;
+                gbc.gridy = 0;
+                gbc.insets = new Insets(0, 3, 0, 0);
+                p.add(btn, gbc);
+                
 
                 final JMenu flipMenu;
                 flipMenu = new JMenu();
