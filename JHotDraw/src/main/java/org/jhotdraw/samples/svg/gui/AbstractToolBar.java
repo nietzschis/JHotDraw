@@ -206,7 +206,9 @@ public /*abstract*/ class AbstractToolBar extends JDisclosureToolBar {
                         }
                         if(panels[state] != null) {
                             for(int i = 0; i< panels[state].getComponents().length; i++) {
-                                   panels[state].getComponents()[i].setPreferredSize(GuiSizes.getPreferredButtonSizes());
+                                if(panels[state].getComponents()[i] instanceof JButton || panels[state].getComponents()[i] instanceof JToggleButton) {
+                                    panels[state].getComponents()[i].setPreferredSize(GuiSizes.getPreferredButtonSizes());
+                                }
                             }
                         }
                     }
