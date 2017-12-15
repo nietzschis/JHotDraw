@@ -296,7 +296,9 @@ public class ButtonFactory {
 
         // Selection tool
         editor.setTool(selectionTool);
+
         button = new JToggleButton();
+        button.setName("select");
         final JToggleButton defaultToolButton = button;
 
         ToolListener toolHandler;
