@@ -82,11 +82,25 @@ public class StrokeToolBar extends AbstractToolBar {
                     AbstractButton btn;
 
                     // Stroke color
-                    Map<AttributeKey, Object> defaultAttributes = new HashMap<AttributeKey, Object>();
-                    STROKE_GRADIENT.set(defaultAttributes, null);
+                    //Right mouse button
+                    Map<AttributeKey, Object> defaultAttributesRight = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesRight, null);
                     btn = ButtonFactory.createSelectionColorButton(editor,
-                            STROKE_COLOR, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
-                            "attribute.strokeColor", labels, defaultAttributes, new Rectangle(3, 3, 10, 10));
+                            STROKE_COLOR_RIGHT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesRight, new Rectangle(3, 3, 10, 10));
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    ((JPopupButton) btn).setAction(null, null);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(btn, gbc);
+                    
+                    //Left Mouse Button
+                    Map<AttributeKey, Object> defaultAttributesLeft = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesLeft, null);
+                    btn = ButtonFactory.createSelectionColorButton(editor,
+                            STROKE_COLOR_LEFT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesLeft, new Rectangle(3, 3, 10, 10));
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     ((JPopupButton) btn).setAction(null, null);
                     gbc = new GridBagConstraints();
@@ -130,7 +144,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(STROKE_WIDTH, strokeWidthSlider, editor);
 
                     // Create stroke dashes buttons
-                    btn = ButtonFactory.createStrokeJoinButton(editor, labels);
+                    btn = ButtonFactory.createStrokeJoinButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -138,7 +152,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     gbc.insets = new Insets(0, 3, 0, 0);
                     p.add(btn, gbc);
 
-                    btn = ButtonFactory.createStrokeCapButton(editor, labels);
+                    btn = ButtonFactory.createStrokeCapButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -170,25 +184,53 @@ public class StrokeToolBar extends AbstractToolBar {
                     AbstractButton btn;
 
                     // Stroke color field and button
-                    Map<AttributeKey, Object> defaultAttributes = new HashMap<AttributeKey, Object>();
-                    STROKE_GRADIENT.set(defaultAttributes, null);
-                    JAttributeTextField<Color> colorField = new JAttributeTextField<Color>();
-                    colorField.setColumns(7);
-                    colorField.setToolTipText(labels.getString("attribute.strokeColor.toolTipText"));
-                    colorField.putClientProperty("Palette.Component.segmentPosition", "first");
-                    colorField.setUI((PaletteFormattedTextFieldUI) PaletteFormattedTextFieldUI.createUI(colorField));
-                    colorField.setFormatterFactory(ColorFormatter.createFormatterFactory());
-                    colorField.setHorizontalAlignment(JTextField.LEFT);
-                    new FigureAttributeEditorHandler<Color>(STROKE_COLOR, defaultAttributes, colorField, editor, true);
+                    //RIGHT MOUSE BUTTON
+                    Map<AttributeKey, Object> defaultAttributesRight = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesRight, null);
+                    JAttributeTextField<Color> colorFieldRight = new JAttributeTextField<Color>();
+                    colorFieldRight.setColumns(7);
+                    colorFieldRight.setToolTipText(labels.getString("attribute.strokeColor.toolTipText"));
+                    colorFieldRight.putClientProperty("Palette.Component.segmentPosition", "first");
+                    colorFieldRight.setUI((PaletteFormattedTextFieldUI) PaletteFormattedTextFieldUI.createUI(colorFieldRight));
+                    colorFieldRight.setFormatterFactory(ColorFormatter.createFormatterFactory());
+                    colorFieldRight.setHorizontalAlignment(JTextField.LEFT);
+                    new FigureAttributeEditorHandler<Color>(STROKE_COLOR_RIGHT_MOUSE, defaultAttributesRight, colorFieldRight, editor, true);
                     gbc = new GridBagConstraints();
                     gbc.gridx = 0;
                      gbc.gridwidth = 3;
                     gbc.fill = GridBagConstraints.HORIZONTAL;
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-                    p.add(colorField, gbc);
+                    p.add(colorFieldRight, gbc);
                     btn = ButtonFactory.createSelectionColorButton(editor,
-                            STROKE_COLOR, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
-                            "attribute.strokeColor", labels, defaultAttributes, new Rectangle(3, 3, 10, 10));
+                            STROKE_COLOR_RIGHT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesRight, new Rectangle(3, 3, 10, 10));
+                    btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                    ((JPopupButton) btn).setAction(null, null);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 3;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(btn, gbc);
+                    
+                    //LEFT MOUSE BUTTON
+                    Map<AttributeKey, Object> defaultAttributesLeft = new HashMap<AttributeKey, Object>();
+                    STROKE_GRADIENT.set(defaultAttributesLeft, null);
+                    JAttributeTextField<Color> colorFieldLeft = new JAttributeTextField<Color>();
+                    colorFieldLeft.setColumns(7);
+                    colorFieldLeft.setToolTipText(labels.getString("attribute.strokeColor.toolTipText"));
+                    colorFieldLeft.putClientProperty("Palette.Component.segmentPosition", "first");
+                    colorFieldLeft.setUI((PaletteFormattedTextFieldUI) PaletteFormattedTextFieldUI.createUI(colorFieldLeft));
+                    colorFieldLeft.setFormatterFactory(ColorFormatter.createFormatterFactory());
+                    colorFieldLeft.setHorizontalAlignment(JTextField.LEFT);
+                    new FigureAttributeEditorHandler<Color>(STROKE_COLOR_LEFT_MOUSE, defaultAttributesLeft, colorFieldLeft, editor, true);
+                    gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                     gbc.gridwidth = 3;
+                    gbc.fill = GridBagConstraints.HORIZONTAL;
+                    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+                    p.add(colorFieldLeft, gbc);
+                    btn = ButtonFactory.createSelectionColorButton(editor,
+                            STROKE_COLOR_LEFT_MOUSE, ButtonFactory.HSV_COLORS, ButtonFactory.HSV_COLORS_COLUMN_COUNT,
+                            "attribute.strokeColor", labels, defaultAttributesLeft, new Rectangle(3, 3, 10, 10));
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     ((JPopupButton) btn).setAction(null, null);
                     gbc = new GridBagConstraints();
@@ -263,7 +305,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     new FigureAttributeEditorHandler<Double>(STROKE_WIDTH, strokeWidthSlider, editor);
 
 
-                    btn = ButtonFactory.createStrokeJoinButton(editor, labels);
+                    btn = ButtonFactory.createStrokeJoinButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -273,7 +315,7 @@ public class StrokeToolBar extends AbstractToolBar {
                     gbc.insets = new Insets(0, 3, 0, 0);
                     p.add(btn, gbc);
 
-                    btn = ButtonFactory.createStrokeCapButton(editor, labels);
+                    btn = ButtonFactory.createStrokeCapButton(editor);
                     btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
                     gbc = new GridBagConstraints();
                     gbc.anchor = GridBagConstraints.FIRST_LINE_START;

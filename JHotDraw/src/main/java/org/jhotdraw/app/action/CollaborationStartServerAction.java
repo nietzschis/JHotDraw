@@ -24,7 +24,7 @@ import org.jhotdraw.app.*;
  *
  * @author Niels
  */
-public class CollaborationStartServerAction extends AbstractApplicationAction {
+public class CollaborationStartServerAction extends AbstractApplicationAction{
 
     public final static String ID = "collaboration.start";
 

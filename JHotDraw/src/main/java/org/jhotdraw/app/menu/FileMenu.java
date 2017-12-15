@@ -6,6 +6,7 @@ import org.jhotdraw.app.action.ClearAction;
 import org.jhotdraw.app.action.DuplicateCanvasAction;
 import org.jhotdraw.app.action.ExitAction;
 import org.jhotdraw.app.action.ExportAction;
+import org.jhotdraw.app.action.ImportWatermarkAction;
 import org.jhotdraw.app.action.LoadAction;
 import org.jhotdraw.app.action.LoadDirectoryAction;
 import org.jhotdraw.app.action.NewAction;
@@ -21,10 +22,10 @@ public class FileMenu extends AbstractMenu {
 
     public FileMenu(ApplicationModel model, JMenu openRecentMenu) {
         super("file", model);
-        
-        addAction(ClearAction.ID);
-        addAction(NewAction.ID);
-        addAction(DuplicateCanvasAction.ID);
+
+        addActionDynamically(ClearAction.class);
+        addActionDynamically(NewAction.class);
+        addActionDynamically(DuplicateCanvasAction.class);
         addAction(LoadAction.ID);
         if (model.getAction(LoadDirectoryAction.ID) != null) {
             addAction(LoadDirectoryAction.ID);
@@ -33,15 +34,19 @@ public class FileMenu extends AbstractMenu {
         addSeparator();
         addAction(SaveAction.ID);
         addAction(SaveAsAction.ID);
-        if (model.getAction(ExportAction.ID) != null) {
-            addAction(ExportAction.ID);
+
+        if (model.getActionDynamicly(ExportAction.class) != null) {
+            addActionDynamically(ExportAction.class);
         }
-        if (model.getAction(PrintAction.ID) != null) {
+        if (model.getAction(ImportWatermarkAction.ID) != null) {
+            addAction(ImportWatermarkAction.ID);
+        }
+        if (model.getActionDynamicly(PrintAction.class) != null) {
             addSeparator();
-            addAction(PrintAction.ID);
+            addActionDynamically(PrintAction.class);
         }
         addSeparator();
-        addAction(ExitAction.ID);
+        addActionDynamically(ExitAction.class);
     }
 
 }

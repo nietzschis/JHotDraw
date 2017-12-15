@@ -25,7 +25,11 @@ import javax.print.attribute.standard.*;
 import javax.swing.*;
 import org.jhotdraw.app.*;
 import org.jhotdraw.gui.*;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
 import org.jhotdraw.util.*;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Presents a printer dialog to the user and then prints the View to the
@@ -43,13 +47,14 @@ import org.jhotdraw.util.*;
  * relying on Java Reflection. 
  * <br>1.0 January 1, 2007 Created.
  */
-public class PrintAction extends AbstractViewAction {
+@ServiceProvider(service = ActionSPI.class)
+public class PrintAction extends AbstractViewAction implements ActionSPI{
 
     public final static String ID = "file.print";
 
     /** Creates a new instance. */
-    public PrintAction(Application app) {
-        super(app);
+    public PrintAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }

@@ -348,6 +348,10 @@ public interface DrawingView {
      * This is a bound property.
      */
     public void setScaleFactor(double newValue);
+    
+    public Color getWorkspaceBG();
+    
+    public void setWorkspaceBG(Color color);
 
     /**
      * The detail level of the handles.

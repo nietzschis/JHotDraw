@@ -250,7 +250,15 @@ public interface Application {
      * Removes a (non-palette) window from the application.
      */
     public void removeWindow(Window window);
+    
+    public void setSearchMenu(ArrayList<Action> actions);
+    
+    public JMenu getSearchMenu();
+    
+    public String getSearchText();
         
     JFrame getFrame();
+    
+    public JTextField getTextField();
     
 }

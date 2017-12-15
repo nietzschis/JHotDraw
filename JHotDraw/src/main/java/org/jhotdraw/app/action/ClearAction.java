@@ -21,6 +21,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Clears a view.
@@ -29,12 +33,13 @@ import org.jhotdraw.app.View;
  * @version 1.1 2007-11-25 Call method clear on a worker thread.
  * <br>1.0  2005-10-16 Created.
  */
-public class ClearAction extends AbstractViewAction {
+@ServiceProvider(service = ActionSPI.class)
+public class ClearAction extends AbstractViewAction implements ActionSPI{
     public final static String ID = "file.clear";
     
     /** Creates a new instance. */
-    public ClearAction(Application app) {
-        super(app);
+    public ClearAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, "file.new");
     }

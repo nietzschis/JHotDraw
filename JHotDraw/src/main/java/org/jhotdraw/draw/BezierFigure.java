@@ -102,7 +102,7 @@ public class BezierFigure extends AbstractAttributedFigure {
     /**
      * Returns the Figures connector for the specified location.
      * By default a ChopDiamondConnector is returned.
-     * @see ChopDiamondConnector
+     * @see ChopBezierConnector
      */
     public Connector findConnector(Point2D.Double p, ConnectionFigure prototype) {
         return new ChopBezierConnector(this);

@@ -341,6 +341,14 @@ public class DefaultDrawingView
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, (Options.isTextAntialiased()) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         drawDrawing(g);
     }
+    
+    private Color workspaceBG = Color.GRAY;
+    
+    @Override
+    public Color getWorkspaceBG() { return workspaceBG; }
+    
+    @Override
+    public void setWorkspaceBG(Color color) { workspaceBG = color; }
 
     protected void drawBackground(Graphics2D g) {
         // Position of the zero coordinate point on the view
@@ -369,9 +377,9 @@ public class DefaultDrawingView
             g.fillRect(x, y, w - x, h - y);
         }
 
-        // Draw a gray canvasColor for the area which is at
+        // Draw a Color for the area which is at
         // negative view coordinates.
-        Color outerBackground = new Color(0xf0f0f0);
+        Color outerBackground = workspaceBG;
         if (y > 0) {
             g.setColor(outerBackground);
             g.fillRect(0, 0, w, y);

@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
+import org.jhotdraw.collaboration.client.CollaborationConnection;
 import org.jhotdraw.util.*;
 
 /**
@@ -191,6 +192,8 @@ public class CreationTool extends AbstractTool {
 
     public void mousePressed(MouseEvent evt) {
         super.mousePressed(evt);
+        FigurePainter painter = new FigurePainter();
+        painter.paint(evt.getButton(), editor);
         getView().clearSelection();
         createdFigure = createFigure();
         Point2D.Double p = constrainPoint(viewToDrawing(anchor));
@@ -198,6 +201,7 @@ public class CreationTool extends AbstractTool {
         anchor.y = evt.getY();
         createdFigure.setBounds(p, p);
         getDrawing().add(createdFigure);
+
     }
 
     public void mouseDragged(MouseEvent evt) {
@@ -253,6 +257,8 @@ public class CreationTool extends AbstractTool {
                 });
                 creationFinished(createdFigure);
                 createdFigure = null;
+                // TODO: Her bliver ikke SVG figurer tegnet
+                CollaborationConnection.getInstance().notifyUpdate("create");
             }
         } else {
             if (isToolDoneAfterCreation()) {

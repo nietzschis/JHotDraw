@@ -6,7 +6,6 @@
  */
 package org.jhotdraw.app.action;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -16,23 +15,27 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.jhotdraw.app.Application;
-import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
 import org.jhotdraw.gui.JSheet;
 import org.jhotdraw.gui.Worker;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
 import org.jhotdraw.util.ResourceBundleUtil;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author ville
  */
-public class DuplicateCanvasAction extends AbstractApplicationAction {
+@ServiceProvider(service = ActionSPI.class)
+public class DuplicateCanvasAction extends AbstractApplicationAction implements ActionSPI{
 
     public final static String ID = "window.duplicate";
     
     /** Creates a new instance. */
-    public DuplicateCanvasAction(Application app) {
-        super(app);
+    public DuplicateCanvasAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }
