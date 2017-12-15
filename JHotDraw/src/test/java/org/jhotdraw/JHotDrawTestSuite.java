@@ -22,6 +22,7 @@ import org.jhotdraw.app.action.watermark.WatermarkTest;
 import org.jhotdraw.draw.AnimationTest;
 import org.jhotdraw.draw.AnimationToolTest;
 import org.jhotdraw.draw.SimpleDrawingViewTest;
+import org.jhotdraw.gui.GuiSizeTest;
 import org.jhotdraw.opencontaingfolder.CorrectStrategyTest;
 import org.jhotdraw.text.StartLineTextStrategyTest;
 import org.jhotdraw.samples.svg.action.SplitTest;
