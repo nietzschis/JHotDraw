@@ -123,7 +123,50 @@
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+              <SubComponents>
+                <Component class="org.jhotdraw.samples.svg.gui.ToolsToolBar" name="creationToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.ActionsToolBar" name="actionToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.FillToolBar" name="fillToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.StrokeToolBar" name="strokeToolBar">
+                  <Properties>
+                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+                      <Insets value="[0, 10, 0, 0]"/>
+                    </Property>
+                  </Properties>
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.FontToolBar" name="fontToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.ArrangeToolBar" name="arrangeToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.AlignToolBar" name="alignToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.FigureToolBar" name="figureToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.LinkToolBar" name="linkToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.CanvasToolBar" name="canvasToolBar">
+                </Component>
+                <Component class="org.jhotdraw.samples.svg.gui.ViewToolBar" name="viewToolBar">
+                </Component>
+                <Container class="org.jhotdraw.samples.svg.gui.RecordingToolBar" name="recordingToolBar1">
+                  <Properties>
+                    <Property name="rollover" type="boolean" value="true"/>
+                  </Properties>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                </Container>
+                <Container class="org.jhotdraw.samples.svg.gui.AnimationToolBar" name="animationToolBar2">
+                  <Properties>
+                    <Property name="rollover" type="boolean" value="true"/>
+                  </Properties>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                </Container>
+              </SubComponents>
             </Container>
           </SubComponents>
         </Container>

@@ -24,7 +24,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
  * @author Werner Randelshofer, Staldenmattweg 2, CH-6405 Immensee
  * @version 1.0 2009-02-08 Created.
  */
-public class LoadDirectoryAction extends LoadAction {
+public class LoadDirectoryAction extends LoadAction{
     public final static String ID = "file.loadDirectory";
 
     /** Creates a new instance. */

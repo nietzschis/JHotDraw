@@ -48,6 +48,10 @@ public interface ApplicationModel {
      * Puts an action with the specified id.
      */
     public void putAction(String id, Action action);
+    /*
+    *Returns the action with the given class name by using Lookup.
+    */
+    public Action getActionDynamicly(Class name);
     /**
      * Returns the action with the specified id.
      */

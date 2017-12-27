@@ -58,6 +58,9 @@ public abstract class AbstractViewAction extends AbstractAction {
         }
     };
     
+    public AbstractViewAction(){
+    }
+    
     /** Creates a new instance. */
     public AbstractViewAction(Application app) {
         this.app = app;

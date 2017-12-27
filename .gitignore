@@ -1,5 +1,9 @@
 JHotDraw/target/
 /JHotDraw/nbactions.xml
+<<<<<<< HEAD
+/JHotDraw/nbproject/
+/JHotDraw/FeatureTraces/
+=======
 JHotDraw/FeatureTraces/
 .idea/
 *.iml
@@ -8,3 +12,4 @@ JHotDraw/FeatureTraces/
 JHotDraw/JHotDraw.iml
 JHotDraw/.idea/
 JHotDraw/jgiven-reports/
+>>>>>>> refs/remotes/origin/master

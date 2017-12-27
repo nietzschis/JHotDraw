@@ -98,17 +98,19 @@ public class SVGApplicationModel extends DefaultApplicationModel {
 
         putAction(ClearSelectionAction.ID, new ClearSelectionAction());
         putAction(ViewSourceAction.ID, new ViewSourceAction(a));
+
         putAction(ImportWatermarkAction.ID, new ImportWatermarkAction(a));
-        putAction(ExportAction.ID, new ExportAction(a));
+        putAction(ExportAction.ID, getActionDynamicly(ExportAction.class));
+
     }
 
     public Collection<Action> createDrawingActions(Application app, DrawingEditor editor) {
         LinkedList<Action> a = new LinkedList<Action>();
-        a.add(new CutAction());
-        a.add(new CopyAction());
-        a.add(new PasteAction());
-        a.add(new SelectAllAction());
-        a.add(new ClearSelectionAction());
+        a.add(getActionDynamicly(CutAction.class));
+        a.add(getActionDynamicly(CopyAction.class));
+        a.add(getActionDynamicly(PasteAction.class));
+        a.add(getActionDynamicly(SelectAllAction.class));
+        a.add(getActionDynamicly(ClearSelectionAction.class));
         a.add(new SelectSameAction(editor));
         return a;
     }
@@ -142,6 +144,7 @@ public class SVGApplicationModel extends DefaultApplicationModel {
     @Override
     public java.util.List<JMenu> createMenus(Application a, View pr) {
         LinkedList<JMenu> mb = new LinkedList<>();
+        System.out.println("edit menu: " + new EditMenu(this, pr));
         mb.add(new FileMenu(this, new OpenRecentMenu(this, a, pr)));
         mb.add(new EditMenu(this, pr));
         mb.add(new CollaborationMenu(this));
@@ -149,6 +152,25 @@ public class SVGApplicationModel extends DefaultApplicationModel {
         mb.add(new HelpMenu(this));
         
         return mb;
+    }
+    
+    protected JMenu createSearchBar(Application a, View p){
+        JMenu m, m2;
+        JMenuItem mi;
+        JRadioButtonMenuItem rbmi;
+        JCheckBoxMenuItem cbmi;
+        ButtonGroup group;
+        Action action;
+
+        ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        ResourceBundleUtil svgLabels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+
+        m = new JMenu();
+        appLabels.configureMenu(m, "view");
+        m.add(getAction(ViewSourceAction.ID));
+        
+        return m;
     }
 
     /**

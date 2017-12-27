@@ -8,12 +8,15 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.*;
 import org.jhotdraw.app.*;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Niels
  */
-public class CollaborationStopServerAction extends AbstractApplicationAction {
+
+public class CollaborationStopServerAction extends AbstractApplicationAction{
 
     public final static String ID = "collaboration.stop";
 
@@ -22,7 +25,7 @@ public class CollaborationStopServerAction extends AbstractApplicationAction {
 
     public CollaborationStopServerAction(Application app) {
         super(app);
-        this.app = app;
+        this.app = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
         setEnabled(false);

@@ -19,11 +19,18 @@ import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.jhotdraw.app.action.*;
+import org.jhotdraw.gui.JPopupButton;
 import org.jhotdraw.util.*;
 import org.jhotdraw.util.prefs.*;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A DefaultSDIApplication can handle the life cycle of a single document window
@@ -46,9 +53,15 @@ import org.jhotdraw.util.prefs.*;
  * <br>1.1 2006-02-06 Revised.
  * <br>1.0 October 16, 2005 Created.
  */
+//@ServiceProvider(service = SearchSPI.class)
 public class DefaultSDIApplication extends AbstractApplication {
 
     private Preferences prefs;
+    private JComboBox<Action> combobox = new JComboBox();
+    private JList<Action> list = new JList<>();
+    private JMenu searchMenu = new JMenu("Search results:");
+    private JTextField textField = new JTextField();
+    private FileBackupSaver autoSaver;
     private JFrame frame;
 
     /**
@@ -56,6 +69,7 @@ public class DefaultSDIApplication extends AbstractApplication {
      */
     @FeatureEntryPoint(JHotDrawFeatures.APPLICATION_STARTUP)
     public DefaultSDIApplication() {
+        GuiSizes.getResolution();
     }
 
     @Override
@@ -71,6 +85,10 @@ public class DefaultSDIApplication extends AbstractApplication {
         prefs = Preferences.userNodeForPackage((getModel() == null) ? getClass() : getModel().getClass());
         initLabels();
         initApplicationActions();
+        
+        int backupInterval = prefs.getInt("backupInterval", DEFAULT_BACKUP_INTERVAL);
+        String backupLocation = prefs.get("backupLocation", DEFAULT_BACKUP_LOCATION);
+        createAutosaver(backupInterval, backupLocation);
     }
 
     @Override
@@ -87,6 +105,25 @@ public class DefaultSDIApplication extends AbstractApplication {
         System.setProperty("com.apple.macos.useScreenMenuBar", "false");
         System.setProperty("apple.awt.graphics.UseQuartz", "false");
         System.setProperty("swing.aatext", "true");
+    }
+    
+    /**
+     * Stops application after saving each View to a backup file.
+     */
+    @Override
+    public void stop() {
+        autoSaver.saveFiles();
+        autoSaver.stop();
+        super.stop();
+    }
+    
+    protected void createAutosaver(int interval, String backupLocation) {
+        if (autoSaver != null) {
+            autoSaver.stop();
+            autoSaver = null;
+        }
+        autoSaver = new FileBackupSaver(this, interval, backupLocation);
+        autoSaver.start();
     }
 
     protected void initLookAndFeel() {
@@ -111,29 +148,13 @@ public class DefaultSDIApplication extends AbstractApplication {
     protected void initApplicationActions() {
         ResourceBundleUtil appLabels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         ApplicationModel m = getModel();
-        m.putAction(AboutAction.ID, new AboutAction(this));
-        m.putAction(ExitAction.ID, new ExitAction(this));
-
-        m.putAction(ClearAction.ID, new ClearAction(this));
-        m.putAction(NewAction.ID, new NewAction(this));
-        appLabels.configureAction(m.getAction(NewAction.ID), "window.new");
-        m.putAction(DuplicateCanvasAction.ID, new DuplicateCanvasAction(this));
-        appLabels.configureAction(m.getAction(DuplicateCanvasAction.ID), "window.duplicate");
-        m.putAction(LoadAction.ID, new LoadAction(this));
-        m.putAction(ClearRecentFilesAction.ID, new ClearRecentFilesAction(this));
+        appLabels.configureAction(m.getActionDynamicly(NewAction.class), "window.new");
+        appLabels.configureAction(m.getActionDynamicly(DuplicateCanvasAction.class), "window.duplicate");
         m.putAction(SaveAction.ID, new SaveAction(this));
         m.putAction(SaveAsAction.ID, new SaveAsAction(this));
-        m.putAction(CloseAction.ID, new CloseAction(this));
-        m.putAction(PrintAction.ID, new PrintAction(this));
+        m.putAction(LoadAction.ID, new LoadAction(this));
 
         m.putAction(UndoAction.ID, new UndoAction(this));
-        m.putAction(RedoAction.ID, new RedoAction(this));
-        m.putAction(CutAction.ID, new CutAction());
-        m.putAction(CopyAction.ID, new CopyAction());
-        m.putAction(PasteAction.ID, new PasteAction());
-        m.putAction(DeleteAction.ID, new DeleteAction());
-        m.putAction(DuplicateAction.ID, new DuplicateAction());
-        m.putAction(SelectAllAction.ID, new SelectAllAction());
         m.putAction(VerticalFlipAction.ID, new VerticalFlipAction());
         
         m.putAction(CollaborationStartServerAction.ID, new CollaborationStartServerAction(this));
@@ -146,7 +167,6 @@ public class DefaultSDIApplication extends AbstractApplication {
         
         // Color hot key action
         //m.putAction(ColorHotkeyAction.ID, new ColorHotkeyAction());
-
     }
 
     protected void initViewActions(View p) {
@@ -192,7 +212,7 @@ public class DefaultSDIApplication extends AbstractApplication {
             frame.addWindowListener(new WindowAdapter() {
 
                 public void windowClosing(final WindowEvent evt) {
-                    getModel().getAction(CloseAction.ID).actionPerformed(
+                    getModel().getActionDynamicly(CloseAction.class).actionPerformed(
                             new ActionEvent(frame, ActionEvent.ACTION_PERFORMED,
                                     "windowClosing"));
                 }
@@ -278,6 +298,9 @@ public class DefaultSDIApplication extends AbstractApplication {
         for (JMenu mm : getModel().createMenus(this, p)) {
             mb.add(mm);
         }
+        mb.add(createSearchLabel(mb, p));
+        mb.add(createSearchTextField());
+        mb.add(createSearchMenu(mb, p));
         
         return mb;
     }
@@ -316,4 +339,44 @@ public class DefaultSDIApplication extends AbstractApplication {
     public JFrame getFrame() {
         return frame;
     }
+
+    protected JMenu createSearchMenu(JMenuBar mb, View p) {
+        return searchMenu;
+    }
+    protected JTextField createSearchTextField(){
+        textField.setPreferredSize(new Dimension(200, textField.getPreferredSize().height));
+        textField.setMaximumSize(textField.getPreferredSize());
+        textField.addActionListener(Lookup.getDefault().lookup(SearchAction.class));
+        textField.setToolTipText("Press enter to search for tool");
+        textField.setText("search for tool");
+        return textField;
+    }
+    
+    protected JLabel createSearchLabel(JMenuBar mb, View p){
+       JLabel searchLabel = new JLabel("           Press enter to search: ");
+       return searchLabel; 
+    }
+
+    public void setSearchMenu(ArrayList<Action> actions) {
+        searchMenu.removeAll();
+        for (Action action : actions) {
+            searchMenu.add(action);
+        }
+    }
+    
+    @Override
+    public JMenu getSearchMenu(){
+       return searchMenu; 
+    }
+
+    @Override
+    public String getSearchText() {
+        return textField.getText();
+    }
+    
+    @Override
+    public JTextField getTextField(){
+        return textField;
+    }
+
 }

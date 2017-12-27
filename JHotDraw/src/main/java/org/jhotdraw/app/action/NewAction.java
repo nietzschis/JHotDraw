@@ -20,6 +20,10 @@ import java.awt.event.*;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.JHotDrawFeatures;
 import org.jhotdraw.app.View;
+import org.jhotdraw.services.ActionSPI;
+import org.jhotdraw.services.ApplicationSPI;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Creates a new view.
@@ -31,19 +35,20 @@ import org.jhotdraw.app.View;
  * <br>1.1 2005-07-09 Place new view relative to current one.
  * <br>1.0  04 January 2005  Created.
  */
-public class NewAction extends AbstractApplicationAction {
+@ServiceProvider(service = ActionSPI.class)
+public class NewAction extends AbstractApplicationAction implements ActionSPI{
     public final static String ID = "file.new";
     
     /** Creates a new instance. */
-    public NewAction(Application app) {
-        super(app);
+    public NewAction() {
+        super(Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance());
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
         labels.configureAction(this, ID);
     }
     
     @FeatureEntryPoint(JHotDrawFeatures.MANAGE_DRAWINGS)
     public void actionPerformed(ActionEvent evt) {
-        Application app = getApplication();
+        Application app = Lookup.getDefault().lookup(ApplicationSPI.class).getApplicationInstance();
         final View newP = app.createView();
         int multiOpenId = 1;
         for (View existingP : app.views()) {

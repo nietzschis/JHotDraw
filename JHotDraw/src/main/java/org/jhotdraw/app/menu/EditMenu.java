@@ -27,25 +27,25 @@ public class EditMenu extends AbstractMenu {
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
         
         addAction(UndoAction.ID).setIcon(null);
-        addAction(RedoAction.ID).setIcon(null);
+        addActionDynamically(RedoAction.class).setIcon(null);
         
         addSeparator();
         
-        addAction(CutAction.ID).setIcon(null);
-        addAction(CopyAction.ID).setIcon(null);
-        addAction(PasteAction.ID).setIcon(null);
-        addAction(DuplicateAction.ID).setIcon(null);
-        addAction(DeleteAction.ID).setIcon(null);
+        addActionDynamically(CutAction.class).setIcon(null);
+        addActionDynamically(CopyAction.class).setIcon(null);
+        addActionDynamically(PasteAction.class).setIcon(null);
+        addActionDynamically(DuplicateAction.class).setIcon(null);
+        addActionDynamically(DeleteAction.class).setIcon(null);
         
         addSeparator();
         
-        addAction(SelectAllAction.ID).setIcon(null);
+        addActionDynamically(SelectAllAction.class).setIcon(null);
         if (model.getAction(FindAction.ID) != null) {
             addSeparator();
             addAction(FindAction.ID);
         }
         
-        JMenuItem mi = addAction(ClearSelectionAction.ID);
+        JMenuItem mi = addActionDynamically(ClearSelectionAction.class);
         mi.setIcon(null);
 
         if (p != null) {

@@ -40,8 +40,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import org.jhotdraw.geom.Insets2D;
 
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+import org.jhotdraw.text.StartLineTextStrategy;
 
 /**
  * SVGPath is a composite Figure which contains one or more
@@ -55,7 +57,7 @@ import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
  * <br>1.1 2007-12-21 Only close/open last path. 
  * <br>1.0 July 8, 2006 Created.
  */
-public class SVGPathFigure extends AbstractAttributedCompositeFigure implements SVGFigure {
+public class SVGPathFigure extends AbstractAttributedCompositeFigure implements SVGFigure, TextHolderFigure {
 
     private static final long serialVersionUID = 7500584567042233588L;
     
@@ -70,18 +72,22 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     private transient Shape cachedHitShape;
     private final static boolean DEBUG = false;
 
-    private Split split = new Split();
 
+    private transient GeneralPath cachedTextPath;
+    
+    private boolean editable = true;
+  
+    private Split split = new Split();
     /** Creates a new instance. */
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure() {
-        add(new SVGBezierFigure());
-        SVGAttributeKeys.setDefaults(this);
+        this(false);
     }
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
     public SVGPathFigure(boolean isEmpty) {
         if (! isEmpty) { add(new SVGBezierFigure()); }
         SVGAttributeKeys.setDefaults(this);
+        setText("text");
     }
 
     @FeatureEntryPoint(JHotDrawFeatures.LINE_TOOL)
@@ -131,10 +137,23 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         if (paint != null) {
             g.setPaint(paint);
             drawFill(g);
+
         }
+
+        
+        paint = getTextColor();
+        if (paint != null){
+            Composite savedComposite = g.getComposite();
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) Math.max(0d, TEXT_OPACITY.get(this))));
+            g.setPaint(paint);
+            drawText(g);
+            g.setComposite(savedComposite);
+        }
+
         Paint strokepaint = SVGAttributeKeys.getStrokePaint(this);
         if (strokepaint != null) {
             g.setPaint(strokepaint);
+
             g.setStroke(SVGAttributeKeys.getStroke(this));
             drawStroke(g);
         }
@@ -152,6 +171,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     // empty
     }
 
+    public void drawText(Graphics2D g){
+        g.fill(getTextPath());
+    }
+    
     public void drawFill(Graphics2D g) {
         g.fill(getPath());
     }
@@ -165,31 +188,53 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         cachedPath = null;
         cachedDrawingArea = null;
         cachedHitShape = null;
+        cachedTextPath = null;
     }
 
     protected GeneralPath getPath() {
         if (cachedPath == null) {
-            cachedPath = new GeneralPath();
-            cachedPath.setWindingRule(WINDING_RULE.get(this) == WindingRule.EVEN_ODD ? GeneralPath.WIND_EVEN_ODD : GeneralPath.WIND_NON_ZERO);
-            for (Figure child : getChildren()) {
-                SVGBezierFigure b = (SVGBezierFigure) child;
-                cachedPath.append(b.getBezierPath(), false);
-            }
+            updatePaths();
         }
         return cachedPath;
     }
+    
+    private void updatePaths(){
+        cachedPath = new GeneralPath();
+        cachedTextPath = new GeneralPath();
+        cachedPath.setWindingRule(WINDING_RULE.get(this) == WindingRule.EVEN_ODD ? GeneralPath.WIND_EVEN_ODD : GeneralPath.WIND_NON_ZERO);
+        for (Figure child : getChildren()) {
+            SVGBezierFigure b = (SVGBezierFigure) child;
+            cachedPath.append(b.getBezierPath(), false);
+            StartLineTextStrategy t = new StartLineTextStrategy(getText(), getFont());
+            cachedTextPath.append(t.textShape(b.getBezierPath()), false);
+            }
+    }
+    
+    public GeneralPath getFigurePath(){
+        GeneralPath gp = (GeneralPath) getPath().clone();
+        gp.append(getTextPath(), false);
+        return gp;
+    }
+    
     protected Shape getHitShape() {
         if (cachedHitShape == null) {
             cachedHitShape = getPath();
             if (FILL_COLOR.get(this) == null && FILL_GRADIENT.get(this) == null) {
                 cachedHitShape = SVGAttributeKeys.getHitStroke(this).createStrokedShape(cachedHitShape);
                 }
-
         }
         return cachedHitShape;
     }
-
     
+    protected GeneralPath getTextPath(){
+        if (cachedTextPath==null){
+            cachedTextPath= new GeneralPath();
+            StartLineTextStrategy t = new StartLineTextStrategy(getText(), getFont());
+            cachedTextPath.append(t.textShape(getPath()), false);
+        }
+        return cachedTextPath;
+    }
+
     // int count;
     public Rectangle2D.Double getDrawingArea() {
         if (cachedDrawingArea == null) {
@@ -200,10 +245,9 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             } else if (STROKE_CAP.get(this) != BasicStroke.CAP_BUTT) {
                 width += strokeTotalWidth * 2;
             }
-            GeneralPath gp = (GeneralPath) getPath();
+            GeneralPath gp = (GeneralPath) getFigurePath().clone();
             Rectangle2D strokeRect = new Rectangle2D.Double(0, 0, width, width);
             if (TRANSFORM.get(this) != null) {
-                gp = (GeneralPath) gp.clone();
                 gp.transform(TRANSFORM.get(this));
                 strokeRect = TRANSFORM.get(this).createTransformedShape(strokeRect).getBounds2D();
             }
@@ -235,31 +279,56 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             }
         }
         boolean isClosed = CLOSED.get(getChild(0));
-        if (isClosed && FILL_COLOR.get(this) == null && FILL_GRADIENT.get(this)==null) {
+        if (isClosedUnfilled()) {
             return getHitShape().contains(p);
         }
-        /*
-        return cachedPath.contains(p2);
-         */
+
         double tolerance = Math.max(2f, AttributeKeys.getStrokeTotalWidth(this) / 2d);
-        if (isClosed || FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this)!=null) {
-            if (getPath().contains(p)) {
-                return true;
-            }
-            double grow = AttributeKeys.getPerpendicularHitGrowth(this) /** 2d*/;
+        if (isClosedOrHasFill() && closedFigureShape().contains(p)) {
+            return true;
+        }
+        
+        if (!isClosed && Shapes.outlineContains(getPath(), p, tolerance)) {
+            return true;
+        }
+        
+        if (textContains(p)){
+            return true;
+        }
+        return false;
+    }
+    
+    /*
+    Returns a shape which contains the area inside of the figure's path and the area inside its stroke
+    */
+    private Shape closedFigureShape(){
+        double grow = AttributeKeys.getPerpendicularHitGrowth(this) /** 2d*/;
             GrowStroke gs = new GrowStroke((float) grow,
                     (float) (AttributeKeys.getStrokeTotalWidth(this) *
                     STROKE_MITER_LIMIT.get(this)));
-            if (gs.createStrokedShape(getPath()).contains(p)) {
-                return true;
-            } else {
-                if (isClosed) {
-                    return false;
-                }
-            }
-        }
-        if (!isClosed) {
-            if (Shapes.outlineContains(getPath(), p, tolerance)) {
+            GeneralPath gp = (GeneralPath) getPath().clone();
+            gp.append(gs.createStrokedShape(getPath()), false);
+        return gp;
+    }
+    
+    /*
+    returns a boolean corresponding to whether it is closed and has no fill color
+    */
+    private boolean isClosedUnfilled(){
+        return (CLOSED.get(getChild(0))&&FILL_COLOR.get(this) == null && FILL_GRADIENT.get(this)==null);
+    }
+    
+    /*
+    returns a boolean for whether it is closed or has a fill color
+    */
+    
+    private boolean isClosedOrHasFill(){
+        return CLOSED.get(getChild(0)) || FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this)!=null;
+    }
+    
+    public boolean textContains(Point2D.Double p){
+        if (!getPath().contains(p)){
+            if (getTextPath().contains(p)){
                 return true;
             }
         }
@@ -546,5 +615,98 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         }
         TRANSFORM.basicSet(this, null);
         changed();
+    }
+    
+    
+        @Override
+    public boolean isEditable() {
+        return editable;
+    }
+
+    @Override
+    public Font getFont() {
+        return SVGAttributeKeys.getFont(this);
+    }
+
+    @Override
+    public Color getTextColor() {
+        return TEXT_COLOR.get(this);
+    }
+
+    @Override
+    public Color getFillColor() {
+        return Color.WHITE;
+    }
+
+    @Override
+    public TextHolderFigure getLabelFor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getTabSize() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getText() {
+        return TEXT.get(this);
+    }
+
+    @Override
+    public void setText(String newText) {
+        TEXT.set(this, newText);
+    }
+
+    @Override
+    public int getTextColumns() {
+        return 1;
+    }
+
+    @Override
+    public void setFontSize(float size) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public float getFontSize() {
+        return (float) Math.abs(FONT_SIZE.get(this));
+    }
+
+    @Override
+    public double getBaseline() {
+        return 5;
+    }
+
+    @Override
+    public Insets2D.Double getInsets() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isTextOverflow() {
+        return false;
+    }
+    
+    
+    @Override
+    public Tool getTool(Point2D.Double p) {
+        if (isEditable() && textContains(p)) {
+            TextEditingTool tool = new TextEditingTool(this);
+            return tool;
+        }
+        return null;
+    }
+    
+    public Rectangle2D.Double getBounds(){
+        if (cachedBounds == null) {
+            if (getChildCount() == 0) {
+                cachedBounds = new Rectangle2D.Double();
+            } else {
+                Rectangle2D r = getFigurePath().getBounds2D();
+                cachedBounds = new Rectangle2D.Double((Double) r.getX(), (Double) r.getY(), (Double) r.getWidth(), (Double) r.getHeight());
+            }
+        }
+        return (Rectangle2D.Double) cachedBounds.clone();
     }
 }

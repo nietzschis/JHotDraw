@@ -89,10 +89,12 @@ public class AttributeAction extends AbstractSelectedAction {
      */
     @SuppressWarnings("unchecked")
     public void applyAttributesTo(final Map<AttributeKey, Object> a, Set<Figure> figures) {
+        FigurePainter painter = new FigurePainter();
+
         for (Map.Entry<AttributeKey, Object> entry : a.entrySet()) {
             getEditor().setDefaultAttribute(entry.getKey(), entry.getValue());
         }
-
+        painter.setLeftColorToDefaultColor(getEditor());
         final ArrayList<Figure> selectedFigures = new ArrayList<Figure>(figures);
         final ArrayList<Object> restoreData = new ArrayList<Object>(selectedFigures.size());
         for (Figure figure : selectedFigures) {
@@ -100,6 +102,7 @@ public class AttributeAction extends AbstractSelectedAction {
             figure.willChange();
             for (Map.Entry<AttributeKey, Object> entry : a.entrySet()) {
                 entry.getKey().basicSet(figure, entry.getValue());
+                painter.changeColor(figure, entry);
             }
             figure.changed();
         }

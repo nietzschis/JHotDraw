@@ -71,6 +71,9 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
      * imageData.
      */
     private transient BufferedImage bufferedImage;
+    
+    //Shape to clip image to
+    private Shape clipShape;
 
     private boolean edgeDetectorApplied;
     /**
@@ -153,19 +156,35 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                     //  gx.setRenderingHints(g.getRenderingHints());
 
                 } else {
-
+                    //Clip graphics to the shape
+                    clipToShape(g, clipShape);                    
                     g.drawImage(image, (int) rectangle.x, (int) rectangle.y, (int) rectangle.width, (int) rectangle.height, null);
                 }
-            } else {
-                
-             drawShape(g);
+                //Stroke image if attributes are initialized
+                drawStroke(g);                
+            } else {                
+                drawShape(g);
             }
-
+            
             if (newContrast != 1d) {
                 g.setComposite(savedComposite);
             }
         }
-
+    }
+    
+    //Clips the image to a given shape
+    protected void clipToShape(Graphics2D g, Shape clipShape){
+        //Outcommented code line below is to force clipping to an ellipse shape for testing purposes.
+        //clipShape = new Ellipse2D.Double(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        /*
+        Implement chooser in GUI, to define which shape to clip 
+        to and use GUI input to choose predefined shape.
+        */        
+        //Do nothing if null
+        if(clipShape != null){
+            //Clip graphic with shape
+            g.setClip(clipShape);
+        }        
     }
 
     //Contrast
@@ -191,21 +210,24 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
                 gx.setStroke(new BasicStroke());
                 gx.draw(shape);
     }
-  
-    
-
     //Contrast End
-    
-    
-    
-    
     
     protected void drawFill(Graphics2D g) {
 
     }
 
     protected void drawStroke(Graphics2D g) {
-
+        //since we override the draw method from parent, inherit attributes from drawing here
+        g.setPaint(SVGAttributeKeys.getStrokePaint(this));
+        g.setStroke(SVGAttributeKeys.getStroke(this));
+        
+        //null not allowed
+        if(clipShape != null){
+            //draw the stroke of the shape on top of the image
+            g.draw(clipShape);
+        }else{
+            g.draw(rectangle);
+        }
     }
 
     // SHAPE AND BOUNDS

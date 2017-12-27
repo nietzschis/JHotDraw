@@ -5,16 +5,13 @@
  */
 package org.jhotdraw.app.action;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.util.HashMap;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.action.AttributeAction;
 import org.jhotdraw.draw.action.ColorIcon;
 import org.jhotdraw.gui.JPopupButton;
-import org.jhotdraw.util.ResourceBundleUtil;
 /**
  *
  * @author lefoz

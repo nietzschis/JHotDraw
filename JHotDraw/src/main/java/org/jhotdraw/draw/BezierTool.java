@@ -113,7 +113,8 @@ public class BezierTool extends AbstractTool {
 
     @Override
     public void mousePressed(MouseEvent evt) {
-
+        FigurePainter painter = new FigurePainter();
+        painter.paint(evt.getButton(), getEditor());
         if (DEBUG) {
             System.out.println("BezierTool.mousePressed " + evt);
         }
