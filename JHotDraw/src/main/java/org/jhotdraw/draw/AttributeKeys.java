@@ -67,12 +67,6 @@ public class AttributeKeys {
      * Figure fill color. The value of this attribute is a Color object.
      */
     public final static AttributeKey<Color> FILL_COLOR = new AttributeKey<Color>("fillColor", Color.class, Color.white, true, labels);
-
-
-    
-    
-    
-
     public final static AttributeKey<Color> FILL_COLOR_LEFT_MOUSE = new AttributeKey<Color>("fillColorLeftMouse", Color.class, Color.white, true, labels);
     public final static AttributeKey<Color> FILL_COLOR_RIGHT_MOUSE = new AttributeKey<Color>("fillColorRightMouse", Color.class, Color.white, true, labels);
     /**
