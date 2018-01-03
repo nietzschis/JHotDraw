@@ -331,6 +331,7 @@ public abstract class AbstractAttributeEditorHandler<T> {
     @SuppressWarnings("unchecked")
     protected void updateFigures() {
         if (updateDepth++ == 0) {
+            //System.out.println(Attribute);
             Set<Figure> figures = getEditedFigures();
             if (activeView == null || figures.isEmpty()) {
             } else {

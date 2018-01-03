@@ -35,15 +35,15 @@ import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
  * SVGEllipse represents a SVG ellipse and a SVG circle element.
  *
  * @author Werner Randelshofer
- * @version 2.1 2009-04-17 Method contains() takes now into account
- * whether the figure is filled.
+ * @version 2.1 2009-04-17 Method contains() takes now into account whether the
+ * figure is filled.
  * <br>2.0.3 Don't draw ellipse if widht or height is 0.
  * <br>2.0.2 2008-03-20 Fixed contains() method.
  * <br>2.0 2007-04-14 Adapted for new AttributeKeys.TRANSFORM support.
  * <br>1.0 July 8, 2006 Created.
  */
 public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
-    
+
     private static final long serialVersionUID = -8735585264721936541L;
 
     private Ellipse2D.Double ellipse;
@@ -56,7 +56,9 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
      */
     private transient Shape cachedHitShape;
 
-    /** Creates a new instance. */
+    /**
+     * Creates a new instance.
+     */
     public SVGEllipseFigure() {
         this(0, 0, 0, 0);
     }
@@ -135,6 +137,7 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         }
         return cachedTransformedShape;
     }
+
     private Shape getHitShape() {
         if (cachedHitShape == null) {
             if (FILL_COLOR.get(this) != null || FILL_GRADIENT.get(this) != null) {
@@ -154,6 +157,8 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         ellipse.y = Math.min(anchor.y, lead.y);
         ellipse.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         ellipse.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        SVGAttributeKeys.FIGURE_WIDTH.set(this, ellipse.width);
+        SVGAttributeKeys.FIGURE_HEIGHT.set(this, ellipse.height);
         invalidate();
     }
 
@@ -163,8 +168,8 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
      * @param tx the transformation.
      */
     public void transform(AffineTransform tx) {
-        if (TRANSFORM.get(this) != null ||
-                (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
+        if (TRANSFORM.get(this) != null
+                || (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
             if (TRANSFORM.get(this) == null) {
                 TRANSFORM.basicSetClone(this, tx);
             } else {
@@ -178,14 +183,14 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
             setBounds(
                     (Point2D.Double) tx.transform(anchor, anchor),
                     (Point2D.Double) tx.transform(lead, lead));
-            if (FILL_GRADIENT.get(this) != null &&
-                    !FILL_GRADIENT.get(this).isRelativeToFigureBounds()) {
+            if (FILL_GRADIENT.get(this) != null
+                    && !FILL_GRADIENT.get(this).isRelativeToFigureBounds()) {
                 Gradient g = FILL_GRADIENT.getClone(this);
                 g.transform(tx);
                 FILL_GRADIENT.basicSet(this, g);
             }
-            if (STROKE_GRADIENT.get(this) != null &&
-                    !STROKE_GRADIENT.get(this).isRelativeToFigureBounds()) {
+            if (STROKE_GRADIENT.get(this) != null
+                    && !STROKE_GRADIENT.get(this).isRelativeToFigureBounds()) {
                 Gradient g = STROKE_GRADIENT.getClone(this);
                 g.transform(tx);
                 STROKE_GRADIENT.basicSet(this, g);
@@ -205,13 +210,35 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
 
     public Object getTransformRestoreData() {
         return new Object[]{
-                    ellipse.clone(),
-                    TRANSFORM.getClone(this),
-                    FILL_GRADIENT.getClone(this),
-                    STROKE_GRADIENT.getClone(this),};
+            ellipse.clone(),
+            TRANSFORM.getClone(this),
+            FILL_GRADIENT.getClone(this),
+            STROKE_GRADIENT.getClone(this),};
     }
 
     // ATTRIBUTES
+    public <T> void setAttribute(AttributeKey<T> key, T newValue) {
+        if (key.equals(SVGAttributeKeys.TRANSFORM)
+                || key.equals(SVGAttributeKeys.FIGURE_HEIGHT)
+                || key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            invalidate();
+
+        }
+        super.setAttribute(key, newValue);
+        setNewBounds(key);
+    }
+
+    private <T> void setNewBounds(AttributeKey<T> key) {
+        if (SVGAttributeKeys.FIGURE_HEIGHT.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_HEIGHT)) {
+            ellipse.height = SVGAttributeKeys.FIGURE_HEIGHT.get(this);
+        }
+        if (SVGAttributeKeys.FIGURE_WIDTH.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            ellipse.width = SVGAttributeKeys.FIGURE_WIDTH.get(this);
+        }
+    }
+
     // EDITING
     @Override
     public Collection<Handle> createHandles(int detailLevel) {

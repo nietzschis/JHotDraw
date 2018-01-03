@@ -99,6 +99,14 @@ public class SVGAttributeKeys extends AttributeKeys {
      */
     public final static AttributeKey<Double> SHADOWS = new AttributeKey<Double>("addShadow",Double.class, 0d, false, labels);;
 
+    /**
+     * The width of the selected figure. The value of this attribute is a Double object.
+     */
+    public final static AttributeKey<Double> FIGURE_WIDTH = new AttributeKey<Double>("figureWidth", Double.class, 1d, true, labels);
+    /**
+     * The height of the selected figure. The value of this attribute is a Double object.
+     */
+    public final static AttributeKey<Double> FIGURE_HEIGHT = new AttributeKey<Double>("figureHeight", Double.class, 1d, true, labels);
     
      /**
      * Specifies the overall contrast of a SVG figure.

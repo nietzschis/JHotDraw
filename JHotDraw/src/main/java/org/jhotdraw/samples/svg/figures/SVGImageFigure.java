@@ -271,6 +271,8 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         rectangle.y = Math.min(anchor.y, lead.y);
         rectangle.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
         rectangle.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        SVGAttributeKeys.FIGURE_WIDTH.set(this, rectangle.width);
+        SVGAttributeKeys.FIGURE_HEIGHT.set(this, rectangle.height);
     }
 
     private void invalidateTransformedShape() {
@@ -339,6 +341,28 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
             rectangle.clone(),
             TRANSFORM.get(this)
         };
+    }
+
+    public <T> void setAttribute(AttributeKey<T> key, T newValue) {
+        if (key.equals(SVGAttributeKeys.TRANSFORM)
+                || key.equals(SVGAttributeKeys.FIGURE_HEIGHT)
+                || key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            invalidate();
+
+        }
+        super.setAttribute(key, newValue);
+        setNewBounds(key);
+    }
+
+    private <T> void setNewBounds(AttributeKey<T> key) {
+        if (SVGAttributeKeys.FIGURE_HEIGHT.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_HEIGHT)) {
+            rectangle.height = SVGAttributeKeys.FIGURE_HEIGHT.get(this);
+        }
+        if (SVGAttributeKeys.FIGURE_WIDTH.get(this) != null
+                && key.equals(SVGAttributeKeys.FIGURE_WIDTH)) {
+            rectangle.width = SVGAttributeKeys.FIGURE_WIDTH.get(this);
+        }
     }
 
     // EDITING

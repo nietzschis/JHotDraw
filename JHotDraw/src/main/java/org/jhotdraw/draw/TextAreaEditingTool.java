@@ -150,7 +150,6 @@ public class TextAreaEditingTool extends AbstractTool implements ActionListener 
             getDrawing().fireUndoableEditHappened(edit);
 
             typingTarget.changed();
-            typingTarget = null;
 
             textArea.endOverlay();
             
