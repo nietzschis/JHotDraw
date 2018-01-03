@@ -74,7 +74,7 @@ public class AttributeKeys {
     
 
     public final static AttributeKey<Color> FILL_COLOR_LEFT_MOUSE = new AttributeKey<Color>("fillColorLeftMouse", Color.class, Color.white, true, labels);
-    public final static AttributeKey<Color> FILL_COLOR_RIGHT_MOUSE = new AttributeKey<Color>("fillColorRightMouse", Color.class, Color.white, true, labels);>>>>>>> master
+    public final static AttributeKey<Color> FILL_COLOR_RIGHT_MOUSE = new AttributeKey<Color>("fillColorRightMouse", Color.class, Color.white, true, labels);
     /**
      * Close BezierFigure. The value of this attribute is a Boolean object.
      */
