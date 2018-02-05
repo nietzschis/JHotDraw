@@ -19,6 +19,7 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.action.*;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.samples.svg.PathTool;
+import org.jhotdraw.samples.svg.SlinkyTool;
 import org.jhotdraw.samples.svg.PenTool;
 import org.jhotdraw.samples.svg.SVGCreateFromFileTool;
 import org.jhotdraw.samples.svg.action.CombineAction;
@@ -77,6 +78,7 @@ public class ToolsToolBar extends AbstractToolBar {
                 CreationTool creationTool;
                 PredefinedFunctionTool predefinedFunctionTool;
                 PathTool pathTool;
+                SlinkyTool sprayTool;
                 EraserTool eraserTool;
                 TextCreationTool textTool;
                 TextAreaCreationTool textAreaTool;
@@ -168,6 +170,16 @@ public class ToolsToolBar extends AbstractToolBar {
                 gbc = new GridBagConstraints();
                 gbc.gridx = 3;
                 gbc.gridy = 1;
+                gbc.insets = new Insets(3, 0, 0, 0);
+                p.add(btn, gbc);
+                
+                
+                btn = ButtonFactory.addToolTo(this, editor, sprayTool = new SlinkyTool(new SVGPathFigure(), new SVGBezierFigure(false), attributes), "createSlinky", labels);
+                pathTool.setToolDoneAfterCreation(false);
+                btn.setUI((PaletteButtonUI) PaletteButtonUI.createUI(btn));
+                gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 3;
                 gbc.insets = new Insets(3, 0, 0, 0);
                 p.add(btn, gbc);
 

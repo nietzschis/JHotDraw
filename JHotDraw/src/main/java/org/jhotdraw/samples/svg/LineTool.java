@@ -49,6 +49,7 @@ public class LineTool extends AbstractTool {
      */
     @Override
     public void mousePressed(MouseEvent e) {        
+        
         super.mousePressed(e);
         getView().clearSelection();
         createdFigure = createFigure();
@@ -64,6 +65,7 @@ public class LineTool extends AbstractTool {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
+        
         if (createdFigure != null) {
             Rectangle2D.Double bounds = createdFigure.getBounds();
             if (bounds.width == 0 && bounds.height == 0) {
