@@ -63,7 +63,6 @@ public class DefaultSDIApplication extends AbstractApplication {
     private JTextField textField = new JTextField();
     private FileBackupSaver autoSaver;
     private JFrame frame;
-    //Delete this comment
 
     /**
      * Creates a new instance.
