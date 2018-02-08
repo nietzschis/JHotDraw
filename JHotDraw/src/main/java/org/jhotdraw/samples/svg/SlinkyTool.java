@@ -24,7 +24,7 @@ import java.util.Random;
 public class SlinkyTool extends PathTool {
     
     
-    
+    //Delete this code
     
     protected Map<AttributeKey, Object> prototypeAttributes;
     protected Figure prototype = new SVGEllipseFigure();
