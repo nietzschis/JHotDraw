@@ -1,6 +1,5 @@
 package org.jhotdraw.samples.svg;
 
-import java.awt.Paint;
 import java.awt.Point;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.samples.svg.figures.SVGBezierFigure;
@@ -11,20 +10,15 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
-import org.jhotdraw.draw.BezierFigure;
-import org.jhotdraw.draw.CreationTool;
-import org.jhotdraw.draw.DrawingView;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigurePainter;
-import java.util.Random;
 /**
  *
- * @author Ľuboš
+ * @author Jens Laurberg aka. Nietzschis
  */
 public class SlinkyTool extends PathTool {
     
     
-    //Delete this code
     
     protected Map<AttributeKey, Object> prototypeAttributes;
     protected Figure prototype = new SVGEllipseFigure();
@@ -56,7 +50,6 @@ public class SlinkyTool extends PathTool {
         anchor.y = evt.getY()-25;
         createdFigure.setBounds(p, p);
         getDrawing().add(createdFigure);
-        
         createdFigure.setBounds(constrainPoint(new Point(anchor.x+50, anchor.y+50)),p);
 
     
@@ -74,8 +67,4 @@ public class SlinkyTool extends PathTool {
         }
         return f;
     }
-    
-
-    
-
 }
